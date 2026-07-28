@@ -1,10 +1,20 @@
 # AI-X Learn
 
-일러스트 기반 스텝바이스텝으로 배우는 종합 AI 활용 학습 플랫폼.
+![Next.js](https://img.shields.io/badge/Next.js%2016-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React%2019-087EA4?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20v4-06B6D4?logo=tailwindcss&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=white)
+
+**일러스트 기반 스텝바이스텝으로 배우는 종합 AI 활용 학습 플랫폼.**
+
+유튜브·논문·블로그에 파편화된 AI 기술 정보를 큐레이션해, 한 화면에 하나의 개념씩 — 다이어그램·시뮬레이션 데모·용어 툴팁과 함께 초보자도 끝까지 따라갈 수 있게 만든 학습 서비스입니다. 환경변수 없이 `npm run dev` 한 번으로 전체 기능이 동작합니다.
+
+## 주요 기능
 
 - **강의 14개 / 레슨 147개** — 2026년 최신 트렌드 기준, 전 강의 웹 검색 팩트체크 완료 (에이전틱 워크플로우, AI 하네스/Evals, MCP, RAG, AI 게임 개발, Runway·Veo·Kling, Figma AI, Suno·ElevenLabs, Make.com·n8n 자동화, AI 수익화, **AI 시대의 PM**)
 - **핵심 UI**: 한 화면에 하나의 개념 — 좌측 텍스트 + 우측 일러스트 스플릿 뷰, [이전/다음 단계] 스텝 네비게이션 (키보드 ←/→ 지원)
-- **일러스트 시스템**: 이미지 파일 대신 구조화된 데이터(flow/cycle/compare/stack/steps/grid/terminal/chat)를 커스텀 렌더러가 그려 103개 레슨 전체의 비주얼 일관성 보장
+- **일러스트 시스템**: 이미지 파일 대신 구조화된 데이터(flow/cycle/compare/stack/steps/grid/terminal/chat)를 커스텀 렌더러가 그려 147개 레슨 전체의 비주얼 일관성 보장
 - **따라하기 데모 (시뮬레이션 스크린캐스트)**: 실무 도구 화면(코드 에디터·디자인 캔버스·Make 자동화·Slack·Gmail·브라우저)을 재현하고, 커서가 움직이며 클릭(물결 1회)·더블클릭(물결 2회)·타이핑·드래그를 시연 — 재생/일시정지/배속 지원
 - **용어 툴팁**: 어려운 용어(200여 개)의 첫 등장에 자동으로 점선 밑줄 — 마우스를 올리면(모바일은 탭) 초보자 눈높이 설명 표시 (`src/content/glossary.ts`)
 - **초보자 최적화 콘텐츠**: 전 레슨이 일상 비유·첫 등장 용어 풀이·구체적 따라하기 단계("여기서 막힌다면" 안내 포함)로 작성됨
@@ -100,3 +110,13 @@ scripts/generate-seed.ts     # 콘텐츠 → 시드 SQL 변환기
 | `npm run seed:generate` | 콘텐츠 → `supabase/seed.sql` 재생성 |
 | `npm run content:check` | 콘텐츠 무결성 검증 (데모 target 참조, 슬러그 중복 등) |
 | `npm run lint` | ESLint |
+
+## 문서
+
+- [`docs/DEVLOG.md`](docs/DEVLOG.md) — 개발 과정의 시행착오·버그·해결 기록과 아키텍처 결정(ADR). 버전별(v0.1 초기 구축 → v0.2 데모 시스템 → v0.3 팩트체크·강의 확충 → v0.4 초보자 눈높이·용어 툴팁) 히스토리 포함
+- [`CLAUDE.md`](CLAUDE.md) — 개발 원칙, 콘텐츠 작성 규칙, 기술 스택 주의사항 (AI 어시스턴트와 협업 시 자동 로드)
+- [`docs/PRD.md`](docs/PRD.md) — 최초 기획서 (제품 요구사항 정의서)
+
+## 라이선스
+
+학습·데모 목적의 프로젝트입니다. 강의 콘텐츠에 언급된 서비스·상표는 각 소유자의 자산입니다.
