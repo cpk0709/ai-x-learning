@@ -6,13 +6,13 @@ import type { Course } from "../types";
  */
 export const aiVideo: Course = {
   slug: "ai-video",
-  title: "AI 영상 제작: Sora · Runway · Veo와 숏폼 자동화",
+  title: "AI 영상 제작: Runway · Veo · Kling과 숏폼 자동화",
   subtitle: "텍스트 한 줄로 영상을 만들고, 숏폼 채널을 자동으로 굴리는 파이프라인",
   description:
     "2026년 영상 제작의 진입 장벽은 카메라가 아니라 '설계'입니다. 이 강의에서는 Sora, Runway, Google Veo 같은 텍스트-투-비디오 도구의 원리와 한계를 이해하고, 시네마토그래피 언어로 프롬프트를 쓰는 법을 익힙니다. 이어서 스토리보드→클립 생성→캡컷 편집으로 이어지는 제작 워크플로우를 완성하고, 대본→음성→클립→자막을 자동으로 이어붙여 릴스·쇼츠·틱톡에 배포하는 숏폼 자동화 파이프라인까지 설계합니다.",
   category: "creative",
   level: "intermediate",
-  tags: ["Sora", "Runway", "Google Veo", "숏폼 자동화", "CapCut"],
+  tags: ["Runway", "Google Veo", "Kling", "숏폼 자동화", "CapCut"],
   gradient: ["#ec4899", "#8b5cf6"],
   icon: "video",
   outcomes: [
@@ -38,12 +38,12 @@ export const aiVideo: Course = {
 
 - 프롬프트를 이해한 모델이 **잠재 공간의 노이즈**에서 시작해, 수십 단계에 걸쳐 노이즈를 걷어내며 프레임을 완성합니다.
 - 2026년 주력 모델들은 **디퓨전 트랜스포머(DiT)** 구조로, 시간축까지 한 덩어리로 학습해 프레임 간 움직임이 자연스럽습니다.
-- Veo, Sora 계열은 **영상과 동기화된 오디오**(대사·효과음)까지 함께 생성합니다.
+- Veo를 비롯한 최신 모델들은 **영상과 동기화된 오디오**(대사·효과음)까지 함께 생성합니다.
 
 ## 여전히 남은 두 가지 한계
 
 - **물리 일관성** — 모델은 물리 법칙을 '계산'하지 않고 '흉내' 냅니다. 손가락 개수, 액체의 흐름, 화면 밖으로 나갔다 돌아온 물체(객체 영속성)가 자주 무너집니다.
-- **길이 제한** — 한 번에 생성되는 클립은 보통 **5~15초**. 긴 영상은 여러 클립을 이어 붙여야 하고, 그래서 '편집 파이프라인'이 필수입니다.
+- **길이 제한** — 한 번에 생성되는 클립은 보통 **10초 안팎**, 길어야 수십 초입니다. 긴 영상은 여러 클립을 이어 붙여야 하고, 그래서 '편집 파이프라인'이 필수입니다.
 
 ## 실무 감각
 
@@ -74,7 +74,7 @@ export const aiVideo: Course = {
                 edgeLabel: "시간축 포함 한 덩어리로",
               },
               {
-                label: "클립 완성 (5~15초)",
+                label: "클립 완성 (10초 안팎)",
                 sublabel: "오디오 동시 생성 모델도 등장",
                 icon: "video",
                 tone: "success",
@@ -91,7 +91,7 @@ export const aiVideo: Course = {
 
 ## 5대 플레이어의 성격
 
-- **Sora (OpenAI)** — 복잡한 장면 연출과 서사 표현이 강점. 소셜 앱과 결합해 '만들고 바로 공유'하는 흐름을 만들었습니다.
+- **Sora (OpenAI)** — 복잡한 장면 연출과 서사 표현으로 시장을 열었지만, 소셜 앱이 2026년 상반기에 종료되고 API도 단계적 중단이 예고됐습니다. 신규 파이프라인에는 넣지 않는 편이 안전합니다.
 - **Runway (Gen 시리즈)** — 크리에이터용 **편집 도구가 가장 성숙**. 모션 브러시, 카메라 컨트롤 등 세밀한 연출 개입이 가능합니다.
 - **Google Veo** — **네이티브 오디오 생성**과 프롬프트 충실도가 강점. Flow 등 구글 생태계와의 연결이 매끄럽습니다.
 - **Pika** — 빠르고 가벼운 밈·이펙트 특화. 숏폼 감성의 변형 효과가 풍부합니다.
@@ -100,21 +100,21 @@ export const aiVideo: Course = {
 ## 선택 기준 3가지
 
 1. **연출 통제력**이 필요하면 → Runway
-2. **오디오 포함 완성형 클립**이 필요하면 → Veo, Sora
+2. **오디오 포함 완성형 클립**이 필요하면 → Veo
 3. **대량 생산 단가**가 중요하면 → Kling, Pika
 
 ## 하나만 기억한다면
 
 도구는 계속 바뀝니다. "어떤 도구가 최고인가"보다 **"내 파이프라인의 어느 단계에 어떤 도구를 꽂는가"**를 기준으로 판단하세요.
 
-> 💡 **핵심**: 2026년의 정답은 단일 도구가 아니라 **조합**입니다 — 연출은 Runway, 완성형은 Veo/Sora, 물량은 Kling/Pika.`,
+> 💡 **핵심**: 2026년의 정답은 단일 도구가 아니라 **조합**입니다 — 연출은 Runway, 완성형은 Veo, 물량은 Kling/Pika.`,
           illustration: {
             type: "grid",
             title: "2026 텍스트-투-비디오 지형도",
             items: [
               {
                 label: "Sora",
-                sublabel: "복잡한 연출 · 소셜 결합",
+                sublabel: "복잡한 연출 · 서비스 종료 수순",
                 icon: "sparkles",
                 tone: "primary",
               },
@@ -203,10 +203,10 @@ export const aiVideo: Course = {
               kind: "browser",
               url: "app.runwayml.com/generate",
               blocks: [
-                { id: "b-head", type: "heading", label: "Generate Video — Runway Gen-4" },
+                { id: "b-head", type: "heading", label: "Generate Video — Runway" },
                 { id: "b-prompt", type: "input", label: "샷·피사체·배경 프롬프트 입력…" },
                 { id: "b-style", type: "input", label: "카메라·조명·질감 옵션 입력…" },
-                { id: "b-ratio", type: "badge", label: "9:16 · 10초 · Gen-4" },
+                { id: "b-ratio", type: "badge", label: "9:16 · 10초 · Gen 시리즈" },
                 { id: "b-generate", type: "button", label: "Generate" },
                 { id: "b-progress", type: "badge", label: "생성 중… 디노이징 45%", hidden: true },
                 { id: "b-clip1", type: "card", label: "🎬 beach-run_v1.mp4 · 10초", hidden: true },
@@ -251,7 +251,7 @@ export const aiVideo: Course = {
           slug: "storyboard-pipeline",
           title: "스토리보드→클립→편집: 파이프라인으로 만들기",
           minutes: 5,
-          content: `클립 한 개는 누구나 뽑습니다. 차이는 **여러 클립을 하나의 영상으로 완성하는 파이프라인**에서 갈립니다. 5~15초 길이 제한이 있는 한, 편집 없는 AI 영상은 없습니다.
+          content: `클립 한 개는 누구나 뽑습니다. 차이는 **여러 클립을 하나의 영상으로 완성하는 파이프라인**에서 갈립니다. 클립 단위 길이 제한이 있는 한, 편집 없는 AI 영상은 없습니다.
 
 ## 파이프라인 5단계
 
@@ -312,7 +312,7 @@ export const aiVideo: Course = {
 
 1. **캐릭터 시트 확보** — 이미지 생성 AI로 주인공의 기준 이미지를 만들고, 레퍼런스 기능(캐릭터 고정)으로 다양한 각도·의상을 뽑습니다.
 2. **씬별 키프레임 생성** — 스토리보드의 각 씬을 **정지 이미지**로 먼저 만듭니다. 이미지는 영상보다 싸고 빠르니, 여기서 충분히 고릅니다.
-3. **키프레임 → I2V 변환** — 확정된 이미지를 시작 프레임으로 넣고, 프롬프트에는 **움직임만** 지시합니다. Runway·Kling·Veo 모두 시작/끝 프레임 지정을 지원합니다.
+3. **키프레임 → I2V 변환** — 확정된 이미지를 시작 프레임으로 넣고, 프롬프트에는 **움직임만** 지시합니다. Runway·Kling·Veo 모두 시작 프레임 입력을 지원하고, Kling·Veo는 끝 프레임 지정까지 가능합니다.
 
 ## 보너스: 끝 프레임 연결
 

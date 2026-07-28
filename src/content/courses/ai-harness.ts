@@ -221,7 +221,7 @@ promptfoo는 설정 파일 하나에 이벨의 3요소를 선언합니다.
 \`\`\`yaml
 # promptfooconfig.yaml
 prompts: [file://prompts/support-agent.txt]
-providers: [anthropic:claude-sonnet-4-5]
+providers: [anthropic:claude-sonnet-5]
 tests:
   - vars: { question: "환불은 며칠 걸리나요?" }
     assert:
@@ -269,7 +269,7 @@ tests:
               ],
               code: [
                 { id: "y1", text: "prompts: [file://prompts/support-agent.txt]" },
-                { id: "y2", text: "providers: [anthropic:claude-sonnet-4-5]" },
+                { id: "y2", text: "providers: [anthropic:claude-sonnet-5]" },
                 { id: "y3", text: "tests:" },
                 { id: "y4", text: "- vars: { question: \"해외 배송도 되나요?\" }", indent: 1 },
                 { id: "y5", text: "assert:", indent: 2 },

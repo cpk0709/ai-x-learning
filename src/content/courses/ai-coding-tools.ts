@@ -248,12 +248,12 @@ export const aiCodingTools: Course = {
 ## 설치와 실행
 
 \`\`\`bash
-npm install -g @anthropic-ai/claude-code
+curl -fsSL https://claude.ai/install.sh | bash
 cd my-project
 claude
 \`\`\`
 
-프로젝트 루트에서 \`claude\`를 실행하면 대화형 세션이 열립니다. 로그인은 최초 1회면 됩니다.
+공식 설치 스크립트 한 줄이면 됩니다(Windows는 PowerShell용 스크립트 제공). 프로젝트 루트에서 \`claude\`를 실행하면 대화형 세션이 열립니다. 로그인은 최초 1회면 됩니다.
 
 ## 첫 작업은 '읽기'부터
 
@@ -273,7 +273,7 @@ claude
             type: "terminal",
             windowTitle: "claude — 첫 작업",
             lines: [
-              { text: "npm install -g @anthropic-ai/claude-code", tone: "cmd" },
+              { text: "curl -fsSL https://claude.ai/install.sh | bash", tone: "cmd" },
               { text: "claude", tone: "cmd" },
               { text: "# 나: 이 프로젝트 구조를 요약해줘", tone: "comment" },
               { text: "Next.js 앱 — app/ 라우트, lib/에 결제·인증 로직", tone: "out" },

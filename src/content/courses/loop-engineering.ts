@@ -141,7 +141,7 @@ export const loopEngineering: Course = {
 ## MCP: 도구의 USB-C 포트
 
 - 예전에는 도구를 앱마다 다시 구현했습니다. MCP는 **도구 서버를 한 번 만들면 모든 AI 클라이언트에서 재사용**하게 해주는 개방형 프로토콜입니다.
-- Slack, GitHub, Postgres, 사내 API… 이미 수천 개의 MCP 서버가 공개돼 있습니다.
+- Slack, GitHub, Postgres, 사내 API… 이미 1만 개가 넘는 MCP 서버가 공개돼 있습니다.
 - Claude Code, Cursor 등 주요 에이전트 도구가 모두 MCP 클라이언트입니다.
 
 ## 도구 설계의 3원칙
@@ -299,7 +299,7 @@ cart.test.ts의 실패하는 테스트를 통과시켜 줘.
             lines: [
               { text: "npx vitest run", tone: "cmd" },
               { text: "✕ cart > 10% 할인 적용  (cart.test.ts:18)", tone: "err" },
-              { text: "  expected 2700, received 3000", tone: "dim" },
+              { text: "  expected 2700, received 3300", tone: "dim" },
               { text: "# 에이전트: cart.ts:42 할인율 계산 수정", tone: "comment" },
               { text: "npx vitest run", tone: "cmd" },
               { text: "✕ cart > 중복 쿠폰 방지  (cart.test.ts:31)", tone: "err" },

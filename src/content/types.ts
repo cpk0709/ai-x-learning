@@ -244,8 +244,8 @@ export const CATEGORY_META: Record<
     description: "AI 디자인, 영상 제작, 음악과 더빙",
   },
   business: {
-    label: "비즈니스 자동화",
-    description: "노코드 자동화, SNS 봇, 수익 창출",
+    label: "비즈니스 & 커리어",
+    description: "노코드 자동화, n8n, SNS 봇, 수익 창출, AI 시대의 PM",
   },
 };
 

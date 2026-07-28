@@ -17,7 +17,7 @@ export function Footer() {
           <ul className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
             <li><Link className="hover:text-foreground" href="/courses?category=dev">AI 개발</Link></li>
             <li><Link className="hover:text-foreground" href="/courses?category=creative">크리에이티브</Link></li>
-            <li><Link className="hover:text-foreground" href="/courses?category=business">비즈니스 자동화</Link></li>
+            <li><Link className="hover:text-foreground" href="/courses?category=business">비즈니스 & 커리어</Link></li>
           </ul>
         </div>
         <div>

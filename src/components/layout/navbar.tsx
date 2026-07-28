@@ -25,7 +25,7 @@ const NAV_LINKS = [
   { href: "/courses", label: "강의 탐색" },
   { href: "/courses?category=dev", label: "AI 개발" },
   { href: "/courses?category=creative", label: "크리에이티브" },
-  { href: "/courses?category=business", label: "비즈니스" },
+  { href: "/courses?category=business", label: "비즈니스·커리어" },
 ];
 
 export function Navbar() {

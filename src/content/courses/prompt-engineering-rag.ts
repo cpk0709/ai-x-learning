@@ -466,7 +466,7 @@ export const promptEngineeringRag: Course = {
               },
               {
                 label: "임베딩 모델",
-                sublabel: "텍스트 → 1,536차원 벡터",
+                sublabel: "텍스트 → 수백~수천 차원 벡터",
                 icon: "cpu",
                 tone: "accent",
                 edgeLabel: "문서와 같은 모델 사용",

@@ -148,7 +148,7 @@ export const nocodeAutomation: Course = {
 
 - **Zapier** — 가장 쉽고 연동 앱이 가장 많음(8,000개+). 직선형 Zap 중심이라 단순 자동화에 최적. AI 에이전트 빌더(Zapier Agents)로 자연어 기반 자동화까지 확장.
 - **Make.com** — 시각적 캔버스에서 분기·반복 등 복잡한 흐름을 그리기 좋음. 오퍼레이션 단가가 저렴해 대량 실행에 유리. AI Agents 기능으로 시나리오에 자율 판단 단계를 삽입 가능.
-- **n8n** — 오픈소스. 셀프호스팅하면 실행량 과금이 없고, 코드 노드와 LangChain 기반 AI 워크플로우로 확장성이 가장 큼. 대신 초기 학습과 서버 관리가 필요.
+- **n8n** — 소스 공개(페어코드 라이선스). 셀프호스팅하면 실행량 과금이 없고, 코드 노드와 LangChain 기반 AI 워크플로우로 확장성이 가장 큼. 대신 초기 학습과 서버 관리가 필요.
 
 ## 선택 기준 3문항
 
@@ -192,7 +192,7 @@ export const nocodeAutomation: Course = {
                 icon: "server",
                 tone: "muted",
                 items: [
-                  "오픈소스 · 셀프호스팅",
+                  "페어코드 · 셀프호스팅",
                   "실행량 과금 없음(자체 서버)",
                   "코드·AI 노드 확장성 최고",
                   "서버 관리 부담 있음",
@@ -501,7 +501,7 @@ Google Forms에 신청이 들어오면, Google Sheets에 자동 기록하고 Sla
             windowTitle: "terminal — 웹훅 테스트",
             lines: [
               { text: "# Make에서 발급받은 웹훅 URL로 테스트 데이터 전송", tone: "comment" },
-              { text: "curl -X POST https://hook.make.com/abc123 \\", tone: "cmd" },
+              { text: "curl -X POST https://hook.eu1.make.com/abc123 \\", tone: "cmd" },
               { text: "  -H 'Content-Type: application/json' \\", tone: "cmd" },
               { text: "  -d '{\"name\":\"김민준\",\"plan\":\"pro\",\"amount\":29000}'", tone: "cmd" },
               { text: "Accepted", tone: "ok" },
@@ -522,7 +522,7 @@ Google Forms에 신청이 들어오면, Google Sheets에 자동 기록하고 Sla
 - **일시적 에러** — API 서버 순간 장애, 요청 한도 초과(rate limit). **재시도하면 대부분 해결**됩니다.
 - **영구적 에러** — 필수 필드 누락, 잘못된 인증, 존재하지 않는 레코드. 재시도해도 똑같이 실패하므로 **사람에게 알려야** 합니다.
 
-## Make의 에러 핸들러 4종
+## Make의 에러 핸들러 디렉티브
 
 - **Retry(Break)** — 일정 간격을 두고 재시도. 일시적 에러의 기본기.
 - **Resume** — 대체 값을 넣고 계속 진행.
@@ -772,7 +772,7 @@ AI의 출력은 **다음 노드가 기계적으로 읽어야** 합니다. "환�
 
 ## 비용의 단위: 오퍼레이션
 
-- Make는 **노드 1회 실행 = 1 오퍼레이션**, Zapier는 트리거 이후 **스텝 1회 = 1 태스크**로 과금합니다.
+- Make는 **모듈(노드) 1회 실행 = 1 오퍼레이션**으로 세고, 청구는 크레딧 단위입니다 — 일반 모듈은 1 오퍼레이션 = 크레딧 1개, 내장 AI 기능은 사용량에 따라 더 씁니다. Zapier는 **액션 스텝 1회 성공 = 1 태스크**로 세며, 트리거와 필터·포매터 같은 내장 스텝은 태스크로 세지 않습니다.
 - 여기에 AI 노드는 **토큰 비용이 별도**로 듭니다 — AI 자동화 비용의 대부분은 이쪽입니다.
 
 ## 오퍼레이션 최적화 3수

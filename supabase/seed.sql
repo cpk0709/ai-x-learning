@@ -88,7 +88,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 ## MCP: 도구의 USB-C 포트
 
 - 예전에는 도구를 앱마다 다시 구현했습니다. MCP는 **도구 서버를 한 번 만들면 모든 AI 클라이언트에서 재사용**하게 해주는 개방형 프로토콜입니다.
-- Slack, GitHub, Postgres, 사내 API… 이미 수천 개의 MCP 서버가 공개돼 있습니다.
+- Slack, GitHub, Postgres, 사내 API… 이미 1만 개가 넘는 MCP 서버가 공개돼 있습니다.
 - Claude Code, Cursor 등 주요 에이전트 도구가 모두 MCP 클라이언트입니다.
 
 ## 도구 설계의 3원칙
@@ -163,7 +163,7 @@ cart.test.ts의 실패하는 테스트를 통과시켜 줘.
 - "통과할 때까지 반복해"라는 한 줄이 **루프 계약**을 만듭니다 — 이 문장이 없으면 한 번 고치고 멈추는 경우가 많습니다.
 
 > 💡 **핵심**: 프롬프트에 목표만 쓰지 말고 **검증 명령 + 반복 조건**을 함께 쓰세요. 그 순간 챗봇이 에이전트가 됩니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"claude — 자가 수정 루프","lines":[{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 10% 할인 적용  (cart.test.ts:18)","tone":"err"},{"text":"  expected 2700, received 3000","tone":"dim"},{"text":"# 에이전트: cart.ts:42 할인율 계산 수정","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 중복 쿠폰 방지  (cart.test.ts:31)","tone":"err"},{"text":"# 에이전트: 쿠폰 중복 가드 추가","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✓ 12 passed (12)","tone":"ok"},{"text":"목표 달성 — 루프 종료","tone":"ok"}],"caption":"실패 → 수정 → 재검증이 사람 개입 없이 3회 반복된 실제 루프 흐름입니다."}$aix$::jsonb, $aix${"title":"에디터에서 자가 수정 루프 따라하기","app":{"kind":"code-editor","windowTitle":"cart.ts — AI 에이전트 세션","files":[{"id":"f-cart","name":"cart.ts","active":true},{"id":"f-test","name":"cart.test.ts"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"c1","text":"export function applyDiscount(total: number) {"},{"id":"c2","text":"// 10% 할인 쿠폰 적용","indent":1,"tone":"comment"},{"id":"c3","text":"return total * 1.1; // ← 버그: 할인이 아니라 할증","indent":1,"tone":"del"},{"id":"c4","text":"return total * 0.9;","indent":1,"tone":"add","hidden":true},{"id":"c5","text":"}"}],"terminal":[{"id":"t1","text":"npx vitest run","tone":"cmd","hidden":true},{"id":"t2","text":"✕ cart > 10% 할인 적용 (cart.test.ts:18)","tone":"err","hidden":true},{"id":"t3","text":"  expected 2700, received 3300","tone":"out","hidden":true},{"id":"t4","text":"npx vitest run","tone":"cmd","hidden":true},{"id":"t5","text":"✓ 12 passed (12) — 루프 종료","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 먼저 테스트를 실행해 실패 신호를 확인합니다"},{"t":"type","target":"t1","text":"npx vitest run"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"② 에러가 가리키는 라인으로 이동합니다"},{"t":"move","target":"c3"},{"t":"dblclick","target":"c3"},{"t":"caption","text":"③ 할인율 계산을 수정합니다 (1.1 → 0.9)"},{"t":"type","target":"c4","text":"return total * 0.9;"},{"t":"wait","ms":500},{"t":"caption","text":"④ 같은 명령으로 재검증 — 이것이 루프입니다"},{"t":"type","target":"t4","text":"npx vitest run"},{"t":"reveal","target":"t5"},{"t":"move","target":"t5"},{"t":"caption","text":"✅ 테스트 통과 — 성공 종료 조건 달성"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 4
+  $aix${"type":"terminal","windowTitle":"claude — 자가 수정 루프","lines":[{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 10% 할인 적용  (cart.test.ts:18)","tone":"err"},{"text":"  expected 2700, received 3300","tone":"dim"},{"text":"# 에이전트: cart.ts:42 할인율 계산 수정","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 중복 쿠폰 방지  (cart.test.ts:31)","tone":"err"},{"text":"# 에이전트: 쿠폰 중복 가드 추가","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✓ 12 passed (12)","tone":"ok"},{"text":"목표 달성 — 루프 종료","tone":"ok"}],"caption":"실패 → 수정 → 재검증이 사람 개입 없이 3회 반복된 실제 루프 흐름입니다."}$aix$::jsonb, $aix${"title":"에디터에서 자가 수정 루프 따라하기","app":{"kind":"code-editor","windowTitle":"cart.ts — AI 에이전트 세션","files":[{"id":"f-cart","name":"cart.ts","active":true},{"id":"f-test","name":"cart.test.ts"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"c1","text":"export function applyDiscount(total: number) {"},{"id":"c2","text":"// 10% 할인 쿠폰 적용","indent":1,"tone":"comment"},{"id":"c3","text":"return total * 1.1; // ← 버그: 할인이 아니라 할증","indent":1,"tone":"del"},{"id":"c4","text":"return total * 0.9;","indent":1,"tone":"add","hidden":true},{"id":"c5","text":"}"}],"terminal":[{"id":"t1","text":"npx vitest run","tone":"cmd","hidden":true},{"id":"t2","text":"✕ cart > 10% 할인 적용 (cart.test.ts:18)","tone":"err","hidden":true},{"id":"t3","text":"  expected 2700, received 3300","tone":"out","hidden":true},{"id":"t4","text":"npx vitest run","tone":"cmd","hidden":true},{"id":"t5","text":"✓ 12 passed (12) — 루프 종료","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 먼저 테스트를 실행해 실패 신호를 확인합니다"},{"t":"type","target":"t1","text":"npx vitest run"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"② 에러가 가리키는 라인으로 이동합니다"},{"t":"move","target":"c3"},{"t":"dblclick","target":"c3"},{"t":"caption","text":"③ 할인율 계산을 수정합니다 (1.1 → 0.9)"},{"t":"type","target":"c4","text":"return total * 0.9;"},{"t":"wait","ms":500},{"t":"caption","text":"④ 같은 명령으로 재검증 — 이것이 루프입니다"},{"t":"type","target":"t4","text":"npx vitest run"},{"t":"reveal","target":"t5"},{"t":"move","target":"t5"},{"t":"caption","text":"✅ 테스트 통과 — 성공 종료 조건 달성"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -422,7 +422,7 @@ promptfoo는 설정 파일 하나에 이벨의 3요소를 선언합니다.
 ```yaml
 # promptfooconfig.yaml
 prompts: [file://prompts/support-agent.txt]
-providers: [anthropic:claude-sonnet-4-5]
+providers: [anthropic:claude-sonnet-5]
 tests:
   - vars: { question: "환불은 며칠 걸리나요?" }
     assert:
@@ -442,7 +442,7 @@ tests:
 합격률 숫자 자체보다 **실패한 케이스의 출력**을 직접 읽으세요. assertion이 너무 빡빡하거나 헐거운 곳이 반드시 발견되고, 그걸 고치는 과정이 곧 이벨 튜닝입니다.
 
 > 💡 **핵심**: 하네스 세팅의 완성 기준은 "명령 한 줄로 전체 데이터셋이 돌고 합격률이 나오는가"입니다. 그 한 줄이 이후 모든 자동화의 기반이 됩니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"promptfoo — 첫 이벨 실행","lines":[{"text":"npx promptfoo eval","tone":"cmd"},{"text":"Running 42 test cases across 1 provider...","tone":"dim"},{"text":"✓ [contains] 환불은 며칠 걸리나요?","tone":"ok"},{"text":"✓ [llm-rubric] 배송 조회 방법 알려줘","tone":"ok"},{"text":"✕ [contains] 해외 배송도 되나요?","tone":"err"},{"text":"  expected \"관세\" in output","tone":"dim"},{"text":"─────────────────────────────","tone":"dim"},{"text":"Pass rate: 36/42 (85.7%)","tone":"out"},{"text":"npx promptfoo view  # 웹 UI로 실패 케이스 확인","tone":"comment"}],"caption":"명령 한 줄 = 데이터셋 전체 실행 + 자동 채점 + 합격률. 이것이 하네스입니다."}$aix$::jsonb, $aix${"title":"promptfoo로 첫 이벨 실행 따라하기","app":{"kind":"code-editor","windowTitle":"promptfooconfig.yaml — 이벨 하네스","files":[{"id":"f-config","name":"promptfooconfig.yaml","active":true},{"id":"f-prompt","name":"prompts/support-agent.txt"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"y1","text":"prompts: [file://prompts/support-agent.txt]"},{"id":"y2","text":"providers: [anthropic:claude-sonnet-4-5]"},{"id":"y3","text":"tests:"},{"id":"y4","text":"- vars: { question: \"해외 배송도 되나요?\" }","indent":1},{"id":"y5","text":"assert:","indent":2},{"id":"y6","text":"- type: contains","indent":3},{"id":"y7","text":"value: \"관세\" # ← 너무 빡빡한 기준","indent":4,"tone":"del"},{"id":"y8","text":"value: \"해외 배송\"","indent":4,"tone":"add","hidden":true},{"id":"y9","text":"- type: llm-rubric","indent":3,"hidden":true},{"id":"y10","text":"value: \"배송 가능 여부를 정확히 안내\"","indent":4,"hidden":true}],"terminal":[{"id":"t1","text":"npx promptfoo eval","tone":"cmd","hidden":true},{"id":"t2","text":"✕ [contains] 해외 배송도 되나요?","tone":"err","hidden":true},{"id":"t3","text":"  expected \"관세\" in output","tone":"out","hidden":true},{"id":"t4","text":"Pass rate: 36/42 (85.7%)","tone":"out","hidden":true},{"id":"t5","text":"npx promptfoo eval","tone":"cmd","hidden":true},{"id":"t6","text":"✓ [contains] 해외 배송도 되나요?","tone":"ok","hidden":true},{"id":"t7","text":"Pass rate: 42/42 (100%)","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 설정 파일의 3요소(프롬프트·모델·테스트)를 확인합니다"},{"t":"move","target":"y1"},{"t":"move","target":"y3"},{"t":"caption","text":"② 명령 한 줄로 전체 데이터셋을 실행합니다"},{"t":"type","target":"t1","text":"npx promptfoo eval"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"reveal","target":"t4"},{"t":"wait","ms":600},{"t":"caption","text":"③ 실패 케이스를 읽고 너무 빡빡한 assertion을 찾습니다"},{"t":"move","target":"y7"},{"t":"dblclick","target":"y7"},{"t":"caption","text":"④ assertion을 실제 기준에 맞게 고칩니다"},{"t":"type","target":"y8","text":"value: \"해외 배송\""},{"t":"reveal","target":"y9"},{"t":"reveal","target":"y10"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 같은 명령으로 재실행해 합격률 변화를 확인합니다"},{"t":"type","target":"t5","text":"npx promptfoo eval"},{"t":"reveal","target":"t6"},{"t":"reveal","target":"t7"},{"t":"move","target":"t7"},{"t":"caption","text":"✅ 합격률 100% — 첫 하네스 세팅 완료입니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
+  $aix${"type":"terminal","windowTitle":"promptfoo — 첫 이벨 실행","lines":[{"text":"npx promptfoo eval","tone":"cmd"},{"text":"Running 42 test cases across 1 provider...","tone":"dim"},{"text":"✓ [contains] 환불은 며칠 걸리나요?","tone":"ok"},{"text":"✓ [llm-rubric] 배송 조회 방법 알려줘","tone":"ok"},{"text":"✕ [contains] 해외 배송도 되나요?","tone":"err"},{"text":"  expected \"관세\" in output","tone":"dim"},{"text":"─────────────────────────────","tone":"dim"},{"text":"Pass rate: 36/42 (85.7%)","tone":"out"},{"text":"npx promptfoo view  # 웹 UI로 실패 케이스 확인","tone":"comment"}],"caption":"명령 한 줄 = 데이터셋 전체 실행 + 자동 채점 + 합격률. 이것이 하네스입니다."}$aix$::jsonb, $aix${"title":"promptfoo로 첫 이벨 실행 따라하기","app":{"kind":"code-editor","windowTitle":"promptfooconfig.yaml — 이벨 하네스","files":[{"id":"f-config","name":"promptfooconfig.yaml","active":true},{"id":"f-prompt","name":"prompts/support-agent.txt"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"y1","text":"prompts: [file://prompts/support-agent.txt]"},{"id":"y2","text":"providers: [anthropic:claude-sonnet-5]"},{"id":"y3","text":"tests:"},{"id":"y4","text":"- vars: { question: \"해외 배송도 되나요?\" }","indent":1},{"id":"y5","text":"assert:","indent":2},{"id":"y6","text":"- type: contains","indent":3},{"id":"y7","text":"value: \"관세\" # ← 너무 빡빡한 기준","indent":4,"tone":"del"},{"id":"y8","text":"value: \"해외 배송\"","indent":4,"tone":"add","hidden":true},{"id":"y9","text":"- type: llm-rubric","indent":3,"hidden":true},{"id":"y10","text":"value: \"배송 가능 여부를 정확히 안내\"","indent":4,"hidden":true}],"terminal":[{"id":"t1","text":"npx promptfoo eval","tone":"cmd","hidden":true},{"id":"t2","text":"✕ [contains] 해외 배송도 되나요?","tone":"err","hidden":true},{"id":"t3","text":"  expected \"관세\" in output","tone":"out","hidden":true},{"id":"t4","text":"Pass rate: 36/42 (85.7%)","tone":"out","hidden":true},{"id":"t5","text":"npx promptfoo eval","tone":"cmd","hidden":true},{"id":"t6","text":"✓ [contains] 해외 배송도 되나요?","tone":"ok","hidden":true},{"id":"t7","text":"Pass rate: 42/42 (100%)","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 설정 파일의 3요소(프롬프트·모델·테스트)를 확인합니다"},{"t":"move","target":"y1"},{"t":"move","target":"y3"},{"t":"caption","text":"② 명령 한 줄로 전체 데이터셋을 실행합니다"},{"t":"type","target":"t1","text":"npx promptfoo eval"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"reveal","target":"t4"},{"t":"wait","ms":600},{"t":"caption","text":"③ 실패 케이스를 읽고 너무 빡빡한 assertion을 찾습니다"},{"t":"move","target":"y7"},{"t":"dblclick","target":"y7"},{"t":"caption","text":"④ assertion을 실제 기준에 맞게 고칩니다"},{"t":"type","target":"y8","text":"value: \"해외 배송\""},{"t":"reveal","target":"y9"},{"t":"reveal","target":"y10"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 같은 명령으로 재실행해 합격률 변화를 확인합니다"},{"t":"type","target":"t5","text":"npx promptfoo eval"},{"t":"reveal","target":"t6"},{"t":"reveal","target":"t7"},{"t":"move","target":"t7"},{"t":"caption","text":"✅ 합격률 100% — 첫 하네스 세팅 완료입니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -783,7 +783,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 임베딩 모델을 교체하면 **전체 문서 재임베딩**이 필요합니다 — 교체 비용을 설계에 반영하세요.
 
 > 💡 **핵심**: 벡터 검색 = 질문과 문서를 **같은 의미 공간의 좌표**로 바꾼 뒤, 가장 가까운 이웃을 찾는 것입니다.$aix$,
-  $aix${"type":"flow","title":"벡터 검색의 흐름","nodes":[{"label":"질문","sublabel":"\"환불 규정 알려줘\"","icon":"message","tone":"primary"},{"label":"임베딩 모델","sublabel":"텍스트 → 1,536차원 벡터","icon":"cpu","tone":"accent","edgeLabel":"문서와 같은 모델 사용"},{"label":"벡터 DB (ANN 인덱스)","sublabel":"미리 임베딩된 문서 벡터들","icon":"database","tone":"muted"},{"label":"최근접 이웃 top-k","sublabel":"\"반품 정책\" 문서 발견","icon":"target","tone":"success","edgeLabel":"코사인 유사도 순 정렬"}],"caption":"단어가 아니라 좌표가 가까운 문서를 찾으므로, 표현이 달라도 의미로 매칭됩니다."}$aix$::jsonb, null, 6, 5
+  $aix${"type":"flow","title":"벡터 검색의 흐름","nodes":[{"label":"질문","sublabel":"\"환불 규정 알려줘\"","icon":"message","tone":"primary"},{"label":"임베딩 모델","sublabel":"텍스트 → 수백~수천 차원 벡터","icon":"cpu","tone":"accent","edgeLabel":"문서와 같은 모델 사용"},{"label":"벡터 DB (ANN 인덱스)","sublabel":"미리 임베딩된 문서 벡터들","icon":"database","tone":"muted"},{"label":"최근접 이웃 top-k","sublabel":"\"반품 정책\" 문서 발견","icon":"target","tone":"success","edgeLabel":"코사인 유사도 순 정렬"}],"caption":"단어가 아니라 좌표가 가까운 문서를 찾으므로, 표현이 달라도 의미로 매칭됩니다."}$aix$::jsonb, null, 6, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -1036,12 +1036,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 ## 설치와 실행
 
 ```bash
-npm install -g @anthropic-ai/claude-code
+curl -fsSL https://claude.ai/install.sh | bash
 cd my-project
 claude
 ```
 
-프로젝트 루트에서 `claude`를 실행하면 대화형 세션이 열립니다. 로그인은 최초 1회면 됩니다.
+공식 설치 스크립트 한 줄이면 됩니다(Windows는 PowerShell용 스크립트 제공). 프로젝트 루트에서 `claude`를 실행하면 대화형 세션이 열립니다. 로그인은 최초 1회면 됩니다.
 
 ## 첫 작업은 '읽기'부터
 
@@ -1057,7 +1057,7 @@ claude
 "로그인 버튼 라벨을 '시작하기'로 바꾸고, 빌드가 통과하는지 확인해줘" — 이렇게 **검증까지 포함한 작은 작업**이 좋은 출발점입니다. Claude Code는 파일을 수정하기 전 diff를 보여주고 승인을 요청하므로, 처음에는 하나씩 확인하며 신뢰를 쌓으세요.
 
 > 💡 **핵심**: 첫 작업 공식 = **읽기 요청 → 작은 수정 + 검증**. 자율성은 신뢰가 쌓인 만큼만 넓히세요.$aix$,
-  $aix${"type":"terminal","windowTitle":"claude — 첫 작업","lines":[{"text":"npm install -g @anthropic-ai/claude-code","tone":"cmd"},{"text":"claude","tone":"cmd"},{"text":"# 나: 이 프로젝트 구조를 요약해줘","tone":"comment"},{"text":"Next.js 앱 — app/ 라우트, lib/에 결제·인증 로직","tone":"out"},{"text":"# 나: 로그인 버튼 라벨을 '시작하기'로 바꾸고 빌드 확인해줘","tone":"comment"},{"text":"● app/login/page.tsx 수정 제안 (diff 승인 대기)","tone":"dim"},{"text":"npm run build","tone":"cmd"},{"text":"✓ Compiled successfully","tone":"ok"},{"text":"완료 — 라벨 변경 + 빌드 통과 확인","tone":"ok"}],"caption":"읽기 → 작은 수정 → 검증. 첫 세션에서 이 흐름을 그대로 따라 해보세요."}$aix$::jsonb, $aix${"title":"Claude Code 첫 작업 따라하기","app":{"kind":"code-editor","windowTitle":"my-project — Claude Code 세션","files":[{"id":"f-page","name":"login/page.tsx","active":true},{"id":"f-auth","name":"lib/auth.ts"},{"id":"f-readme","name":"README.md"}],"code":[{"id":"c1","text":"export default function LoginPage() {"},{"id":"c2","text":"return (","indent":1},{"id":"c3","text":"<Button>로그인</Button>","indent":2,"tone":"del"},{"id":"c4","text":"<Button>시작하기</Button>","indent":2,"tone":"add","hidden":true},{"id":"c5","text":");","indent":1},{"id":"c6","text":"}"}],"terminal":[{"id":"t1","text":"claude","tone":"cmd","hidden":true},{"id":"t2","text":"> 로그인 버튼 라벨을 '시작하기'로 바꿔줘","tone":"cmd","hidden":true},{"id":"t3","text":"● login/page.tsx 수정 제안 (diff 승인 대기)","tone":"out","hidden":true},{"id":"t4","text":"npm run build","tone":"cmd","hidden":true},{"id":"t5","text":"✓ Compiled successfully","tone":"ok","hidden":true},{"id":"t6","text":"완료 — 라벨 변경 + 빌드 통과 확인","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 프로젝트 루트에서 claude를 실행합니다"},{"t":"type","target":"t1","text":"claude"},{"t":"wait","ms":500},{"t":"caption","text":"② 작고 검증 가능한 작업을 지시합니다"},{"t":"type","target":"t2","text":"> 로그인 버튼 라벨을 '시작하기'로 바꿔줘"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"③ 에이전트가 제안한 diff를 확인하고 승인합니다"},{"t":"move","target":"c3"},{"t":"click"},{"t":"reveal","target":"c4"},{"t":"wait","ms":500},{"t":"caption","text":"④ 빌드 명령으로 변경을 검증합니다"},{"t":"type","target":"t4","text":"npm run build"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"move","target":"t6"},{"t":"caption","text":"⑤ 작은 수정 + 검증 완료 — 신뢰가 한 칸 쌓였습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
+  $aix${"type":"terminal","windowTitle":"claude — 첫 작업","lines":[{"text":"curl -fsSL https://claude.ai/install.sh | bash","tone":"cmd"},{"text":"claude","tone":"cmd"},{"text":"# 나: 이 프로젝트 구조를 요약해줘","tone":"comment"},{"text":"Next.js 앱 — app/ 라우트, lib/에 결제·인증 로직","tone":"out"},{"text":"# 나: 로그인 버튼 라벨을 '시작하기'로 바꾸고 빌드 확인해줘","tone":"comment"},{"text":"● app/login/page.tsx 수정 제안 (diff 승인 대기)","tone":"dim"},{"text":"npm run build","tone":"cmd"},{"text":"✓ Compiled successfully","tone":"ok"},{"text":"완료 — 라벨 변경 + 빌드 통과 확인","tone":"ok"}],"caption":"읽기 → 작은 수정 → 검증. 첫 세션에서 이 흐름을 그대로 따라 해보세요."}$aix$::jsonb, $aix${"title":"Claude Code 첫 작업 따라하기","app":{"kind":"code-editor","windowTitle":"my-project — Claude Code 세션","files":[{"id":"f-page","name":"login/page.tsx","active":true},{"id":"f-auth","name":"lib/auth.ts"},{"id":"f-readme","name":"README.md"}],"code":[{"id":"c1","text":"export default function LoginPage() {"},{"id":"c2","text":"return (","indent":1},{"id":"c3","text":"<Button>로그인</Button>","indent":2,"tone":"del"},{"id":"c4","text":"<Button>시작하기</Button>","indent":2,"tone":"add","hidden":true},{"id":"c5","text":");","indent":1},{"id":"c6","text":"}"}],"terminal":[{"id":"t1","text":"claude","tone":"cmd","hidden":true},{"id":"t2","text":"> 로그인 버튼 라벨을 '시작하기'로 바꿔줘","tone":"cmd","hidden":true},{"id":"t3","text":"● login/page.tsx 수정 제안 (diff 승인 대기)","tone":"out","hidden":true},{"id":"t4","text":"npm run build","tone":"cmd","hidden":true},{"id":"t5","text":"✓ Compiled successfully","tone":"ok","hidden":true},{"id":"t6","text":"완료 — 라벨 변경 + 빌드 통과 확인","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 프로젝트 루트에서 claude를 실행합니다"},{"t":"type","target":"t1","text":"claude"},{"t":"wait","ms":500},{"t":"caption","text":"② 작고 검증 가능한 작업을 지시합니다"},{"t":"type","target":"t2","text":"> 로그인 버튼 라벨을 '시작하기'로 바꿔줘"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"③ 에이전트가 제안한 diff를 확인하고 승인합니다"},{"t":"move","target":"c3"},{"t":"click"},{"t":"reveal","target":"c4"},{"t":"wait","ms":500},{"t":"caption","text":"④ 빌드 명령으로 변경을 검증합니다"},{"t":"type","target":"t4","text":"npm run build"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"move","target":"t6"},{"t":"caption","text":"⑤ 작은 수정 + 검증 완료 — 신뢰가 한 칸 쌓였습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -1249,6 +1249,321 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 > 💡 **핵심**: 속도 지표(리드 타임)와 **안전 지표(되돌림 비율)를 반드시 함께** 보세요. 한쪽만 보는 측정은 측정이 아닙니다.$aix$,
   $aix${"type":"cycle","title":"생산성 측정 루프","center":"월 단위 반복","nodes":[{"label":"기준선 수립","sublabel":"도입 전 4주 지표","icon":"gauge"},{"label":"지표 수집","sublabel":"리드 타임 · 되돌림 비율","icon":"chart"},{"label":"비교·해석","sublabel":"속도와 안전을 함께","icon":"eye"},{"label":"정책 조정","sublabel":"리뷰 기준 · 자율 범위","icon":"settings"}],"caption":"측정도 루프입니다 — 기준선 없이 시작한 측정은 해석할 수 없습니다."}$aix$::jsonb, null, 5, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: AI 게임 개발: 에셋부터 NPC까지
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '92dd9e34-7cd9-7121-64e6-b0bc90ca874b', 'ai-game-dev', 'AI 게임 개발: 에셋부터 NPC까지', $aix$아트팀도 QA팀도 없는 1인 개발자가 상용 수준의 게임을 완성하는 시대입니다. 이 강의에서는 기획·에셋·코드·QA로 이어지는 게임 제작 파이프라인의 각 단계에 AI를 결합하는 법을 다룹니다. 2D 스프라이트와 3D 모델 생성, LLM 기반 NPC 대화, AI 에이전트를 이용한 게임플레이 코드 작성과 플레이테스트 자동화, 그리고 Steam AI 고지 정책과 저작권 리스크 대응까지 — 2026년 기준으로 실제 동작하는 워크플로우만 담았습니다.$aix$,
+  null, 'dev', 'intermediate', array['Unity', 'Unreal', 'AI 에셋 생성', 'LLM NPC', '1인 개발']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '3dd9a655-290c-de11-782f-3aee636c73f8', '92dd9e34-7cd9-7121-64e6-b0bc90ca874b', 'ai-gamedev-landscape', 'AI 게임 개발 지형도', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'cefe6985-4404-2735-0bcd-cafed3e5c2c1', '92dd9e34-7cd9-7121-64e6-b0bc90ca874b', 'asset-content-generation', '에셋과 콘텐츠 생성', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '49b41a03-0628-9610-f25c-86fa0c90baf9', '92dd9e34-7cd9-7121-64e6-b0bc90ca874b', 'code-qa-launch', '코드·QA·출시', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3f7c2e68-e622-b591-daf1-a3c79f255e56', '3dd9a655-290c-de11-782f-3aee636c73f8', 'ai-game-dev/pipeline-shift', 'pipeline-shift', '게임 제작 파이프라인, AI가 바꾼 것과 못 바꾼 것',
+  $aix$"팀이 없어서 못 만든다"는 말은 2026년에 절반만 사실입니다. 게임 제작의 어떤 단계는 AI가 10배 빨라졌고, 어떤 단계는 여전히 사람의 몫입니다.
+
+## 파이프라인 4단계별 변화
+
+- **기획**: 컨셉 브레인스토밍, 세계관 문서, 밸런스 시트 초안 — AI가 초안을 만들고 사람이 방향을 잡습니다.
+- **에셋**: 가장 극적인 변화. 스프라이트·3D 모델·텍스처·사운드를 텍스트 한 줄로 생성합니다.
+- **코드**: AI 에이전트가 엔진과 직접 연동(MCP)되어 스크립트를 쓰고 직접 테스트까지 돌립니다.
+- **QA**: AI 봇이 수백 번 플레이하며 진행 불가 구간과 밸런스 붕괴를 찾아냅니다.
+
+## 여전히 사람이 해야 하는 것
+
+- **재미의 판단** — "이게 재밌는가"는 어떤 지표로도 대체되지 않습니다.
+- **일관된 아트 디렉션** — 생성은 AI가 해도, 스타일의 기준을 세우는 건 사람입니다.
+- **스코프 결정** — 무엇을 만들지 않을지 정하는 일이야말로 1인 개발의 핵심 기술입니다.
+
+> 💡 **핵심**: AI는 "만드는 속도"를 바꿨지, "무엇을 만들지 판단하는 일"을 바꾸지 못했습니다. 이 강의는 그 둘을 결합하는 법을 다룹니다.$aix$,
+  $aix${"type":"grid","title":"파이프라인 단계별 AI 영향도","items":[{"label":"기획","sublabel":"초안 생성 · 방향은 사람","icon":"lightbulb","tone":"accent"},{"label":"에셋","sublabel":"가장 큰 변화 · 텍스트→에셋","icon":"image","tone":"primary"},{"label":"코드","sublabel":"에이전트가 작성·검증","icon":"code","tone":"primary"},{"label":"QA","sublabel":"봇이 수백 회 플레이","icon":"test-tube","tone":"accent"},{"label":"재미의 판단","sublabel":"여전히 사람의 몫","icon":"user","tone":"warning"},{"label":"아트 디렉션","sublabel":"스타일 기준은 사람이","icon":"palette","tone":"warning"}],"caption":"보라색은 AI가 강한 영역, 노란색은 사람이 지켜야 할 영역입니다."}$aix$::jsonb, null, 4, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c597d856-14c7-319a-b126-4b59c175e672', '3dd9a655-290c-de11-782f-3aee636c73f8', 'ai-game-dev/engine-ai-tools', 'engine-ai-tools', '엔진별 AI 도구 현황: Unity AI vs Unreal',
+  $aix$엔진을 고르기 전에 각 엔진의 AI 지원 현황을 알아야 합니다. 2026년 현재 두 엔진의 접근은 뚜렷하게 다릅니다.
+
+## Unity: 에디터 안의 'Unity AI'
+
+Unity 6.2부터 베타로 불리던 Muse가 은퇴하고 **Unity AI**가 에디터에 정식 탑재됐습니다.
+
+- **Assistant** — 프로젝트 컨텍스트를 이해하는 에디터 내 어시스턴트. 질문 답변, 코드 리팩터링.
+- **Generators** — 스프라이트·텍스처·머티리얼·애니메이션·사운드 생성 도구 모음.
+- **Inference Engine** — 구 Sentis의 새 이름. 게임 안에서 AI 모델을 **로컬 추론**으로 돌립니다.
+
+Muse와의 결정적 차이는 서드파티 모델(외부 AI)을 쓴다는 점입니다.
+
+## Unreal: MCP로 여는 에이전트 통합
+
+- **UE 5.8**에 MCP 서버와 AI 작업용 Skills가 탑재되어, 외부 AI 에이전트가 씬을 검사하고 조작할 수 있습니다.
+- 2026년 State of Unreal에서 발표된 **UE6**(2027년 말 얼리 액세스 목표)는 Claude·Gemini 등 모델을 1급 시민으로 통합해 레벨 셋업, 리깅, 라이팅 조정 같은 반복 작업을 맡길 계획입니다.
+
+## 선택 기준
+
+- 에디터 안에서 통합된 생성 도구를 원하면 → Unity
+- 외부 AI 에이전트와의 연동 자유도를 원하면 → Unreal (또는 Unity + 커뮤니티 MCP)
+
+> 💡 **핵심**: 두 엔진 모두 방향은 같습니다 — "AI가 에디터를 직접 조작하되, 최종 편집권은 개발자에게". 도구 이름보다 이 구조를 기억하세요.$aix$,
+  $aix${"type":"compare","title":"Unity AI vs Unreal의 AI 전략","columns":[{"title":"Unity (6.2+)","icon":"layers","tone":"primary","items":["Unity AI 정식 탑재 (Muse 은퇴)","Assistant: 에디터 내 어시스턴트","Generators: 에셋 생성 도구 모음","Inference Engine: 런타임 로컬 추론"]},{"title":"Unreal (5.8 → UE6)","icon":"rocket","tone":"accent","items":["UE 5.8: MCP 서버 · AI Skills","외부 에이전트가 씬 검사·조작","UE6: Claude·Gemini 통합 예고","얼리 액세스 2027년 말 목표"]}],"caption":"통합 생성 도구의 Unity, 에이전트 개방의 Unreal — 방향은 같고 순서가 다릅니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '84a7ab92-1543-7129-3684-3991ead24dcc', '3dd9a655-290c-de11-782f-3aee636c73f8', 'ai-game-dev/solo-dev-scope', 'solo-dev-scope', '1인 개발의 현실적 스코프 설계',
+  $aix$AI가 있으니 MMORPG도 혼자 만들 수 있을까요? 아니요. AI 시대의 1인 개발은 **스코프를 넓히는 게 아니라 완성도를 높이는** 방향으로 설계해야 합니다.
+
+## AI가 시간을 줄여주는 곳 vs 아닌 곳
+
+AI 코딩 도구가 강한 영역과 약한 영역은 명확히 갈립니다.
+
+- **강함**: 싱글플레이 로직, 에디터 툴, UI, 표준적인 물리·상태머신, 에셋 파이프라인
+- **약함**: 실시간 멀티플레이 넷코드, 프레임 단위 타이밍, 거대한 상태를 가진 RPG 시스템
+
+약한 영역이 게임의 중심이면, AI 배수 효과가 사라집니다.
+
+## 스코프 설계 3원칙
+
+1. **AI가 강한 영역에 게임을 세우세요** — 싱글플레이 + 절차적 다양성 조합이 1인 개발의 스위트 스폿입니다.
+2. **에셋 종류를 줄이고 스타일을 통일하세요** — 생성 자체보다 일관성 유지가 비용입니다 (모듈 2에서 다룹니다).
+3. **수직 슬라이스를 먼저** — 1개 레벨을 출시 품질로 완성해 보면, 전체 스코프의 진짜 비용이 보입니다.
+
+## 현실적인 목표선
+
+"AAA를 혼자"가 아니라 **"과거 5인 팀 규모의 완성도를 혼자"**가 2026년의 현실적인 기준입니다.
+
+> 💡 **핵심**: AI는 스코프의 상한을 올리는 도구가 아니라, 같은 스코프의 **완성도와 속도**를 올리는 도구입니다.$aix$,
+  $aix${"type":"steps","title":"1인 개발 스코프 설계 순서","steps":[{"label":"장르를 AI 강점에 맞추기","sublabel":"싱글플레이 · 표준 메커닉 중심","icon":"target"},{"label":"에셋 스타일 1개로 통일","sublabel":"종류를 줄이면 일관성 비용 감소","icon":"palette"},{"label":"수직 슬라이스 제작","sublabel":"레벨 1개를 출시 품질로","icon":"scissors"},{"label":"비용 측정 후 전체 계획","sublabel":"슬라이스 x 레벨 수 = 진짜 스코프","icon":"chart"}],"caption":"수직 슬라이스가 스코프 계산기입니다 — 계획은 그 다음입니다."}$aix$::jsonb, null, 5, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f4c9a1c2-e439-ee03-86d6-7606c4bb8a98', 'cefe6985-4404-2735-0bcd-cafed3e5c2c1', 'ai-game-dev/2d-sprite-workflow', '2d-sprite-workflow', '2D 스프라이트·컨셉아트: 일관성이 전부다',
+  $aix$이미지 생성 AI로 멋진 스프라이트 한 장을 만드는 건 쉽습니다. 어려운 것은 **100장을 같은 게임처럼 보이게** 만드는 일입니다.
+
+## 일관성이 무너지는 지점
+
+- 캐릭터가 컷마다 미묘하게 다르게 생김
+- 아이템 아이콘마다 명암·선 굵기가 제각각
+- 달리기·점프·공격 프레임 사이에서 디테일이 흔들림
+
+## 일관성 유지 워크플로우
+
+1. **스타일 바이블 먼저** — 대표 이미지 10~20장으로 색·선·명암 기준을 정합니다.
+2. **커스텀 모델(LoRA) 학습** — Scenario 같은 도구는 내 아트로 LoRA를 학습시켜 모든 출력이 같은 스타일로 나오게 합니다. 2026년 2D 워크플로우의 표준입니다.
+3. **베이스 스프라이트 → 애니메이션 분리** — AI는 단일 스프라이트에 강하고 프레임 간 일관성에 약합니다. 깨끗한 베이스 1장을 생성한 뒤, 리깅 도구나 프레임 보간으로 애니메이션을 만드는 게 실무 패턴입니다.
+4. **후보정은 사람 손으로** — 최종 픽셀 정리와 팔레트 통일은 사람이 마무리합니다 (저작권 측면에서도 유리합니다 — 모듈 3 참고).
+
+> 💡 **핵심**: 2D 에셋 생성의 성패는 프롬프트가 아니라 **커스텀 모델 학습 + 베이스/애니메이션 분리**라는 파이프라인 설계에 달려 있습니다.$aix$,
+  $aix${"type":"flow","title":"일관성 있는 2D 에셋 파이프라인","nodes":[{"label":"스타일 바이블 확정","sublabel":"대표 이미지 10~20장","icon":"book","tone":"warning"},{"label":"커스텀 모델(LoRA) 학습","sublabel":"내 아트 스타일로 고정","icon":"brain","tone":"primary"},{"label":"베이스 스프라이트 생성","sublabel":"캐릭터·아이템·타일","icon":"image","tone":"accent"},{"label":"리깅·보간으로 애니메이션","sublabel":"프레임 일관성은 도구로","icon":"repeat","tone":"accent"},{"label":"사람 손 후보정 → 엔진 임포트","sublabel":"팔레트 통일 · 픽셀 정리","icon":"check","tone":"success"}],"caption":"생성은 3단계일 뿐 — 앞의 기준 잡기와 뒤의 정리가 품질을 만듭니다."}$aix$::jsonb, $aix${"title":"생성한 스프라이트를 레벨에 배치 따라하기","app":{"kind":"design-canvas","windowTitle":"숲 스테이지 — 레벨 에디터","tools":[{"id":"tool-select","icon":"target","label":"선택"},{"id":"tool-asset","icon":"image","label":"에셋"},{"id":"tool-play","icon":"play","label":"테스트"}],"objects":[{"id":"level","shape":"frame","label":"Stage 1","x":6,"y":8,"w":88,"h":84},{"id":"ground","shape":"rect","x":8,"y":72,"w":84,"h":16,"color":"#65a30d"},{"id":"asset-tree","shape":"image","label":"🌲 나무","x":10,"y":14,"w":12,"h":13},{"id":"asset-hero","shape":"image","label":"🦊 주인공","x":24,"y":14,"w":12,"h":13},{"id":"tree1","shape":"image","label":"🌲","x":16,"y":54,"w":11,"h":17,"hidden":true},{"id":"tree2","shape":"image","label":"🌲","x":68,"y":54,"w":11,"h":17,"hidden":true},{"id":"hero1","shape":"image","label":"🦊","x":42,"y":58,"w":9,"h":13,"hidden":true},{"id":"check-ok","shape":"text","label":"✓ 배치 저장됨","x":66,"y":12,"w":24,"h":7,"hidden":true}]},"actions":[{"t":"caption","text":"① AI로 생성한 스프라이트가 팔레트에 준비되어 있습니다"},{"t":"move","target":"tool-asset"},{"t":"click"},{"t":"caption","text":"② 나무 스프라이트를 드래그해 지면 위에 배치합니다"},{"t":"drag","from":"asset-tree","to":"tree1"},{"t":"reveal","target":"tree1"},{"t":"drag","from":"asset-tree","to":"tree2"},{"t":"reveal","target":"tree2"},{"t":"caption","text":"③ 주인공 캐릭터를 시작 지점에 배치합니다"},{"t":"move","target":"asset-hero"},{"t":"click"},{"t":"drag","from":"asset-hero","to":"hero1"},{"t":"reveal","target":"hero1"},{"t":"caption","text":"④ 테스트 버튼으로 배치 결과를 확인합니다"},{"t":"move","target":"tool-play"},{"t":"click"},{"t":"reveal","target":"check-ok"},{"t":"move","target":"check-ok"},{"t":"caption","text":"⑤ 같은 LoRA로 뽑은 에셋이라 장면 톤이 유지됩니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f32351c4-75d4-835e-508a-3edf9bc647b9', 'cefe6985-4404-2735-0bcd-cafed3e5c2c1', 'ai-game-dev/3d-model-generation', '3d-model-generation', '3D 모델 생성: 텍스트에서 게임 레디 메시까지',
+  $aix$3D 모델링은 1인 개발자의 최대 병목이었습니다. 2026년에는 **Meshy·Tripo** 같은 도구가 텍스트나 이미지 한 장으로 텍스처 입힌 3D 모델을 1분 안에 만들어 줍니다.
+
+## 두 대표 도구의 성격
+
+- **Meshy** — PBR 텍스처 품질이 강점. 텍스트→3D, 이미지→3D 모두 지원하며 대화형 에이전트로 수정 지시가 가능합니다.
+- **Tripo** — 생성 속도(평균 수 초)와 깨끗한 지오메트리가 강점. 쿼드 리토폴로지(Smart Mesh)를 자동으로 수행해 게임용 메시에 유리합니다.
+
+## "생성됐다"와 "게임에 쓸 수 있다"는 다릅니다
+
+생성 직후의 메시는 대부분 그대로 못 씁니다. 반드시 확인하세요.
+
+- **폴리곤 수** — 생성 모델은 수만 폴리곤이 기본. 소품이면 수백~수천으로 **리토폴로지**가 필요합니다.
+- **토폴로지 품질** — 애니메이션할 모델(캐릭터)은 변형에 견디는 쿼드 기반 와이어프레임이 필요해 수동 정리가 남습니다.
+- **UV·텍스처** — 자동 UV는 심(seam)이 어색한 경우가 많아 텍스처 재베이크가 필요할 수 있습니다.
+- **LOD** — 거리별 저폴리 버전을 만들어야 프레임이 삽니다.
+
+## 실무 요령
+
+주인공처럼 화면 중앙에 오래 보이는 모델은 여전히 수작업(또는 외주) 가치가 있고, **배경 소품부터 AI로** 채우는 것이 승률 높은 순서입니다.
+
+> 💡 **핵심**: AI 3D 생성은 "모델링의 끝"이 아니라 **"블록아웃의 10배속"**입니다. 리토폴로지·LOD라는 마무리 공정을 예산에 넣으세요.$aix$,
+  $aix${"type":"steps","title":"텍스트→게임 레디 3D 에셋 공정","steps":[{"label":"프롬프트/이미지로 생성","sublabel":"Meshy · Tripo — 1분 내 초안","icon":"wand"},{"label":"후보 중 선택 + 텍스처","sublabel":"PBR 머티리얼 적용","icon":"palette"},{"label":"리토폴로지·폴리곤 감량","sublabel":"소품 수백~수천 폴리곤 목표","icon":"scissors"},{"label":"LOD 생성 후 엔진 임포트","sublabel":"FBX/glTF → 콜라이더 설정","icon":"download"}],"caption":"3~4단계(최적화)를 건너뛰면 프레임 드랍으로 되돌아옵니다."}$aix$::jsonb, $aix${"title":"텍스트→3D 모델 생성 따라하기","app":{"kind":"browser","url":"app.meshy.ai","blocks":[{"id":"b-head","type":"heading","label":"Text to 3D"},{"id":"b-prompt","type":"input","label":"에셋을 텍스트로 설명하세요…"},{"id":"b-gen","type":"button","label":"Generate"},{"id":"b-draft","type":"card","label":"📦 초안 메시 4종 생성됨","hidden":true},{"id":"b-refine","type":"button","label":"Refine & Texture","hidden":true},{"id":"b-textured","type":"card","label":"✨ PBR 텍스처 적용 완료","hidden":true},{"id":"b-polycount","type":"badge","label":"폴리곤 12,400 — 감량 필요","hidden":true},{"id":"b-export","type":"button","label":"Export FBX","hidden":true},{"id":"b-done","type":"card","label":"✓ chest.fbx 다운로드 완료","hidden":true}]},"actions":[{"t":"caption","text":"① 원하는 에셋을 텍스트로 설명합니다"},{"t":"move","target":"b-prompt"},{"t":"click"},{"t":"type","target":"b-prompt","text":"low poly treasure chest, game asset"},{"t":"caption","text":"② Generate로 초안 메시를 생성합니다"},{"t":"move","target":"b-gen"},{"t":"click"},{"t":"wait","ms":600},{"t":"reveal","target":"b-draft"},{"t":"move","target":"b-draft"},{"t":"caption","text":"③ 마음에 드는 초안을 골라 텍스처를 입힙니다"},{"t":"click"},{"t":"reveal","target":"b-refine"},{"t":"move","target":"b-refine"},{"t":"click"},{"t":"reveal","target":"b-textured"},{"t":"caption","text":"④ 폴리곤 수를 확인합니다 — 그대로 쓰면 무겁습니다"},{"t":"reveal","target":"b-polycount"},{"t":"move","target":"b-polycount"},{"t":"caption","text":"⑤ FBX로 내보내 엔진에서 리토폴로지·LOD를 마무리합니다"},{"t":"reveal","target":"b-export"},{"t":"click","target":"b-export"},{"t":"reveal","target":"b-done"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'dad24b15-a397-b2c3-8ea9-097704ca2e5d', 'cefe6985-4404-2735-0bcd-cafed3e5c2c1', 'ai-game-dev/texture-audio-generation', 'texture-audio-generation', '텍스처·사운드·음악: 라이선스가 도구를 고른다',
+  $aix$에셋 중 오디오는 AI 품질이 이미 상용 수준입니다. 단, 이 영역의 도구 선택 기준은 품질보다 **라이선스**입니다.
+
+## 텍스처
+
+- Unity 6.2의 **Generators**가 텍스처·머티리얼 생성을 에디터 안에서 지원합니다.
+- 3D 생성 도구(Meshy 등)의 PBR 텍스처 기능으로 기존 모델에 새 텍스처만 입히는 것도 실무 패턴입니다.
+- 타일링(이음새 없는 반복) 여부를 반드시 확인하세요.
+
+## 효과음(SFX)
+
+- ElevenLabs 등의 SFX 생성기가 "낡은 나무 문이 삐걱이는 소리" 수준의 텍스트 지시로 효과음을 만들어 줍니다.
+- 타격감이 중요한 코어 사운드는 여러 개 생성해 레이어링하면 품질이 크게 오릅니다.
+
+## 음악 — 라이선스를 먼저 보세요
+
+- **ElevenLabs Music**: 라이선스 확보된 데이터로 학습한 "라이선스 클린" 모델. 상업 게임에 안전한 선택지입니다.
+- **Stable Audio**: 상업 라이선스 명시, BGM·앰비언트에 강합니다.
+- **Suno·Udio**: 출력 품질은 높지만 학습 데이터 소송이 진행 중(2026년 기준)이라 상업 게임 BGM으로는 리스크 검토가 필요합니다.
+
+> 💡 **핵심**: 오디오 생성 도구는 "가장 좋은 소리"가 아니라 **"학습 데이터가 깨끗하고 상업 이용 조건이 명시된 도구"**부터 고르세요. 출시 후 문제가 되는 건 품질이 아니라 권리입니다.$aix$,
+  $aix${"type":"grid","title":"오디오·텍스처 생성 도구 지도","items":[{"label":"텍스처·머티리얼","sublabel":"Unity Generators · Meshy","icon":"layers","tone":"accent"},{"label":"효과음(SFX)","sublabel":"텍스트→효과음 · 레이어링","icon":"mic","tone":"accent"},{"label":"BGM — 클린 라이선스","sublabel":"ElevenLabs Music · Stable Audio","icon":"music","tone":"success"},{"label":"BGM — 소송 진행 중","sublabel":"Suno · Udio (리스크 검토)","icon":"alert","tone":"warning"},{"label":"체크 1: 상업 이용 조항","sublabel":"플랜별 허용 범위 확인","icon":"file-text","tone":"muted"},{"label":"체크 2: 학습 데이터 출처","sublabel":"라이선스 확보 여부","icon":"shield","tone":"muted"}],"caption":"초록은 안전지대, 노랑은 출시 전 법무 검토가 필요한 영역입니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7236be44-32ef-4e17-5bfb-52ab209d7648', 'cefe6985-4404-2735-0bcd-cafed3e5c2c1', 'ai-game-dev/llm-npc', 'llm-npc', 'LLM으로 살아있는 NPC 만들기: 비용과 지연의 공학',
+  $aix$"모든 NPC가 자유 대화를 한다"는 데모는 쉽고, 출시는 어렵습니다. 문제는 지능이 아니라 **지연시간과 비용**입니다.
+
+## 두 개의 벽
+
+- **지연**: 클라우드 LLM으로 2~3문장을 생성하면 0.8~2.5초가 걸립니다. 대화의 몰입이 깨지는 시간입니다.
+- **비용**: NPC당·플레이어당 추론이 동시접속 수만큼 곱해집니다. 라이브 게임에서 감당 못 하는 청구서가 나옵니다.
+
+## 온디바이스 vs API
+
+- **온디바이스** — NVIDIA ACE처럼 플레이어의 GPU에서 소형 모델을 직접 추론. 지연·서버비가 없지만 최소 사양이 올라갑니다. Unity의 Inference Engine도 이 방식의 기반입니다.
+- **API** — Inworld·Convai 같은 게임 특화 플랫폼이 캐릭터 페르소나·기억·안전 필터를 관리형으로 제공합니다. 품질 상한이 높지만 과금·오프라인 불가 문제가 있습니다.
+
+## 실무 완화 기법
+
+- **스트리밍 출력**: 첫 글자가 0.3초에 나오면 체감 지연이 사라집니다.
+- **응답 사전 생성**: 플레이어 입력 중에 유력 응답 후보를 미리 만들어 둡니다.
+- **계층 설계**: 핵심 스토리 대사는 사람이 쓰고, 잡담·반응만 LLM에 맡기면 비용이 급감합니다.
+
+> 💡 **핵심**: LLM NPC 설계의 질문은 "무엇을 말하게 할까"가 아니라 **"어떤 대사를 굳이 실시간 생성해야 하는가"**입니다. 대부분의 대사는 사전 생성으로 충분합니다.$aix$,
+  $aix${"type":"compare","title":"NPC용 LLM 연동: 온디바이스 vs API","columns":[{"title":"온디바이스 (로컬 추론)","icon":"cpu","tone":"primary","items":["플레이어 GPU에서 소형 모델 실행","지연 최소 · 서버 비용 0","오프라인 동작 가능","단점: 최소 사양 상승 · 품질 상한"]},{"title":"API (관리형 클라우드)","icon":"cloud","tone":"accent","items":["Inworld · Convai 등 특화 플랫폼","페르소나·기억·안전 필터 내장","품질 상한 높음 · 모델 교체 쉬움","단점: 동접 비례 과금 · 지연 0.8초+"]}],"caption":"핵심 대사는 사전 제작, 잡담만 실시간 — 하이브리드가 2026년의 정석입니다."}$aix$::jsonb, null, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '350bf49e-25d4-cf6c-bfd1-fab449e92b30', '49b41a03-0628-9610-f25c-86fa0c90baf9', 'ai-game-dev/ai-gameplay-code', 'ai-gameplay-code', 'AI 에이전트로 게임플레이 코드 작성하기',
+  $aix$게임 코드는 "작성 → 에디터에서 확인"의 왕복이 잦아 AI에게 불리했습니다. 2026년에는 **MCP로 에이전트가 엔진을 직접 조작**하면서 이 왕복이 루프 안으로 들어왔습니다.
+
+## 에디터 연동: Unity MCP
+
+커뮤니티의 Unity-MCP 같은 브리지를 붙이면 Claude Code·Cursor 등의 에이전트가 다음을 직접 합니다.
+
+- 씬의 게임오브젝트·컴포넌트 검사
+- C# 스크립트 작성 후 **컴파일 에러를 직접 읽고 수정**
+- 플레이 모드 실행으로 동작 검증
+
+"코드 생성기"가 아니라 **작성→실행→관찰→수정 루프를 도는 개발자**가 되는 것입니다.
+
+## 무엇을 맡기면 잘하나
+
+- **물리 기반 이동**: `Rigidbody2D` 세팅과 이동 스크립트 (Unity 6는 `velocity` 대신 `linearVelocity`를 씁니다 — 최신 API 지식은 프로젝트 규칙 파일로 보강하세요)
+- **상태머신**: Idle→Run→Jump→Attack 전이 로직과 애니메이터 연결
+- **에디터 툴**: 레벨 검증 스크립트, 에셋 일괄 처리기 — 투자 대비 효과 최고
+
+## 프롬프트 요령
+
+목표만 주지 말고 검증 방법을 함께 주세요: "이동 스크립트를 작성하고, 컴파일 확인 후 플레이 모드에서 좌우 이동을 검증해."
+
+> 💡 **핵심**: 게임 코드에서 AI의 가치는 자동완성이 아니라 **엔진과 연결된 검증 루프**에서 나옵니다. MCP 연동을 먼저 세팅하세요.$aix$,
+  $aix${"type":"terminal","windowTitle":"claude + unity-mcp — 에이전트 세션","lines":[{"text":"점프 기능을 PlayerMovement에 추가해 줘","tone":"cmd"},{"text":"[mcp] 씬 검사: Player에 Rigidbody2D 확인","tone":"dim"},{"text":"[edit] PlayerMovement.cs +12줄","tone":"out"},{"text":"[mcp] 컴파일... error CS0103: 'isGrounded'","tone":"err"},{"text":"# 에이전트: 접지 판정 변수 누락 — 수정","tone":"comment"},{"text":"[edit] GroundCheck 레이캐스트 추가","tone":"out"},{"text":"[mcp] 컴파일 성공 → 플레이 모드 테스트","tone":"ok"},{"text":"✓ 점프 동작 확인 — 완료","tone":"ok"}],"caption":"에이전트가 컴파일 에러를 스스로 읽고 고치는 것이 MCP 연동의 가치입니다."}$aix$::jsonb, $aix${"title":"유니티 C# 이동 스크립트를 AI로 작성 따라하기","app":{"kind":"code-editor","windowTitle":"PlayerMovement.cs — Unity + AI 에이전트","files":[{"id":"f-move","name":"PlayerMovement.cs","active":true},{"id":"f-input","name":"PlayerInput.cs"},{"id":"f-scene","name":"Stage1.unity"}],"code":[{"id":"c1","text":"public class PlayerMovement : MonoBehaviour {"},{"id":"c2","text":"[SerializeField] float speed = 5f;","indent":1},{"id":"c3","text":"Rigidbody2D rb;","indent":1},{"id":"c4","text":"void Awake() { rb = GetComponent<Rigidbody2D>(); }","indent":1},{"id":"c5","text":"void FixedUpdate() {","indent":1,"tone":"add","hidden":true},{"id":"c6","text":"float x = Input.GetAxis(\"Horizontal\");","indent":2,"tone":"add","hidden":true},{"id":"c7","text":"rb.linearVelocity = new Vector2(x * speed, rb.linearVelocity.y);","indent":2,"tone":"add","hidden":true},{"id":"c8","text":"}","indent":1,"tone":"add","hidden":true},{"id":"c9","text":"}"}],"terminal":[{"id":"t1","text":"좌우 이동 스크립트를 작성해 줘","tone":"cmd","hidden":true},{"id":"t2","text":"[mcp] Player 오브젝트에 Rigidbody2D 확인 — 작성 시작","tone":"out","hidden":true},{"id":"t3","text":"플레이 모드로 이동을 검증해 줘","tone":"cmd","hidden":true},{"id":"t4","text":"✓ 컴파일 성공 — 좌우 이동 동작 확인","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① AI 에이전트에게 목표를 자연어로 지시합니다"},{"t":"type","target":"t1","text":"좌우 이동 스크립트를 작성해 줘"},{"t":"reveal","target":"t2"},{"t":"wait","ms":500},{"t":"caption","text":"② 에이전트가 물리 기반 이동 코드를 작성합니다"},{"t":"move","target":"c4"},{"t":"click"},{"t":"reveal","target":"c5"},{"t":"type","target":"c6","text":"float x = Input.GetAxis(\"Horizontal\");"},{"t":"reveal","target":"c7"},{"t":"reveal","target":"c8"},{"t":"wait","ms":400},{"t":"caption","text":"③ Unity 6에서는 velocity 대신 linearVelocity입니다"},{"t":"dblclick","target":"c7"},{"t":"caption","text":"④ 플레이 모드 검증까지가 한 루프입니다"},{"t":"type","target":"t3","text":"플레이 모드로 이동을 검증해 줘"},{"t":"reveal","target":"t4"},{"t":"move","target":"t4"},{"t":"caption","text":"⑤ 통과 — 실패 시 에러를 주고 다시 돌리면 됩니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bea7bd36-75ad-acce-729e-22ea25b13412', '49b41a03-0628-9610-f25c-86fa0c90baf9', 'ai-game-dev/playtest-balancing', 'playtest-balancing', '플레이테스트와 밸런싱 자동화',
+  $aix$1인 개발자의 진짜 결핍은 아트가 아니라 **테스터**입니다. 2026년에는 스튜디오의 절반 가까이가 QA·플레이테스트에 AI를 씁니다 — 혼자인 당신에게 더 절실한 도구입니다.
+
+## AI 플레이테스트가 잡아주는 것
+
+- **진행 불가 구간**: 봇 수백 대가 레벨을 돌며 끼임·낙사·소프트락을 기계적으로 발견합니다.
+- **밸런스 붕괴**: 강화학습(RL) 에이전트끼리 수만 판을 시뮬레이션해 지배적인 무기·전략을 찾아냅니다.
+- **난이도 곡선**: "신중한 탐험가", "공격적인 스피드러너" 같은 **플레이어 아키타입 봇**으로 유형별 이탈 지점을 측정합니다.
+
+## 1인 개발자의 현실적 도입 순서
+
+1. **스모크 테스트 봇** — "시작→클리어까지 무작위 입력으로 완주"만 자동화해도 빌드마다 큰 회귀를 잡습니다.
+2. **밸런스 시뮬레이터** — 전투 공식을 코드로 분리하고, AI 에이전트에게 수천 번 시뮬레이션시켜 스탯 테이블을 튜닝합니다.
+3. **AI 리뷰어** — 플레이 영상·로그를 멀티모달 모델에게 보여주고 "어디서 지루했나"를 물어봅니다.
+
+## 한계
+
+봇은 버그와 수치를 찾지, **재미를 느끼지 못합니다**. 사람 테스트를 대체하는 게 아니라, 사람의 시간을 재미 판단에만 쓰게 해주는 것입니다.
+
+> 💡 **핵심**: AI 플레이테스트의 목적은 사람 테스터의 대체가 아니라 **"사람에게는 재미 질문만 남기기"**입니다.$aix$,
+  $aix${"type":"cycle","title":"자동 밸런싱 루프","center":"매 빌드마다 반복","nodes":[{"label":"봇 플레이","sublabel":"아키타입별 수백 회","icon":"bot"},{"label":"지표 수집","sublabel":"클리어율·사망 지점","icon":"chart"},{"label":"붕괴 탐지","sublabel":"지배 전략·소프트락","icon":"search"},{"label":"수치 조정","sublabel":"스탯 테이블 갱신","icon":"settings"}],"caption":"사람은 이 루프의 결과를 보고 '재미'만 판단하면 됩니다."}$aix$::jsonb, null, 5, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4458c3bc-8e56-b368-8166-17c49534984e', '49b41a03-0628-9610-f25c-86fa0c90baf9', 'ai-game-dev/store-ai-policy', 'store-ai-policy', '스토어 등록과 AI 콘텐츠 고지: Steam 정책 실전',
+  $aix$열심히 만든 게임이 고지 누락으로 스토어에서 문제가 되면 억울합니다. 2026년 1월 개정된 Steam의 AI 고지 정책은 이전보다 명확해졌으니 정확히 알아두세요.
+
+## 개정의 핵심: "플레이어가 소비하는 것"만
+
+Valve는 고지 대상을 **게임에 실려 플레이어가 소비하는 AI 생성 콘텐츠**로 좁혔습니다. 개발 과정의 효율 도구 — AI 코드 어시스턴트, 내부 문서 작성 등 — 는 고지 대상이 아닙니다.
+
+## 두 가지 카테고리
+
+- **사전 생성(Pre-generated)**: 개발 중 AI로 만들어 게임에 포함한 에셋(이미지·오디오·텍스트). 등록 시 **서술형 텍스트로 상세히 기재**하며, 일반 콘텐츠와 같은 심사를 받습니다. 스토어 페이지·마케팅 이미지의 AI 사용도 포함됩니다.
+- **라이브 생성(Live-generated)**: 실행 중에 AI가 콘텐츠를 만드는 경우(LLM NPC 대화 등). 체크박스 확인과 함께 **부적절·불법 콘텐츠를 막는 가드레일**을 설명해야 합니다.
+
+## 고지 실무 팁
+
+- 고지 내용은 스토어 페이지에 공개됩니다 — 숨기려다 커뮤니티에 발각되는 것이 최악의 시나리오입니다.
+- LLM NPC를 쓴다면 모듈 2에서 다룬 안전 필터가 곧 가드레일 설명의 재료가 됩니다.
+- 개발 로그를 남겨 두면(어떤 에셋을 어떤 도구로) 고지 작성이 10분 일거리가 됩니다.
+
+> 💡 **핵심**: 기준은 하나 — **"플레이어가 보고 듣는 것 중 AI가 만든 게 있는가"**. 있으면 사전/라이브를 구분해 정직하게 쓰는 것이 가장 싼 보험입니다.$aix$,
+  $aix${"type":"flow","title":"Steam AI 고지 판단 플로우","nodes":[{"label":"AI로 만든 것이 있는가?","sublabel":"에셋·대사·스토어 이미지 점검","icon":"search","tone":"primary"},{"label":"플레이어가 소비하는가?","sublabel":"코드 어시스턴트 등 효율 도구는 제외","icon":"eye","tone":"accent","edgeLabel":"개발 도구만 썼다면 고지 불필요"},{"label":"사전 생성 → 서술형 기재","sublabel":"포함된 AI 에셋을 상세히 설명","icon":"file-text","tone":"warning"},{"label":"라이브 생성 → 가드레일 설명","sublabel":"부적절 콘텐츠 방지책 명시","icon":"shield","tone":"warning"},{"label":"스토어 페이지에 공개","sublabel":"정직한 고지가 가장 싼 보험","icon":"check","tone":"success"}],"caption":"2026년 1월 개정 기준 — '플레이어가 소비하는 콘텐츠'가 유일한 기준선입니다."}$aix$::jsonb, null, 5, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ae9296bc-0f35-1a8c-3c80-7206e601fa97', '49b41a03-0628-9610-f25c-86fa0c90baf9', 'ai-game-dev/copyright-risk', 'copyright-risk', '저작권 리스크 관리: 내 게임을 지키는 법',
+  $aix$AI 에셋의 저작권 문제는 "소송당할 위험"보다 **"내 게임을 아무도 못 지키게 되는 위험"**이 먼저입니다.
+
+## 확정된 법적 지형 (미국 기준)
+
+- 2026년 3월 연방대법원이 관련 상고를 기각하면서, **순수 AI 생성물은 저작권 등록 불가**라는 원칙이 확정됐습니다.
+- 반면 사람이 충분히 기여한 **인간+AI 협업 저작물은 등록 가능** — 이미 6,000건 이상 등록됐습니다. 단, AI 생성 부분은 명시하고 보호 범위에서 제외해야 하며, 숨기면 등록이 취소될 수 있습니다.
+
+## 무엇이 "인간의 기여"인가
+
+프롬프트를 잘 쓰고 첫 출력을 그대로 쓰는 것은 인정받기 어렵습니다. 인정되는 것은:
+
+- AI 출력을 **실질적으로 편집·수정**한 것 (2D 후보정, 리토폴로지가 여기서도 효자입니다)
+- 출력물들을 **선택·배치·결합**한 구성적 판단
+- AI 요소와 직접 만든 요소의 결합
+
+## 1인 개발자의 방어 체크리스트
+
+1. 학습 데이터가 깨끗한(라이선스 클린) 도구를 우선 선택
+2. 도구별 상업 이용 약관 확인 — 무료 플랜은 상업 금지인 경우가 많습니다
+3. AI 원본과 수정본을 분리 보관 (기여 입증 자료)
+4. 어떤 에셋을 어떤 도구로 만들었는지 기록 (Steam 고지와 등록 서류에 재사용)
+5. 게임의 "얼굴"(주인공·키 비주얼·로고)은 사람 손의 비중을 높게
+
+> 💡 **핵심**: AI 에셋을 쓰되 **사람의 편집·선택·결합을 기록으로 남기는 것** — 이것이 저작권 보호와 스토어 고지를 동시에 해결하는 한 가지 습관입니다.$aix$,
+  $aix${"type":"stack","title":"저작권 방어의 4층 구조","layers":[{"label":"보호받는 최종 게임","sublabel":"인간+AI 협업 저작물로 등록","icon":"shield","tone":"success"},{"label":"인간의 기여 층","sublabel":"편집·선택·배치·결합의 기록","icon":"user","tone":"primary"},{"label":"도구·약관 층","sublabel":"라이선스 클린 도구 · 상업 조항 확인","icon":"file-text","tone":"accent"},{"label":"AI 원시 출력","sublabel":"이 층만으로는 보호 불가 (등록 불가)","icon":"bot","tone":"muted"}],"caption":"맨 아래 층(AI 원시 출력)에 머무는 에셋이 많을수록 게임의 방어력이 약해집니다."}$aix$::jsonb, null, 5, 10
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -1512,10 +1827,295 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
   illustration = excluded.illustration, demo = excluded.demo,
   minutes = excluded.minutes, order_index = excluded.order_index;
 
--- 강의: AI 영상 제작: Sora · Runway · Veo와 숏폼 자동화
+-- 강의: AI 프로덕트 디자인: Figma 실전 워크플로우
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
-  'fb2289d4-2769-d76f-0c55-f213a266a1bb', 'ai-video', 'AI 영상 제작: Sora · Runway · Veo와 숏폼 자동화', $aix$2026년 영상 제작의 진입 장벽은 카메라가 아니라 '설계'입니다. 이 강의에서는 Sora, Runway, Google Veo 같은 텍스트-투-비디오 도구의 원리와 한계를 이해하고, 시네마토그래피 언어로 프롬프트를 쓰는 법을 익힙니다. 이어서 스토리보드→클립 생성→캡컷 편집으로 이어지는 제작 워크플로우를 완성하고, 대본→음성→클립→자막을 자동으로 이어붙여 릴스·쇼츠·틱톡에 배포하는 숏폼 자동화 파이프라인까지 설계합니다.$aix$,
-  null, 'creative', 'intermediate', array['Sora', 'Runway', 'Google Veo', '숏폼 자동화', 'CapCut']::text[]
+  '3b0ae812-43f2-7c2a-c5a3-9dcb36be3a9c', 'figma-product-design', 'AI 프로덕트 디자인: Figma 실전 워크플로우', $aix$2026년의 프로덕트 디자인은 와이어프레임을 그리는 일이 아니라, AI가 만든 초안을 판단하고 시스템으로 다듬는 일이 됐습니다. 이 강의에서는 Figma의 AI 에이전트·Figma Make·Dev Mode MCP 서버 같은 최신 기능으로 아이디어에서 동작 프로토타입까지 직행하는 워크플로우를 익히고, 디자인 시스템 정리·네이밍·문서화 자동화, 디자인→코드 핸드오프 도구들의 현실적 품질, 그리고 인터뷰 전사·태깅·사용성 분석까지 — 프로덕트 디자이너의 하루 전체를 AI와 함께 재설계합니다.$aix$,
+  null, 'creative', 'intermediate', array['Figma', '프로덕트 디자인', '디자인 시스템', 'UX 리서치', '코드 핸드오프']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '9eca39a0-9bfd-419c-9320-5698b6db4aa9', '3b0ae812-43f2-7c2a-c5a3-9dcb36be3a9c', 'workflow-shift', '디자인 워크플로우의 변화', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'e7521ecc-332b-9a8a-a17d-bfba3db9c156', '3b0ae812-43f2-7c2a-c5a3-9dcb36be3a9c', 'hands-on-workflow', '실전 워크플로우', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '354e435d-32ba-67e2-c6d3-b58bf9c0c412', '3b0ae812-43f2-7c2a-c5a3-9dcb36be3a9c', 'ux-research-collab', 'UX 리서치와 협업', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '9fc0434e-5cd8-3177-efaf-cf4c7f695d99', '9eca39a0-9bfd-419c-9320-5698b6db4aa9', 'figma-product-design/ai-design-cycle', 'ai-design-cycle', '와이어프레임 건너뛰기: 짧아진 디자인 사이클',
+  $aix$와이어프레임 2주, 목업 2주, 프로토타입 1주 — 이 직렬 공정이 무너지고 있습니다. 2026년의 디자이너는 **아이디어에서 '동작하는 프로토타입'으로 직행**합니다.
+
+## 무엇이 달라졌나
+
+- 예전: 저해상도 와이어프레임 → 고해상도 목업 → 클릭 프로토타입 → 개발 전달. 각 단계가 '다시 그리기'였습니다.
+- 지금: 프롬프트로 화면 초안을 몇 분 만에 뽑고, 곧바로 **실제로 동작하는 프로토타입**으로 만들어 사용자 앞에 놓습니다.
+
+## 왜 이게 큰 변화인가
+
+- 검증이 빨라집니다 — "이 흐름이 맞나?"를 그림이 아니라 **동작**으로 확인합니다.
+- 버리는 비용이 싸집니다 — 초안 10개를 만들고 9개를 버려도 반나절입니다.
+- 대신 **판단의 밀도**가 올라갑니다. 10개 중 어느 것이 사용자 문제를 푸는지 고르는 눈이 디자이너의 핵심 역량이 됐습니다.
+
+## 사라지지 않는 것
+
+문제 정의, 정보 구조, 디자인 시스템, 그리고 취향 — AI는 화면을 그려주지만 **무엇을 만들지는 정해주지 않습니다**.
+
+> 💡 **핵심**: 사이클이 짧아진 만큼 디자이너의 무게중심은 '그리기'에서 **'판단하고 다듬기'**로 이동했습니다. 이 강의 전체가 그 새 무게중심을 다룹니다.$aix$,
+  $aix${"type":"compare","title":"기존 사이클 vs AI 사이클","columns":[{"title":"기존 (직렬 공정)","icon":"clock","tone":"muted","items":["와이어프레임 → 목업 → 프로토타입","단계마다 다시 그리기","검증까지 몇 주 소요","초안을 버리는 비용이 큼"]},{"title":"AI 사이클 (직행)","icon":"zap","tone":"primary","items":["프롬프트 → 동작 프로토타입 직행","초안 10개 생성, 9개 폐기","당일 사용자 검증 가능","판단·다듬기에 시간 집중"]}],"caption":"그리는 시간이 줄어든 자리를 '판단하는 시간'이 채웁니다."}$aix$::jsonb, null, 4, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b4ad73dc-1703-36fb-d7dd-20f3a5671062', '9eca39a0-9bfd-419c-9320-5698b6db4aa9', 'figma-product-design/figma-ai-landscape', 'figma-ai-landscape', 'Figma AI 지형도: 무엇이 어디까지 되는가',
+  $aix$도구의 지도를 정확히 그려야 과대평가도 과소평가도 하지 않습니다. 2026년 중반 기준 Figma의 AI 기능을 정리합니다.
+
+## 캔버스 안의 AI
+
+- **First Draft** — 텍스트 설명으로 화면 레이아웃을 생성합니다. 연결된 디자인 시스템이 있으면 그 컴포넌트를 사용합니다. 2026년 5월부터는 **AI 에이전트가 First Draft의 새 진입점**이 됐습니다.
+- **Figma AI 에이전트 (베타)** — 2026년 5월 20일 베타 공개. 자연어로 디자인을 생성·수정하고 반복 작업을 자동화합니다. 컴포넌트와 레이아웃을 이해하는 **컴포넌트 인지형 편집**이 특징입니다.
+- **Make an image / 이미지 편집** — 캔버스 안에서 이미지 생성·교체.
+
+## 캔버스 밖으로
+
+- **Figma Make** — 프롬프트로 **동작하는 앱/프로토타입**을 생성합니다 (2025년 Config 공개). 팀 라이브러리를 연결하면 우리 시스템의 색·타이포·컴포넌트가 적용됩니다.
+- **Dev Mode MCP 서버** — 디자인의 구조화 데이터(레이어 트리·토큰·컴포넌트명)를 AI 코딩 도구에 직접 전달합니다.
+- **Code Connect** — 디자인 컴포넌트와 실제 코드 컴포넌트를 연결합니다.
+
+> 💡 **핵심**: "초안 생성(에이전트) → 동작 프로토타입(Make) → 코드 전달(MCP·Code Connect)" — 이 세 축이 이후 모든 레슨의 뼈대입니다.$aix$,
+  $aix${"type":"grid","title":"Figma AI 기능 지도 (2026)","items":[{"label":"AI 에이전트","sublabel":"자연어 생성·수정 (2026.5 베타)","icon":"bot","tone":"primary"},{"label":"First Draft","sublabel":"텍스트 → 화면 레이아웃","icon":"sparkles","tone":"primary"},{"label":"Figma Make","sublabel":"프롬프트 → 동작 프로토타입","icon":"play","tone":"accent"},{"label":"Dev Mode MCP 서버","sublabel":"디자인 데이터 → AI 코딩 도구","icon":"link","tone":"success"},{"label":"Code Connect","sublabel":"디자인 ↔ 실제 코드 연결","icon":"code","tone":"success"},{"label":"이미지 생성·편집","sublabel":"캔버스 안 에셋 작업","icon":"image","tone":"muted"}],"caption":"초안 생성 → 동작 프로토타입 → 코드 전달, 세 축으로 기억하세요."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e370d0f3-ed69-6de9-6aca-f9f28af518a0', '9eca39a0-9bfd-419c-9320-5698b6db4aa9', 'figma-product-design/prompt-ui-limits', 'prompt-ui-limits', '프롬프트로 UI 초안 만들기, 그리고 그 한계',
+  $aix$프롬프트 한 줄로 화면이 나옵니다. 하지만 그 화면을 **그대로 쓰면 안 되는 이유**를 아는 것이 중급 디자이너의 출발점입니다.
+
+## 좋은 UI 프롬프트의 구조
+
+- **화면의 목적** — "운동 앱의 주간 리포트 화면"
+- **필수 요소** — "주간 걸음 수 차트, 최근 운동 리스트, 목표 달성 배지"
+- **맥락과 톤** — "모바일, 미니멀, 우리 라이브러리 컴포넌트 사용"
+
+요소를 나열하면 나열할수록 초안의 쓸모가 올라갑니다. "예쁜 대시보드 만들어줘"는 예쁜 쓰레기를 만듭니다.
+
+## AI 초안의 전형적인 한계
+
+- **시스템 이탈** — 라이브러리를 연결하지 않으면 범용 컴포넌트로 채워집니다. 색·간격·버튼이 우리 제품과 미묘하게 다릅니다.
+- **평균의 함정** — 학습된 '무난한 패턴'으로 수렴합니다. 차별화된 인터랙션은 나오지 않습니다.
+- **접근성·엣지 케이스 누락** — 빈 상태, 에러 상태, 긴 텍스트는 사람이 챙겨야 합니다.
+
+## 그래서 워크플로우는
+
+**생성은 AI, 선별과 시스템 정합은 사람.** 초안을 받으면 우리 디자인 시스템의 컴포넌트로 교체하고 간격·타이포를 토큰에 맞춥니다 — 아래 데모에서 직접 해봅니다.
+
+> 💡 **핵심**: AI 초안은 주니어가 잡아준 러프 스케치입니다. **취향과 시스템은 여전히 사람의 몫**입니다.$aix$,
+  $aix${"type":"chat","title":"나쁜 프롬프트 vs 좋은 프롬프트","messages":[{"role":"user","text":"예쁜 대시보드 만들어줘"},{"role":"ai","text":"(어디서 본 듯한 범용 대시보드 — 우리 제품과 무관한 색과 컴포넌트)"},{"role":"user","text":"운동 앱 주간 리포트 화면. 주간 걸음 수 차트, 최근 운동 리스트, 목표 배지 포함. 모바일, 우리 라이브러리 컴포넌트 사용"},{"role":"ai","text":"(요소·맥락이 반영된 초안 — 이제 사람이 시스템에 맞게 다듬을 차례)"}],"caption":"목적 + 필수 요소 + 맥락. 초안의 품질은 프롬프트의 구체성에 비례합니다."}$aix$::jsonb, $aix${"title":"AI 초안을 디자인 시스템에 맞게 정리 따라하기","app":{"kind":"design-canvas","windowTitle":"체크아웃 화면 초안 — Figma","tools":[{"id":"tool-select","icon":"target","label":"선택"},{"id":"tool-frame","icon":"layers","label":"프레임"},{"id":"tool-text","icon":"file-text","label":"텍스트"},{"id":"tool-ai","icon":"sparkles","label":"AI"}],"objects":[{"id":"frame-draft","shape":"frame","label":"Checkout — AI 초안","x":6,"y":8,"w":56,"h":84},{"id":"txt-title","shape":"text","label":"주문 확인","x":10,"y":14,"w":28,"h":6},{"id":"rect-form","shape":"rect","x":10,"y":24,"w":48,"h":26,"color":"#e5e7eb"},{"id":"rect-form2","shape":"rect","x":10,"y":24,"w":48,"h":26,"color":"#fae8ff","hidden":true},{"id":"btn-generic","shape":"rect","label":"결제하기","x":10,"y":58,"w":48,"h":10,"color":"#94a3b8"},{"id":"btn-brand","shape":"rect","label":"결제하기","x":10,"y":58,"w":48,"h":10,"color":"#d946ef","hidden":true},{"id":"frame-lib","shape":"frame","label":"우리 디자인 시스템","x":68,"y":8,"w":26,"h":84},{"id":"lib-btn","shape":"rect","label":"Button/Primary","x":71,"y":16,"w":20,"h":8,"color":"#d946ef"},{"id":"lib-input","shape":"rect","label":"Input/Default","x":71,"y":30,"w":20,"h":8,"color":"#fae8ff"},{"id":"txt-done","shape":"text","label":"✓ 시스템 컴포넌트로 교체 완료","x":10,"y":74,"w":44,"h":6,"hidden":true}]},"actions":[{"t":"caption","text":"① AI가 생성한 체크아웃 초안을 살펴봅니다"},{"t":"move","target":"frame-draft"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"② 회색 기본 버튼은 우리 브랜드가 아닙니다"},{"t":"move","target":"btn-generic"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"③ 라이브러리의 Button/Primary로 교체합니다"},{"t":"drag","from":"lib-btn","to":"btn-generic"},{"t":"hide","target":"btn-generic"},{"t":"reveal","target":"btn-brand"},{"t":"wait","ms":500},{"t":"caption","text":"④ 입력 필드도 Input/Default로 바꿉니다"},{"t":"drag","from":"lib-input","to":"rect-form"},{"t":"hide","target":"rect-form"},{"t":"reveal","target":"rect-form2"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 초안이 우리 시스템의 언어로 정리됐습니다"},{"t":"reveal","target":"txt-done"},{"t":"move","target":"txt-done"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bd3d03eb-c66b-1616-8b15-ca7a2ff41102', 'e7521ecc-332b-9a8a-a17d-bfba3db9c156', 'figma-product-design/design-system-ai', 'design-system-ai', '디자인 시스템과 AI: 정리·네이밍·문서화 자동화',
+  $aix$AI 시대에 디자인 시스템의 역할이 하나 늘었습니다. 사람이 보는 규칙집을 넘어 **AI가 읽는 컨텍스트**가 된 것입니다.
+
+## 왜 정리가 먼저인가
+
+First Draft도, Figma Make도, 코드 생성 도구도 결국 **여러분의 라이브러리를 읽고** 결과를 만듭니다. "Rectangle 47", "btn_final_v2" 같은 이름의 라이브러리는 AI에게 노이즈만 줍니다. 정리된 시스템 = 좋은 프롬프트입니다.
+
+## AI로 자동화할 수 있는 정리 작업
+
+- **네이밍 정규화** — 흩어진 레이어·컴포넌트 이름을 `Button/Primary` 같은 규칙으로 일괄 변경. Figma AI 에이전트가 컴포넌트 구조를 이해하고 반복 작업을 대신합니다.
+- **설명(description) 초안** — 컴포넌트 용도·사용 규칙 문서의 초안을 AI가 작성하고 사람이 다듬습니다. 이 설명은 Dev Mode와 MCP를 통해 **모델의 프롬프트 컨텍스트**로도 쓰입니다.
+- **중복·이탈 감지** — 비슷한 컴포넌트 변형, 토큰을 벗어난 색 사용을 찾아 목록화합니다.
+
+## 사람이 정하는 것
+
+네이밍 컨벤션 자체, 변형(variant)의 축, 무엇을 시스템에 편입할지 — **규칙은 사람이, 적용은 AI가**.
+
+> 💡 **핵심**: 이제 디자인 시스템 문서는 사람과 AI가 함께 읽는 문서입니다. **정리가 잘된 시스템일수록 모든 AI 기능의 출력 품질이 올라갑니다.**$aix$,
+  $aix${"type":"stack","title":"디자인 시스템 = AI의 컨텍스트","layers":[{"label":"AI 도구들","sublabel":"First Draft · Make · 코드 생성","icon":"bot","tone":"primary"},{"label":"Code Connect · MCP","sublabel":"디자인 데이터를 코드 세계로 전달","icon":"link","tone":"accent"},{"label":"설명·문서·토큰","sublabel":"컴포넌트 description이 곧 프롬프트","icon":"file-text","tone":"accent"},{"label":"정리된 컴포넌트와 네이밍","sublabel":"Button/Primary — 모든 것의 기반","icon":"layers","tone":"muted"}],"caption":"아래층이 부실하면 위층의 모든 AI 출력이 흔들립니다."}$aix$::jsonb, $aix${"title":"디자인 시스템 컴포넌트 정리 따라하기","app":{"kind":"design-canvas","windowTitle":"컴포넌트 라이브러리 정리 — Figma","tools":[{"id":"tool-select2","icon":"target","label":"선택"},{"id":"tool-layers2","icon":"layers","label":"레이어"},{"id":"tool-doc2","icon":"file-text","label":"문서"},{"id":"tool-ai2","icon":"sparkles","label":"AI"}],"objects":[{"id":"frame-comp","shape":"frame","label":"Components","x":6,"y":8,"w":88,"h":84},{"id":"comp-a","shape":"rect","label":"Rectangle 47","x":12,"y":20,"w":24,"h":12,"color":"#a5b4fc"},{"id":"comp-b","shape":"rect","label":"btn_final_v2","x":52,"y":38,"w":24,"h":12,"color":"#a5b4fc"},{"id":"comp-c","shape":"ellipse","label":"타원 3","x":30,"y":62,"w":14,"h":12,"color":"#f9a8d4"},{"id":"comp-a2","shape":"rect","label":"Card/Default","x":12,"y":20,"w":24,"h":12,"color":"#818cf8","hidden":true},{"id":"comp-b2","shape":"rect","label":"Button/Primary","x":12,"y":38,"w":24,"h":12,"color":"#818cf8","hidden":true},{"id":"comp-c2","shape":"ellipse","label":"Avatar/Large","x":12,"y":56,"w":14,"h":12,"color":"#f472b6","hidden":true},{"id":"txt-report","shape":"text","label":"✓ 3개 이름 정규화 · 설명 초안 3건 생성","x":44,"y":74,"w":46,"h":6,"hidden":true}]},"actions":[{"t":"caption","text":"① 이름이 제각각인 컴포넌트 3개를 확인합니다"},{"t":"move","target":"comp-a"},{"t":"click"},{"t":"move","target":"comp-b"},{"t":"click"},{"t":"move","target":"comp-c"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"② AI에게 네이밍 규칙 적용을 요청합니다"},{"t":"move","target":"tool-ai2"},{"t":"click"},{"t":"wait","ms":600},{"t":"caption","text":"③ 규칙에 맞는 이름으로 정규화되고 정렬됩니다"},{"t":"hide","target":"comp-a"},{"t":"reveal","target":"comp-a2"},{"t":"hide","target":"comp-b"},{"t":"reveal","target":"comp-b2"},{"t":"hide","target":"comp-c"},{"t":"reveal","target":"comp-c2"},{"t":"wait","ms":500},{"t":"caption","text":"④ 설명 문서 초안까지 자동 생성됩니다"},{"t":"reveal","target":"txt-report"},{"t":"move","target":"txt-report"},{"t":"caption","text":"⑤ 컨벤션은 사람이 정하고 적용은 AI가 합니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '28d8ea8e-1404-2dc8-a80a-5905890798dc', 'e7521ecc-332b-9a8a-a17d-bfba3db9c156', 'figma-product-design/consistent-ui-assets', 'consistent-ui-assets', '일관된 UI 에셋: 아이콘·일러스트를 시스템에 맞게',
+  $aix$이미지 생성 AI로 아이콘 하나는 쉽게 뽑습니다. 어려운 것은 **30개를 뽑아도 한 세트로 보이게** 만드는 일입니다.
+
+## 낱개 생성이 실패하는 이유
+
+그때그때 프롬프트로 뽑은 에셋은 선 굵기, 코너 반경, 색, 시점이 조금씩 다릅니다. 화면에 올리는 순간 "어디서 주워온 티"가 납니다. 프로덕트 에셋의 생명은 화려함이 아니라 **일관성**입니다.
+
+## 시스템에 맞추는 4단계
+
+1. **스타일 명세를 프롬프트로** — "2px 스트로크, 라운드 캡, 24px 그리드, 단색" 같은 우리 아이콘 가이드를 프롬프트 앞부분에 고정합니다.
+2. **기준 에셋을 레퍼런스로** — 기존 아이콘 3~4개를 참조 이미지로 주고 같은 세트의 신규 멤버를 요청합니다.
+3. **일괄 생성 후 컬링** — 후보를 넉넉히 뽑고, 세트에서 튀는 것을 탈락시킵니다.
+4. **토큰·컴포넌트로 편입** — 통과한 에셋만 라이브러리에 등록합니다. 등록 전까지는 '초안'입니다.
+
+## 일러스트도 같은 원리
+
+일러스트는 팔레트·인물 비례·질감을 명세로 고정합니다. 명세 없는 생성은 매번 다른 작가를 고용하는 것과 같습니다.
+
+> 💡 **핵심**: 에셋 생성의 프롬프트는 "무엇을"보다 **"우리 스타일 명세"**가 먼저입니다. 명세 → 레퍼런스 → 컬링 → 라이브러리 편입, 이 관문을 지키세요.$aix$,
+  $aix${"type":"steps","title":"시스템에 맞는 에셋 생성 4단계","steps":[{"label":"스타일 명세 고정","sublabel":"스트로크·그리드·팔레트를 프롬프트로","icon":"palette"},{"label":"기준 에셋 레퍼런스","sublabel":"기존 세트 3~4개를 참조로 제공","icon":"image"},{"label":"일괄 생성 → 컬링","sublabel":"넉넉히 뽑고 튀는 것 탈락","icon":"filter"},{"label":"라이브러리 편입","sublabel":"통과한 것만 컴포넌트로 등록","icon":"layers"}],"caption":"편입 관문을 지키면 30개를 뽑아도 한 세트로 보입니다."}$aix$::jsonb, null, 5, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'd37cd0af-3775-8b60-11f0-ed90bfc5beff', 'e7521ecc-332b-9a8a-a17d-bfba3db9c156', 'figma-product-design/prototype-feedback', 'prototype-feedback', '동작 프로토타입과 AI 피드백 루프',
+  $aix$클릭 몇 개 연결한 프로토타입과 **실제로 동작하는 프로토타입**은 검증의 질이 다릅니다. Figma Make가 이 간극을 메웁니다.
+
+## 프롬프트 → 동작 프로토타입
+
+Figma Make는 자연어 설명으로 로직·상태·데이터가 있는 프로토타입을 생성합니다. 디자인 파일의 프레임을 첨부하거나 팀 라이브러리를 연결하면 **우리 컴포넌트와 스타일이 반영된** 결과가 나옵니다. "탭을 누르면 목록이 필터링되고, 항목을 누르면 상세로" — 이런 동작이 클릭 연결 없이 만들어집니다.
+
+## AI 피드백으로 다듬기
+
+만들고 끝이 아니라 **루프**를 돌립니다.
+
+- 프로토타입을 AI에게 보여주고 휴리스틱 점검을 요청합니다 — 대비 부족, 터치 타깃 크기, 흐름의 막다른 길.
+- "이 화면에서 사용자가 헤맬 지점은?"처럼 **관점을 지정해** 물으면 답의 해상도가 올라갑니다.
+- 지적을 반영하고 다시 점검 — 사용자 테스트 전에 싼 비용으로 몇 바퀴 돕니다.
+
+## AI 피드백의 위치
+
+AI 점검은 사용자 테스트의 **대체가 아니라 전처리**입니다. 뻔한 결함을 미리 걷어내 진짜 테스트에서 깊은 발견에 집중하게 해줍니다.
+
+> 💡 **핵심**: 만들기 → AI 점검 → 수정 → 사용자 테스트. **AI 피드백은 테스트 전 결함 필터**로 쓸 때 가장 값집니다.$aix$,
+  $aix${"type":"cycle","title":"프로토타입 개선 루프","center":"사용자 테스트 전 반복","nodes":[{"label":"생성","sublabel":"프롬프트 → 동작 프로토타입","icon":"play"},{"label":"AI 점검","sublabel":"휴리스틱·접근성 지적","icon":"search"},{"label":"수정","sublabel":"지적 반영해 다듬기","icon":"wrench"},{"label":"재확인","sublabel":"흐름 다시 점검","icon":"eye"}],"caption":"이 루프를 몇 바퀴 돈 뒤 사용자 테스트에 들어가면 발견의 질이 달라집니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8043bf8a-a9e9-6261-0c4b-1e2325bc4a19', 'e7521ecc-332b-9a8a-a17d-bfba3db9c156', 'figma-product-design/design-to-code-handoff', 'design-to-code-handoff', '디자인 → 코드 핸드오프: 도구의 현실적 품질',
+  $aix$"디자인하면 코드가 나온다"는 말은 절반만 사실입니다. 2026년 기준, **어디까지 되고 어디부터 사람이 하는지**를 정확히 알아야 합니다.
+
+## 파이프라인의 부품들
+
+- **Dev Mode MCP 서버** — Figma 디자인의 레이어 트리·토큰·컴포넌트명을 Claude Code 같은 AI 코딩 도구에 구조화 데이터로 전달합니다. 스크린샷 붙여넣기와는 정보량이 다릅니다. 2026년에는 코드를 캔버스로 되가져오는 **양방향(Code to Canvas)** 흐름까지 열렸습니다.
+- **Code Connect** — 디자인 컴포넌트를 실제 코드 컴포넌트에 매핑해, 생성 코드가 범용 div 더미 대신 **우리 팀의 실제 컴포넌트**를 쓰게 합니다.
+- **전문 변환 도구** — Builder.io Visual Copilot, Anima, Locofy 등. 기존 컴포넌트 라이브러리와 연결할 수 있는 도구일수록 실전 가치가 높습니다.
+
+## 현실적 품질 (2026)
+
+- 프런트엔드 초기 작업 시간을 30~60% 줄여줍니다.
+- 그러나 산출물은 **20~40%의 수동 정리**가 필요합니다 — 접근성, 시맨틱, 성능, 유지보수성.
+- 변환 품질은 **디자인 파일의 규율에 비례**합니다. 오토 레이아웃과 정돈된 네이밍 없이는 어떤 도구도 좋은 코드를 못 만듭니다.
+
+> 💡 **핵심**: 핸드오프 자동화의 성패는 도구가 아니라 **연결(Code Connect)과 파일 규율**이 결정합니다. "그리는 대로 코드가 된다"가 아니라 "정리한 만큼 코드가 된다"입니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"claude — Figma MCP 핸드오프","lines":[{"text":"선택한 결제 화면을 React로 구현해 줘","tone":"cmd"},{"text":"Figma MCP: 레이어 트리·토큰·컴포넌트명 수신","tone":"out"},{"text":"Code Connect 매핑 발견: Button/Primary → <Button>","tone":"ok"},{"text":"CheckoutForm.tsx 생성 (우리 컴포넌트 사용)","tone":"ok"},{"text":"# 사람: 접근성 라벨·에러 상태·긴 텍스트 보완","tone":"comment"},{"text":"npm run check","tone":"cmd"},{"text":"✓ lint · type · test 통과","tone":"ok"},{"text":"# 초기 구현 60% 단축, 정리 30%는 사람 몫","tone":"comment"}],"caption":"구조화 데이터 + 컴포넌트 매핑 + 사람의 마무리 — 2026년 핸드오프의 실제 모습입니다."}$aix$::jsonb, null, 6, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b8d45ce9-0ef2-b1da-7458-42b65eb45abb', '354e435d-32ba-67e2-c6d3-b58bf9c0c412', 'figma-product-design/ai-user-research', 'ai-user-research', '유저 리서치에 AI: 전사·태깅·인사이트 추출',
+  $aix$인터뷰 6건을 분석하는 데 일주일 걸리던 일이 하루로 줄었습니다. 단, **줄어든 것은 시간이지 판단 책임이 아닙니다**.
+
+## AI가 잘하는 것 (2026 기준)
+
+- **전사** — 음성→텍스트 정확도 95~98%, 화자 분리까지 자동입니다. 이 단계는 안심하고 맡기세요.
+- **태깅·클러스터링** — Dovetail의 Magic Cluster처럼 하이라이트를 주제별로 자동 그룹화합니다. 테마 추출은 전문가 코더와 80~85% 일치 수준 — 쓸 만하지만 **맹신할 수준은 아닙니다**.
+- **질의 응답** — "가입 중 이탈 신호가 나온 순간은?"처럼 전사본 전체에 질문을 던져 근거 발췌를 받습니다.
+
+## 반드시 지킬 편향 가드
+
+- **원문 대조** — AI 요약의 모든 인사이트는 원문 인용으로 역추적합니다. 인용 없는 인사이트는 채택하지 않습니다.
+- **확증 편향 경계** — "사용자들이 X를 싫어하지?"라고 물으면 AI는 싫어한 증거만 모아줍니다. 중립형 질문으로 물으세요.
+- **소수 의견 확인** — 클러스터링은 다수 패턴을 키우고 소수 신호를 묻습니다. 어느 클러스터에도 속하지 않은 발언을 일부러 훑어보세요.
+
+> 💡 **핵심**: 전사는 맡기고, 태깅은 검토하고, 인사이트는 **원문 인용으로 검증**합니다. AI는 리서치의 손을 대신하지, 판단을 대신하지 않습니다.$aix$,
+  $aix${"type":"flow","title":"AI 리서치 분석 파이프라인","nodes":[{"label":"녹음 업로드 → 자동 전사","sublabel":"정확도 95~98% · 화자 분리","icon":"mic","tone":"primary"},{"label":"AI 태깅·클러스터링","sublabel":"전문가와 80~85% 일치 — 검토 필요","icon":"brain","tone":"accent"},{"label":"원문 대조 검증","sublabel":"인용 없는 인사이트는 폐기","icon":"search","tone":"warning","edgeLabel":"사람의 관문"},{"label":"인사이트 확정·공유","sublabel":"근거 인용과 함께 문서화","icon":"check","tone":"success"}],"caption":"세 번째 관문(원문 대조)을 건너뛰는 순간 리서치가 아니라 소설이 됩니다."}$aix$::jsonb, $aix${"title":"인터뷰 녹취 AI 분석 따라하기","app":{"kind":"browser","url":"app.dovetail.com/projects/onboarding","blocks":[{"id":"b-head","type":"heading","label":"온보딩 리서치 — 인터뷰 6건"},{"id":"b-upload","type":"button","label":"녹음 파일 업로드"},{"id":"b-file","type":"card","label":"🎙 interview-03.mp3 (42분)","hidden":true},{"id":"b-transcribed","type":"badge","label":"전사 완료 — 화자 2명 분리","hidden":true},{"id":"b-cluster","type":"button","label":"테마 자동 클러스터링"},{"id":"b-theme1","type":"card","label":"테마 1: 가입 단계가 너무 길다 (5/6명)","hidden":true},{"id":"b-theme2","type":"card","label":"테마 2: 요금제 용어가 어렵다 (3/6명)","hidden":true},{"id":"b-quote","type":"text","label":"원문 인용: \"세 번째 화면에서 포기할 뻔했어요\"","hidden":true},{"id":"b-ask","type":"input","label":"전사본에 질문하기…"},{"id":"b-verify","type":"badge","label":"⚠ 원문 대조 후 인사이트 확정","hidden":true}]},"actions":[{"t":"caption","text":"① 인터뷰 녹음을 업로드해 자동 전사합니다"},{"t":"move","target":"b-upload"},{"t":"click"},{"t":"reveal","target":"b-file"},{"t":"reveal","target":"b-transcribed"},{"t":"wait","ms":500},{"t":"caption","text":"② 테마 자동 클러스터링을 실행합니다"},{"t":"move","target":"b-cluster"},{"t":"click"},{"t":"wait","ms":400},{"t":"reveal","target":"b-theme1"},{"t":"reveal","target":"b-theme2"},{"t":"caption","text":"③ 테마의 근거를 원문 인용으로 확인합니다"},{"t":"move","target":"b-theme1"},{"t":"click"},{"t":"reveal","target":"b-quote"},{"t":"wait","ms":400},{"t":"caption","text":"④ 중립형 질문으로 데이터를 파고듭니다"},{"t":"click","target":"b-ask"},{"t":"type","target":"b-ask","text":"가입 중 이탈 신호가 나온 순간은?"},{"t":"wait","ms":400},{"t":"caption","text":"⑤ 요약은 초안 — 원문 대조로 사람이 확정합니다"},{"t":"reveal","target":"b-verify"},{"t":"move","target":"b-verify"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '416f08a9-0111-b436-38f2-03f6b0de4bcc', '354e435d-32ba-67e2-c6d3-b58bf9c0c412', 'figma-product-design/usability-analysis', 'usability-analysis', '사용성 테스트 분석 자동화, 그리고 편향 주의보',
+  $aix$사용성 테스트의 병목은 진행이 아니라 **분석**이었습니다 — 세션 영상 수십 시간을 돌려보는 일. 2026년의 도구들은 이 병목을 정면으로 공략합니다.
+
+## 자동화되는 것들
+
+- **세션 요약** — Maze, UserTesting 등이 세션별 요약과 태스크 성공률·이탈 지점을 자동 산출합니다.
+- **AI 모더레이터** — 미리 정한 가이드에 따라 비대면 세션을 진행하고 후속 질문까지 던집니다. 사람 모더레이터의 즉흥적 유도 발언이 없어 오히려 **일관성**이 좋습니다.
+- **편향 질문 감지** — 스터디 설계 단계에서 유도 질문("이 버튼이 편하시죠?")을 자동으로 지적해줍니다.
+
+## 그래도 남는 함정
+
+- AI 요약은 **말한 것**을 잘 잡고 **말하지 않은 것**(머뭇거림, 표정, 어긋난 클릭)을 놓칩니다. 실패 태스크의 영상은 직접 보세요.
+- 요약이 매끄러울수록 검증 없이 믿게 되는 **자동화 편향**이 생깁니다. 결정에 쓰이는 발견은 반드시 세션 원본으로 재확인합니다.
+- 참가자 모집 편향은 AI가 못 잡습니다 — 표본 설계는 여전히 사람 일입니다.
+
+> 💡 **핵심**: 분석 자동화의 올바른 용도는 "볼 영상을 줄이는 것"이지 "영상을 안 보는 것"이 아닙니다. **AI가 골라준 결정적 순간을 사람이 봅니다.**$aix$,
+  $aix${"type":"compare","title":"분석 자동화: 잘 맡긴 팀 vs 잘못 맡긴 팀","columns":[{"title":"잘못 맡긴 팀","icon":"alert","tone":"warning","items":["AI 요약만 읽고 결정","유도 질문을 그대로 사용","머뭇거림·비언어 신호 놓침","매끄러운 요약을 맹신"]},{"title":"잘 맡긴 팀","icon":"check","tone":"primary","items":["AI가 지목한 순간만 영상 확인","편향 질문 감지로 설계 보정","실패 태스크는 원본 시청","결정용 발견은 재검증"]}],"caption":"같은 도구, 다른 결과 — 차이는 '원본 확인 관문'의 유무입니다."}$aix$::jsonb, null, 5, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'db5a8e3f-e473-6595-25ca-f20790bcd22b', '354e435d-32ba-67e2-c6d3-b58bf9c0c412', 'figma-product-design/new-designer-role', 'new-designer-role', '흐려지는 경계: 개발자·PM과 일하는 새 방식',
+  $aix$AI가 협업을 줄여줄 것 같지만, 현실은 반대입니다. **모두가 빨라진 만큼 맞춰야 할 접점이 늘었습니다.**
+
+## 무슨 일이 벌어지고 있나
+
+- 디자이너의 65%가 프로덕트·엔지니어링 업무를 더 맡게 됐다고 답했고, 엔지니어와 PM도 40%가 디자인 작업에 더 참여합니다. **역할 경계가 실제로 흐려지고 있습니다.**
+- PM이 Figma Make로 프로토타입을 만들어 오고, 개발자가 Code to Canvas로 구현 변형을 디자인 파일에 밀어 넣는 시대 — 디자인 파일은 더 이상 디자이너만의 공간이 아닙니다.
+
+## 디자이너의 새 포지션
+
+- **품질 기준의 소유자** — 누구나 화면을 만들 수 있으니, "무엇이 좋은 화면인가"의 기준을 세우고 지키는 사람이 필요합니다.
+- **시스템의 관리자** — 모두가 쓰는 라이브러리·토큰·가이드가 곧 제품 일관성입니다. 시스템 관리가 곧 디자인 리더십입니다.
+- **구현 감각의 통역자** — HTML/CSS와 컴포넌트 구조를 이해하면 핸드오프가 깨끗해지고, AI가 만든 코드 초안에 대한 대화가 가능해집니다.
+
+## 실무 팁
+
+PM의 AI 프로토타입을 무시하지도, 그대로 받지도 마세요. **"의도는 접수, 완성도는 시스템으로"** — 초안으로 존중하고 시스템으로 재해석하는 것이 새 협업 예절입니다.
+
+> 💡 **핵심**: AI 시대의 디자이너는 화면의 생산자에서 **기준과 시스템의 소유자**로 이동합니다. 경계가 흐려질수록 기준을 쥔 사람이 중심이 됩니다.$aix$,
+  $aix${"type":"grid","title":"디자이너의 새 포지션 4가지","items":[{"label":"품질 기준의 소유자","sublabel":"무엇이 좋은 화면인지 정의","icon":"target","tone":"primary"},{"label":"시스템 관리자","sublabel":"라이브러리·토큰이 곧 일관성","icon":"layers","tone":"accent"},{"label":"구현 통역자","sublabel":"코드 구조를 아는 핸드오프","icon":"code","tone":"success"},{"label":"판단하는 눈","sublabel":"AI 초안 10개 중 정답 고르기","icon":"eye","tone":"warning"}],"caption":"PM도 개발자도 화면을 만드는 시대 — 기준을 쥔 사람이 디자이너입니다."}$aix$::jsonb, null, 5, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4dff5c79-41d1-2df9-af93-bbf3716ec545', '354e435d-32ba-67e2-c6d3-b58bf9c0c412', 'figma-product-design/portfolio-career', 'portfolio-career', 'AI 시대의 포트폴리오: 결과물이 아니라 판단을 보여라',
+  $aix$누구나 그럴듯한 화면을 만드는 시대에, 그럴듯한 화면만 모은 포트폴리오는 **아무것도 증명하지 못합니다**.
+
+## 채용하는 쪽이 이제 보는 것
+
+- 최종 화면이 아니라 **과정의 판단** — 왜 이 방향을 골랐고, 무엇을 버렸는가.
+- AI를 **어떻게 부렸는가** — 어떤 단계를 자동화했고, 어디에 사람의 손을 남겼는가.
+- **시스템 사고** — 화면 한 장이 아니라 컴포넌트·토큰·가이드로 사고한 흔적.
+
+## 포트폴리오에 넣을 새 재료
+
+1. **비포/애프터 스토리** — AI 초안 vs 시스템에 맞게 다듬은 결과를 나란히. "이 간극이 내 일"이라는 가장 강한 증명입니다.
+2. **폐기한 옵션의 이유** — 생성한 10개 중 9개를 버린 기준을 한 단락으로.
+3. **리서치→결정의 연결** — 인터뷰 인용이 어떻게 디자인 결정으로 이어졌는지 근거 사슬을 보여줍니다.
+4. **워크플로우 자체** — 내가 설계한 AI 협업 프로세스(도구·관문·검증)를 다이어그램으로.
+
+## 차별화의 방향
+
+"AI를 안 쓴다"도 "AI가 다 했다"도 아닙니다. **AI를 팀원처럼 부리되 품질의 최종 서명은 내가 한다** — 이것이 2026년 시니어의 서사입니다.
+
+> 💡 **핵심**: 포트폴리오의 질문이 바뀌었습니다. "무엇을 만들었나"가 아니라 **"무엇을 판단했나"**. 판단의 기록을 남기는 습관이 곧 커리어 자산입니다.$aix$,
+  $aix${"type":"steps","title":"AI 시대 포트폴리오 재구성 4단계","steps":[{"label":"비포/애프터 배치","sublabel":"AI 초안 vs 내가 다듬은 결과","icon":"image"},{"label":"폐기의 이유 기록","sublabel":"버린 9개의 판단 기준","icon":"filter"},{"label":"근거 사슬 연결","sublabel":"리서치 인용 → 디자인 결정","icon":"link"},{"label":"워크플로우 공개","sublabel":"도구·관문·검증 다이어그램","icon":"workflow"}],"caption":"결과물은 흔해졌습니다 — 판단의 기록이 여러분의 서명입니다."}$aix$::jsonb, null, 5, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: AI 영상 제작: Runway · Veo · Kling과 숏폼 자동화
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'fb2289d4-2769-d76f-0c55-f213a266a1bb', 'ai-video', 'AI 영상 제작: Runway · Veo · Kling과 숏폼 자동화', $aix$2026년 영상 제작의 진입 장벽은 카메라가 아니라 '설계'입니다. 이 강의에서는 Sora, Runway, Google Veo 같은 텍스트-투-비디오 도구의 원리와 한계를 이해하고, 시네마토그래피 언어로 프롬프트를 쓰는 법을 익힙니다. 이어서 스토리보드→클립 생성→캡컷 편집으로 이어지는 제작 워크플로우를 완성하고, 대본→음성→클립→자막을 자동으로 이어붙여 릴스·쇼츠·틱톡에 배포하는 숏폼 자동화 파이프라인까지 설계합니다.$aix$,
+  null, 'creative', 'intermediate', array['Runway', 'Google Veo', 'Kling', '숏폼 자동화', 'CapCut']::text[]
 ) on conflict (id) do update set
   title = excluded.title, description = excluded.description,
   category = excluded.category, level = excluded.level, tags = excluded.tags;
@@ -1536,19 +2136,19 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 - 프롬프트를 이해한 모델이 **잠재 공간의 노이즈**에서 시작해, 수십 단계에 걸쳐 노이즈를 걷어내며 프레임을 완성합니다.
 - 2026년 주력 모델들은 **디퓨전 트랜스포머(DiT)** 구조로, 시간축까지 한 덩어리로 학습해 프레임 간 움직임이 자연스럽습니다.
-- Veo, Sora 계열은 **영상과 동기화된 오디오**(대사·효과음)까지 함께 생성합니다.
+- Veo를 비롯한 최신 모델들은 **영상과 동기화된 오디오**(대사·효과음)까지 함께 생성합니다.
 
 ## 여전히 남은 두 가지 한계
 
 - **물리 일관성** — 모델은 물리 법칙을 '계산'하지 않고 '흉내' 냅니다. 손가락 개수, 액체의 흐름, 화면 밖으로 나갔다 돌아온 물체(객체 영속성)가 자주 무너집니다.
-- **길이 제한** — 한 번에 생성되는 클립은 보통 **5~15초**. 긴 영상은 여러 클립을 이어 붙여야 하고, 그래서 '편집 파이프라인'이 필수입니다.
+- **길이 제한** — 한 번에 생성되는 클립은 보통 **10초 안팎**, 길어야 수십 초입니다. 긴 영상은 여러 클립을 이어 붙여야 하고, 그래서 '편집 파이프라인'이 필수입니다.
 
 ## 실무 감각
 
 한계는 회피 대상이지 극복 대상이 아닙니다. 물리가 무너지기 쉬운 장면(손 클로즈업, 군중)은 피해서 설계하고, 긴 서사는 짧은 클립의 합으로 쪼갭니다.
 
 > 💡 **핵심**: 영상 생성 AI는 "물리 시뮬레이터"가 아니라 "그럴듯함 생성기"입니다. 한계를 아는 사람이 한계 안에서 완성도를 만듭니다.$aix$,
-  $aix${"type":"flow","title":"텍스트가 영상이 되기까지","nodes":[{"label":"프롬프트 이해","sublabel":"장면·피사체·카메라 해석","icon":"file-text","tone":"primary"},{"label":"잠재 공간 노이즈","sublabel":"무작위 상태에서 시작","icon":"sparkles","tone":"muted"},{"label":"확산 디노이징","sublabel":"수십 단계 반복으로 프레임 조각","icon":"wand","tone":"accent","edgeLabel":"시간축 포함 한 덩어리로"},{"label":"클립 완성 (5~15초)","sublabel":"오디오 동시 생성 모델도 등장","icon":"video","tone":"success"}],"caption":"물리 법칙은 '계산'이 아니라 '흉내' — 그래서 손·액체·군중이 약점입니다."}$aix$::jsonb, null, 5, 0
+  $aix${"type":"flow","title":"텍스트가 영상이 되기까지","nodes":[{"label":"프롬프트 이해","sublabel":"장면·피사체·카메라 해석","icon":"file-text","tone":"primary"},{"label":"잠재 공간 노이즈","sublabel":"무작위 상태에서 시작","icon":"sparkles","tone":"muted"},{"label":"확산 디노이징","sublabel":"수십 단계 반복으로 프레임 조각","icon":"wand","tone":"accent","edgeLabel":"시간축 포함 한 덩어리로"},{"label":"클립 완성 (10초 안팎)","sublabel":"오디오 동시 생성 모델도 등장","icon":"video","tone":"success"}],"caption":"물리 법칙은 '계산'이 아니라 '흉내' — 그래서 손·액체·군중이 약점입니다."}$aix$::jsonb, null, 5, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -1559,7 +2159,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 ## 5대 플레이어의 성격
 
-- **Sora (OpenAI)** — 복잡한 장면 연출과 서사 표현이 강점. 소셜 앱과 결합해 '만들고 바로 공유'하는 흐름을 만들었습니다.
+- **Sora (OpenAI)** — 복잡한 장면 연출과 서사 표현으로 시장을 열었지만, 소셜 앱이 2026년 상반기에 종료되고 API도 단계적 중단이 예고됐습니다. 신규 파이프라인에는 넣지 않는 편이 안전합니다.
 - **Runway (Gen 시리즈)** — 크리에이터용 **편집 도구가 가장 성숙**. 모션 브러시, 카메라 컨트롤 등 세밀한 연출 개입이 가능합니다.
 - **Google Veo** — **네이티브 오디오 생성**과 프롬프트 충실도가 강점. Flow 등 구글 생태계와의 연결이 매끄럽습니다.
 - **Pika** — 빠르고 가벼운 밈·이펙트 특화. 숏폼 감성의 변형 효과가 풍부합니다.
@@ -1568,15 +2168,15 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 ## 선택 기준 3가지
 
 1. **연출 통제력**이 필요하면 → Runway
-2. **오디오 포함 완성형 클립**이 필요하면 → Veo, Sora
+2. **오디오 포함 완성형 클립**이 필요하면 → Veo
 3. **대량 생산 단가**가 중요하면 → Kling, Pika
 
 ## 하나만 기억한다면
 
 도구는 계속 바뀝니다. "어떤 도구가 최고인가"보다 **"내 파이프라인의 어느 단계에 어떤 도구를 꽂는가"**를 기준으로 판단하세요.
 
-> 💡 **핵심**: 2026년의 정답은 단일 도구가 아니라 **조합**입니다 — 연출은 Runway, 완성형은 Veo/Sora, 물량은 Kling/Pika.$aix$,
-  $aix${"type":"grid","title":"2026 텍스트-투-비디오 지형도","items":[{"label":"Sora","sublabel":"복잡한 연출 · 소셜 결합","icon":"sparkles","tone":"primary"},{"label":"Runway","sublabel":"연출 통제력 · 편집 도구 성숙","icon":"camera","tone":"primary"},{"label":"Google Veo","sublabel":"네이티브 오디오 · 프롬프트 충실","icon":"music","tone":"accent"},{"label":"Pika","sublabel":"밈 · 이펙트 특화","icon":"zap","tone":"muted"},{"label":"Kling","sublabel":"가성비 · 인물 동작","icon":"users","tone":"muted"},{"label":"선택 기준","sublabel":"통제력 / 오디오 / 단가","icon":"target","tone":"warning"}],"caption":"단일 도구가 아니라 파이프라인 단계별 조합으로 고릅니다."}$aix$::jsonb, null, 6, 1
+> 💡 **핵심**: 2026년의 정답은 단일 도구가 아니라 **조합**입니다 — 연출은 Runway, 완성형은 Veo, 물량은 Kling/Pika.$aix$,
+  $aix${"type":"grid","title":"2026 텍스트-투-비디오 지형도","items":[{"label":"Sora","sublabel":"복잡한 연출 · 서비스 종료 수순","icon":"sparkles","tone":"primary"},{"label":"Runway","sublabel":"연출 통제력 · 편집 도구 성숙","icon":"camera","tone":"primary"},{"label":"Google Veo","sublabel":"네이티브 오디오 · 프롬프트 충실","icon":"music","tone":"accent"},{"label":"Pika","sublabel":"밈 · 이펙트 특화","icon":"zap","tone":"muted"},{"label":"Kling","sublabel":"가성비 · 인물 동작","icon":"users","tone":"muted"},{"label":"선택 기준","sublabel":"통제력 / 오디오 / 단가","icon":"target","tone":"warning"}],"caption":"단일 도구가 아니라 파이프라인 단계별 조합으로 고릅니다."}$aix$::jsonb, null, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -1601,14 +2201,14 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 "아름다운, 멋진" 같은 감상 형용사는 자리만 차지합니다. 그 자리에 조명과 렌즈 단어를 넣으세요.
 
 > 💡 **핵심**: 좋은 영상 프롬프트는 소설이 아니라 **콘티 지문**입니다 — 샷·움직임·조명을 기술 용어로 지정하세요.$aix$,
-  $aix${"type":"chat","title":"감상 프롬프트 vs 시네마토그래피 프롬프트","messages":[{"role":"user","text":"바닷가에서 달리는 강아지의 아름답고 감동적인 영상"},{"role":"ai","text":"→ 평범한 스톡 영상 느낌의 결과물 (연출 정보 없음)"},{"role":"user","text":"트래킹 샷: 골든 리트리버가 해질녘 해변을 달린다. 로우 앵글, 느린 트래킹, 골든 아워 역광, 얕은 심도, 35mm 필름 룩"},{"role":"ai","text":"→ 카메라가 함께 달리는 영화적 장면 (샷·움직임·조명이 모두 지정됨)"}],"caption":"감상 형용사를 빼고 그 자리에 샷·카메라·조명 용어를 넣으세요."}$aix$::jsonb, $aix${"title":"Runway에서 시네마토그래피 프롬프트 따라하기","app":{"kind":"browser","url":"app.runwayml.com/generate","blocks":[{"id":"b-head","type":"heading","label":"Generate Video — Runway Gen-4"},{"id":"b-prompt","type":"input","label":"샷·피사체·배경 프롬프트 입력…"},{"id":"b-style","type":"input","label":"카메라·조명·질감 옵션 입력…"},{"id":"b-ratio","type":"badge","label":"9:16 · 10초 · Gen-4"},{"id":"b-generate","type":"button","label":"Generate"},{"id":"b-progress","type":"badge","label":"생성 중… 디노이징 45%","hidden":true},{"id":"b-clip1","type":"card","label":"🎬 beach-run_v1.mp4 · 10초","hidden":true},{"id":"b-clip2","type":"card","label":"🎬 beach-run_v2.mp4 · 10초","hidden":true},{"id":"b-play","type":"button","label":"▶ 미리보기 재생","hidden":true}]},"actions":[{"t":"caption","text":"① 샷 종류와 피사체·행동을 먼저 지정합니다"},{"t":"move","target":"b-prompt"},{"t":"click"},{"t":"type","target":"b-prompt","text":"트래킹 샷: 해질녘 해변을 달리는 리트리버"},{"t":"caption","text":"② 감상 형용사 대신 조명·렌즈 언어를 넣습니다"},{"t":"click","target":"b-style"},{"t":"type","target":"b-style","text":"골든 아워 역광, 얕은 심도, 35mm 필름 룩"},{"t":"caption","text":"③ 비율과 길이를 확인하고 생성을 시작합니다"},{"t":"move","target":"b-ratio"},{"t":"click","target":"b-generate"},{"t":"reveal","target":"b-progress"},{"t":"wait","ms":900},{"t":"hide","target":"b-progress"},{"t":"caption","text":"④ 변형 2개를 비교해 베스트를 고릅니다"},{"t":"reveal","target":"b-clip1"},{"t":"reveal","target":"b-clip2"},{"t":"move","target":"b-clip1"},{"t":"dblclick"},{"t":"caption","text":"⑤ 재생하며 물리 붕괴 프레임이 없는지 검수합니다"},{"t":"reveal","target":"b-play"},{"t":"click","target":"b-play"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 2
+  $aix${"type":"chat","title":"감상 프롬프트 vs 시네마토그래피 프롬프트","messages":[{"role":"user","text":"바닷가에서 달리는 강아지의 아름답고 감동적인 영상"},{"role":"ai","text":"→ 평범한 스톡 영상 느낌의 결과물 (연출 정보 없음)"},{"role":"user","text":"트래킹 샷: 골든 리트리버가 해질녘 해변을 달린다. 로우 앵글, 느린 트래킹, 골든 아워 역광, 얕은 심도, 35mm 필름 룩"},{"role":"ai","text":"→ 카메라가 함께 달리는 영화적 장면 (샷·움직임·조명이 모두 지정됨)"}],"caption":"감상 형용사를 빼고 그 자리에 샷·카메라·조명 용어를 넣으세요."}$aix$::jsonb, $aix${"title":"Runway에서 시네마토그래피 프롬프트 따라하기","app":{"kind":"browser","url":"app.runwayml.com/generate","blocks":[{"id":"b-head","type":"heading","label":"Generate Video — Runway"},{"id":"b-prompt","type":"input","label":"샷·피사체·배경 프롬프트 입력…"},{"id":"b-style","type":"input","label":"카메라·조명·질감 옵션 입력…"},{"id":"b-ratio","type":"badge","label":"9:16 · 10초 · Gen 시리즈"},{"id":"b-generate","type":"button","label":"Generate"},{"id":"b-progress","type":"badge","label":"생성 중… 디노이징 45%","hidden":true},{"id":"b-clip1","type":"card","label":"🎬 beach-run_v1.mp4 · 10초","hidden":true},{"id":"b-clip2","type":"card","label":"🎬 beach-run_v2.mp4 · 10초","hidden":true},{"id":"b-play","type":"button","label":"▶ 미리보기 재생","hidden":true}]},"actions":[{"t":"caption","text":"① 샷 종류와 피사체·행동을 먼저 지정합니다"},{"t":"move","target":"b-prompt"},{"t":"click"},{"t":"type","target":"b-prompt","text":"트래킹 샷: 해질녘 해변을 달리는 리트리버"},{"t":"caption","text":"② 감상 형용사 대신 조명·렌즈 언어를 넣습니다"},{"t":"click","target":"b-style"},{"t":"type","target":"b-style","text":"골든 아워 역광, 얕은 심도, 35mm 필름 룩"},{"t":"caption","text":"③ 비율과 길이를 확인하고 생성을 시작합니다"},{"t":"move","target":"b-ratio"},{"t":"click","target":"b-generate"},{"t":"reveal","target":"b-progress"},{"t":"wait","ms":900},{"t":"hide","target":"b-progress"},{"t":"caption","text":"④ 변형 2개를 비교해 베스트를 고릅니다"},{"t":"reveal","target":"b-clip1"},{"t":"reveal","target":"b-clip2"},{"t":"move","target":"b-clip1"},{"t":"dblclick"},{"t":"caption","text":"⑤ 재생하며 물리 붕괴 프레임이 없는지 검수합니다"},{"t":"reveal","target":"b-play"},{"t":"click","target":"b-play"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
   minutes = excluded.minutes, order_index = excluded.order_index;
 insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '29594c0c-deac-0dc7-2095-b6a30752061a', '2e800625-0718-244a-324f-b6c33fd0a71d', 'ai-video/storyboard-pipeline', 'storyboard-pipeline', '스토리보드→클립→편집: 파이프라인으로 만들기',
-  $aix$클립 한 개는 누구나 뽑습니다. 차이는 **여러 클립을 하나의 영상으로 완성하는 파이프라인**에서 갈립니다. 5~15초 길이 제한이 있는 한, 편집 없는 AI 영상은 없습니다.
+  $aix$클립 한 개는 누구나 뽑습니다. 차이는 **여러 클립을 하나의 영상으로 완성하는 파이프라인**에서 갈립니다. 클립 단위 길이 제한이 있는 한, 편집 없는 AI 영상은 없습니다.
 
 ## 파이프라인 5단계
 
@@ -1644,7 +2244,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 1. **캐릭터 시트 확보** — 이미지 생성 AI로 주인공의 기준 이미지를 만들고, 레퍼런스 기능(캐릭터 고정)으로 다양한 각도·의상을 뽑습니다.
 2. **씬별 키프레임 생성** — 스토리보드의 각 씬을 **정지 이미지**로 먼저 만듭니다. 이미지는 영상보다 싸고 빠르니, 여기서 충분히 고릅니다.
-3. **키프레임 → I2V 변환** — 확정된 이미지를 시작 프레임으로 넣고, 프롬프트에는 **움직임만** 지시합니다. Runway·Kling·Veo 모두 시작/끝 프레임 지정을 지원합니다.
+3. **키프레임 → I2V 변환** — 확정된 이미지를 시작 프레임으로 넣고, 프롬프트에는 **움직임만** 지시합니다. Runway·Kling·Veo 모두 시작 프레임 입력을 지원하고, Kling·Veo는 끝 프레임 지정까지 가능합니다.
 
 ## 보너스: 끝 프레임 연결
 
@@ -1858,7 +2458,7 @@ Custom 모드의 가사 칸에서는 **대괄호 구조 태그**로 곡의 전�
 - 아티스트 실명은 정책상 무시되거나 차단됩니다. 이름 대신 **소리를 묘사**하세요.
 
 > 💡 **핵심**: 스타일 태그 = 장르 + 무드 + 악기 + BPM. 이 네 축만 채우면 프롬프트의 80%는 완성입니다.$aix$,
-  $aix${"type":"chat","title":"스타일 프롬프트 개선 예시","messages":[{"role":"user","text":"신나는 노래 만들어줘"},{"role":"ai","text":"장르·무드·악기·BPM이 없어 임의로 생성합니다 → 매번 다른 결과"},{"role":"user","text":"upbeat synthwave, retro, punchy drums, analog synth, 118 BPM, no vocals"},{"role":"ai","text":"4축이 모두 지정됨 → 의도한 소리를 재현 가능하게 생성"}],"caption":"막연한 형용사 대신 음악을 설명하는 4축 언어를 쓰세요."}$aix$::jsonb, $aix${"title":"Suno에서 스타일 태그로 BGM 만들기 따라하기","app":{"kind":"browser","url":"app.suno.ai/create","blocks":[{"id":"h1","type":"heading","label":"Create"},{"id":"badge-mode","type":"badge","label":"Custom 모드"},{"id":"lbl-style","type":"text","label":"스타일 프롬프트 (Styles)"},{"id":"in-style","type":"input","label":"장르, 무드, 악기, BPM을 쉼표로 입력…"},{"id":"lbl-lyrics","type":"text","label":"가사 (Lyrics) — 구조 태그 사용 가능"},{"id":"in-lyrics","type":"input","label":"[Verse] [Chorus] 구조 태그 입력…"},{"id":"btn-create","type":"button","label":"Create"},{"id":"badge-gen","type":"badge","label":"생성 중… 곡 2개를 만들고 있습니다","hidden":true},{"id":"card-1","type":"card","label":"🎵 새벽 감성 lo-fi — v1 (2:58)","hidden":true},{"id":"card-2","type":"card","label":"🎵 새벽 감성 lo-fi — v2 (3:04)","hidden":true},{"id":"btn-extend","type":"button","label":"Extend — 이어서 발전시키기","hidden":true}]},"actions":[{"t":"caption","text":"① Custom 모드에서 스타일 입력창을 클릭합니다"},{"t":"move","target":"in-style"},{"t":"click"},{"t":"caption","text":"② 장르·무드·악기·BPM, 4축 언어로 스타일을 적습니다"},{"t":"type","target":"in-style","text":"lo-fi, dreamy, piano, 80 BPM, no vocals"},{"t":"wait","ms":400},{"t":"caption","text":"③ 가사 칸에는 대괄호 구조 태그로 전개를 지정합니다"},{"t":"click","target":"in-lyrics"},{"t":"type","target":"in-lyrics","text":"[Intro] [Verse] [Chorus] [Outro]"},{"t":"caption","text":"④ Create를 눌러 생성을 시작합니다"},{"t":"move","target":"btn-create"},{"t":"click"},{"t":"reveal","target":"badge-gen"},{"t":"wait","ms":800},{"t":"hide","target":"badge-gen"},{"t":"caption","text":"⑤ 동시에 생성된 곡 2개를 비교해 마음에 드는 쪽을 고릅니다"},{"t":"reveal","target":"card-1"},{"t":"reveal","target":"card-2"},{"t":"move","target":"card-2"},{"t":"click"},{"t":"caption","text":"⑥ Extend로 고른 곡을 이어서 발전시킵니다"},{"t":"reveal","target":"btn-extend"},{"t":"move","target":"btn-extend"},{"t":"click"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 1
+  $aix${"type":"chat","title":"스타일 프롬프트 개선 예시","messages":[{"role":"user","text":"신나는 노래 만들어줘"},{"role":"ai","text":"장르·무드·악기·BPM이 없어 임의로 생성합니다 → 매번 다른 결과"},{"role":"user","text":"upbeat synthwave, retro, punchy drums, analog synth, 118 BPM, no vocals"},{"role":"ai","text":"4축이 모두 지정됨 → 의도한 소리를 재현 가능하게 생성"}],"caption":"막연한 형용사 대신 음악을 설명하는 4축 언어를 쓰세요."}$aix$::jsonb, $aix${"title":"Suno에서 스타일 태그로 BGM 만들기 따라하기","app":{"kind":"browser","url":"suno.com/create","blocks":[{"id":"h1","type":"heading","label":"Create"},{"id":"badge-mode","type":"badge","label":"Custom 모드"},{"id":"lbl-style","type":"text","label":"스타일 프롬프트 (Styles)"},{"id":"in-style","type":"input","label":"장르, 무드, 악기, BPM을 쉼표로 입력…"},{"id":"lbl-lyrics","type":"text","label":"가사 (Lyrics) — 구조 태그 사용 가능"},{"id":"in-lyrics","type":"input","label":"[Verse] [Chorus] 구조 태그 입력…"},{"id":"btn-create","type":"button","label":"Create"},{"id":"badge-gen","type":"badge","label":"생성 중… 곡 2개를 만들고 있습니다","hidden":true},{"id":"card-1","type":"card","label":"🎵 새벽 감성 lo-fi — v1 (2:58)","hidden":true},{"id":"card-2","type":"card","label":"🎵 새벽 감성 lo-fi — v2 (3:04)","hidden":true},{"id":"btn-extend","type":"button","label":"Extend — 이어서 발전시키기","hidden":true}]},"actions":[{"t":"caption","text":"① Custom 모드에서 스타일 입력창을 클릭합니다"},{"t":"move","target":"in-style"},{"t":"click"},{"t":"caption","text":"② 장르·무드·악기·BPM, 4축 언어로 스타일을 적습니다"},{"t":"type","target":"in-style","text":"lo-fi, dreamy, piano, 80 BPM, no vocals"},{"t":"wait","ms":400},{"t":"caption","text":"③ 가사 칸에는 대괄호 구조 태그로 전개를 지정합니다"},{"t":"click","target":"in-lyrics"},{"t":"type","target":"in-lyrics","text":"[Intro] [Verse] [Chorus] [Outro]"},{"t":"caption","text":"④ Create를 눌러 생성을 시작합니다"},{"t":"move","target":"btn-create"},{"t":"click"},{"t":"reveal","target":"badge-gen"},{"t":"wait","ms":800},{"t":"hide","target":"badge-gen"},{"t":"caption","text":"⑤ 동시에 생성된 곡 2개를 비교해 마음에 드는 쪽을 고릅니다"},{"t":"reveal","target":"card-1"},{"t":"reveal","target":"card-2"},{"t":"move","target":"card-2"},{"t":"click"},{"t":"caption","text":"⑥ Extend로 고른 곡을 이어서 발전시킵니다"},{"t":"reveal","target":"btn-extend"},{"t":"move","target":"btn-extend"},{"t":"click"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -1931,7 +2531,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 - 복제 가능한 목소리는 **본인 것, 또는 서면 동의를 받은 목소리**뿐입니다.
 - 연예인·정치인·지인의 목소리 무단 복제는 ElevenLabs 약관 위반이자, 한국에서도 퍼블리시티권 침해·성폭력처벌법(딥페이크)상 처벌 대상이 될 수 있습니다.
-- 2026년 시행 중인 **EU AI Act** 등 주요 규제는 AI 생성 음성에 **AI임을 고지**하도록 요구합니다. 국내 플랫폼들도 AI 콘텐츠 표시를 요구하는 추세입니다.
+- 2026년 8월부터 적용되는 **EU AI Act** 투명성 의무 등 주요 규제는 AI 생성 음성에 **AI임을 고지**하도록 요구합니다. 국내 플랫폼들도 AI 콘텐츠 표시를 요구하는 추세입니다.
 
 ## 안전한 활용 체크리스트
 
@@ -2139,7 +2739,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 - **Zapier** — 가장 쉽고 연동 앱이 가장 많음(8,000개+). 직선형 Zap 중심이라 단순 자동화에 최적. AI 에이전트 빌더(Zapier Agents)로 자연어 기반 자동화까지 확장.
 - **Make.com** — 시각적 캔버스에서 분기·반복 등 복잡한 흐름을 그리기 좋음. 오퍼레이션 단가가 저렴해 대량 실행에 유리. AI Agents 기능으로 시나리오에 자율 판단 단계를 삽입 가능.
-- **n8n** — 오픈소스. 셀프호스팅하면 실행량 과금이 없고, 코드 노드와 LangChain 기반 AI 워크플로우로 확장성이 가장 큼. 대신 초기 학습과 서버 관리가 필요.
+- **n8n** — 소스 공개(페어코드 라이선스). 셀프호스팅하면 실행량 과금이 없고, 코드 노드와 LangChain 기반 AI 워크플로우로 확장성이 가장 큼. 대신 초기 학습과 서버 관리가 필요.
 
 ## 선택 기준 3문항
 
@@ -2152,7 +2752,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 기본 개념은 세 도구가 동일하므로, 이 강의는 **Make를 기준**으로 하되 Zapier 용어를 병기합니다. 하나를 익히면 갈아타는 데 하루면 충분합니다.
 
 > 💡 **핵심**: 도구보다 **개념(트리거·노드·데이터 흐름)**이 자산입니다. 일단 하나로 시작하세요 — 이 강의에서는 Make입니다.$aix$,
-  $aix${"type":"compare","title":"2026년 자동화 도구 3파전","columns":[{"title":"Zapier","icon":"zap","tone":"accent","items":["연동 앱 8,000개+ 최다","직선형 Zap, 가장 쉬움","Zapier Agents (AI)","태스크당 비용은 높은 편"]},{"title":"Make.com","icon":"workflow","tone":"primary","items":["시각적 캔버스 · 분기 강함","오퍼레이션 단가 저렴","AI Agents 내장","이 강의의 기준 도구"]},{"title":"n8n","icon":"server","tone":"muted","items":["오픈소스 · 셀프호스팅","실행량 과금 없음(자체 서버)","코드·AI 노드 확장성 최고","서버 관리 부담 있음"]}],"caption":"쉬움 → Zapier, 복잡·대량 → Make, 보안·확장 → n8n."}$aix$::jsonb, null, 6, 1
+  $aix${"type":"compare","title":"2026년 자동화 도구 3파전","columns":[{"title":"Zapier","icon":"zap","tone":"accent","items":["연동 앱 8,000개+ 최다","직선형 Zap, 가장 쉬움","Zapier Agents (AI)","태스크당 비용은 높은 편"]},{"title":"Make.com","icon":"workflow","tone":"primary","items":["시각적 캔버스 · 분기 강함","오퍼레이션 단가 저렴","AI Agents 내장","이 강의의 기준 도구"]},{"title":"n8n","icon":"server","tone":"muted","items":["페어코드 · 셀프호스팅","실행량 과금 없음(자체 서버)","코드·AI 노드 확장성 최고","서버 관리 부담 있음"]}],"caption":"쉬움 → Zapier, 복잡·대량 → Make, 보안·확장 → n8n."}$aix$::jsonb, null, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -2262,7 +2862,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 검증용 시크릿 헤더나 토큰 필드를 하나 넣어 걸러내는 습관을 들이세요.
 
 > 💡 **핵심**: 연동 목록은 편의일 뿐, 본질은 HTTP입니다. **웹훅(받기) + HTTP 모듈(보내기)**만 있으면 사실상 모든 서비스가 연결 대상입니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"terminal — 웹훅 테스트","lines":[{"text":"# Make에서 발급받은 웹훅 URL로 테스트 데이터 전송","tone":"comment"},{"text":"curl -X POST https://hook.make.com/abc123 \\","tone":"cmd"},{"text":"  -H 'Content-Type: application/json' \\","tone":"cmd"},{"text":"  -d '{\"name\":\"김민준\",\"plan\":\"pro\",\"amount\":29000}'","tone":"cmd"},{"text":"Accepted","tone":"ok"},{"text":"# Make 캔버스: 웹훅 노드에 초록 불 — 시나리오 즉시 실행","tone":"comment"},{"text":"# name/plan/amount 필드가 다음 노드에서 매핑 가능해짐","tone":"dim"}],"caption":"curl 한 줄이면 웹훅의 동작 원리가 눈앞에서 확인됩니다."}$aix$::jsonb, null, 6, 5
+  $aix${"type":"terminal","windowTitle":"terminal — 웹훅 테스트","lines":[{"text":"# Make에서 발급받은 웹훅 URL로 테스트 데이터 전송","tone":"comment"},{"text":"curl -X POST https://hook.eu1.make.com/abc123 \\","tone":"cmd"},{"text":"  -H 'Content-Type: application/json' \\","tone":"cmd"},{"text":"  -d '{\"name\":\"김민준\",\"plan\":\"pro\",\"amount\":29000}'","tone":"cmd"},{"text":"Accepted","tone":"ok"},{"text":"# Make 캔버스: 웹훅 노드에 초록 불 — 시나리오 즉시 실행","tone":"comment"},{"text":"# name/plan/amount 필드가 다음 노드에서 매핑 가능해짐","tone":"dim"}],"caption":"curl 한 줄이면 웹훅의 동작 원리가 눈앞에서 확인됩니다."}$aix$::jsonb, null, 6, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -2276,7 +2876,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - **일시적 에러** — API 서버 순간 장애, 요청 한도 초과(rate limit). **재시도하면 대부분 해결**됩니다.
 - **영구적 에러** — 필수 필드 누락, 잘못된 인증, 존재하지 않는 레코드. 재시도해도 똑같이 실패하므로 **사람에게 알려야** 합니다.
 
-## Make의 에러 핸들러 4종
+## Make의 에러 핸들러 디렉티브
 
 - **Retry(Break)** — 일정 간격을 두고 재시도. 일시적 에러의 기본기.
 - **Resume** — 대체 값을 넣고 계속 진행.
@@ -2356,7 +2956,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 ## 비용의 단위: 오퍼레이션
 
-- Make는 **노드 1회 실행 = 1 오퍼레이션**, Zapier는 트리거 이후 **스텝 1회 = 1 태스크**로 과금합니다.
+- Make는 **모듈(노드) 1회 실행 = 1 오퍼레이션**으로 세고, 청구는 크레딧 단위입니다 — 일반 모듈은 1 오퍼레이션 = 크레딧 1개, 내장 AI 기능은 사용량에 따라 더 씁니다. Zapier는 **액션 스텝 1회 성공 = 1 태스크**로 세며, 트리거와 필터·포매터 같은 내장 스텝은 태스크로 세지 않습니다.
 - 여기에 AI 노드는 **토큰 비용이 별도**로 듭니다 — AI 자동화 비용의 대부분은 이쪽입니다.
 
 ## 오퍼레이션 최적화 3수
@@ -2367,6 +2967,326 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 > 💡 **핵심**: 운영 = **로그(건강)와 오퍼레이션(비용)** 두 계기판 읽기. 필터는 앞으로, 폴링은 웹훅으로, AI 입력은 가볍게.$aix$,
   $aix${"type":"cycle","title":"자동화 운영 사이클","center":"매주 반복","nodes":[{"label":"로그 점검","sublabel":"History · 실패 건 확인","icon":"eye"},{"label":"비용 분석","sublabel":"오퍼레이션 · AI 토큰","icon":"chart"},{"label":"최적화","sublabel":"필터 전진 · 웹훅화","icon":"wrench"},{"label":"재배포","sublabel":"수정 후 다시 활성화","icon":"rocket"}],"caption":"만들고 끝이 아닙니다 — 점검·분석·최적화가 매주 도는 운영 루프입니다."}$aix$::jsonb, null, 5, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: n8n 마스터: 셀프호스팅 AI 에이전트 자동화
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '0752fdd0-9cf8-45a3-83c3-8fc529c00920', 'n8n-automation', 'n8n 마스터: 셀프호스팅 AI 에이전트 자동화', $aix$Zapier의 태스크 요금 청구서가 무서워지기 시작했다면, n8n으로 넘어올 때입니다. n8n은 소스가 공개된 fair-code 자동화 플랫폼으로, 내 서버에 직접 설치하면 실행량 과금 없이 무제한으로 돌릴 수 있습니다. 이 강의는 Docker 셀프호스팅부터 LangChain 기반 AI Agent 노드, 자체 데이터 RAG 챗봇, 사람 승인 관문, 그리고 에러 워크플로우·큐 모드 같은 프로덕션 운영 기술까지 — 2026년 기준 n8n의 실전 기능을 처음부터 끝까지 다룹니다.$aix$,
+  null, 'business', 'intermediate', array['n8n', '셀프호스팅', 'AI Agent', 'RAG', '워크플로우 자동화']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'ca1f0300-03ca-a90d-6535-9baff0dc6ec9', '0752fdd0-9cf8-45a3-83c3-8fc529c00920', 'n8n-foundation', 'n8n 시작하기', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'bbc543d8-285f-6105-d14d-1ad66620283b', '0752fdd0-9cf8-45a3-83c3-8fc529c00920', 'ai-agent-workflows', 'AI 에이전트 워크플로우', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '175e83e1-d040-95dd-d2f4-ff8544ab06c5', '0752fdd0-9cf8-45a3-83c3-8fc529c00920', 'production-ops', '프로덕션 운영', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7d593d64-6eb3-b10d-fa9e-4f32ca077c40', 'ca1f0300-03ca-a90d-6535-9baff0dc6ec9', 'n8n-automation/why-n8n', 'why-n8n', '왜 n8n인가: 빌리는 자동화 vs 소유하는 자동화',
+  $aix$자동화가 커질수록 Zapier·Make 청구서도 커집니다. 이유는 하나 — **스텝마다 돈을 내는 구조**이기 때문입니다.
+
+## 과금 구조가 모든 것을 가른다
+
+- **Zapier**는 태스크(액션 1회), **Make**는 오퍼레이션(모듈 1회) 단위로 과금합니다. 10단계 워크플로우가 1만 번 돌면 **최대 10만 단위**가 청구됩니다.
+- **n8n**은 워크플로우 **실행(execution) 1회 = 1단위**입니다. 같은 작업이 1만 실행으로 끝나고, 워크플로우 안의 스텝 수는 요금과 무관합니다.
+- 셀프호스팅하면 실행 자체가 **무제한 무료** — 서버비만 남습니다. 클라우드가 편하면 n8n Cloud(스타터 월 24유로~)도 있습니다.
+
+## 돈 말고도 남는 것: 데이터 주권
+
+- 고객 데이터가 외부 SaaS를 경유하지 않고 **내 서버 안에서만** 흐릅니다. 보안 심사가 있는 조직엔 결정적입니다.
+- n8n은 **Sustainable Use License(fair-code)** — 소스가 공개되고 사내 업무용은 무료지만, n8n 자체를 재판매하는 것은 제한됩니다. OSI 기준의 '오픈소스'는 아니라는 점만 정확히 알아두세요.
+- Code 노드로 JavaScript/Python을 직접 쓸 수 있어, 노코드의 한계에 막히지 않습니다.
+
+> 💡 **핵심**: n8n의 본질은 "무료 Zapier"가 아니라 **실행 단위 과금 + 셀프호스팅으로 자동화를 자산으로 소유하는 것**입니다.$aix$,
+  $aix${"type":"compare","title":"과금·소유 구조: SaaS vs n8n","columns":[{"title":"Zapier · Make","icon":"cloud","tone":"muted","items":["태스크/오퍼레이션(스텝) 단위 과금","스텝이 늘수록 요금 급증","데이터가 외부 서버를 경유","플랫폼 정책 변경에 종속"]},{"title":"n8n","icon":"zap","tone":"primary","items":["워크플로우 실행 단위 과금","셀프호스팅 시 실행 무제한","데이터가 내 서버에만 머묾","소스 공개 — 직접 확장 가능"]}],"caption":"10단계 × 1만 회 = Zapier·Make는 최대 10만 과금 단위, n8n은 1만 실행입니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0dbc6f95-57a6-ec73-c4c1-6546bed4f983', 'ca1f0300-03ca-a90d-6535-9baff0dc6ec9', 'n8n-automation/self-hosting-docker', 'self-hosting-docker', '설치와 셀프호스팅: Docker 컨테이너 한 방',
+  $aix$n8n 셀프호스팅의 표준은 **Docker**입니다. Compose 파일 하나면 데이터베이스까지 포함해 한 시간 안에 운영 가능한 인스턴스가 뜹니다.
+
+## 준비물과 사양
+
+- **2 vCPU / 4GB RAM** VPS면 소규모 팀 운영에 충분합니다.
+- 기본 저장소는 SQLite지만, 운영 환경은 **PostgreSQL**을 함께 띄우는 것이 표준입니다.
+
+```bash
+mkdir n8n && cd n8n
+# docker-compose.yml 작성 후
+docker compose up -d
+```
+
+## 반드시 챙길 설정 3가지
+
+- **`N8N_ENCRYPTION_KEY`** — 크레덴셜을 암호화하는 키. 이 키를 잃으면 저장된 모든 인증 정보를 복구할 수 없습니다. 반드시 백업하세요.
+- **볼륨 마운트** — `/home/node/.n8n`을 볼륨으로 잡아야 컨테이너를 갈아치워도 데이터가 남습니다.
+- **HTTPS** — 웹훅을 외부에서 받으려면 Caddy/Traefik 같은 리버스 프록시로 도메인 + TLS를 붙입니다.
+
+## 다른 선택지
+
+- **n8n Cloud**: 설치·업데이트를 맡기고 바로 시작 (실행량 기반 요금)
+- **PaaS 배포**: Railway, Render, Hetzner 등에 원클릭 템플릿 다수
+- 업데이트는 이미지 태그를 올리고 `docker compose up -d` 재실행이 전부입니다.
+
+> 💡 **핵심**: Docker + Postgres + 암호화 키 백업. 이 세 가지가 갖춰진 순간부터 여러분의 자동화는 '내 인프라'가 됩니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"server — docker compose","lines":[{"text":"docker compose up -d","tone":"cmd"},{"text":"✔ Container n8n-postgres  Started","tone":"ok"},{"text":"✔ Container n8n  Started","tone":"ok"},{"text":"docker compose logs n8n | tail -2","tone":"cmd"},{"text":"Editor is now accessible via:","tone":"out"},{"text":"http://localhost:5678","tone":"out"},{"text":"# 볼륨 + 암호화 키 설정 확인 완료","tone":"comment"},{"text":"✓ 관리자 계정 생성 후 바로 사용 가능","tone":"ok"}],"caption":"Compose 파일 하나로 n8n과 Postgres가 함께 뜹니다."}$aix$::jsonb, $aix${"title":"Docker로 n8n 설치 따라하기","app":{"kind":"code-editor","windowTitle":"docker-compose.yml — 내 서버","files":[{"id":"f-compose","name":"docker-compose.yml","active":true},{"id":"f-env","name":".env"}],"code":[{"id":"d1","text":"services:"},{"id":"d2","text":"n8n:","indent":1},{"id":"d3","text":"image: docker.n8n.io/n8nio/n8n","indent":2},{"id":"d4","text":"ports: [\"5678:5678\"]","indent":2},{"id":"d5","text":"environment:","indent":2},{"id":"d6","text":"- N8N_ENCRYPTION_KEY=${KEY}","indent":3,"tone":"add","hidden":true},{"id":"d7","text":"volumes:","indent":2},{"id":"d8","text":"- n8n_data:/home/node/.n8n","indent":3}],"terminal":[{"id":"t1","text":"docker compose up -d","tone":"cmd","hidden":true},{"id":"t2","text":"✔ Container n8n  Started","tone":"ok","hidden":true},{"id":"t3","text":"docker compose logs n8n","tone":"cmd","hidden":true},{"id":"t4","text":"Editor is now accessible via: http://localhost:5678","tone":"out","hidden":true},{"id":"t5","text":"✓ 브라우저에서 관리자 계정 생성 완료","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① Compose 파일에서 이미지와 포트를 확인합니다"},{"t":"move","target":"d3"},{"t":"click"},{"t":"move","target":"d4"},{"t":"caption","text":"② 크레덴셜 암호화 키를 환경변수로 추가합니다"},{"t":"move","target":"d5"},{"t":"click"},{"t":"type","target":"d6","text":"- N8N_ENCRYPTION_KEY=${KEY}"},{"t":"wait","ms":500},{"t":"caption","text":"③ 컨테이너를 백그라운드로 시작합니다"},{"t":"type","target":"t1","text":"docker compose up -d"},{"t":"reveal","target":"t2"},{"t":"wait","ms":600},{"t":"caption","text":"④ 로그에서 에디터 접속 주소를 확인합니다"},{"t":"type","target":"t3","text":"docker compose logs n8n"},{"t":"reveal","target":"t4"},{"t":"move","target":"t4"},{"t":"reveal","target":"t5"},{"t":"caption","text":"✅ 내 서버에서 n8n이 실행 중입니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '871c2451-c452-6bcd-0680-198e0a77d81f', 'ca1f0300-03ca-a90d-6535-9baff0dc6ec9', 'n8n-automation/first-workflow', 'first-workflow', '기본기와 첫 워크플로우: 웹훅 → 가공 → 알림',
+  $aix$n8n의 화면은 Make와 닮았지만, 데이터를 다루는 방식은 훨씬 개발자 친화적입니다. 기본기 세 가지를 익히고 바로 첫 워크플로우를 만듭니다.
+
+## 3가지 기본기
+
+- **노드** — 트리거 노드(Webhook, Schedule), 앱 노드(Slack, Sheets), 코어 노드(IF, Edit Fields, Code)로 나뉩니다. Code 노드에선 JS가 그대로 돌아갑니다.
+- **크레덴셜** — API 키·토큰은 워크플로우와 **분리 저장**되고 암호화됩니다. 워크플로우를 공유해도 비밀은 새지 않습니다.
+- **데이터 흐름** — 노드 사이를 흐르는 것은 **JSON 아이템 배열**입니다. 각 노드의 출력 패널에서 실제 JSON을 눈으로 확인하며 만듭니다.
+
+## 첫 워크플로우: 리드 수집 알림
+
+랜딩 페이지 폼에서 리드가 들어오면 영업 채널에 알리는 흐름입니다.
+
+1. **Webhook 트리거** — 폼이 POST하는 URL 생성 (테스트 URL과 운영 URL이 따로 있습니다)
+2. **Edit Fields** — 이름·이메일·회사만 남기고 정리
+3. **IF** — 회사 도메인 이메일만 통과 (gmail 등 무료 메일은 제외)
+4. **Slack** — #영업 채널에 리드 카드 전송
+
+테스트 실행으로 실제 데이터를 흘려보고, **핀(Pin) 기능**으로 샘플 데이터를 고정하면 매번 폼을 다시 제출하지 않고 뒷단을 다듬을 수 있습니다. 완성되면 우측 상단 토글로 **활성화**합니다.
+
+> 💡 **핵심**: n8n 실력 = JSON 흐름을 읽는 능력입니다. 노드마다 출력 데이터를 확인하는 습관이 디버깅 시간을 90% 줄입니다.$aix$,
+  $aix${"type":"flow","title":"첫 워크플로우: 리드 수집 알림","nodes":[{"label":"Webhook 트리거","sublabel":"폼에서 새 리드 POST 수신","icon":"globe","tone":"accent"},{"label":"Edit Fields","sublabel":"이름·이메일·회사 정리","icon":"wrench"},{"label":"IF 필터","sublabel":"회사 이메일만 통과","icon":"filter","tone":"warning","edgeLabel":"무료 메일은 여기서 종료"},{"label":"Slack 알림","sublabel":"#영업 채널에 리드 카드","icon":"message","tone":"success"}],"caption":"노드 사이를 흐르는 것은 항상 JSON 아이템 — 각 단계의 출력을 눈으로 확인하세요."}$aix$::jsonb, null, 7, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1cdaa254-4f74-105e-bf3d-d24e74061253', 'bbc543d8-285f-6105-d14d-1ad66620283b', 'n8n-automation/ai-node-system', 'ai-node-system', 'n8n의 AI 노드 체계: 루트 노드와 서브 노드',
+  $aix$n8n이 Make·Zapier와 결정적으로 갈라지는 지점이 AI입니다. 단순 "AI 모듈 하나"가 아니라, **LangChain을 내장한 70여 개의 AI 노드**가 체계를 이룹니다.
+
+## 클러스터 구조: 루트 + 서브
+
+AI 노드는 일반 노드와 연결 방식이 다릅니다.
+
+- **루트 노드** — 워크플로우 본선에 놓이는 노드. **AI Agent**(판단·도구 사용)와 **Basic LLM Chain**(단발 호출)이 대표입니다.
+- **서브 노드** — 루트 노드 아래에 꽂는 부품. 어떤 부품을 꽂느냐로 능력이 결정됩니다:
+  - **Chat Model**: OpenAI, Anthropic, Google, 그리고 **Ollama로 로컬 모델**까지
+  - **Memory**: Window Buffer(최근 N개), Postgres/Redis(세션 영속)
+  - **Tool**: HTTP Request, 다른 워크플로우 호출, 벡터 스토어 검색
+  - **Output Parser**: 응답을 JSON 스키마로 강제
+
+## 대화의 입구: Chat Trigger
+
+**Chat Trigger** 노드를 붙이면 워크플로우가 즉시 챗 인터페이스를 갖습니다. 임베드 위젯으로 사내 포털에 붙일 수도 있습니다.
+
+셀프호스팅 + Ollama 조합이면 **모델 호출까지 내 서버 안에서** 끝나는 완전 폐쇄망 AI 자동화도 가능합니다.
+
+> 💡 **핵심**: n8n의 AI는 "노드 하나"가 아니라 **조립식 클러스터**입니다. 루트 노드에 무엇을 꽂는지가 곧 설계입니다.$aix$,
+  $aix${"type":"stack","title":"AI Agent 노드의 클러스터 구조","layers":[{"label":"AI Agent (루트 노드)","sublabel":"판단 · 도구 선택 · 반복 실행","icon":"bot","tone":"primary"},{"label":"Chat Model","sublabel":"OpenAI · Anthropic · Ollama(로컬)","icon":"brain","tone":"accent"},{"label":"Memory","sublabel":"Window Buffer · Postgres · Redis","icon":"layers","tone":"accent"},{"label":"Tools + Output Parser","sublabel":"HTTP Request · 벡터 검색 · JSON 강제","icon":"wrench","tone":"muted"}],"caption":"루트 노드에 서브 노드를 꽂아 조립합니다 — LangChain 기반 70여 개 AI 노드."}$aix$::jsonb, null, 5, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e468c07a-b66e-0730-5760-69530d704cea', 'bbc543d8-285f-6105-d14d-1ad66620283b', 'n8n-automation/build-tool-agent', 'build-tool-agent', 'AI Agent 노드: 도구를 쓰는 에이전트 만들기',
+  $aix$분기(IF)를 사람이 다 설계하는 자동화에는 한계가 있습니다. **AI Agent 노드**는 상황을 보고 스스로 도구를 골라 쓰는 에이전트를 캔버스 위에서 조립하게 해줍니다.
+
+## 실전 사례: 리드 스코어링 에이전트
+
+폼으로 들어온 리드를 에이전트가 조사하고 등급을 매겨 CRM에 기록합니다.
+
+1. **Webhook** — 새 리드 수신
+2. **AI Agent** — 시스템 메시지에 평가 기준 명시: "직원 수, 업종, 기존 거래 여부로 0~100점"
+3. 도구 연결: **HTTP Request Tool**(회사 정보 조회), **CRM 조회 Tool**(기존 고객 여부)
+4. **Structured Output Parser** — `{ score, grade, reason }` JSON 강제
+5. **CRM 업데이트** — 점수·등급 기록
+
+에이전트는 리드마다 필요한 도구만 골라 씁니다. 기존 고객이면 조회 한 번으로 끝내고, 처음 보는 회사면 외부 조사를 추가하는 식입니다.
+
+## 품질을 가르는 3가지
+
+- **도구 설명(description)이 프롬프트입니다** — "회사 도메인으로 직원 수·업종을 조회한다"처럼 언제 쓰는 도구인지 명확히.
+- **Max Iterations** 로 반복 상한을 걸어 폭주를 방지합니다.
+- 출력은 반드시 **Output Parser로 JSON 강제** — 뒷단 노드가 안정적으로 파싱합니다.
+
+> 💡 **핵심**: IF 노드는 여러분이 정한 길을 가고, AI Agent는 **도구 목록 안에서 스스로 길을 찾습니다**. 좋은 도구 설명이 좋은 에이전트를 만듭니다.$aix$,
+  $aix${"type":"cycle","title":"AI Agent의 실행 사이클","center":"목표: 리드 등급 판정","nodes":[{"label":"판단","sublabel":"어떤 도구가 필요한가","icon":"brain"},{"label":"도구 호출","sublabel":"회사 조회 · CRM 검색","icon":"wrench"},{"label":"관찰","sublabel":"도구 응답 읽기","icon":"eye"},{"label":"확정","sublabel":"점수·등급 JSON 출력","icon":"check"}],"caption":"AI Agent 노드가 이 사이클을 자동으로 돕니다 — Max Iterations로 상한은 필수."}$aix$::jsonb, $aix${"title":"AI Agent 노드 워크플로우 조립 따라하기","app":{"kind":"automation-canvas","windowTitle":"리드 스코어링 에이전트 — n8n","nodes":[{"id":"n-webhook","icon":"globe","label":"Webhook","sublabel":"새 리드 수신","tone":"accent"},{"id":"n-agent","icon":"bot","label":"AI Agent","sublabel":"평가 기준: 시스템 메시지","tone":"primary","hidden":true},{"id":"n-model","icon":"brain","label":"Chat Model","sublabel":"서브 노드 연결","hidden":true},{"id":"n-tool1","icon":"search","label":"HTTP Request Tool","sublabel":"회사 정보 조회","hidden":true},{"id":"n-tool2","icon":"database","label":"CRM 조회 Tool","sublabel":"기존 고객 여부","hidden":true},{"id":"n-crm","icon":"trending-up","label":"CRM 업데이트","sublabel":"점수·등급 기록","tone":"success","hidden":true}],"runLog":[{"id":"lg1","text":"▶ 테스트 리드: kim@acme.io (Acme Corp)","tone":"out","hidden":true},{"id":"lg2","text":"AI Agent: 도구 2회 호출 → 스코어 87점 (A등급)","tone":"out","hidden":true},{"id":"lg3","text":"✓ CRM에 A등급 리드로 기록 완료","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 웹훅 트리거 뒤에 AI Agent 노드를 추가합니다"},{"t":"move","target":"n-webhook"},{"t":"click"},{"t":"reveal","target":"n-agent"},{"t":"caption","text":"② 서브 노드로 Chat Model을 연결합니다"},{"t":"move","target":"n-agent"},{"t":"click"},{"t":"reveal","target":"n-model"},{"t":"wait","ms":400},{"t":"caption","text":"③ 에이전트가 쓸 도구 2개를 꽂습니다"},{"t":"reveal","target":"n-tool1"},{"t":"reveal","target":"n-tool2"},{"t":"wait","ms":500},{"t":"caption","text":"④ 평가 결과를 기록할 CRM 노드를 붙입니다"},{"t":"reveal","target":"n-crm"},{"t":"move","target":"n-crm"},{"t":"caption","text":"⑤ 테스트 리드를 흘려보내 실행을 확인합니다"},{"t":"reveal","target":"lg1"},{"t":"reveal","target":"lg2"},{"t":"reveal","target":"lg3"},{"t":"move","target":"lg3"},{"t":"caption","text":"✅ 에이전트가 스스로 도구를 골라 리드를 평가했습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '27c188d7-2b51-c835-dc24-49b74ff1a6cd', 'bbc543d8-285f-6105-d14d-1ad66620283b', 'n8n-automation/rag-knowledge-bot', 'rag-knowledge-bot', '자체 데이터 RAG: 사내 지식봇 만들기',
+  $aix$"우리 회사 규정은 모델이 모른다"는 문제의 정답이 **RAG**입니다. n8n은 벡터 스토어 노드를 내장하고 있어, 코드 없이 캔버스에서 RAG 파이프라인을 완성할 수 있습니다.
+
+## 파이프라인은 두 개입니다
+
+**① 적재(Ingestion)** — 문서를 검색 가능한 형태로 저장:
+
+- 문서 로더(Google Drive·Notion·PDF) → **Text Splitter**로 청크 분할 → **Embeddings** 노드로 벡터화 → **Vector Store**에 insert
+
+**② 질의(Query)** — 질문이 오면 근거를 찾아 답변:
+
+- **Chat Trigger** → **AI Agent** + **Vector Store Tool** → 유사 청크 검색 → 근거를 붙여 답변 생성
+
+## 벡터 스토어 선택 가이드
+
+- **Simple Vector Store**(인메모리): 설정 0초, 청킹 전략 실험용 — 재시작하면 사라집니다
+- **Qdrant / PGVector**: 셀프호스팅 철학 그대로 — 내 서버에서 함께 운영
+- **Pinecone / Supabase**: 관리형이 편할 때
+
+## 실패를 막는 2가지 규칙
+
+- 적재와 질의에 **같은 임베딩 모델**을 써야 합니다. 다르면 검색이 조용히 망가집니다.
+- 시스템 메시지에 "**문서에 근거가 없으면 모른다고 답하라**"를 명시하고, 답변에 출처(문서명·섹션)를 붙이세요. 이것이 사내 지식봇의 신뢰를 만듭니다.
+
+> 💡 **핵심**: RAG의 품질은 모델이 아니라 **청킹과 임베딩 일관성**에서 결정됩니다. 인메모리로 실험하고, Qdrant로 운영하세요.$aix$,
+  $aix${"type":"flow","title":"사내 지식봇 RAG 파이프라인","nodes":[{"label":"문서 로더","sublabel":"Drive · Notion · PDF","icon":"file-text"},{"label":"Text Splitter","sublabel":"청크로 분할","icon":"scissors"},{"label":"Embeddings → Vector Store","sublabel":"Qdrant/PGVector에 저장","icon":"database","tone":"accent"},{"label":"Vector Store Tool 검색","sublabel":"질문과 유사한 청크 회수","icon":"search","tone":"primary","edgeLabel":"사용자 질문 도착 시"},{"label":"AI Agent 답변","sublabel":"근거 + 출처 표기","icon":"bot","tone":"success"}],"caption":"적재와 질의에 반드시 같은 임베딩 모델을 사용해야 검색이 맞습니다."}$aix$::jsonb, $aix${"title":"사내 지식봇 응답 확인 따라하기","app":{"kind":"chat-app","workspace":"우리 회사","channels":[{"id":"ch-kb","name":"사내-지식봇","active":true},{"id":"ch-general","name":"일반"}],"composerId":"composer","messages":[{"id":"q1","author":"나","time":"오전 10:02","text":"연차는 이월되나요? 최대 며칠까지?","hidden":true},{"id":"a1","author":"지식봇","bot":true,"time":"오전 10:02","text":"연차는 다음 해로 최대 5일까지 이월할 수 있습니다.\n출처: 인사규정 v3 · 7.2절 '연차 이월'","hidden":true},{"id":"q2","author":"나","time":"오전 10:04","text":"우리 회사 주차 지원 정책은?","hidden":true},{"id":"a2","author":"지식봇","bot":true,"time":"오전 10:04","text":"적재된 문서에서 근거를 찾지 못했습니다.\n추측 대신 인사팀(#hr) 문의를 권장합니다.","hidden":true}]},"actions":[{"t":"caption","text":"① 사내 규정 문서는 이미 벡터 스토어에 적재돼 있습니다"},{"t":"wait","ms":500},{"t":"caption","text":"② 지식봇 채널에 질문을 입력합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"연차는 이월되나요? 최대 며칠까지?"},{"t":"wait","ms":400},{"t":"hide","target":"composer"},{"t":"reveal","target":"composer"},{"t":"reveal","target":"q1"},{"t":"caption","text":"③ 봇이 벡터 검색으로 근거를 찾아 답합니다"},{"t":"reveal","target":"a1"},{"t":"move","target":"a1"},{"t":"wait","ms":600},{"t":"caption","text":"④ 문서에 없는 질문으로 환각 방지를 시험합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"우리 회사 주차 지원 정책은?"},{"t":"hide","target":"composer"},{"t":"reveal","target":"composer"},{"t":"reveal","target":"q2"},{"t":"reveal","target":"a2"},{"t":"move","target":"a2"},{"t":"caption","text":"✅ 근거가 없으면 모른다고 답합니다 — 신뢰의 조건"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '82bb96a9-514a-8708-1736-74ac8114a761', 'bbc543d8-285f-6105-d14d-1ad66620283b', 'n8n-automation/human-approval', 'human-approval', '사람 승인 스텝: 멈추고, 묻고, 이어간다',
+  $aix$AI가 쓴 메일이 고객에게 바로 나간다면? 아찔합니다. n8n은 **워크플로우를 일시 정지하고 사람의 응답을 기다리는** 휴먼 인 더 루프를 기본 기능으로 제공합니다.
+
+## Send and Wait for Response
+
+Slack·Gmail·Teams 등 주요 메신저 노드에는 **"Send and Wait for Response"** 오퍼레이션이 있습니다.
+
+- 메시지와 함께 **승인/거절 버튼**(또는 커스텀 폼)을 보냅니다
+- 워크플로우는 그 지점에서 **멈춘 채 대기** — 서버 자원은 거의 쓰지 않습니다
+- 응답이 오면 결과(approved/declined)를 들고 다음 노드로 진행합니다
+
+## 실전 사례: AI 답장 승인 관문
+
+리드에게 보낼 답장을 AI가 초안 작성 → Slack으로 담당자에게 초안 + 승인 버튼 전송 → 승인 시 발송, 거절 시 수정 큐로.
+
+## 설계 포인트
+
+- **타임아웃 필수** — 응답 제한 시간을 설정해 실행이 무한 대기하지 않게 합니다. 타임아웃 시의 기본 동작(중단/에스컬레이션)도 정하세요.
+- **판단 재료를 함께** — 초안 전문, AI의 확신도, 원본 링크를 메시지에 포함해 담당자가 이동 없이 판단하게 합니다.
+- AI Agent의 **도구 호출 자체에 승인**을 거는 패턴(Human-in-the-loop for tools)도 지원됩니다 — "발송 도구를 쓰기 전 허락받기".
+
+> 💡 **핵심**: 자동화의 신뢰는 "전부 자동"이 아니라 **되돌리기 어려운 지점 직전의 승인 관문**에서 나옵니다.$aix$,
+  $aix${"type":"chat","title":"Slack 승인 관문 (Send and Wait)","messages":[{"role":"ai","text":"리드 답장 초안: '요청하신 견적서를 첨부합니다…' 발송을 승인하시겠어요? [승인] [거절]"},{"role":"system","text":"워크플로우 일시 정지 — 응답 대기 중 (타임아웃 2시간)"},{"role":"user","text":"승인"},{"role":"ai","text":"✅ 발송 완료. 다음 노드로 실행을 이어갑니다."}],"caption":"응답이 올 때까지 실행이 멈춥니다 — 자원은 거의 쓰지 않습니다."}$aix$::jsonb, null, 5, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '87125174-b745-a640-a0fa-8cb0c0624620', '175e83e1-d040-95dd-d2f4-ff8544ab06c5', 'n8n-automation/error-workflows', 'error-workflows', '에러 워크플로우와 재시도 설계',
+  $aix$자동화는 만들 때가 아니라 **조용히 실패할 때** 사고가 납니다. n8n의 에러 처리는 이중 방어선으로 설계합니다.
+
+## 1차 방어선: 노드 재시도
+
+- 노드 설정의 **Retry on Fail** — 최대 횟수(2~3회)와 재시도 간격을 지정합니다. API 타임아웃 같은 일시 오류의 대부분이 여기서 해소됩니다.
+- **On Error 설정** — 실패 시 워크플로우를 멈출지, 에러 출력 브랜치로 계속 갈지 노드별로 선택합니다. "이 스텝은 실패해도 전체는 계속"이 가능해집니다.
+
+## 2차 방어선: 전역 에러 워크플로우
+
+**Error Trigger** 노드로 시작하는 워크플로우를 하나 만들고, 각 워크플로우의 Settings에서 error workflow로 지정합니다.
+
+- 실패 시 자동 실행되며 **워크플로우 이름·에러 메시지·실행 URL**이 페이로드로 들어옵니다
+- 표준 구성: Slack #장애 채널 알림 + 실행 링크 → 담당자가 클릭 한 번으로 실패 지점 확인
+- 단, Error Trigger는 수동 테스트 실행으로는 발화하지 않습니다 — 운영 실행 실패에만 반응합니다
+
+## 재실행 안전성 (멱등성)
+
+실패한 실행은 화면에서 **부분 재실행**할 수 있습니다. 이때 "CRM에 두 번 기록"이 나지 않도록, 쓰기 작업은 **업서트(있으면 갱신)** 패턴으로 설계하세요.
+
+> 💡 **핵심**: 노드엔 Retry, 전체엔 Error Trigger. 그리고 모든 쓰기 작업은 **두 번 실행돼도 안전하게**.$aix$,
+  $aix${"type":"flow","title":"에러 처리 이중 방어선","nodes":[{"label":"노드 실행","icon":"zap","tone":"primary"},{"label":"Retry on Fail","sublabel":"최대 3회 · 간격 5초","icon":"repeat","tone":"accent","edgeLabel":"일시 오류 발생 시"},{"label":"Error Trigger 워크플로우","sublabel":"전역 에러 캐치","icon":"alert","tone":"warning","edgeLabel":"재시도 소진 시"},{"label":"Slack 보고 + 실행 링크","sublabel":"클릭 한 번으로 실패 지점 확인","icon":"message","tone":"success"}],"loopBack":{"from":1,"to":0,"label":"재시도 (최대 3회)"},"caption":"1차는 노드 재시도, 2차는 전역 에러 워크플로우 — 두 겹이 표준입니다."}$aix$::jsonb, null, 6, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '74593fbd-3adb-c363-5d8a-7b899d7e52cf', '175e83e1-d040-95dd-d2f4-ff8544ab06c5', 'n8n-automation/environments-backup', 'environments-backup', '환경 분리·버전 관리·백업',
+  $aix$운영 중인 워크플로우를 캔버스에서 직접 고치는 것은 프로덕션 코드를 라이브로 수정하는 것과 같습니다. 성장한 팀은 **환경을 나눕니다**.
+
+## 환경 분리: dev와 prod
+
+- 인스턴스를 두 개 운영합니다 — 개발용(dev)에서 만들고 검증한 뒤 운영(prod)으로 승격합니다.
+- n8n의 **Source Control 기능**(유료 플랜)은 인스턴스를 Git 브랜치에 연결합니다: dev에서 **push** → 리뷰 → prod에서 **pull**.
+- 주의: pull은 **덮어쓰기**입니다(병합 아님). prod에서 직접 수정하는 습관을 끊는 것이 전제입니다.
+- 크레덴셜은 Git에 **스텁(이름만)** 으로 올라갑니다 — 비밀값은 환경마다 따로 등록합니다.
+
+## 백업: 커뮤니티 에디션의 정석
+
+Source Control 없이도 백업은 가능합니다.
+
+```bash
+n8n export:workflow --all --output=backup/
+n8n export:credentials --all --decrypted
+```
+
+- 더 우아한 방법: **n8n이 n8n을 백업** — Schedule 트리거로 매일 밤 자체 API에서 전체 워크플로우 JSON을 받아 Git에 커밋하는 워크플로우를 만듭니다.
+- **`N8N_ENCRYPTION_KEY` 백업은 별도로** — 이 키가 없으면 DB를 복구해도 크레덴셜은 전부 무용지물입니다.
+
+> 💡 **핵심**: "dev에서 만들고 Git으로 승격, prod는 손대지 않는다" — 워크플로우도 코드처럼 다루는 순간 운영 사고가 사라집니다.$aix$,
+  $aix${"type":"steps","title":"운영 표준: 환경·버전·백업","steps":[{"label":"dev / prod 인스턴스 분리","sublabel":"개발과 운영을 물리적으로 격리","icon":"server"},{"label":"Git Source Control 연동","sublabel":"dev push → 리뷰 → prod pull","icon":"git-branch"},{"label":"야간 자동 백업","sublabel":"CLI export 또는 API 백업 워크플로우","icon":"download"},{"label":"암호화 키 별도 보관","sublabel":"키 분실 = 크레덴셜 전손","icon":"key"}],"caption":"pull은 병합이 아니라 덮어쓰기 — prod 직접 수정 습관부터 끊으세요."}$aix$::jsonb, null, 5, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'd7e62c78-a55f-794e-3cdf-a4380ad7fba8', '175e83e1-d040-95dd-d2f4-ff8544ab06c5', 'n8n-automation/queue-mode', 'queue-mode', '성능과 큐 모드: 대량 실행 버티기',
+  $aix$단일 컨테이너 n8n은 UI·스케줄·실행을 한 프로세스가 다 합니다. 실행량이 몰리면 에디터까지 함께 느려지죠. 해답은 **큐 모드**입니다.
+
+## 큐 모드 아키텍처
+
+`EXECUTIONS_MODE=queue` 설정으로 역할을 분리합니다.
+
+- **메인 인스턴스** — UI, 스케줄, 웹훅 접수만 담당. 실행 작업을 **Redis 큐**에 넣습니다.
+- **워커** — `n8n worker` 명령으로 띄우는 실행 전담 프로세스. 큐에서 작업을 꺼내 처리하고 결과를 DB에 기록합니다.
+- **필수 조건**: Redis + **PostgreSQL** (큐 모드에서 SQLite는 지원되지 않습니다)
+
+## 확장은 수평으로
+
+- 처리량이 부족하면 **워커 컨테이너를 늘립니다** — `docker compose up -d --scale worker=4`
+- 워커당 **동시 실행 수(concurrency)** 도 조절 가능합니다
+- 웹훅이 초당 수백 건이라면 **웹훅 프로세서**를 별도로 두어 접수 계층까지 확장합니다
+
+## 큐 모드 전에 챙길 성능 기본기
+
+- **실행 로그 정리** — 실행 기록을 무한 보관하면 DB가 비대해집니다. 보관 기간 프루닝을 켜세요.
+- 대량 아이템은 **Split In Batches(Loop)** 로 나눠 처리해 메모리 폭발을 막습니다.
+
+> 💡 **핵심**: 트래픽이 늘면 서버를 키우지 말고 **역할을 나누세요**. 메인은 접수, 워커는 실행 — 이것이 n8n 스케일링의 정석입니다.$aix$,
+  $aix${"type":"stack","title":"큐 모드 아키텍처","layers":[{"label":"메인 인스턴스","sublabel":"UI · 스케줄 · 웹훅 접수","icon":"monitor","tone":"primary"},{"label":"Redis 큐","sublabel":"실행 대기열","icon":"layers","tone":"accent"},{"label":"워커 × N","sublabel":"n8n worker — 수평 확장","icon":"cpu","tone":"accent"},{"label":"PostgreSQL","sublabel":"실행 기록 저장 (SQLite 불가)","icon":"database","tone":"muted"}],"caption":"접수와 실행을 분리하면 워커만 늘려서 대량 트래픽을 버팁니다."}$aix$::jsonb, null, 6, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2c6ba5cd-9c66-6e16-f9d6-6d98eec5ca27', '175e83e1-d040-95dd-d2f4-ff8544ab06c5', 'n8n-automation/migration-strategy', 'migration-strategy', 'Make/Zapier에서 n8n으로 이전하는 전략',
+  $aix$이전은 "전부 옮기기"가 아니라 **ROI 순서대로 옮기기**입니다. 자동 변환 도구에 기대기보다, 이 5단계가 안전합니다.
+
+## 이전 5단계
+
+1. **인벤토리** — 운영 중인 시나리오/잽을 전수 조사: 실행량, 스텝 수, 실패율, 담당자
+2. **ROI 순위** — **실행량이 많고 스텝이 긴 것부터**. 과금 단위 차이(스텝당 → 실행당) 덕에 절감 폭이 가장 큽니다. 거의 안 도는 자동화는 굳이 옮기지 않아도 됩니다.
+3. **재구축** — 모듈→노드로 다시 조립합니다. 지원 앱이 없다면? **HTTP Request 노드**로 대부분의 API를 직접 호출할 수 있고, **커뮤니티 노드**(Settings → Community Nodes, npm 설치)로 메꿉니다.
+4. **병행 운영** — 같은 트리거를 양쪽에 걸고 1~2주간 결과를 대조합니다. n8n 쪽 알림에 태그를 붙여 구분하면 편합니다.
+5. **컷오버** — 기존 쪽을 끄고, 첫 달은 에러 워크플로우 알림을 집중 모니터링. 그다음 구독을 정리합니다.
+
+## 커뮤니티 노드 주의점
+
+npm 생태계라 자유롭지만, 2026년 초 악성 패키지 공급망 공격 사례가 보고됐습니다. **Verified 배지가 있는 노드** 위주로 쓰고, 미검증 패키지는 코드를 확인한 뒤 설치하세요.
+
+> 💡 **핵심**: 실행량 × 스텝 수가 큰 워크플로우부터 옮기고, **반드시 병행 운영으로 검증 후 컷오버** — 절감액이 이전 비용을 첫 달에 회수해 줍니다.$aix$,
+  $aix${"type":"steps","title":"Make/Zapier → n8n 이전 5단계","steps":[{"label":"인벤토리","sublabel":"실행량 · 스텝 수 · 실패율 조사","icon":"clipboard"},{"label":"ROI 순위","sublabel":"실행량 많고 스텝 긴 것부터","icon":"chart"},{"label":"재구축","sublabel":"없는 앱은 HTTP Request · 커뮤니티 노드","icon":"workflow"},{"label":"병행 운영","sublabel":"1~2주 양쪽 결과 대조","icon":"repeat"},{"label":"컷오버","sublabel":"구독 정리 · 집중 모니터링","icon":"check"}],"caption":"자동 변환보다 ROI 순서의 수동 재구축이 결과적으로 빠르고 안전합니다."}$aix$::jsonb, null, 5, 10
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -2510,8 +3430,8 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 ## 발행까지의 연결 사슬
 
-1. 인스타그램 계정을 **프로페셔널(비즈니스) 계정**으로 전환합니다 — 개인 계정은 API 발행이 불가합니다.
-2. 페이스북 페이지를 만들고 인스타그램 계정과 **연결**합니다.
+1. 인스타그램 계정을 **프로페셔널(비즈니스 또는 크리에이터) 계정**으로 전환합니다 — 개인 계정은 API 발행이 불가합니다.
+2. 페이스북 페이지를 만들고 인스타그램 계정과 **연결**합니다 — Make 모듈이 쓰는 페이스북 로그인 경로의 요건입니다. (Meta에는 페이지 없이 연결하는 인스타그램 로그인 방식도 생겼지만, Make는 전자를 씁니다.)
 3. Meta 개발자 앱을 만들고 `instagram_content_publish` 등 권한을 받습니다.
 4. Make의 인스타그램 비즈니스 모듈에 로그인하면 토큰 갱신은 Make가 대신 처리합니다.
 
@@ -2519,7 +3439,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 - 발행은 **2단계**입니다: 미디어 컨테이너 생성 → 발행 확정. Make 모듈이 감싸주지만 실패 시 디버깅에 필요한 지식입니다.
 - 이미지는 파일 업로드가 아니라 **공개 URL**로 전달합니다 — 앞 레슨에서 URL을 받아둔 이유입니다.
-- API 발행은 **24시간당 계정별 상한**(수십 건 수준)이 있습니다. 하루 1~3회 발행 봇에는 충분합니다.
+- API 발행은 **24시간당 계정별 상한**이 있습니다(이동 창 기준, 캐러셀은 1건으로 계산). 하루 1~3회 발행 봇에는 여유가 충분합니다.
 - 스토리·릴스 발행은 지원 범위와 형식 제약이 다르므로 피드부터 안정화하세요.
 
 > 💡 **핵심**: 순서는 **비즈니스 계정 → 페이지 연결 → 권한 → Make 로그인**. 발행 실패의 대부분은 코드가 아니라 이 사슬의 어딘가가 끊긴 것입니다.$aix$,
@@ -2540,7 +3460,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 ## 티스토리: 우회 설계가 필요
 
-- 공개 Open API가 **신규 발급 중단**된 상태라 정공법 연결이 어렵습니다.
+- 공개 Open API가 **2024년에 완전히 종료**되어 정공법 연결이 불가능합니다.
 - 현실적 대안: 완성 원고를 이메일/노션으로 받아 **사람이 3분 만에 붙여넣는 반자동**, 또는 브라우저 자동화 도구 활용(차단 리스크는 감수).
 - 장기 운영이라면 워드프레스나 자체 블로그로의 이전을 권합니다.
 
@@ -2550,7 +3470,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 같은 URL을 인스타그램 프로필 링크 도구나 스토리로 재활용하면 채널 간 순환이 생깁니다.
 
 > 💡 **핵심**: 자동화 친화도는 플랫폼마다 다릅니다. **API가 열려 있는 곳에 본진**을 두고, 닫힌 곳은 반자동으로 타협하세요.$aix$,
-  $aix${"type":"compare","title":"워드프레스 vs 티스토리 자동화","columns":[{"title":"워드프레스","icon":"globe","tone":"primary","items":["공식 REST API + Make 전용 모듈","예약 발행 · 카테고리 · 대표 이미지 제어","자체 도메인 — 정지 리스크 없음","완전 무인 발행 가능"]},{"title":"티스토리","icon":"alert","tone":"warning","items":["Open API 신규 발급 중단","반자동(원고 전달 → 수동 게시)이 현실적","브라우저 자동화는 차단 리스크","장기적으로 이전 검토 권장"]}],"caption":"본진은 API가 열린 플랫폼에 — 자동화 가능성이 곧 플랫폼 선택 기준입니다."}$aix$::jsonb, null, 5, 5
+  $aix${"type":"compare","title":"워드프레스 vs 티스토리 자동화","columns":[{"title":"워드프레스","icon":"globe","tone":"primary","items":["공식 REST API + Make 전용 모듈","예약 발행 · 카테고리 · 대표 이미지 제어","자체 도메인 — 정지 리스크 없음","완전 무인 발행 가능"]},{"title":"티스토리","icon":"alert","tone":"warning","items":["Open API 서비스 종료 (2024)","반자동(원고 전달 → 수동 게시)이 현실적","브라우저 자동화는 차단 리스크","장기적으로 이전 검토 권장"]}],"caption":"본진은 API가 열린 플랫폼에 — 자동화 가능성이 곧 플랫폼 선택 기준입니다."}$aix$::jsonb, null, 5, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
@@ -2970,6 +3890,327 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 > 💡 **핵심**: 첫 업로드는 가설, 판매 데이터는 검증입니다. **팔린 것의 변형을 늘리고 안 팔린 것을 끊는 월간 루프**가 수익 곡선의 기울기를 만듭니다.$aix$,
   $aix${"type":"cycle","title":"월간 판매 데이터 개선 루프","center":"팔린 것이 다음 주제를 정한다","nodes":[{"label":"업로드·판매","sublabel":"포트폴리오 노출","icon":"shopping-cart"},{"label":"데이터 분석","sublabel":"판매 상위작의 공통점","icon":"chart"},{"label":"주제 리스트 갱신","sublabel":"팔린 주제의 변형 추가","icon":"trending-up"},{"label":"변형 시리즈 제작","sublabel":"안 팔린 스타일은 중단","icon":"refresh"}],"caption":"이 루프가 닫히는 순간, 부업이 시스템이 됩니다."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: AI 시대의 PM: 새로운 역할과 핵심 역량
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '2afe3831-2d86-38d4-8241-e72f7b41baf6', 'ai-pm', 'AI 시대의 PM: 새로운 역할과 핵심 역량', $aix$AI가 코드를 짜고, 디자인을 그리고, 문서를 쓰는 2026년 — 제품 개발의 병목은 더 이상 '만드는 것'이 아닙니다. 무엇을 만들지 판단하는 사람, 즉 PM에게 무게중심이 옮겨왔습니다. 이 강의는 AI 이전/이후 제품 개발 사이클이 어떻게 달라졌는지, PM의 역할이 백로그 관리자에서 제품 방향 결정자로 어떻게 재정의됐는지 짚고, AI 제품 감각(이벨 읽기), 바이브 코딩 프로토타이핑, 데이터 리터러시 같은 새 역량과 함께 30-60-90일 전환 로드맵까지 제시합니다.$aix$,
+  null, 'business', 'beginner', array['AI PM', '프로덕트 매니지먼트', '이벨(Evals)', '바이브 코딩', '커리어 전환']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'bf127cfb-33ed-2f7a-77cf-7e1f75e5a3dc', '2afe3831-2d86-38d4-8241-e72f7b41baf6', 'what-changed', '무엇이 달라졌나', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '19f0ca6f-ea55-6d88-3f4b-79a52c458312', '2afe3831-2d86-38d4-8241-e72f7b41baf6', 'core-skills', 'AI 시대 필수 역량', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'fe7b0f05-195d-4dcf-b8b9-0c3580b14766', '2afe3831-2d86-38d4-8241-e72f7b41baf6', 'practice-career', '실무 적용과 커리어 전환', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ff056fd1-9bab-c728-fa12-464c7625236a', 'bf127cfb-33ed-2f7a-77cf-7e1f75e5a3dc', 'ai-pm/execution-cost-collapse', 'execution-cost-collapse', '실행 비용의 붕괴: 병목이 옮겨간 자리',
+  $aix$"만들 사람이 없어서 못 한다"는 말이 사라지고 있습니다. 2026년 제품 개발의 병목은 실행이 아니라 **판단**입니다.
+
+## AI 이전의 개발 사이클
+
+- 아이디어 하나를 검증하려면 **기획서 → 설득 → 개발 착수 → 몇 주 대기**가 필요했습니다.
+- 실행이 비쌌기 때문에, PM의 일은 "무엇을 만들지 아주 신중하게 고르고 문서로 정당화하는 것"이었습니다.
+- 틀린 선택의 비용이 커서, 회의와 문서가 늘어났습니다.
+
+## AI 이후의 개발 사이클
+
+- AI 코딩 도구와 에이전트 덕분에 프로토타입이 **몇 주가 아니라 몇 시간** 만에 나옵니다.
+- 만들 수 있는 것이 폭증하자, 병목은 "만들기"에서 **"무엇을 만들지, 만든 게 좋은지 판단하기"**로 이동했습니다.
+- 앤드류 응은 이를 "프로덕트 매니지먼트가 새로운 병목이 되고 있다"고 표현했습니다.
+
+## PM에게 의미하는 것
+
+- 결정의 **횟수**가 늘어납니다 — 같은 시간에 더 많은 판단을 내려야 합니다.
+- 좋은 것과 그럴듯한 것을 가르는 **취향과 판단력**이 희소 자원이 됩니다.
+
+> 💡 **핵심**: 실행이 값싸지면 판단이 비싸집니다. AI 시대 PM의 경쟁력은 "많이 만들게 하는 힘"이 아니라 **"무엇을 만들지 고르는 힘"**입니다.$aix$,
+  $aix${"type":"compare","title":"AI 이전 vs 이후의 제품 개발 사이클","columns":[{"title":"AI 이전 (실행이 병목)","icon":"clock","tone":"muted","items":["아이디어 → 문서 → 설득 → 개발 대기","프로토타입 1개에 몇 주","틀린 선택의 비용이 큼","PM = 신중한 선별자"]},{"title":"AI 이후 (판단이 병목)","icon":"zap","tone":"primary","items":["아이디어 → 프로토타입 → 즉시 검증","프로토타입 1개에 몇 시간","선택지가 폭증 — 고르기가 문제","PM = 빠른 판단자"]}],"caption":"실행 비용이 급감하자 병목이 '만들기'에서 '판단하기'로 이동했습니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3885300e-6af5-072b-ca46-2e83b37a7839', 'bf127cfb-33ed-2f7a-77cf-7e1f75e5a3dc', 'ai-pm/pm-role-redefined', 'pm-role-redefined', 'PM 역할의 재정의: 백로그 관리자에서 방향 결정자로',
+  $aix$티켓을 정리하고 회의록을 요약하는 PM은 AI가 이미 더 잘합니다. 그렇다면 사람 PM의 일은 무엇으로 남을까요?
+
+## 대체되는 것: 정보의 포장과 전달
+
+- 고객 피드백 요약, 회의록 정리, 티켓 작성, 진행 상황 보고 — **"정보를 옮기는 일"**은 에이전트가 대신합니다.
+- 백로그를 관리하는 것 자체는 더 이상 PM의 존재 이유가 아닙니다.
+
+## 남고 커지는 것: 방향의 결정
+
+- **문제 선택**: 수많은 가능한 것 중에 "지금 풀 가치가 있는 문제"를 고르는 일
+- **품질 판정**: AI가 만든 결과물이 출시 기준을 넘는지 가르는 일
+- **정렬(Alignment)**: 엔지니어링·디자인·경영진이 한 방향을 보게 만드는 스토리텔링
+
+## 새로운 하루의 모습
+
+2026년의 PM은 문서를 쓰는 시간이 줄고, **AI가 만든 초안·프로토타입·분석을 검토하고 판단하는 시간**이 늘었습니다. 실행을 지시하는 사람이 아니라, 실행 결과를 심사하는 **에디터**에 가깝습니다.
+
+> 💡 **핵심**: PM의 정의가 바뀌었습니다 — "백로그를 관리하는 사람"에서 **"제품의 방향을 결정하고 품질을 판정하는 사람"**으로.$aix$,
+  $aix${"type":"flow","title":"방향 결정자의 업무 루프","nodes":[{"label":"문제 선택","sublabel":"지금 풀 가치가 있는가","icon":"target","tone":"primary"},{"label":"AI에게 실행 위임","sublabel":"초안·프로토타입·분석 생성","icon":"bot","tone":"accent"},{"label":"결과 심사","sublabel":"좋은가, 그럴듯하기만 한가","icon":"eye","tone":"warning"},{"label":"방향 결정·팀 정렬","sublabel":"출시 / 수정 / 폐기","icon":"check","tone":"success"}],"loopBack":{"from":2,"to":1,"label":"기준 미달이면 다시 위임"},"caption":"PM은 실행자가 아니라 에디터 — 위임하고, 심사하고, 결정합니다."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '48c34ea2-7dbf-214d-494c-d2fb955e3db3', 'bf127cfb-33ed-2f7a-77cf-7e1f75e5a3dc', 'ai-pm/team-structure-shift', 'team-structure-shift', '팀 구조의 변화: 소수 정예 + 에이전트',
+  $aix$"팀이 커야 큰 제품을 만든다"는 공식이 깨지고 있습니다. 2026년의 제품 팀은 작아졌고, 그 자리를 AI 에이전트가 채웁니다.
+
+## 팀은 작아지고, 산출량은 늘었다
+
+- 8~12명이던 제품 팀이 **3~5명 규모**로 재편되는 흐름이 보고됩니다. 한 사람이 AI 도구로 더 많이 만들기 때문입니다.
+- 초기 스타트업에서는 5명이 에이전트(고객지원·리서치·운영)를 붙여 **예전 20명 몫**을 처리하는 사례가 나옵니다.
+
+## PM 대 엔지니어 비율의 변화
+
+- 전통적 비율은 PM 1명당 엔지니어 6~8명이었습니다.
+- 엔지니어 1인의 산출량이 커지자, **판단할 것(스펙·우선순위·품질 기준)이 폭증** — 같은 인원의 엔지니어에게 더 많은 PM 판단이 필요해지는 방향으로 압력이 걸립니다.
+- 동시에 "정보 전달만 하는 PM" 수요는 줄어 — PM 역할이 **양극화**됩니다.
+
+## PM에게 의미하는 것
+
+- 작은 팀에서는 역할 경계가 흐려집니다. PM도 프로토타입을 만들고, 엔지니어도 고객을 만납니다.
+- "누가 무엇을 하느냐"보다 **"누가 판단에 책임지느냐"**가 팀 설계의 중심이 됩니다.
+
+> 💡 **핵심**: 팀은 작아지고 에이전트가 늘어납니다. 이 구조에서 PM의 가치는 머릿수 관리가 아니라 **판단의 밀도**에서 나옵니다.$aix$,
+  $aix${"type":"grid","title":"2026년 소수 정예 제품 팀의 구성","items":[{"label":"PM 1","sublabel":"방향 결정·품질 판정","icon":"target","tone":"primary"},{"label":"엔지니어 2~3","sublabel":"AI 도구로 산출량 수 배","icon":"code","tone":"accent"},{"label":"디자이너 1","sublabel":"취향과 경험의 기준","icon":"palette","tone":"accent"},{"label":"리서치 에이전트","sublabel":"인터뷰 분석·경쟁 조사","icon":"search","tone":"muted"},{"label":"코딩 에이전트","sublabel":"프로토타입·마이그레이션","icon":"bot","tone":"muted"},{"label":"운영 에이전트","sublabel":"티켓 분류·리포트 생성","icon":"workflow","tone":"muted"}],"caption":"사람은 판단에, 에이전트는 실행에 — 작은 팀이 큰 팀의 산출량을 냅니다."}$aix$::jsonb, null, 4, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '02b9b89c-f645-2191-7bc8-9c9237836033', 'bf127cfb-33ed-2f7a-77cf-7e1f75e5a3dc', 'ai-pm/fading-vs-rising', 'fading-vs-rising', '사라지는 업무 vs 더 중요해지는 업무',
+  $aix$"PM이 사라진다"는 공포와 "PM 전성시대"라는 낙관이 동시에 들립니다. 둘 다 절반만 맞습니다 — **업무 단위로 갈라지기** 때문입니다.
+
+## 사라지거나 자동화되는 업무
+
+- 회의록 요약, 상태 보고서 작성, 티켓 정리
+- 유저 피드백의 1차 분류와 요약
+- 경쟁사 기능 변경 추적, 시장 자료 1차 조사
+- 표준적인 PRD·유저 스토리의 **초안 작성**
+
+공통점: 입력과 출력이 명확한 **정보 가공** 작업입니다.
+
+## 더 중요해지는 업무
+
+- **문제 정의**: 애매한 신호에서 "진짜 문제"를 골라내는 일
+- **품질 기준 수립**: AI 산출물의 합격선을 정의하는 일 (이벨의 출발점)
+- **트레이드오프 결정**: 데이터가 답을 주지 않는 지점에서의 선택
+- **이해관계자 정렬**: 조직이 한 방향으로 움직이게 만드는 설득
+
+공통점: 정답이 없고, **책임**이 따르는 판단 작업입니다.
+
+## 갈림길
+
+정보 가공이 업무의 대부분이었던 PM은 위기를, 판단과 정렬이 중심이었던 PM은 기회를 맞습니다. 준비는 이 격차를 좁히는 일입니다.
+
+> 💡 **핵심**: AI는 PM을 대체하지 않습니다. **정보 가공형 업무를 대체하고, 판단형 업무의 가치를 끌어올립니다.** 여러분의 시간표를 후자로 옮기세요.$aix$,
+  $aix${"type":"compare","title":"PM 업무의 양극화","columns":[{"title":"자동화되는 업무","icon":"bot","tone":"muted","items":["회의록·보고서 작성","피드백 1차 분류·요약","경쟁사 변경 추적","PRD·스토리 초안"]},{"title":"가치가 커지는 업무","icon":"trending-up","tone":"primary","items":["문제 정의와 선택","품질 기준(이벨) 수립","트레이드오프 결정","이해관계자 정렬·설득"]}],"caption":"왼쪽에 시간을 쓰던 PM일수록, 오른쪽으로의 이동이 시급합니다."}$aix$::jsonb, null, 5, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '411fc435-fa6b-b851-2bad-ea47494c0570', '19f0ca6f-ea55-6d88-3f4b-79a52c458312', 'ai-pm/ai-product-sense', 'ai-product-sense', 'AI 제품 감각 ①: 프롬프트·이벨·모델의 한계',
+  $aix$AI 기능을 기획하려면 모델을 만들 줄은 몰라도 됩니다. 하지만 **모델이 어디서 틀리는지, 품질을 어떻게 측정하는지**는 알아야 합니다.
+
+## PM이 알아야 할 모델의 성질
+
+- **확률적**: 같은 입력에도 답이 달라질 수 있습니다. "항상 정확히"라는 스펙은 성립하지 않습니다.
+- **그럴듯한 오류**: 모델은 자신 있게 틀립니다 — 지어낸 통계, 근거 없는 확신이 대표적 실패 유형입니다.
+- **프롬프트 = 사양서**: 프롬프트에 없는 규칙(예: 존댓말, 사과 우선)은 지켜지지 않습니다.
+
+## 이벨(Evals): AI 제품의 품질 계기판
+
+이벨은 대표 케이스 수백 건에 대해 AI 출력을 채점한 결과입니다. 2026년 실무에서 **이벨은 PM 요구사항과 엔지니어링을 잇는 다리**이며, 성공 기준을 정의하는 주체는 PM입니다.
+
+- "좋다"를 **차원별로 분해**합니다: 정확성·간결성·톤·정책 준수를 각각 점수화
+- 점수만 보지 말고 **실패 사례 원문**을 읽습니다 — 패턴은 항상 원문에 있습니다
+- 발견한 패턴을 **스펙의 품질 기준**으로 되돌려 씁니다
+
+## PM의 실무 루틴
+
+이벨 리포트를 읽고 → 하락한 차원의 실패 사례를 읽고 → 품질 기준을 한 줄 추가하는 것. 아래 데모에서 이 흐름을 그대로 따라 해봅니다.
+
+> 💡 **핵심**: AI 제품 감각 = **이벨을 읽고, 실패 사례에서 패턴을 찾고, 그것을 스펙의 품질 기준으로 쓰는 능력**입니다.$aix$,
+  $aix${"type":"chat","title":"모델은 자신 있게 틀립니다","messages":[{"role":"user","text":"우리 앱 이탈률이 업계 평균 대비 어떤지 알려줘"},{"role":"ai","text":"업계 평균 이탈률은 23.7%로, 귀사는 이보다 5.2%p 낮습니다."},{"role":"system","text":"⚠️ 출처 없는 수치 — 모델이 지어낸 통계일 수 있습니다. PM은 이런 실패 유형을 알고 검증 절차를 설계해야 합니다."}],"caption":"그럴듯한 오류를 잡아내는 눈 — 이것이 AI 제품 감각의 출발점입니다."}$aix$::jsonb, $aix${"title":"이벨 대시보드 읽기 따라하기","app":{"kind":"browser","url":"evals.our-product.ai/reports/summary-v2","blocks":[{"id":"h1","type":"heading","label":"요약 어시스턴트 v2 — 이벨 리포트"},{"id":"b-run","type":"badge","label":"테스트 케이스 200건 · 오늘 실행"},{"id":"c-acc","type":"card","label":"정확성 94% (▲3)"},{"id":"c-brev","type":"card","label":"간결성 89% (—)"},{"id":"c-tone","type":"card","label":"톤 준수 72% (▼9)"},{"id":"btn-fail","type":"button","label":"실패 사례 보기"},{"id":"f1","type":"card","label":"사례 #117: 고객 응답에 반말 사용","hidden":true},{"id":"f2","type":"card","label":"사례 #142: 사과 없이 환불 거절 통보","hidden":true},{"id":"b-cause","type":"badge","label":"공통 패턴: 톤 가이드가 프롬프트에 없음","hidden":true},{"id":"in-note","type":"input","label":"스펙에 추가할 품질 기준 입력…"},{"id":"btn-add","type":"button","label":"품질 기준으로 저장"},{"id":"done","type":"badge","label":"✅ 스펙 v2.1에 반영됨","hidden":true}]},"actions":[{"t":"caption","text":"① 점수를 훑고 하락한 차원을 찾습니다"},{"t":"move","target":"c-acc"},{"t":"move","target":"c-tone"},{"t":"click","target":"c-tone"},{"t":"wait","ms":500},{"t":"caption","text":"② 점수가 아니라 실패 사례 원문을 읽습니다"},{"t":"click","target":"btn-fail"},{"t":"reveal","target":"f1"},{"t":"reveal","target":"f2"},{"t":"move","target":"f2"},{"t":"wait","ms":600},{"t":"caption","text":"③ 실패의 공통 패턴을 확인합니다"},{"t":"reveal","target":"b-cause"},{"t":"move","target":"b-cause"},{"t":"wait","ms":500},{"t":"caption","text":"④ 발견을 스펙의 품질 기준으로 되돌려 씁니다"},{"t":"click","target":"in-note"},{"t":"type","target":"in-note","text":"고객 응답은 존댓말 + 사과를 먼저 한다"},{"t":"click","target":"btn-add"},{"t":"reveal","target":"done"},{"t":"caption","text":"⑤ 다음 이벨 실행에서 톤 점수를 재측정합니다"},{"t":"move","target":"done"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '56e99d82-0da6-a8cc-b4e9-80c477707e32', '19f0ca6f-ea55-6d88-3f4b-79a52c458312', 'ai-pm/build-it-yourself', 'build-it-yourself', '직접 만드는 힘 ②: 바이브 코딩으로 프로토타입',
+  $aix$"문서 10장보다 동작하는 프로토타입 1개"가 2026년 PM의 설득 방식입니다. 코드를 몰라도 됩니다 — 의도를 말하면 앱이 나옵니다.
+
+## 바이브 코딩이란
+
+자연어로 의도를 설명하면 AI가 동작하는 앱을 만들어주는 방식입니다. Lovable, Bolt, v0, Replit 같은 도구가 대표적이며, 최근 조사에서는 **PM의 절반 이상이 AI·노코드 프로토타이핑 도구를 업무에 사용**하는 것으로 나타났습니다. 비개발자도 몇 시간이면 클릭 가능한 프로토타입을 만듭니다.
+
+## PM에게 왜 무기인가
+
+- **검증이 빨라집니다**: 아이디어를 회의가 아니라 유저 테스트로 판정합니다.
+- **커뮤니케이션 비용이 급감합니다**: "이런 느낌"을 말로 설명하는 대신 만져보게 합니다.
+- **요구사항이 정교해집니다**: 직접 만들어보면 엣지 케이스가 미리 보입니다.
+
+## 프로토타입의 규율
+
+- 프로토타입은 **검증용**입니다 — 그대로 출시하는 것이 아니라, 배운 것을 스펙에 반영합니다.
+- 검증 질문을 먼저 정하세요: "유저가 이 버튼을 찾는가?"처럼 **한 가지 가설**에 집중합니다.
+- 실패한 프로토타입은 성공입니다 — 개발 착수 전에 배웠으니까요.
+
+> 💡 **핵심**: 아이디어 검증의 단위가 **문서에서 동작물로** 바뀌었습니다. PM이 직접 만들 수 있으면 검증 속도가 곧 경쟁력이 됩니다.$aix$,
+  $aix${"type":"steps","title":"바이브 코딩 검증 사이클 (반나절 코스)","steps":[{"label":"검증 질문 정하기","sublabel":"가설 1개로 좁히기","icon":"lightbulb"},{"label":"의도를 프롬프트로","sublabel":"화면·데이터·흐름을 말로 설명","icon":"message"},{"label":"프로토타입 생성","sublabel":"Lovable·Bolt·v0 등","icon":"wand"},{"label":"유저 5명에게 테스트","sublabel":"관찰하고 기록","icon":"users"},{"label":"배운 것을 스펙에","sublabel":"프로토타입은 버려도 됨","icon":"clipboard"}],"caption":"예전엔 몇 주짜리 사이클 — 지금은 반나절이면 한 바퀴 돕니다."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5a172f87-aaf1-a199-be5a-3a9e68642f9d', '19f0ca6f-ea55-6d88-3f4b-79a52c458312', 'ai-pm/data-literacy', 'data-literacy', '데이터 리터러시와 판단력 ③: AI 출력을 의심하는 법',
+  $aix$AI가 분석까지 해주는 시대에 데이터 리터러시가 왜 더 중요해질까요? **AI의 분석 결과를 판정할 사람**이 필요하기 때문입니다.
+
+## AI 분석 시대의 함정
+
+- AI 요약은 매끄럽지만, **표본 편향**(불만 유저만 응답)은 알려주지 않습니다.
+- 상관관계를 인과처럼 서술하는 것은 AI 분석의 고질적 습관입니다.
+- 분류·요약 결과의 **오분류율**을 확인하지 않으면, 틀린 근거로 로드맵을 정하게 됩니다.
+
+## PM의 검증 루틴 3가지
+
+- **원본 표집**: AI가 분류한 결과에서 무작위 10건의 원문을 직접 읽어봅니다.
+- **반대 질문**: "이 결론이 틀렸다면 어떤 데이터가 보여야 하지?"를 AI에게 묻습니다.
+- **분모 확인**: 비율이 나오면 항상 분모(전체 몇 건 중인지)를 확인합니다.
+
+## 판단력은 검증의 누적
+
+데이터 리터러시는 통계 지식이 아니라 습관입니다. AI의 결과를 받으면 **믿기 전에 표본 하나를 원문으로 확인**하는 것 — 아래 데모의 흐름처럼요. 이 습관이 쌓이면 AI가 어디서 틀리는지에 대한 감각, 즉 판단력이 됩니다.
+
+> 💡 **핵심**: AI가 분석을 대신할수록 필요한 것은 분석 기술이 아니라 **분석 결과를 의심하고 검증하는 판단력**입니다.$aix$,
+  $aix${"type":"cycle","title":"AI 분석 검증 루프","center":"믿기 전에 확인","nodes":[{"label":"AI 분석 수신","sublabel":"분류·요약·리포트","icon":"bot"},{"label":"원본 표집","sublabel":"무작위 원문 10건 읽기","icon":"search"},{"label":"반례 탐색","sublabel":"틀렸다면 뭐가 보일까","icon":"alert"},{"label":"판단·수정","sublabel":"수용 / 재분류 / 재분석","icon":"check"}],"caption":"검증을 반복할수록 'AI가 어디서 틀리는지'에 대한 감각이 쌓입니다."}$aix$::jsonb, $aix${"title":"유저 피드백 자동 분류 확인 따라하기","app":{"kind":"chat-app","workspace":"제품팀 워크스페이스","composerId":"composer","channels":[{"id":"ch-feedback","name":"피드백-분류","active":true},{"id":"ch-product","name":"제품-일반"}],"messages":[{"id":"m1","author":"분류봇","bot":true,"time":"오전 9:00","text":"오늘 신규 피드백 47건 분류를 완료했습니다.","hidden":true},{"id":"m2","author":"분류봇","bot":true,"time":"오전 9:00","text":"🔴 버그 12건 · 🟡 기능 요청 23건 · 🟢 칭찬 12건","hidden":true},{"id":"m3","author":"분류봇","bot":true,"time":"오전 9:01","text":"최다 언급 요청: 'CSV 내보내기' 9건","hidden":true},{"id":"m4","author":"나 (PM)","time":"오전 9:12","text":"내보내기 요청 9건 원문 보여줘","hidden":true},{"id":"m5","author":"분류봇","bot":true,"time":"오전 9:12","text":"1) \"엑셀로 뽑고 싶어요\" 2) \"내보내기 눌러도 권한 오류가 떠요\" 3) \"권한이 없다고 나와요\" …","hidden":true},{"id":"m6","author":"나 (PM)","time":"오전 9:15","text":"2·3번은 기능 요청이 아니라 권한 버그야. 버그로 재분류해줘.","hidden":true},{"id":"m7","author":"분류봇","bot":true,"time":"오전 9:15","text":"재분류 완료 — 🔴 버그 14건 · 🟡 요청 21건. 분류 규칙에 '권한 오류' 패턴을 추가했습니다.","hidden":true}]},"actions":[{"t":"caption","text":"① 에이전트가 밤사이 피드백을 자동 분류했습니다"},{"t":"reveal","target":"m1"},{"t":"reveal","target":"m2"},{"t":"reveal","target":"m3"},{"t":"move","target":"m3"},{"t":"wait","ms":600},{"t":"caption","text":"② 요약을 믿기 전에 원문을 표집합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"내보내기 요청 9건 원문 보여줘"},{"t":"reveal","target":"m4"},{"t":"reveal","target":"m5"},{"t":"move","target":"m5"},{"t":"wait","ms":700},{"t":"caption","text":"③ 원문을 읽으니 오분류가 보입니다 — 요청이 아니라 버그"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"2·3번은 권한 버그야. 재분류해줘"},{"t":"reveal","target":"m6"},{"t":"reveal","target":"m7"},{"t":"move","target":"m7"},{"t":"caption","text":"④ 사람의 판정이 분류 규칙을 개선시킵니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5729d35f-b861-b573-7e48-4265d6c4d68b', '19f0ca6f-ea55-6d88-3f4b-79a52c458312', 'ai-pm/timeless-skills', 'timeless-skills', '변하지 않는 것 ④: 문제 정의, 고객 공감, 커뮤니케이션',
+  $aix$역설적이게도, AI 시대에 가장 값이 오른 PM 역량은 새로운 기술이 아니라 **가장 오래된 기본기**입니다.
+
+## 왜 기본기의 가치가 올랐나
+
+- **문제 정의**: 실행이 빨라질수록, 잘못 정의된 문제는 "정교하게 틀린 결과물"을 더 빨리 만듭니다. AI는 시키는 것을 잘할 뿐, 무엇을 시킬지 정해주지 않습니다.
+- **고객 공감**: AI는 데이터를 요약하지만, 고객의 말과 속마음의 간극(말로는 좋다며 안 쓰는 이유)은 현장에서 사람이 읽어야 합니다.
+- **커뮤니케이션**: 조직을 움직이는 스토리텔링과 신뢰 구축은 자동화되지 않습니다. 하드콜(어려운 결정)을 내리고 책임지는 것도요.
+
+## 기본기 × AI = 증폭
+
+기본기와 AI 역량은 경쟁 관계가 아니라 곱셈 관계입니다.
+
+- 문제 정의가 좋은 PM이 바이브 코딩을 쓰면 → 옳은 가설을 하루 만에 검증
+- 고객 공감이 깊은 PM이 이벨을 쓰면 → 고객이 실제로 느끼는 품질 차원을 측정
+- 커뮤니케이션이 강한 PM이 AI 초안을 쓰면 → 설득의 밀도가 올라감
+
+기본기가 0이면 AI를 곱해도 0입니다.
+
+> 💡 **핵심**: AI 도구는 상향 평준화됩니다. 결국 차이를 만드는 것은 **문제를 고르는 눈, 고객을 읽는 마음, 조직을 움직이는 말**입니다.$aix$,
+  $aix${"type":"stack","title":"AI 시대 PM 역량 스택","layers":[{"label":"AI 도구 활용","sublabel":"바이브 코딩 · 이벨 · 자동 분석 — 빠르게 배울 수 있음","icon":"sparkles","tone":"accent"},{"label":"데이터 리터러시·판단력","sublabel":"AI 출력을 검증하고 판정하는 습관","icon":"chart","tone":"primary"},{"label":"문제 정의 · 고객 공감 · 커뮤니케이션","sublabel":"모든 층을 떠받치는 기반 — 대체 불가","icon":"users","tone":"success"}],"caption":"위층은 도구와 함께 바뀌지만, 맨 아래층은 시대가 바뀌어도 그대로입니다."}$aix$::jsonb, null, 5, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bc3a5eb3-6293-fc23-e7f4-acd9590e7fad', 'fe7b0f05-195d-4dcf-b8b9-0c3580b14766', 'ai-pm/accelerate-pm-work', 'accelerate-pm-work', 'AI로 PM 업무 가속: 인터뷰 분석·경쟁 분석·PRD 초안',
+  $aix$이론은 충분합니다. 오늘 출근해서 바로 쓸 수 있는 세 가지 가속 지점을 봅니다. 원칙은 하나 — **초안은 AI, 판단은 사람**.
+
+## ① 유저 인터뷰 분석
+
+- 녹취록을 넣고 "반복되는 불만을 주제별로 묶고, 각 주제의 대표 인용문을 달아줘"라고 요청합니다.
+- 규칙: AI가 뽑은 주제마다 **대표 인용문 원문을 직접 확인**합니다. 요약만 믿으면 뉘앙스가 사라집니다.
+
+## ② 경쟁 분석
+
+- 경쟁사 릴리스 노트·가격 페이지를 모아 변경점 추적과 비교표 초안을 맡깁니다.
+- 규칙: 수치·날짜는 **출처 링크로 재확인** — 모델은 그럴듯한 세부사항을 지어냅니다.
+
+## ③ PRD 초안
+
+- 문제·대상·제약을 입력하면 구조 잡힌 초안이 나옵니다. 백지에서 시작하지 않는 것만으로 시간이 크게 줍니다.
+- 규칙: AI 초안의 **성공 지표는 거의 항상 재작성**이 필요합니다. 근거 없는 지표가 가장 흔한 허점입니다. 아래 데모에서 직접 고쳐봅니다.
+
+## 공통 원칙
+
+AI 산출물에는 "AI 초안 — 검토 전" 딱지를 붙이고, 사람 검토를 통과해야 떼어지게 하세요. 팀의 신뢰를 지키는 최소 장치입니다.
+
+> 💡 **핵심**: 가속의 공식은 **AI가 80%의 초안, 사람이 20%의 판단** — 그리고 그 20%가 문서의 가치를 결정합니다.$aix$,
+  $aix${"type":"grid","title":"PM 업무 가속 3지점과 사람의 몫","items":[{"label":"인터뷰 분석","sublabel":"AI: 주제 묶기 / 사람: 원문 확인","icon":"mic","tone":"primary"},{"label":"경쟁 분석","sublabel":"AI: 변경 추적 / 사람: 출처 검증","icon":"search","tone":"accent"},{"label":"PRD 초안","sublabel":"AI: 구조·초안 / 사람: 지표 재작성","icon":"file-text","tone":"success"},{"label":"공통 규칙","sublabel":"'검토 전' 딱지 → 사람 승인 후 해제","icon":"shield","tone":"warning"}],"caption":"모든 칸의 오른쪽 절반(사람의 몫)이 비면, 가속이 아니라 사고입니다."}$aix$::jsonb, $aix${"title":"AI와 PRD 초안 작성 따라하기","app":{"kind":"browser","url":"prd.our-product.ai/new","blocks":[{"id":"h1","type":"heading","label":"PRD 초안 생성기"},{"id":"in-idea","type":"input","label":"만들 기능을 한 줄로 설명하세요…"},{"id":"btn-gen","type":"button","label":"초안 생성"},{"id":"b-draft","type":"badge","label":"AI 초안 v1 — 검토 전","hidden":true},{"id":"c-problem","type":"card","label":"📄 문제: 팀 외부와 데이터를 공유하기 어렵다","hidden":true},{"id":"c-metric","type":"card","label":"🎯 성공 지표: 페이지뷰 +30% (근거 없음)","hidden":true},{"id":"c-eval","type":"card","label":"🧪 품질 기준: (비어 있음)","hidden":true},{"id":"in-edit","type":"input","label":"수정 지시 입력…"},{"id":"btn-apply","type":"button","label":"반영"},{"id":"c-metric2","type":"card","label":"🎯 성공 지표: 주간 내보내기 사용 활성 팀 25%","hidden":true},{"id":"c-eval2","type":"card","label":"🧪 품질 기준: 내보내기 성공률 99% · 3초 이내","hidden":true},{"id":"b-done","type":"badge","label":"✅ 사람 검토 완료 — v1.1","hidden":true}]},"actions":[{"t":"caption","text":"① 문제·대상·제약을 한 줄로 입력합니다"},{"t":"click","target":"in-idea"},{"t":"type","target":"in-idea","text":"외부 공유용 CSV 내보내기 기능"},{"t":"click","target":"btn-gen"},{"t":"reveal","target":"b-draft"},{"t":"reveal","target":"c-problem"},{"t":"reveal","target":"c-metric"},{"t":"reveal","target":"c-eval"},{"t":"wait","ms":600},{"t":"caption","text":"② 초안의 허점을 찾습니다 — 근거 없는 지표"},{"t":"dblclick","target":"c-metric"},{"t":"caption","text":"③ 사람이 지표와 품질 기준을 다시 씁니다"},{"t":"click","target":"in-edit"},{"t":"type","target":"in-edit","text":"지표를 활성 팀 25%로 교체, 품질 기준 추가"},{"t":"click","target":"btn-apply"},{"t":"hide","target":"c-metric"},{"t":"reveal","target":"c-metric2"},{"t":"hide","target":"c-eval"},{"t":"reveal","target":"c-eval2"},{"t":"wait","ms":500},{"t":"caption","text":"④ 검토를 마쳐야 '검토 전' 딱지가 떨어집니다"},{"t":"hide","target":"b-draft"},{"t":"reveal","target":"b-done"},{"t":"move","target":"b-done"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '30902c76-8188-38be-272f-f1d35a3f6c3f', 'fe7b0f05-195d-4dcf-b8b9-0c3580b14766', 'ai-pm/spec-for-ai-features', 'spec-for-ai-features', 'AI 기능을 기획하는 법: 확률적 제품의 스펙',
+  $aix$"버튼을 누르면 항상 X가 된다"는 스펙 문법은 AI 기능에서 무너집니다. 확률적으로 동작하는 제품에는 **다른 스펙 문법**이 필요합니다.
+
+## 결정적 스펙 → 확률적 스펙
+
+- 이전: "요약은 100자 이내여야 한다"
+- 이후: "골든 데이터셋 기준, **95%의 케이스에서** 요약이 80~120자여야 한다"
+
+수용 기준(acceptance criteria)이 **평가 기준(evaluation criteria)**으로 바뀝니다. 기준선을 측정할 이벨 계획이 스펙의 일부가 됩니다.
+
+## AI PRD에 반드시 들어갈 세 가지
+
+- **이벨 기준**: 품질을 어떤 차원으로 나눠 무엇으로 측정하는가, 출시 합격선은 몇 점인가
+- **실패 모드 카탈로그**: 모델이 틀리는 방식(지어냄, 톤 이탈, 무응답)을 예상 목록으로 만들고, 각각의 **감지 방법과 대응**을 정의합니다. 실무에서 AI 기능 실패의 다수는 모델 실패가 아니라 이 설계를 안 한 **설계 실패**입니다.
+- **신뢰 설계**: 확신 낮은 출력의 처리 방식 — 표현 완화(소프트 폴백), 사람에게 넘기기(휴먼 핸드오프), 출처 표시. 신뢰는 한 번 무너지면 복구가 어렵습니다.
+
+## PM의 새 문장들
+
+"이 기능이 틀리면 유저는 무엇을 보게 되는가?"— 이 질문에 스펙이 답하지 못하면 아직 기획이 끝나지 않은 것입니다.
+
+> 💡 **핵심**: AI 기능의 스펙은 **잘 될 때의 그림 + 틀릴 때의 각본**입니다. 이벨 기준·실패 모드·신뢰 설계가 빠진 AI PRD는 절반짜리입니다.$aix$,
+  $aix${"type":"flow","title":"확률적 제품의 스펙 작성 흐름","nodes":[{"label":"품질 차원 정의","sublabel":"정확성·톤·정책 준수로 분해","icon":"layers","tone":"primary"},{"label":"이벨 기준·합격선","sublabel":"95% 케이스에서 기준 충족","icon":"gauge","tone":"accent"},{"label":"실패 모드 카탈로그","sublabel":"틀리는 방식 → 감지 → 대응","icon":"alert","tone":"warning"},{"label":"신뢰 설계","sublabel":"폴백 · 휴먼 핸드오프 · 출처","icon":"shield","tone":"success"}],"loopBack":{"from":3,"to":1,"label":"이벨 미달 시 기준 재조정"},"caption":"'틀릴 때의 각본'까지 써야 AI 기능의 스펙이 완성됩니다."}$aix$::jsonb, null, 6, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '23bb9714-f131-8d25-8df3-0cb676ae7006', 'fe7b0f05-195d-4dcf-b8b9-0c3580b14766', 'ai-pm/transition-roadmap', 'transition-roadmap', '전환 로드맵: 30-60-90일 학습 계획',
+  $aix$"뭐부터 해야 하죠?"에 대한 답입니다. 거창한 자격증이 아니라, **90일간의 실전 반복**으로 전환합니다.
+
+## 첫 30일: 도구를 몸에 붙이기
+
+- AI 도구 2~3개를 골라 **실제 업무**에 씁니다 (PRD 초안, 피드백 분석 등)
+- 같은 작업을 수동/AI로 각각 해보고 품질·시간을 비교합니다
+- 매주 프롬프트 하나를 다듬어 재사용 템플릿으로 저장합니다
+
+## 60일까지: 만들고 측정하기
+
+- 바이브 코딩 도구로 **동작하는 프로토타입 1개**를 만들어 유저 5명에게 보여줍니다
+- 자사(또는 가상) AI 기능의 **미니 이벨**을 만듭니다 — 케이스 20건, 품질 차원 3개면 충분합니다
+- AI 산출물에서 오류를 잡아낸 사례를 기록하기 시작합니다
+
+## 90일까지: 팀으로 확장하기
+
+- 검증한 워크플로우를 팀 프로세스로 제안합니다 ("검토 전 딱지" 규칙 등)
+- AI 기능 스펙(이벨 기준·실패 모드 포함)을 1건 작성해 리뷰받습니다
+
+## 주니어 vs 시니어의 강조점
+
+- **주니어**: 도구 숙련 + 기본기(문제 정의·고객 인터뷰)를 병행하세요. 도구만 배우면 판단력 없는 오퍼레이터가 됩니다.
+- **시니어**: 직접 만들기의 비중을 늘리세요. 위임에 익숙해진 손으로 프로토타입과 이벨을 한 번은 직접 만들어야 팀을 이끌 수 있습니다.
+
+> 💡 **핵심**: 전환의 단위는 강의 수강이 아니라 **업무 1건을 AI로 다시 해보는 것**입니다. 90일 뒤, 여러분의 포트폴리오에는 프로토타입 1개와 이벨 1개가 있어야 합니다.$aix$,
+  $aix${"type":"steps","title":"30-60-90일 전환 로드맵","steps":[{"label":"30일: 도구 체화","sublabel":"실무 2~3개 업무에 AI 적용 · 비교","icon":"wrench"},{"label":"60일: 만들고 측정","sublabel":"프로토타입 1개 + 미니 이벨 1개","icon":"rocket"},{"label":"90일: 팀으로 확장","sublabel":"워크플로우 제안 + AI 스펙 1건 리뷰","icon":"users"},{"label":"이후: 반복과 심화","sublabel":"판단 사례를 기록해 감각으로","icon":"repeat"}],"caption":"90일의 산출물은 수료증이 아니라 프로토타입 1개와 이벨 1개입니다."}$aix$::jsonb, null, 6, 10
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,
