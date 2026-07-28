@@ -118,6 +118,18 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* 데모 플레이어 — 클릭 물결 효과 (더블클릭은 2회 연속 생성) */
+@keyframes demo-ripple {
+  from {
+    transform: translate(-50%, -50%) scale(0.15);
+    opacity: 0.8;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

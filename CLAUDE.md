@@ -10,7 +10,8 @@
 2. **일러스트는 데이터, 렌더링은 렌더러** — 레슨 비주얼은 8종 타입(flow/cycle/compare/stack/steps/grid/terminal/chat)의 구조화 데이터로만 정의한다. 개별 레슨용 커스텀 컴포넌트나 이미지 파일을 만들지 말 것. 새 비주얼이 필요하면 `illustration.tsx`에 타입을 추가해 전체가 일관되게 한다.
 3. **데모 모드 우선** — 모든 기능은 Supabase 환경변수 없이 동작해야 한다. Supabase 의존 코드는 항상 null 체크 후 조용히 no-op (`src/lib/supabase/client.ts` 패턴).
 4. **품질 기준은 loop-engineering.ts** — 새 강의를 쓰거나 에이전트에게 집필시킬 때 이 파일을 스타일 가이드로 참조시킨다 (톤·분량·마크다운 구조·일러스트 활용법).
-5. 검증 파이프라인: `npx tsc --noEmit` → `npm run lint` → `npm run build`. 세 개 모두 통과해야 커밋한다.
+5. 검증 파이프라인: `npx tsc --noEmit` → `npm run lint` → `npm run content:check` → `npm run build`. 전부 통과해야 커밋한다.
+6. **따라하기 데모는 데이터 + 플레이어** — 레슨의 `demo` 필드(DemoScene)는 앱 템플릿 6종(code-editor/browser/design-canvas/automation-canvas/chat-app/email-app) 위에서 커서·클릭 물결·타이핑을 시연하는 시뮬레이션 스크린캐스트다. 실제 영상 파일을 쓰지 않는다. 새 도구 화면이 필요하면 `demo-apps.tsx`에 템플릿을 추가한다.
 
 ## 콘텐츠 작성 규칙 (실수 방지 — 근거는 DEVLOG 참고)
 
@@ -18,6 +19,7 @@
 - 마크다운에서 `**"따옴표 포함 볼드"**한글` 패턴은 CommonMark 규칙상 볼드가 풀리지만, 렌더러(`lesson-markdown.tsx`의 `fixBoldQuotes`)가 자동 보정하므로 콘텐츠는 자연스럽게 쓰면 된다. 단, 이 전처리를 제거하지 말 것.
 - `IconKey`는 `src/content/types.ts`에 정의된 값만 사용. lucide 아이콘을 임의로 추가하려면 `icon-map.tsx`에 먼저 등록.
 - 강의 추가 절차: ① `courses/새강의.ts` 작성 → ② `src/content/index.ts` COURSES에 등록 → ③ `npm run seed:generate` → ④ 빌드 확인.
+- **데모 작성 시**: 액션의 target은 반드시 앱 요소 id와 일치해야 한다 (오타는 타입체크로 못 잡고 데모가 조용히 깨짐) — 작성 후 `npm run content:check`로 검증 필수. 스타일 기준은 loop-engineering.ts의 demo 2곳 (caption ①②③ 단계 안내, 액션 15~25개, type 텍스트 40자 이내).
 
 ## 기술 스택 주의사항
 

@@ -6,6 +6,34 @@
 
 ---
 
+## 2026-07-28 — 따라하기 데모 시스템 (v0.2)
+
+### 배경 및 설계 결정
+- 요구: 레슨 한켠에서 "영상"으로 도구 사용법(에디터/디자인 툴/Slack/Gmail 등)을 보고 따라할 수 있어야 함. 실제 영상 제작이 불가하므로 **시뮬레이션 스크린캐스트**로 구현.
+- 설계: 실물 도구 화면을 재현하는 앱 템플릿 6종(code-editor/browser/design-canvas/automation-canvas/chat-app/email-app) + 액션 타임라인(move/click/dblclick/drag/type/reveal/hide/caption/wait)을 데이터로 정의하고, 플레이어가 커서를 움직이며 재생. 클릭은 물결 1회, 더블클릭은 물결 2회(220ms 간격).
+- 커서 이동은 CSS transition(left/top), 물결은 CSS keyframes(demo-ripple), 타이핑은 글자 단위 상태 갱신. 요소 위치는 `data-demo-id` 속성을 런타임에 조회(getBoundingClientRect → % 좌표)해 반응형에서도 정확.
+
+### 11. 데모 액션 target 오타는 타입체크로 못 잡음
+- **문제**: 액션의 target은 문자열 id라서 존재하지 않는 id를 참조해도 컴파일이 통과하고, 재생 시 해당 스텝만 조용히 건너뛰어짐. 9개 에이전트가 병렬 집필하면 오타 위험이 큼.
+- **해결**: `scripts/validate-content.ts` (`npm run content:check`) 신설 — 모든 데모의 target/from/to를 앱 요소 id와 대조, id 중복·등장 경로 없는 hidden 요소·슬러그 중복까지 검사. 에이전트에게도 자가 대조를 지시.
+- **교훈**: 문자열 참조로 연결되는 데이터는 반드시 전용 검증기를 함께 만든다. 타입 시스템 밖의 무결성은 스크립트로 지킨다.
+
+### 12. prose 스타일이 코드블록 내부까지 오염
+- **증상**: 마크다운 fenced 코드블록 안의 각 줄에 인라인 코드용 bg-muted 배경이 상자처럼 표시됨.
+- **원인**: `prose-code:bg-muted` 등이 `<pre>` 안의 `<code>`에도 적용됨.
+- **해결**: `[&_pre_code]:bg-transparent [&_pre_code]:p-0` 오버라이드 추가.
+- **교훈**: prose-code 커스터마이징 시 pre>code 케이스를 항상 함께 처리할 것.
+
+### 13. 재생 루프의 재귀 호출이 lint 에러 (react-hooks/immutability)
+- **증상**: `runFrom`(useCallback)이 loop 모드 반복을 위해 자기 자신을 재귀 호출 → "Cannot access variable before it is declared".
+- **해결**: 재귀 대신 `for(;;)` 무한 루프 + `start = 0; continue` 구조로 변경. useCallback 내부에서 자기 참조가 필요해지면 재귀가 아니라 루프로 풀 것.
+- 함께 수정: 스크립트에서 `module` 변수명 사용 금지 (@next/next/no-assign-module-variable).
+
+### 14. 입력창 '전송 후 비우기' 시연을 위한 hide 시맨틱 확장
+- 채팅 데모에서 메시지 전송 후 입력창을 비워야 자연스러움. 별도 clear 액션 대신 `hide`가 타이핑된 텍스트도 제거하도록 확장하고, `hide → reveal` 연쇄로 "비워진 입력창 복원" 패턴을 표준화. (validate-content가 이 패턴의 reveal을 경고하지만 의도된 것 — 경고 메시지에 명시.)
+
+---
+
 ## 2026-07-28 — 초기 구축 (v0.1)
 
 ### 1. 콘텐츠 템플릿 리터럴의 미이스케이프 백틱 → 파일 전체 구문 에러

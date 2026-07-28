@@ -18,7 +18,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '2e4b67fa-e5e4-d93b-399d-fa3391b6dda0', 'ee5af2ab-0f01-04af-54cf-6e58ee98468f', 'production-workflows', '프로덕션 에이전틱 워크플로우', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '5f8c6207-ea4e-b0d1-8762-03f68fe11079', 'bb43b706-521e-c6a6-3ab3-cccb0a0dcbe5', 'loop-engineering/why-agents', 'why-agents', '챗봇에서 에이전트로: 무엇이 달라졌나',
   $aix$한 번 묻고 한 번 답하는 챗봇의 시대는 끝났습니다. 2026년의 AI는 **목표를 주면 끝날 때까지 스스로 일하는 에이전트**입니다.
 
@@ -36,11 +36,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 같은 모델이라도 **루프 설계가 좋으면 성공률이 몇 배** 차이 납니다. 이것이 루프 엔지니어링입니다.
 
 > 💡 **핵심**: 에이전트 = LLM + 도구 + **피드백 루프**. 이 강의는 그 루프를 설계하는 법을 다룹니다.$aix$,
-  $aix${"type":"compare","title":"챗봇 vs 에이전트","columns":[{"title":"챗봇 (단발 호출)","icon":"message","tone":"muted","items":["질문 1번 → 답변 1번","결과 검증 없음","틀리면 사람이 다시 질문","도구 사용 불가"]},{"title":"에이전트 (루프)","icon":"repeat","tone":"primary","items":["목표 1번 → 완료까지 반복","행동 결과를 스스로 관찰","틀리면 스스로 경로 수정","터미널·파일·API 직접 조작"]}],"caption":"같은 모델이라도 루프 구조가 있으면 '일을 끝내는 능력'이 생깁니다."}$aix$::jsonb, 4, 0
+  $aix${"type":"compare","title":"챗봇 vs 에이전트","columns":[{"title":"챗봇 (단발 호출)","icon":"message","tone":"muted","items":["질문 1번 → 답변 1번","결과 검증 없음","틀리면 사람이 다시 질문","도구 사용 불가"]},{"title":"에이전트 (루프)","icon":"repeat","tone":"primary","items":["목표 1번 → 완료까지 반복","행동 결과를 스스로 관찰","틀리면 스스로 경로 수정","터미널·파일·API 직접 조작"]}],"caption":"같은 모델이라도 루프 구조가 있으면 '일을 끝내는 능력'이 생깁니다."}$aix$::jsonb, null, 4, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'a8e24f8d-0758-6c72-4ee9-4d023ab2f4ce', 'bb43b706-521e-c6a6-3ab3-cccb0a0dcbe5', 'loop-engineering/anatomy-of-loop', 'anatomy-of-loop', '에이전트 루프 해부: 계획→실행→관찰→평가',
   $aix$모든 에이전틱 시스템은 결국 하나의 사이클로 수렴합니다. 이 4단계를 정확히 이해하면 어떤 프레임워크든 읽을 수 있습니다.
 
@@ -60,11 +61,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 언제 **멈추게** 할 것인가 (4단계의 기준)
 
 > 💡 **핵심**: 루프 엔지니어링 = "모델이 더 똑똑해지게"가 아니라 **"모델이 더 잘 판단할 수 있는 환경"**을 만드는 일입니다.$aix$,
-  $aix${"type":"cycle","title":"에이전트 루프의 4단계","center":"목표 달성까지 반복","nodes":[{"label":"계획","sublabel":"다음 행동 결정","icon":"brain"},{"label":"실행","sublabel":"도구 호출","icon":"terminal"},{"label":"관찰","sublabel":"결과 읽기","icon":"eye"},{"label":"평가","sublabel":"완료 판단","icon":"check"}],"caption":"평가에서 '미완료'면 계획으로 돌아갑니다 — 이 순환이 에이전트의 본질입니다."}$aix$::jsonb, 5, 1
+  $aix${"type":"cycle","title":"에이전트 루프의 4단계","center":"목표 달성까지 반복","nodes":[{"label":"계획","sublabel":"다음 행동 결정","icon":"brain"},{"label":"실행","sublabel":"도구 호출","icon":"terminal"},{"label":"관찰","sublabel":"결과 읽기","icon":"eye"},{"label":"평가","sublabel":"완료 판단","icon":"check"}],"caption":"평가에서 '미완료'면 계획으로 돌아갑니다 — 이 순환이 에이전트의 본질입니다."}$aix$::jsonb, null, 5, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '3d1ff484-b652-ee1e-576e-fbf163fb98cc', 'bb43b706-521e-c6a6-3ab3-cccb0a0dcbe5', 'loop-engineering/tools-and-mcp', 'tools-and-mcp', '도구(Tool)와 MCP: 에이전트의 손과 발',
   $aix$루프의 '실행' 단계는 도구가 결정합니다. 그리고 2026년 도구 생태계의 표준은 **MCP(Model Context Protocol)**입니다.
 
@@ -96,11 +98,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - **설명이 프롬프트**입니다 — 모델은 description을 읽고 도구를 고릅니다.
 
 > 💡 **핵심**: 좋은 도구 설명 한 줄이 프롬프트 열 줄보다 루프 성공률을 더 높입니다.$aix$,
-  $aix${"type":"stack","title":"MCP 아키텍처","layers":[{"label":"AI 에이전트 (MCP 클라이언트)","sublabel":"Claude Code · Cursor · 커스텀 에이전트","icon":"bot","tone":"primary"},{"label":"MCP 프로토콜","sublabel":"도구 목록·호출·결과를 표준 형식으로 교환","icon":"link","tone":"accent"},{"label":"MCP 서버들","sublabel":"GitHub · Slack · DB · 사내 API","icon":"server","tone":"muted"},{"label":"실제 시스템","sublabel":"코드 저장소, 메신저, 데이터베이스","icon":"database","tone":"muted"}],"caption":"MCP는 'AI 도구의 USB-C' — 서버 하나로 모든 클라이언트에 연결됩니다."}$aix$::jsonb, 6, 2
+  $aix${"type":"stack","title":"MCP 아키텍처","layers":[{"label":"AI 에이전트 (MCP 클라이언트)","sublabel":"Claude Code · Cursor · 커스텀 에이전트","icon":"bot","tone":"primary"},{"label":"MCP 프로토콜","sublabel":"도구 목록·호출·결과를 표준 형식으로 교환","icon":"link","tone":"accent"},{"label":"MCP 서버들","sublabel":"GitHub · Slack · DB · 사내 API","icon":"server","tone":"muted"},{"label":"실제 시스템","sublabel":"코드 저장소, 메신저, 데이터베이스","icon":"database","tone":"muted"}],"caption":"MCP는 'AI 도구의 USB-C' — 서버 하나로 모든 클라이언트에 연결됩니다."}$aix$::jsonb, null, 6, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '9f36c635-06ca-8343-fa71-65988badca07', 'c42ae9ea-be93-c212-b599-8b76b58b7bad', 'loop-engineering/feedback-signals', 'feedback-signals', '피드백 신호 설계: 루프의 나침반',
   $aix$에이전트가 스스로 고치려면 **"지금 틀렸다"는 사실을 기계적으로 알려주는 신호**가 필요합니다. 신호가 없으면 루프는 감으로 도는 것과 같습니다.
 
@@ -128,11 +131,12 @@ npm run check   # = tsc --noEmit && eslint . && vitest run
 ```
 
 > 💡 **핵심**: 자가 수정 루프의 성능은 모델이 아니라 **피드백 신호의 해상도**가 결정합니다.$aix$,
-  $aix${"type":"grid","title":"피드백 신호의 종류와 강도","items":[{"label":"테스트","sublabel":"기대 동작 명세 · 최강 신호","icon":"test-tube","tone":"primary"},{"label":"타입체크","sublabel":"tsc --noEmit","icon":"shield","tone":"accent"},{"label":"린트","sublabel":"스타일·명백한 실수","icon":"filter","tone":"accent"},{"label":"빌드","sublabel":"최종 통합 검증","icon":"check","tone":"success"},{"label":"런타임 로그","sublabel":"실행 중 동작 확인","icon":"eye","tone":"muted"},{"label":"사람 리뷰","sublabel":"마지막 관문","icon":"user","tone":"warning"}],"caption":"위쪽 신호일수록 기계적·즉각적 — 루프에 먼저 연결하세요."}$aix$::jsonb, 5, 3
+  $aix${"type":"grid","title":"피드백 신호의 종류와 강도","items":[{"label":"테스트","sublabel":"기대 동작 명세 · 최강 신호","icon":"test-tube","tone":"primary"},{"label":"타입체크","sublabel":"tsc --noEmit","icon":"shield","tone":"accent"},{"label":"린트","sublabel":"스타일·명백한 실수","icon":"filter","tone":"accent"},{"label":"빌드","sublabel":"최종 통합 검증","icon":"check","tone":"success"},{"label":"런타임 로그","sublabel":"실행 중 동작 확인","icon":"eye","tone":"muted"},{"label":"사람 리뷰","sublabel":"마지막 관문","icon":"user","tone":"warning"}],"caption":"위쪽 신호일수록 기계적·즉각적 — 루프에 먼저 연결하세요."}$aix$::jsonb, null, 5, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '30f31345-856d-46ef-0e63-446b597c92cd', 'c42ae9ea-be93-c212-b599-8b76b58b7bad', 'loop-engineering/write-test-fix', 'write-test-fix', '실습: 테스트 실패 → 자가 수정 루프 돌리기',
   $aix$이론은 충분합니다. Claude Code로 실제 자가 수정 루프를 돌려봅니다.
 
@@ -159,11 +163,12 @@ cart.test.ts의 실패하는 테스트를 통과시켜 줘.
 - "통과할 때까지 반복해"라는 한 줄이 **루프 계약**을 만듭니다 — 이 문장이 없으면 한 번 고치고 멈추는 경우가 많습니다.
 
 > 💡 **핵심**: 프롬프트에 목표만 쓰지 말고 **검증 명령 + 반복 조건**을 함께 쓰세요. 그 순간 챗봇이 에이전트가 됩니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"claude — 자가 수정 루프","lines":[{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 10% 할인 적용  (cart.test.ts:18)","tone":"err"},{"text":"  expected 2700, received 3000","tone":"dim"},{"text":"# 에이전트: cart.ts:42 할인율 계산 수정","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 중복 쿠폰 방지  (cart.test.ts:31)","tone":"err"},{"text":"# 에이전트: 쿠폰 중복 가드 추가","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✓ 12 passed (12)","tone":"ok"},{"text":"목표 달성 — 루프 종료","tone":"ok"}],"caption":"실패 → 수정 → 재검증이 사람 개입 없이 3회 반복된 실제 루프 흐름입니다."}$aix$::jsonb, 7, 4
+  $aix${"type":"terminal","windowTitle":"claude — 자가 수정 루프","lines":[{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 10% 할인 적용  (cart.test.ts:18)","tone":"err"},{"text":"  expected 2700, received 3000","tone":"dim"},{"text":"# 에이전트: cart.ts:42 할인율 계산 수정","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✕ cart > 중복 쿠폰 방지  (cart.test.ts:31)","tone":"err"},{"text":"# 에이전트: 쿠폰 중복 가드 추가","tone":"comment"},{"text":"npx vitest run","tone":"cmd"},{"text":"✓ 12 passed (12)","tone":"ok"},{"text":"목표 달성 — 루프 종료","tone":"ok"}],"caption":"실패 → 수정 → 재검증이 사람 개입 없이 3회 반복된 실제 루프 흐름입니다."}$aix$::jsonb, $aix${"title":"에디터에서 자가 수정 루프 따라하기","app":{"kind":"code-editor","windowTitle":"cart.ts — AI 에이전트 세션","files":[{"id":"f-cart","name":"cart.ts","active":true},{"id":"f-test","name":"cart.test.ts"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"c1","text":"export function applyDiscount(total: number) {"},{"id":"c2","text":"// 10% 할인 쿠폰 적용","indent":1,"tone":"comment"},{"id":"c3","text":"return total * 1.1; // ← 버그: 할인이 아니라 할증","indent":1,"tone":"del"},{"id":"c4","text":"return total * 0.9;","indent":1,"tone":"add","hidden":true},{"id":"c5","text":"}"}],"terminal":[{"id":"t1","text":"npx vitest run","tone":"cmd","hidden":true},{"id":"t2","text":"✕ cart > 10% 할인 적용 (cart.test.ts:18)","tone":"err","hidden":true},{"id":"t3","text":"  expected 2700, received 3300","tone":"out","hidden":true},{"id":"t4","text":"npx vitest run","tone":"cmd","hidden":true},{"id":"t5","text":"✓ 12 passed (12) — 루프 종료","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 먼저 테스트를 실행해 실패 신호를 확인합니다"},{"t":"type","target":"t1","text":"npx vitest run"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"② 에러가 가리키는 라인으로 이동합니다"},{"t":"move","target":"c3"},{"t":"dblclick","target":"c3"},{"t":"caption","text":"③ 할인율 계산을 수정합니다 (1.1 → 0.9)"},{"t":"type","target":"c4","text":"return total * 0.9;"},{"t":"wait","ms":500},{"t":"caption","text":"④ 같은 명령으로 재검증 — 이것이 루프입니다"},{"t":"type","target":"t4","text":"npx vitest run"},{"t":"reveal","target":"t5"},{"t":"move","target":"t5"},{"t":"caption","text":"✅ 테스트 통과 — 성공 종료 조건 달성"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '1d02b7ab-afef-6629-6731-906cd179087f', 'c42ae9ea-be93-c212-b599-8b76b58b7bad', 'loop-engineering/guardrails', 'guardrails', '가드레일: 무한 루프와 폭주를 막는 법',
   $aix$루프는 강력한 만큼 위험합니다. 잘못 설계된 루프는 같은 실수를 무한 반복하거나, 테스트를 '삭제'해서 통과시키는 꼼수를 씁니다.
 
@@ -182,11 +187,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 성공 조건만 있고 안전 조건이 없는 루프는 프로덕션에 넣을 수 없습니다.
 
 > 💡 **핵심**: "통과할 때까지 반복해"에는 반드시 **"단, 최대 N번까지, 테스트 파일은 건드리지 말고"**를 붙이세요.$aix$,
-  $aix${"type":"flow","title":"가드레일이 있는 자가 수정 루프","nodes":[{"label":"코드 수정","icon":"code","tone":"primary"},{"label":"검증 실행","sublabel":"테스트 + 타입체크","icon":"test-tube","tone":"accent","edgeLabel":"테스트 파일은 수정 금지"},{"label":"가드레일 체크","sublabel":"시도 5회 미만? 진전 있음?","icon":"shield","tone":"warning","edgeLabel":"실패 시"},{"label":"완료 또는 사람에게 보고","sublabel":"성공 종료 / 안전 종료","icon":"check","tone":"success","edgeLabel":"통과 또는 상한 도달"}],"loopBack":{"from":2,"to":0,"label":"재시도 (최대 5회)"},"caption":"성공 종료와 안전 종료, 두 개의 출구가 모두 있어야 프로덕션 루프입니다."}$aix$::jsonb, 5, 5
+  $aix${"type":"flow","title":"가드레일이 있는 자가 수정 루프","nodes":[{"label":"코드 수정","icon":"code","tone":"primary"},{"label":"검증 실행","sublabel":"테스트 + 타입체크","icon":"test-tube","tone":"accent","edgeLabel":"테스트 파일은 수정 금지"},{"label":"가드레일 체크","sublabel":"시도 5회 미만? 진전 있음?","icon":"shield","tone":"warning","edgeLabel":"실패 시"},{"label":"완료 또는 사람에게 보고","sublabel":"성공 종료 / 안전 종료","icon":"check","tone":"success","edgeLabel":"통과 또는 상한 도달"}],"loopBack":{"from":2,"to":0,"label":"재시도 (최대 5회)"},"caption":"성공 종료와 안전 종료, 두 개의 출구가 모두 있어야 프로덕션 루프입니다."}$aix$::jsonb, null, 5, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '04c7685d-c4bb-e5e9-df98-e0874713d165', 'c42ae9ea-be93-c212-b599-8b76b58b7bad', 'loop-engineering/context-management', 'context-management', '컨텍스트 관리: 긴 루프가 무너지지 않게',
   $aix$루프가 수십 번 돌면 대화 기록이 컨텍스트 윈도우를 가득 채웁니다. 긴 작업에서 에이전트가 갑자기 멍청해지는 이유의 대부분이 여기 있습니다.
 
@@ -208,11 +214,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 "루프가 길어질수록 컨텍스트에 남기는 것은 **결정과 결론**, 버리는 것은 **과정과 시행착오**" — 이 원칙 하나면 충분합니다.
 
 > 💡 **핵심**: 컨텍스트는 에이전트의 작업대입니다. 작업대가 좁아지면 실력이 떨어집니다 — 요약하고, 위임하고, 파일에 적으세요.$aix$,
-  $aix${"type":"compare","title":"컨텍스트 전략: 방치 vs 관리","columns":[{"title":"방치된 루프","icon":"alert","tone":"warning","items":["실패 로그가 계속 쌓임","파일 전체를 반복해서 읽음","50번째 반복에서 목표를 잊음","품질이 점점 하락"]},{"title":"관리된 루프","icon":"layers","tone":"primary","items":["오래된 기록은 요약(컴팩션)","탐색은 서브에이전트에 위임","진행 상황은 PLAN.md에 기록","긴 작업에도 품질 유지"]}],"caption":"결정과 결론은 남기고, 과정과 시행착오는 버립니다."}$aix$::jsonb, 6, 6
+  $aix${"type":"compare","title":"컨텍스트 전략: 방치 vs 관리","columns":[{"title":"방치된 루프","icon":"alert","tone":"warning","items":["실패 로그가 계속 쌓임","파일 전체를 반복해서 읽음","50번째 반복에서 목표를 잊음","품질이 점점 하락"]},{"title":"관리된 루프","icon":"layers","tone":"primary","items":["오래된 기록은 요약(컴팩션)","탐색은 서브에이전트에 위임","진행 상황은 PLAN.md에 기록","긴 작업에도 품질 유지"]}],"caption":"결정과 결론은 남기고, 과정과 시행착오는 버립니다."}$aix$::jsonb, null, 6, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'eff676fa-0e07-be2f-c842-7ae3ae6cf322', '2e4b67fa-e5e4-d93b-399d-fa3391b6dda0', 'loop-engineering/orchestration-patterns', 'orchestration-patterns', '멀티 에이전트 패턴: 분업의 3가지 형태',
   $aix$작업이 커지면 에이전트 하나로는 부족합니다. 2026년 실무에서 검증된 오케스트레이션 패턴은 크게 세 가지입니다.
 
@@ -235,11 +242,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 정확성이 생명이면 → 생성자-검증자
 
 > 💡 **핵심**: 멀티 에이전트의 가치는 '더 많은 AI'가 아니라 **독립된 컨텍스트**에서 나옵니다. 서로의 편향을 공유하지 않는 것이 힘입니다.$aix$,
-  $aix${"type":"grid","title":"3가지 오케스트레이션 패턴","items":[{"label":"파이프라인","sublabel":"분석 → 구현 → 리뷰 직렬 연결","icon":"workflow","tone":"primary"},{"label":"팬아웃","sublabel":"대량 작업을 병렬 분산","icon":"git-branch","tone":"accent"},{"label":"생성자-검증자","sublabel":"만드는 자 vs 반박하는 자","icon":"shield","tone":"success"},{"label":"오케스트레이터","sublabel":"전체를 지휘하는 메인 루프","icon":"brain","tone":"warning"}],"caption":"실전에서는 세 패턴을 조합합니다 — 오케스트레이터가 상황에 맞게 지휘합니다."}$aix$::jsonb, 6, 7
+  $aix${"type":"grid","title":"3가지 오케스트레이션 패턴","items":[{"label":"파이프라인","sublabel":"분석 → 구현 → 리뷰 직렬 연결","icon":"workflow","tone":"primary"},{"label":"팬아웃","sublabel":"대량 작업을 병렬 분산","icon":"git-branch","tone":"accent"},{"label":"생성자-검증자","sublabel":"만드는 자 vs 반박하는 자","icon":"shield","tone":"success"},{"label":"오케스트레이터","sublabel":"전체를 지휘하는 메인 루프","icon":"brain","tone":"warning"}],"caption":"실전에서는 세 패턴을 조합합니다 — 오케스트레이터가 상황에 맞게 지휘합니다."}$aix$::jsonb, null, 6, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'f510d67a-f429-39a1-d5d1-02b29cd21380', '2e4b67fa-e5e4-d93b-399d-fa3391b6dda0', 'loop-engineering/human-in-the-loop', 'human-in-the-loop', '휴먼 인 더 루프: 사람이 서야 할 자리',
   $aix$완전 자동화가 항상 정답은 아닙니다. 좋은 워크플로우는 **사람의 판단이 가장 값진 지점**에만 사람을 배치합니다.
 
@@ -260,11 +268,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 모든 스텝마다 승인을 요구하면 자동화의 의미가 없고, 승인이 하나도 없으면 사고가 납니다. **관문은 적게, 그러나 확실하게.**
 
 > 💡 **핵심**: 자동화 설계의 질문은 "사람을 뺄 수 있는가"가 아니라 **"사람의 판단이 어디서 가장 값진가"**입니다.$aix$,
-  $aix${"type":"flow","title":"3개의 휴먼 관문","nodes":[{"label":"사람: 목표·제약 정의","sublabel":"시작 관문","icon":"user","tone":"warning"},{"label":"에이전트: 자율 작업 루프","sublabel":"계획→실행→관찰→평가 반복","icon":"bot","tone":"primary"},{"label":"사람: 위험 행동 승인","sublabel":"배포·결제·삭제 직전","icon":"shield","tone":"warning","edgeLabel":"되돌리기 어려운 행동 감지 시"},{"label":"사람: 최종 품질 승인","sublabel":"완료 관문","icon":"check","tone":"success"}],"caption":"사람은 관문에만 서고, 관문 사이는 에이전트가 자율 주행합니다."}$aix$::jsonb, 5, 8
+  $aix${"type":"flow","title":"3개의 휴먼 관문","nodes":[{"label":"사람: 목표·제약 정의","sublabel":"시작 관문","icon":"user","tone":"warning"},{"label":"에이전트: 자율 작업 루프","sublabel":"계획→실행→관찰→평가 반복","icon":"bot","tone":"primary"},{"label":"사람: 위험 행동 승인","sublabel":"배포·결제·삭제 직전","icon":"shield","tone":"warning","edgeLabel":"되돌리기 어려운 행동 감지 시"},{"label":"사람: 최종 품질 승인","sublabel":"완료 관문","icon":"check","tone":"success"}],"caption":"사람은 관문에만 서고, 관문 사이는 에이전트가 자율 주행합니다."}$aix$::jsonb, $aix${"title":"Slack에서 배포 승인 관문 따라하기","app":{"kind":"chat-app","workspace":"우리 팀 워크스페이스","channels":[{"id":"ch-deploy","name":"배포-승인","active":true},{"id":"ch-dev","name":"개발-일반"},{"id":"ch-alert","name":"장애-알림"}],"composerId":"composer","messages":[{"id":"m1","author":"루프봇","bot":true,"time":"오후 2:41","text":"결제 모듈 버그 수정 완료 — 테스트 12/12 통과.\n프로덕션 배포는 되돌리기 어려운 작업이라 승인이 필요합니다.","hidden":true},{"id":"m2","author":"루프봇","bot":true,"time":"오후 2:41","text":"변경 요약: cart.ts 할인율 계산 수정 (+1줄 / -1줄)","hidden":true},{"id":"m3","author":"나 (리드 개발자)","time":"오후 2:44","text":"diff 확인했습니다. 배포 승인합니다 ✅","hidden":true},{"id":"m4","author":"루프봇","bot":true,"time":"오후 2:45","text":"✅ 배포 시작 → 완료 (v2.4.1). 모니터링 정상입니다.","hidden":true}]},"actions":[{"t":"caption","text":"① 에이전트가 위험 관문(배포)에서 멈추고 승인을 요청합니다"},{"t":"reveal","target":"m1"},{"t":"reveal","target":"m2"},{"t":"wait","ms":700},{"t":"caption","text":"② 사람은 변경 요약을 확인하고 판단만 합니다"},{"t":"move","target":"m2"},{"t":"click"},{"t":"wait","ms":500},{"t":"caption","text":"③ 승인 메시지를 입력합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"diff 확인했습니다. 배포 승인합니다 ✅"},{"t":"wait","ms":400},{"t":"hide","target":"composer"},{"t":"reveal","target":"composer"},{"t":"reveal","target":"m3"},{"t":"caption","text":"④ 승인 즉시 에이전트가 나머지를 자율 수행합니다"},{"t":"reveal","target":"m4"},{"t":"move","target":"m4"},{"t":"wait","ms":900}]}$aix$::jsonb, 5, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '929004f6-65c6-f78d-66ff-c0310fe5a1df', '2e4b67fa-e5e4-d93b-399d-fa3391b6dda0', 'loop-engineering/eval-and-monitor', 'eval-and-monitor', '운영: 루프를 측정하고 개선하기',
   $aix$루프를 만들었다면 이제 **측정**할 차례입니다. 측정 없는 루프 개선은 감으로 하는 최적화일 뿐입니다.
 
@@ -287,10 +296,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 거창한 대시보드보다, 실패한 루프의 트랜스크립트 10개를 직접 읽는 것이 첫 걸음입니다. 패턴은 항상 거기에 있습니다.
 
 > 💡 **핵심**: "만들고 끝"이 아니라 **측정 → 분류 → 하나 고침 → 재측정**. 루프를 개선하는 것도 결국 루프입니다.$aix$,
-  $aix${"type":"steps","title":"루프 개선 사이클","steps":[{"label":"트랜스크립트 수집","sublabel":"실패 사례를 빠짐없이 저장","icon":"clipboard"},{"label":"실패 유형 분류","sublabel":"신호·도구·컨텍스트·가드레일","icon":"filter"},{"label":"최빈 유형 하나만 수정","sublabel":"한 번에 하나씩","icon":"wrench"},{"label":"같은 작업 세트로 재측정","sublabel":"성공률·반복 횟수 비교","icon":"chart"}],"caption":"이 사이클 자체가 여러분의 '루프를 위한 루프'입니다."}$aix$::jsonb, 6, 9
+  $aix${"type":"steps","title":"루프 개선 사이클","steps":[{"label":"트랜스크립트 수집","sublabel":"실패 사례를 빠짐없이 저장","icon":"clipboard"},{"label":"실패 유형 분류","sublabel":"신호·도구·컨텍스트·가드레일","icon":"filter"},{"label":"최빈 유형 하나만 수정","sublabel":"한 번에 하나씩","icon":"wrench"},{"label":"같은 작업 세트로 재측정","sublabel":"성공률·반복 횟수 비교","icon":"chart"}],"caption":"이 사이클 자체가 여러분의 '루프를 위한 루프'입니다."}$aix$::jsonb, null, 6, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: AI 하네스 구축: LLM 평가와 테스트 프레임워크
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -308,7 +318,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   'ead8ad43-5360-8b0d-801b-53c76195ef46', '6a2a3f5d-1a88-fbd4-2c0f-93e1fa9fdce4', 'production-quality', '프로덕션 품질 관리', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '4a3ce6e6-c722-57f1-fe0f-a78af628c761', 'fd67f84e-e3a4-fbea-4eac-e2ee44a47291', 'ai-harness/why-harness', 'why-harness', '왜 하네스인가: 바이브 체크의 한계',
   $aix$"프롬프트를 고쳤더니 더 좋아진 것 같아요" — 이 문장이 팀 슬랙에 올라오는 순간, 여러분에게는 하네스가 필요합니다.
 
@@ -330,11 +340,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 숫자가 생기면 논쟁이 실험으로 바뀝니다. 이것이 이 강의의 목표입니다.
 
 > 💡 **핵심**: 바이브 체크는 폐기물이 아니라 출발점입니다 — 감으로 발견한 기준을 **하네스에 옮겨 적는 순간** 품질 관리가 시작됩니다.$aix$,
-  $aix${"type":"compare","title":"바이브 체크 vs 이벨 하네스","columns":[{"title":"바이브 체크","icon":"eye","tone":"muted","items":["떠오른 예시 3~4개로 판단","케이스 B의 회귀를 놓침","\"좋아 보였다\"는 기억뿐","논쟁으로 의사결정"]},{"title":"이벨 하네스","icon":"test-tube","tone":"primary","items":["대표 케이스 수백 개 일괄 실행","전체 점수로 회귀 즉시 감지","언제든 같은 기준으로 재측정","숫자로 의사결정"]}],"caption":"같은 프롬프트 변경도 하네스가 있으면 '실험'이 되고, 없으면 '도박'이 됩니다."}$aix$::jsonb, 4, 0
+  $aix${"type":"compare","title":"바이브 체크 vs 이벨 하네스","columns":[{"title":"바이브 체크","icon":"eye","tone":"muted","items":["떠오른 예시 3~4개로 판단","케이스 B의 회귀를 놓침","\"좋아 보였다\"는 기억뿐","논쟁으로 의사결정"]},{"title":"이벨 하네스","icon":"test-tube","tone":"primary","items":["대표 케이스 수백 개 일괄 실행","전체 점수로 회귀 즉시 감지","언제든 같은 기준으로 재측정","숫자로 의사결정"]}],"caption":"같은 프롬프트 변경도 하네스가 있으면 '실험'이 되고, 없으면 '도박'이 됩니다."}$aix$::jsonb, null, 4, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '72cc7adf-04c5-69a2-db06-0c25c765dd8b', 'fd67f84e-e3a4-fbea-4eac-e2ee44a47291', 'ai-harness/golden-dataset', 'golden-dataset', '골든 데이터셋 만들기',
   $aix$이벨의 품질은 채점기가 아니라 **데이터셋**이 결정합니다. 대표성 없는 100문항보다 잘 고른 30문항이 낫습니다.
 
@@ -356,11 +367,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 데이터셋은 코드처럼 **버전 관리**하고, 새 실패가 나올 때마다 자랍니다.
 
 > 💡 **핵심**: 골든 데이터셋은 한 번 만드는 산출물이 아니라 **실패할 때마다 자라는 살아있는 자산**입니다.$aix$,
-  $aix${"type":"steps","title":"골든 데이터셋 구축 절차","steps":[{"label":"실사용 로그 발굴","sublabel":"실제 입력에서 대표 케이스 추출","icon":"search"},{"label":"실패·엣지 케이스 수록","sublabel":"버그 리포트, 경계 조건, 인젝션","icon":"alert"},{"label":"기대 결과·채점 기준 작성","sublabel":"input · expected · assertion","icon":"clipboard"},{"label":"검수 후 버전 관리","sublabel":"20~50개로 시작, git에 커밋","icon":"git-branch"}],"caption":"완벽한 100개를 기다리지 말고, 대표적인 30개로 오늘 시작하세요."}$aix$::jsonb, 5, 1
+  $aix${"type":"steps","title":"골든 데이터셋 구축 절차","steps":[{"label":"실사용 로그 발굴","sublabel":"실제 입력에서 대표 케이스 추출","icon":"search"},{"label":"실패·엣지 케이스 수록","sublabel":"버그 리포트, 경계 조건, 인젝션","icon":"alert"},{"label":"기대 결과·채점 기준 작성","sublabel":"input · expected · assertion","icon":"clipboard"},{"label":"검수 후 버전 관리","sublabel":"20~50개로 시작, git에 커밋","icon":"git-branch"}],"caption":"완벽한 100개를 기다리지 말고, 대표적인 30개로 오늘 시작하세요."}$aix$::jsonb, null, 5, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '50baa3fd-5d64-0d43-2a05-88c50b58bbd8', 'fd67f84e-e3a4-fbea-4eac-e2ee44a47291', 'ai-harness/grading-methods', 'grading-methods', '채점 방식 3종: 정확 일치·코드 채점·LLM-as-Judge',
   $aix$출력을 어떻게 채점할지가 이벨 설계의 절반입니다. 2026년 실무에서 쓰는 채점기는 크게 세 계열입니다.
 
@@ -390,11 +402,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 정확 일치로 되면 정확 일치 → 안 되면 코드 채점 → 그래도 안 되는 것만 Judge. **싼 채점기부터 소진**하는 것이 원칙입니다.
 
 > 💡 **핵심**: 채점기는 섞어 씁니다 — 형식은 코드로, 품질은 Judge로. 한 케이스에 assertion 여러 개가 정상입니다.$aix$,
-  $aix${"type":"grid","title":"채점 방식 3종 비교","items":[{"label":"정확 일치","sublabel":"분류·JSON 값 · 공짜·결정적","icon":"check","tone":"success"},{"label":"코드 채점","sublabel":"스키마·실행 검증 · 결정적","icon":"code","tone":"primary"},{"label":"LLM-as-Judge","sublabel":"톤·충실성 · 유연하지만 비쌈","icon":"brain","tone":"accent"},{"label":"사람 평가","sublabel":"최종 보정 · Judge 검증용","icon":"user","tone":"warning"}],"caption":"왼쪽 위(싸고 결정적)부터 소진하고, 남는 것만 오른쪽(비싸고 유연)으로 보냅니다."}$aix$::jsonb, 6, 2
+  $aix${"type":"grid","title":"채점 방식 3종 비교","items":[{"label":"정확 일치","sublabel":"분류·JSON 값 · 공짜·결정적","icon":"check","tone":"success"},{"label":"코드 채점","sublabel":"스키마·실행 검증 · 결정적","icon":"code","tone":"primary"},{"label":"LLM-as-Judge","sublabel":"톤·충실성 · 유연하지만 비쌈","icon":"brain","tone":"accent"},{"label":"사람 평가","sublabel":"최종 보정 · Judge 검증용","icon":"user","tone":"warning"}],"caption":"왼쪽 위(싸고 결정적)부터 소진하고, 남는 것만 오른쪽(비싸고 유연)으로 보냅니다."}$aix$::jsonb, null, 6, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'adfc6946-d73d-1f7f-1e0f-c1fdf759b84c', '7f1e9d3a-91ca-e3fe-8554-a49e791478a4', 'ai-harness/harness-setup', 'harness-setup', '실습: promptfoo로 하네스 세팅하기',
   $aix$이론은 충분합니다. promptfoo 스타일 도구로 10분 만에 첫 하네스를 세웁니다.
 
@@ -429,11 +442,12 @@ tests:
 합격률 숫자 자체보다 **실패한 케이스의 출력**을 직접 읽으세요. assertion이 너무 빡빡하거나 헐거운 곳이 반드시 발견되고, 그걸 고치는 과정이 곧 이벨 튜닝입니다.
 
 > 💡 **핵심**: 하네스 세팅의 완성 기준은 "명령 한 줄로 전체 데이터셋이 돌고 합격률이 나오는가"입니다. 그 한 줄이 이후 모든 자동화의 기반이 됩니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"promptfoo — 첫 이벨 실행","lines":[{"text":"npx promptfoo eval","tone":"cmd"},{"text":"Running 42 test cases across 1 provider...","tone":"dim"},{"text":"✓ [contains] 환불은 며칠 걸리나요?","tone":"ok"},{"text":"✓ [llm-rubric] 배송 조회 방법 알려줘","tone":"ok"},{"text":"✕ [contains] 해외 배송도 되나요?","tone":"err"},{"text":"  expected \"관세\" in output","tone":"dim"},{"text":"─────────────────────────────","tone":"dim"},{"text":"Pass rate: 36/42 (85.7%)","tone":"out"},{"text":"npx promptfoo view  # 웹 UI로 실패 케이스 확인","tone":"comment"}],"caption":"명령 한 줄 = 데이터셋 전체 실행 + 자동 채점 + 합격률. 이것이 하네스입니다."}$aix$::jsonb, 6, 3
+  $aix${"type":"terminal","windowTitle":"promptfoo — 첫 이벨 실행","lines":[{"text":"npx promptfoo eval","tone":"cmd"},{"text":"Running 42 test cases across 1 provider...","tone":"dim"},{"text":"✓ [contains] 환불은 며칠 걸리나요?","tone":"ok"},{"text":"✓ [llm-rubric] 배송 조회 방법 알려줘","tone":"ok"},{"text":"✕ [contains] 해외 배송도 되나요?","tone":"err"},{"text":"  expected \"관세\" in output","tone":"dim"},{"text":"─────────────────────────────","tone":"dim"},{"text":"Pass rate: 36/42 (85.7%)","tone":"out"},{"text":"npx promptfoo view  # 웹 UI로 실패 케이스 확인","tone":"comment"}],"caption":"명령 한 줄 = 데이터셋 전체 실행 + 자동 채점 + 합격률. 이것이 하네스입니다."}$aix$::jsonb, $aix${"title":"promptfoo로 첫 이벨 실행 따라하기","app":{"kind":"code-editor","windowTitle":"promptfooconfig.yaml — 이벨 하네스","files":[{"id":"f-config","name":"promptfooconfig.yaml","active":true},{"id":"f-prompt","name":"prompts/support-agent.txt"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"y1","text":"prompts: [file://prompts/support-agent.txt]"},{"id":"y2","text":"providers: [anthropic:claude-sonnet-4-5]"},{"id":"y3","text":"tests:"},{"id":"y4","text":"- vars: { question: \"해외 배송도 되나요?\" }","indent":1},{"id":"y5","text":"assert:","indent":2},{"id":"y6","text":"- type: contains","indent":3},{"id":"y7","text":"value: \"관세\" # ← 너무 빡빡한 기준","indent":4,"tone":"del"},{"id":"y8","text":"value: \"해외 배송\"","indent":4,"tone":"add","hidden":true},{"id":"y9","text":"- type: llm-rubric","indent":3,"hidden":true},{"id":"y10","text":"value: \"배송 가능 여부를 정확히 안내\"","indent":4,"hidden":true}],"terminal":[{"id":"t1","text":"npx promptfoo eval","tone":"cmd","hidden":true},{"id":"t2","text":"✕ [contains] 해외 배송도 되나요?","tone":"err","hidden":true},{"id":"t3","text":"  expected \"관세\" in output","tone":"out","hidden":true},{"id":"t4","text":"Pass rate: 36/42 (85.7%)","tone":"out","hidden":true},{"id":"t5","text":"npx promptfoo eval","tone":"cmd","hidden":true},{"id":"t6","text":"✓ [contains] 해외 배송도 되나요?","tone":"ok","hidden":true},{"id":"t7","text":"Pass rate: 42/42 (100%)","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 설정 파일의 3요소(프롬프트·모델·테스트)를 확인합니다"},{"t":"move","target":"y1"},{"t":"move","target":"y3"},{"t":"caption","text":"② 명령 한 줄로 전체 데이터셋을 실행합니다"},{"t":"type","target":"t1","text":"npx promptfoo eval"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"reveal","target":"t4"},{"t":"wait","ms":600},{"t":"caption","text":"③ 실패 케이스를 읽고 너무 빡빡한 assertion을 찾습니다"},{"t":"move","target":"y7"},{"t":"dblclick","target":"y7"},{"t":"caption","text":"④ assertion을 실제 기준에 맞게 고칩니다"},{"t":"type","target":"y8","text":"value: \"해외 배송\""},{"t":"reveal","target":"y9"},{"t":"reveal","target":"y10"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 같은 명령으로 재실행해 합격률 변화를 확인합니다"},{"t":"type","target":"t5","text":"npx promptfoo eval"},{"t":"reveal","target":"t6"},{"t":"reveal","target":"t7"},{"t":"move","target":"t7"},{"t":"caption","text":"✅ 합격률 100% — 첫 하네스 세팅 완료입니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '74abd22b-ff85-d860-cc50-603b8c5a043f', '7f1e9d3a-91ca-e3fe-8554-a49e791478a4', 'ai-harness/llm-as-judge-design', 'llm-as-judge-design', 'LLM-as-Judge 설계와 함정',
   $aix$Judge는 강력하지만, 검증하지 않은 Judge는 **틀린 자로 재는 것**과 같습니다. 설계 원칙과 알려진 편향을 짚습니다.
 
@@ -454,11 +468,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 사람이 라벨링한 표본 30~50개와 Judge 판정의 **일치율**을 측정하세요. 일치율 90% 미만이면 루브릭을 고칠 차례입니다.
 
 > 💡 **핵심**: Judge는 "설계 → 사람 라벨과 대조 → 루브릭 수정"을 거친 뒤에만 신뢰하세요. **채점기를 채점하는 단계**를 건너뛰면 안 됩니다.$aix$,
-  $aix${"type":"chat","title":"Judge 프롬프트 설계 예시","messages":[{"role":"system","text":"루브릭: ① 원문에 없는 사실 포함? ② 핵심 수치 누락? ③ 3문장 초과? 각각 예/아니오로. 길이는 평가하지 마세요. 근거를 먼저 쓰고 결론을 내리세요."},{"role":"user","text":"[원문]과 [요약]을 채점하세요."},{"role":"ai","text":"근거: 요약의 \"전년 대비 30% 성장\"은 원문에 없음(원문은 13%). → ① 예 ② 아니오 ③ 아니오 — 판정: FAIL (환각)"}],"caption":"점수 대신 예/아니오 체크리스트, 결론 전에 근거 — Judge 일관성의 핵심 두 가지입니다."}$aix$::jsonb, 6, 4
+  $aix${"type":"chat","title":"Judge 프롬프트 설계 예시","messages":[{"role":"system","text":"루브릭: ① 원문에 없는 사실 포함? ② 핵심 수치 누락? ③ 3문장 초과? 각각 예/아니오로. 길이는 평가하지 마세요. 근거를 먼저 쓰고 결론을 내리세요."},{"role":"user","text":"[원문]과 [요약]을 채점하세요."},{"role":"ai","text":"근거: 요약의 \"전년 대비 30% 성장\"은 원문에 없음(원문은 13%). → ① 예 ② 아니오 ③ 아니오 — 판정: FAIL (환각)"}],"caption":"점수 대신 예/아니오 체크리스트, 결론 전에 근거 — Judge 일관성의 핵심 두 가지입니다."}$aix$::jsonb, $aix${"title":"LLM-as-Judge 채점과 검증 따라하기","app":{"kind":"browser","url":"evals.ourteam.dev/judge","blocks":[{"id":"b-head","type":"heading","label":"LLM-as-Judge 채점 대시보드"},{"id":"b-rubric","type":"text","label":"루브릭: ① 원문에 없는 사실? ② 핵심 수치 누락? ③ 3문장 초과? — 각각 예/아니오, 길이는 평가하지 않음"},{"id":"b-input","type":"input","label":"채점할 요약을 붙여넣으세요…"},{"id":"b-run","type":"button","label":"Judge 채점 실행"},{"id":"b-reason","type":"card","label":"근거: 요약의 \"30% 성장\"은 원문에 없음 (원문은 13%)","hidden":true},{"id":"b-check","type":"card","label":"체크: ① 예 · ② 아니오 · ③ 아니오","hidden":true},{"id":"b-verdict","type":"badge","label":"판정: FAIL (환각)","hidden":true},{"id":"b-verify","type":"button","label":"사람 라벨 50건과 대조"},{"id":"b-agree","type":"card","label":"사람 라벨 일치율: 46/50 (92%) — 신뢰 가능","hidden":true}]},"actions":[{"t":"caption","text":"① 루브릭을 예/아니오 체크리스트로 명시합니다"},{"t":"move","target":"b-rubric"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"② 채점할 요약을 입력합니다"},{"t":"click","target":"b-input"},{"t":"type","target":"b-input","text":"3분기 매출이 전년 대비 30% 성장했다."},{"t":"caption","text":"③ Judge를 실행합니다 — 근거를 먼저 쓰게 합니다"},{"t":"move","target":"b-run"},{"t":"click"},{"t":"wait","ms":600},{"t":"reveal","target":"b-reason"},{"t":"reveal","target":"b-check"},{"t":"reveal","target":"b-verdict"},{"t":"move","target":"b-verdict"},{"t":"wait","ms":600},{"t":"caption","text":"④ Judge 자체를 사람 라벨과 대조해 검증합니다"},{"t":"move","target":"b-verify"},{"t":"click"},{"t":"wait","ms":500},{"t":"reveal","target":"b-agree"},{"t":"move","target":"b-agree"},{"t":"caption","text":"✅ 일치율 92% — 이제 이 Judge를 신뢰할 수 있습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'bb1c4889-1145-2a6b-426c-391e1594de1c', '7f1e9d3a-91ca-e3fe-8554-a49e791478a4', 'ai-harness/prompt-versioning', 'prompt-versioning', '프롬프트 버전 관리: git으로 diff 남기기',
   $aix$프롬프트는 코드입니다. 노션 페이지나 채팅창에 흩어진 프롬프트는 "어제는 됐는데 오늘은 안 되는" 미스터리의 근원입니다.
 
@@ -480,11 +495,12 @@ git이 "무엇이 바뀌었나"를, 이벨이 "그래서 얼마나 좋아졌나"
 프로덕션에서 품질 이슈가 터지면 `git revert` 한 번으로 직전 프롬프트로 복귀합니다. 배포된 프롬프트에는 커밋 해시를 태그로 남겨 **"지금 프로덕션에 어떤 버전이 돌고 있는가"**를 항상 답할 수 있게 하세요.
 
 > 💡 **핵심**: 프롬프트 변경 이력 = **git diff(무엇을) + 이벨 점수(얼마나)**. 이 둘이 쌓이면 팀의 프롬프트 노하우가 자산이 됩니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"git — 프롬프트 diff와 이벨 기록","lines":[{"text":"git diff prompts/support-agent.txt","tone":"cmd"},{"text":"- 고객 질문에 답변하세요.","tone":"err"},{"text":"+ 고객 질문에 답변하세요. 반드시 정책 문서의","tone":"ok"},{"text":"+ 근거 조항을 인용하고, 모르면 모른다고 답하세요.","tone":"ok"},{"text":"npx promptfoo eval","tone":"cmd"},{"text":"Pass rate: 39/42 (92.9%)  # 이전 85.7%","tone":"out"},{"text":"git commit -am \"support: 근거 인용 규칙 추가 (eval 85.7%→92.9%)\"","tone":"cmd"},{"text":"[main a3f9c21] support: 근거 인용 규칙 추가","tone":"dim"}],"caption":"diff가 '무엇을 바꿨나', 이벨 점수가 '그래서 좋아졌나'를 증명합니다."}$aix$::jsonb, 5, 5
+  $aix${"type":"terminal","windowTitle":"git — 프롬프트 diff와 이벨 기록","lines":[{"text":"git diff prompts/support-agent.txt","tone":"cmd"},{"text":"- 고객 질문에 답변하세요.","tone":"err"},{"text":"+ 고객 질문에 답변하세요. 반드시 정책 문서의","tone":"ok"},{"text":"+ 근거 조항을 인용하고, 모르면 모른다고 답하세요.","tone":"ok"},{"text":"npx promptfoo eval","tone":"cmd"},{"text":"Pass rate: 39/42 (92.9%)  # 이전 85.7%","tone":"out"},{"text":"git commit -am \"support: 근거 인용 규칙 추가 (eval 85.7%→92.9%)\"","tone":"cmd"},{"text":"[main a3f9c21] support: 근거 인용 규칙 추가","tone":"dim"}],"caption":"diff가 '무엇을 바꿨나', 이벨 점수가 '그래서 좋아졌나'를 증명합니다."}$aix$::jsonb, $aix${"title":"프롬프트 diff + 이벨 점수 커밋 따라하기","app":{"kind":"code-editor","windowTitle":"support-agent.txt — 프롬프트 버전 관리","files":[{"id":"f-agent","name":"prompts/support-agent.txt","active":true},{"id":"f-cfg","name":"promptfooconfig.yaml"}],"code":[{"id":"p1","text":"당신은 우리 쇼핑몰의 고객 지원 상담원입니다."},{"id":"p2","text":"고객 질문에 답변하세요.","tone":"del"},{"id":"p3","text":"고객 질문에 답변하세요. 반드시 정책 문서의","tone":"add","hidden":true},{"id":"p4","text":"근거 조항을 인용하고, 모르면 모른다고 답하세요.","tone":"add","hidden":true}],"terminal":[{"id":"g1","text":"git diff prompts/support-agent.txt","tone":"cmd","hidden":true},{"id":"g2","text":"- 고객 질문에 답변하세요.","tone":"err","hidden":true},{"id":"g3","text":"+ …근거 조항을 인용하고, 모르면 모른다고","tone":"ok","hidden":true},{"id":"g4","text":"npx promptfoo eval","tone":"cmd","hidden":true},{"id":"g5","text":"Pass rate: 39/42 (92.9%)  # 이전 85.7%","tone":"ok","hidden":true},{"id":"g6","text":"git commit -am \"eval 85.7%→92.9%\"","tone":"cmd","hidden":true},{"id":"g7","text":"[main a3f9c21] support: 근거 인용 규칙 추가","tone":"out","hidden":true}]},"actions":[{"t":"caption","text":"① 프롬프트 파일에서 고칠 줄을 찾습니다"},{"t":"move","target":"p2"},{"t":"dblclick","target":"p2"},{"t":"caption","text":"② 근거 인용 규칙을 추가합니다"},{"t":"type","target":"p3","text":"고객 질문에 답변하세요. 반드시 정책 문서의"},{"t":"type","target":"p4","text":"근거 조항을 인용하고, 모르면 모른다고 답하세요."},{"t":"wait","ms":500},{"t":"caption","text":"③ git diff로 무엇이 바뀌었는지 확인합니다"},{"t":"type","target":"g1","text":"git diff prompts/support-agent.txt"},{"t":"reveal","target":"g2"},{"t":"reveal","target":"g3"},{"t":"wait","ms":600},{"t":"caption","text":"④ 이벨을 돌려 점수 변화를 확인합니다"},{"t":"type","target":"g4","text":"npx promptfoo eval"},{"t":"reveal","target":"g5"},{"t":"wait","ms":600},{"t":"caption","text":"⑤ diff와 점수를 함께 커밋 메시지에 남깁니다"},{"t":"type","target":"g6","text":"git commit -am \"eval 85.7%→92.9%\""},{"t":"reveal","target":"g7"},{"t":"move","target":"g7"},{"t":"caption","text":"✅ 무엇을(diff) + 얼마나(점수)가 함께 기록되었습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 5, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '2e3cd141-1a38-c9d3-a16f-e7e778fcc32b', '7f1e9d3a-91ca-e3fe-8554-a49e791478a4', 'ai-harness/regression-ci', 'regression-ci', '회귀 테스트와 CI 연동',
   $aix$하네스의 진짜 힘은 **자동으로 돌 때** 나옵니다. 프롬프트 PR마다 이벨이 돌고, 점수가 떨어지면 머지가 막히는 구조를 만듭니다.
 
@@ -506,11 +522,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 기준선 점수를 낮추는 머지는 반드시 **명시적 합의**를 거치게 하세요. "이번만 예외"가 쌓이면 하네스는 장식이 됩니다.
 
 > 💡 **핵심**: "프롬프트 PR → 이벨 자동 실행 → 점수 하락 시 머지 차단" — 이 게이트 하나가 팀 전체의 품질 하한선을 지킵니다.$aix$,
-  $aix${"type":"flow","title":"이벨 CI 게이트","nodes":[{"label":"프롬프트 수정 PR","sublabel":"prompts/ 디렉토리 변경","icon":"git-branch","tone":"primary"},{"label":"이벨 자동 실행","sublabel":"골든 데이터셋 전체 채점","icon":"test-tube","tone":"accent","edgeLabel":"CI 트리거"},{"label":"기준선 비교","sublabel":"main 브랜치 점수와 대조","icon":"gauge","tone":"warning"},{"label":"머지 승인","sublabel":"점수 유지·상승 시에만","icon":"check","tone":"success","edgeLabel":"기준선 이상"}],"loopBack":{"from":2,"to":0,"label":"점수 하락 → 머지 차단, 프롬프트 재수정"},"caption":"점수가 떨어지면 머지가 막히고 수정으로 되돌아갑니다 — 회귀가 프로덕션에 못 들어갑니다."}$aix$::jsonb, 5, 6
+  $aix${"type":"flow","title":"이벨 CI 게이트","nodes":[{"label":"프롬프트 수정 PR","sublabel":"prompts/ 디렉토리 변경","icon":"git-branch","tone":"primary"},{"label":"이벨 자동 실행","sublabel":"골든 데이터셋 전체 채점","icon":"test-tube","tone":"accent","edgeLabel":"CI 트리거"},{"label":"기준선 비교","sublabel":"main 브랜치 점수와 대조","icon":"gauge","tone":"warning"},{"label":"머지 승인","sublabel":"점수 유지·상승 시에만","icon":"check","tone":"success","edgeLabel":"기준선 이상"}],"loopBack":{"from":2,"to":0,"label":"점수 하락 → 머지 차단, 프롬프트 재수정"},"caption":"점수가 떨어지면 머지가 막히고 수정으로 되돌아갑니다 — 회귀가 프로덕션에 못 들어갑니다."}$aix$::jsonb, null, 5, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'c9235b61-151b-0bc9-806c-cf0aa4608ef7', 'ead8ad43-5360-8b0d-801b-53c76195ef46', 'ai-harness/production-monitoring', 'production-monitoring', '프로덕션 모니터링과 실사용 데이터 수집',
   $aix$배포 전 이벨이 아무리 촘촘해도, 실사용 입력의 분포는 항상 예상을 벗어납니다. 프로덕션은 **가장 큰 이벨 데이터셋의 원천**입니다.
 
@@ -531,11 +548,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 👎 비율·에러율의 스파이크
 
 > 💡 **핵심**: 프로덕션 로깅의 목적은 관찰 자체가 아니라 **다음 이벨 케이스의 채굴**입니다. 트레이스 없는 LLM 앱은 블랙박스입니다.$aix$,
-  $aix${"type":"stack","title":"LLM 관측(Observability) 스택","layers":[{"label":"알림·대시보드","sublabel":"점수 급락·👎 스파이크 감지","icon":"alert","tone":"warning"},{"label":"온라인 이벨","sublabel":"표본 5%를 Judge로 실시간 채점","icon":"gauge","tone":"accent"},{"label":"피드백 수집","sublabel":"👍/👎 · 재질문 · 이탈 신호","icon":"users","tone":"primary"},{"label":"트레이스 로깅","sublabel":"입력→중간 단계→출력 전 과정 기록","icon":"database","tone":"muted"}],"caption":"아래층(기록)이 없으면 위층(감지·개선)은 성립하지 않습니다."}$aix$::jsonb, 5, 7
+  $aix${"type":"stack","title":"LLM 관측(Observability) 스택","layers":[{"label":"알림·대시보드","sublabel":"점수 급락·👎 스파이크 감지","icon":"alert","tone":"warning"},{"label":"온라인 이벨","sublabel":"표본 5%를 Judge로 실시간 채점","icon":"gauge","tone":"accent"},{"label":"피드백 수집","sublabel":"👍/👎 · 재질문 · 이탈 신호","icon":"users","tone":"primary"},{"label":"트레이스 로깅","sublabel":"입력→중간 단계→출력 전 과정 기록","icon":"database","tone":"muted"}],"caption":"아래층(기록)이 없으면 위층(감지·개선)은 성립하지 않습니다."}$aix$::jsonb, null, 5, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '277d0bfc-2661-3e12-5c37-4a6482ce8ff5', 'ead8ad43-5360-8b0d-801b-53c76195ef46', 'ai-harness/failure-to-eval-loop', 'failure-to-eval-loop', '개선 루프: 실패 사례를 이벨로 환류시키기',
   $aix$모니터링으로 실패를 발견했다면, 그 실패가 **두 번 다시 조용히 재발하지 못하게** 만들어야 합니다. 그 장치가 환류(Feedback) 루프입니다.
 
@@ -558,11 +576,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 실패를 프롬프트로만 고치고 케이스를 추가하지 않는 것 — 다음 리팩터링에서 같은 실패가 **조용히** 돌아옵니다.
 
 > 💡 **핵심**: 버그 수정의 완료 조건은 "동작한다"가 아니라 **"그 실패가 골든 데이터셋에 들어갔다"**입니다.$aix$,
-  $aix${"type":"cycle","title":"실패 → 이벨 환류 루프","center":"데이터셋이 계속 자란다","nodes":[{"label":"발견","sublabel":"👎·온라인 이벨·CS 티켓","icon":"search"},{"label":"분류","sublabel":"실패 유형 태깅","icon":"filter"},{"label":"케이스화","sublabel":"골든 데이터셋에 추가","icon":"clipboard"},{"label":"수정·검증","sublabel":"이벨 통과 확인","icon":"wrench"},{"label":"배포","sublabel":"CI 게이트 통과","icon":"rocket"}],"caption":"한 바퀴 돌 때마다 같은 실패의 재발 가능성이 영구히 차단됩니다."}$aix$::jsonb, 5, 8
+  $aix${"type":"cycle","title":"실패 → 이벨 환류 루프","center":"데이터셋이 계속 자란다","nodes":[{"label":"발견","sublabel":"👎·온라인 이벨·CS 티켓","icon":"search"},{"label":"분류","sublabel":"실패 유형 태깅","icon":"filter"},{"label":"케이스화","sublabel":"골든 데이터셋에 추가","icon":"clipboard"},{"label":"수정·검증","sublabel":"이벨 통과 확인","icon":"wrench"},{"label":"배포","sublabel":"CI 게이트 통과","icon":"rocket"}],"caption":"한 바퀴 돌 때마다 같은 실패의 재발 가능성이 영구히 차단됩니다."}$aix$::jsonb, null, 5, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '40a91867-4da1-7eb3-07cf-be65c20a6d6a', 'ead8ad43-5360-8b0d-801b-53c76195ef46', 'ai-harness/ab-testing', 'ab-testing', 'A/B 테스트: 모델·프롬프트 교체 검증',
   $aix$새 모델이 이벨에서 이겼다고 바로 전량 교체하는 것은 위험합니다. 이벨은 **오프라인 예측**이고, 최종 판정은 실사용자가 내립니다.
 
@@ -585,10 +604,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 승자 확정 후에도 패자 설정을 git에 남겨 두면 언제든 재검증할 수 있습니다.
 
 > 💡 **핵심**: 교체 결정 공식은 **"오프라인 이벨로 후보 선별 → 온라인 A/B로 최종 판정"**. 이벨은 필터, A/B는 심판입니다.$aix$,
-  $aix${"type":"compare","title":"챔피언 vs 챌린저","columns":[{"title":"A: 챔피언 (현행)","icon":"shield","tone":"muted","items":["트래픽 90% 유지","온라인 이벨 91.2%","👍 비율 87% · p95 1.8s","검증된 기준선 역할"]},{"title":"B: 챌린저 (신규 모델)","icon":"rocket","tone":"primary","items":["트래픽 10%로 시작","온라인 이벨 93.5%","👍 비율 89% · 비용 -30%","승자 확정 시 점진 확대"]}],"caption":"오프라인 이벨을 통과한 후보만 링에 오르고, 실사용 지표가 최종 판정합니다."}$aix$::jsonb, 5, 9
+  $aix${"type":"compare","title":"챔피언 vs 챌린저","columns":[{"title":"A: 챔피언 (현행)","icon":"shield","tone":"muted","items":["트래픽 90% 유지","온라인 이벨 91.2%","👍 비율 87% · p95 1.8s","검증된 기준선 역할"]},{"title":"B: 챌린저 (신규 모델)","icon":"rocket","tone":"primary","items":["트래픽 10%로 시작","온라인 이벨 93.5%","👍 비율 89% · 비용 -30%","승자 확정 시 점진 확대"]}],"caption":"오프라인 이벨을 통과한 후보만 링에 오르고, 실사용 지표가 최종 판정합니다."}$aix$::jsonb, null, 5, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: 프롬프트 엔지니어링 심화 & RAG 아키텍처
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -606,7 +626,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '33b3514f-c133-d07f-f400-b633fb8d92f5', 'dd025644-b2bc-f7c6-2391-e636e152cbcf', 'production-rag', '프로덕션 RAG', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '8501acea-2c29-1b3f-82e3-aeabe1964b6f', 'f65162dc-af23-3d5a-4eb9-b2b87d953257', 'prompt-engineering-rag/prompt-anatomy', 'prompt-anatomy', '프롬프트의 구조: 역할·맥락·작업·형식',
   $aix$좋은 프롬프트는 길거나 정중한 프롬프트가 아니라 **구조가 있는 프롬프트**입니다. 4가지 요소만 채우면 결과의 편차가 극적으로 줄어듭니다.
 
@@ -629,11 +649,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 4요소가 채워진 프롬프트는 **누가 실행해도 비슷한 품질**이 나옵니다. 팀에서 프롬프트를 템플릿으로 공유할 수 있는 이유가 여기 있습니다.
 
 > 💡 **핵심**: 프롬프트를 쓰기 전에 자문하세요 — "역할·맥락·작업·형식 중 빠진 것은 무엇인가?"$aix$,
-  $aix${"type":"chat","title":"나쁜 프롬프트 vs 좋은 프롬프트","messages":[{"role":"user","text":"이 함수 좀 고쳐줘"},{"role":"ai","text":"어떤 부분이 문제인지 알려주시면… (추측으로 아무 곳이나 수정)"},{"role":"user","text":"[역할] 시니어 TS 개발자로서 [맥락] 아래 함수는 빈 배열 입력 시 NaN을 반환합니다 [작업] 빈 배열이면 0을 반환하도록 수정하고 [형식] 수정 코드 + 한 줄 설명으로 답해줘"},{"role":"ai","text":"빈 배열 가드를 추가했습니다: `if (items.length === 0) return 0;` — reduce 전에 예외 케이스를 차단합니다."}],"caption":"같은 모델, 같은 함수 — 4요소가 채워지자 답변이 '추측'에서 '해결'로 바뀝니다."}$aix$::jsonb, 5, 0
+  $aix${"type":"chat","title":"나쁜 프롬프트 vs 좋은 프롬프트","messages":[{"role":"user","text":"이 함수 좀 고쳐줘"},{"role":"ai","text":"어떤 부분이 문제인지 알려주시면… (추측으로 아무 곳이나 수정)"},{"role":"user","text":"[역할] 시니어 TS 개발자로서 [맥락] 아래 함수는 빈 배열 입력 시 NaN을 반환합니다 [작업] 빈 배열이면 0을 반환하도록 수정하고 [형식] 수정 코드 + 한 줄 설명으로 답해줘"},{"role":"ai","text":"빈 배열 가드를 추가했습니다: `if (items.length === 0) return 0;` — reduce 전에 예외 케이스를 차단합니다."}],"caption":"같은 모델, 같은 함수 — 4요소가 채워지자 답변이 '추측'에서 '해결'로 바뀝니다."}$aix$::jsonb, $aix${"title":"플레이그라운드에서 프롬프트 개선 따라하기","app":{"kind":"browser","url":"console.anthropic.com/playground","blocks":[{"id":"b-head","type":"heading","label":"AI 플레이그라운드"},{"id":"b-input","type":"input","label":"프롬프트를 입력하세요…"},{"id":"b-run","type":"button","label":"실행"},{"id":"b-bad","type":"card","label":"🤖 어떤 부분이 문제인지 알려주시면… (추측으로 아무 곳이나 수정)","hidden":true},{"id":"b-badge-bad","type":"badge","label":"모호한 응답 — 맥락 누락","hidden":true},{"id":"b-good","type":"card","label":"🤖 빈 배열 가드를 추가했습니다: if (items.length === 0) return 0;","hidden":true},{"id":"b-badge-good","type":"badge","label":"✓ 정확한 해결 — 4요소 충족","hidden":true}]},"actions":[{"t":"caption","text":"① 먼저 4요소 없이 프롬프트를 입력해 봅니다"},{"t":"move","target":"b-input"},{"t":"click"},{"t":"type","target":"b-input","text":"이 함수 좀 고쳐줘"},{"t":"click","target":"b-run"},{"t":"wait","ms":500},{"t":"caption","text":"② 모델이 맥락이 없어 추측성 응답을 내놓습니다"},{"t":"reveal","target":"b-bad"},{"t":"reveal","target":"b-badge-bad"},{"t":"wait","ms":700},{"t":"caption","text":"③ 역할·맥락·작업·형식을 채워 다시 입력합니다"},{"t":"hide","target":"b-input"},{"t":"reveal","target":"b-input"},{"t":"click","target":"b-input"},{"t":"type","target":"b-input","text":"[역할]시니어 TS [맥락]빈 배열→NaN [작업]0 반환 [형식]코드"},{"t":"click","target":"b-run"},{"t":"wait","ms":500},{"t":"caption","text":"④ 추측이 사라지고 근거 있는 해결책이 나옵니다"},{"t":"reveal","target":"b-good"},{"t":"reveal","target":"b-badge-good"},{"t":"move","target":"b-badge-good"},{"t":"caption","text":"✅ 같은 모델 — 프롬프트의 구조가 품질을 바꿉니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 5, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '392bb2c9-b7fa-4b4e-4c02-00bb01c8b69f', 'f65162dc-af23-3d5a-4eb9-b2b87d953257', 'prompt-engineering-rag/cot-reasoning', 'cot-reasoning', 'CoT와 사고 유도: reasoning 모델 시대의 변화',
   $aix$"단계별로 생각해 봐(step by step)" 한 줄이 정답률을 끌어올리던 시절이 있었습니다. 하지만 **reasoning 모델이 표준이 된 2026년, CoT의 문법은 달라졌습니다.**
 
@@ -655,11 +676,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 답 전에 **계획을 먼저 출력**시키고 사람이 검토한 뒤 실행 (에이전트 워크플로우의 표준)
 
 > 💡 **핵심**: 2026년의 CoT는 "생각해 봐"라고 시키는 게 아니라, **생각할 재료(제약·기준)와 예산을 설계**하는 일입니다.$aix$,
-  $aix${"type":"compare","title":"고전 CoT vs reasoning 모델 시대","columns":[{"title":"고전 CoT (수동 유도)","icon":"message","tone":"muted","items":["\"step by step\" 주문을 직접 삽입","풀이 과정 포함 Few-shot 예시","추론이 답변 텍스트에 노출","일반 모델에서 정답률 상승"]},{"title":"reasoning 모델 (내장 사고)","icon":"brain","tone":"primary","items":["모델이 내부에서 먼저 사고","사고 예산(budget)으로 깊이 조절","제약·성공 기준이 사고의 재료","수동 CoT 지시는 효과 미미·역효과도"]}],"caption":"주문을 외우는 시대에서, 사고의 재료와 예산을 설계하는 시대로."}$aix$::jsonb, 6, 1
+  $aix${"type":"compare","title":"고전 CoT vs reasoning 모델 시대","columns":[{"title":"고전 CoT (수동 유도)","icon":"message","tone":"muted","items":["\"step by step\" 주문을 직접 삽입","풀이 과정 포함 Few-shot 예시","추론이 답변 텍스트에 노출","일반 모델에서 정답률 상승"]},{"title":"reasoning 모델 (내장 사고)","icon":"brain","tone":"primary","items":["모델이 내부에서 먼저 사고","사고 예산(budget)으로 깊이 조절","제약·성공 기준이 사고의 재료","수동 CoT 지시는 효과 미미·역효과도"]}],"caption":"주문을 외우는 시대에서, 사고의 재료와 예산을 설계하는 시대로."}$aix$::jsonb, null, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '3eff63bd-71ae-7e27-9fad-a2b87d2f530f', 'f65162dc-af23-3d5a-4eb9-b2b87d953257', 'prompt-engineering-rag/few-shot-design', 'few-shot-design', 'Few-shot 예시 설계: 말보다 보여주기',
   $aix$백 마디 설명보다 **잘 고른 예시 2~3개**가 출력 품질을 더 확실하게 통제합니다. 단, 예시는 아무거나 넣는 게 아니라 설계하는 것입니다.
 
@@ -682,11 +704,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 예시와 실제 입력의 형식이 다르면 효과가 급감합니다.
 
 > 💡 **핵심**: Few-shot은 "예시를 몇 개 넣는 것"이 아니라 **대표성·경계·형식·순서를 설계하는 것**입니다.$aix$,
-  $aix${"type":"steps","title":"Few-shot 예시 설계 절차","steps":[{"label":"대표 케이스 선정","sublabel":"실제 입력 분포의 전형적 사례","icon":"target"},{"label":"경계 케이스 추가","sublabel":"빈 입력·애매한 분류 1개","icon":"alert"},{"label":"형식 통일","sublabel":"입력/출력 구조를 완전히 동일하게","icon":"layers"},{"label":"순서·개수 검증","sublabel":"2~5개, 실데이터로 테스트","icon":"test-tube"}],"caption":"모델은 예시의 내용이 아니라 패턴을 복사합니다."}$aix$::jsonb, 5, 2
+  $aix${"type":"steps","title":"Few-shot 예시 설계 절차","steps":[{"label":"대표 케이스 선정","sublabel":"실제 입력 분포의 전형적 사례","icon":"target"},{"label":"경계 케이스 추가","sublabel":"빈 입력·애매한 분류 1개","icon":"alert"},{"label":"형식 통일","sublabel":"입력/출력 구조를 완전히 동일하게","icon":"layers"},{"label":"순서·개수 검증","sublabel":"2~5개, 실데이터로 테스트","icon":"test-tube"}],"caption":"모델은 예시의 내용이 아니라 패턴을 복사합니다."}$aix$::jsonb, null, 5, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '734abec5-20d7-3e3e-7a11-a61b3515999e', 'f65162dc-af23-3d5a-4eb9-b2b87d953257', 'prompt-engineering-rag/structured-output', 'structured-output', '구조화된 출력: JSON Schema와 도구 호출',
   $aix$프롬프트의 결과를 코드가 소비한다면, "JSON으로 답해줘"라는 부탁만으로는 부족합니다. 2026년의 표준은 **스키마로 강제하는 것**입니다.
 
@@ -707,11 +730,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 확신도(confidence)나 근거(evidence) 필드를 추가하면 저품질 출력을 걸러낼 수 있습니다.
 
 > 💡 **핵심**: 코드가 소비하는 출력은 프롬프트로 부탁하지 말고 **스키마로 계약**하세요.$aix$,
-  $aix${"type":"terminal","windowTitle":"structured-output.ts — 리뷰 분류 파이프라인","lines":[{"text":"# 출력 스키마: sentiment는 enum으로 제한","tone":"comment"},{"text":"{ \"sentiment\": { \"enum\": [\"positive\", \"negative\", \"neutral\"] },","tone":"dim"},{"text":"  \"keywords\": { \"type\": \"array\" }, \"confidence\": { \"type\": \"number\" } }","tone":"dim"},{"text":"npx tsx classify.ts --input reviews.jsonl","tone":"cmd"},{"text":"{\"sentiment\":\"negative\",\"keywords\":[\"배송 지연\"],\"confidence\":0.94}","tone":"out"},{"text":"{\"sentiment\":\"positive\",\"keywords\":[\"재구매\"],\"confidence\":0.98}","tone":"out"},{"text":"✓ 10,000건 파싱 실패 0건 — 스키마 강제 덕분","tone":"ok"}],"caption":"스키마가 디코딩을 제약하므로 '설명 붙은 JSON' 같은 파싱 장애가 원천 차단됩니다."}$aix$::jsonb, 6, 3
+  $aix${"type":"terminal","windowTitle":"structured-output.ts — 리뷰 분류 파이프라인","lines":[{"text":"# 출력 스키마: sentiment는 enum으로 제한","tone":"comment"},{"text":"{ \"sentiment\": { \"enum\": [\"positive\", \"negative\", \"neutral\"] },","tone":"dim"},{"text":"  \"keywords\": { \"type\": \"array\" }, \"confidence\": { \"type\": \"number\" } }","tone":"dim"},{"text":"npx tsx classify.ts --input reviews.jsonl","tone":"cmd"},{"text":"{\"sentiment\":\"negative\",\"keywords\":[\"배송 지연\"],\"confidence\":0.94}","tone":"out"},{"text":"{\"sentiment\":\"positive\",\"keywords\":[\"재구매\"],\"confidence\":0.98}","tone":"out"},{"text":"✓ 10,000건 파싱 실패 0건 — 스키마 강제 덕분","tone":"ok"}],"caption":"스키마가 디코딩을 제약하므로 '설명 붙은 JSON' 같은 파싱 장애가 원천 차단됩니다."}$aix$::jsonb, $aix${"title":"에디터에서 스키마 강제 출력 따라하기","app":{"kind":"code-editor","windowTitle":"schema.ts — 리뷰 분류 파이프라인","files":[{"id":"f-schema","name":"schema.ts","active":true},{"id":"f-classify","name":"classify.ts"},{"id":"f-reviews","name":"reviews.jsonl"}],"code":[{"id":"s1","text":"// 리뷰 분류 출력 스키마 (Structured Outputs)","tone":"comment"},{"id":"s2","text":"export const reviewSchema = {"},{"id":"s3","text":"sentiment: { enum: [\"positive\", \"negative\", \"neutral\"] },","indent":1},{"id":"s4","text":"keywords: { type: \"array\", items: { type: \"string\" } },","indent":1},{"id":"s5","text":"confidence: { type: \"number\" },","indent":1,"tone":"add","hidden":true},{"id":"s6","text":"};"}],"terminal":[{"id":"t1","text":"npx tsx classify.ts reviews.jsonl","tone":"cmd","hidden":true},{"id":"t2","text":"{\"sentiment\":\"negative\",\"keywords\":[\"배송 지연\"],\"confidence\":0.94}","tone":"out","hidden":true},{"id":"t3","text":"{\"sentiment\":\"positive\",\"keywords\":[\"재구매\"],\"confidence\":0.98}","tone":"out","hidden":true},{"id":"t4","text":"✓ 10,000건 처리 — 파싱 실패 0건","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 자유 문자열 대신 enum으로 선택지를 제한합니다"},{"t":"move","target":"s3"},{"t":"dblclick","target":"s3"},{"t":"wait","ms":400},{"t":"caption","text":"② confidence 필드를 추가해 저품질 출력을 거릅니다"},{"t":"move","target":"s4"},{"t":"click"},{"t":"type","target":"s5","text":"confidence: { type: \"number\" },"},{"t":"wait","ms":500},{"t":"caption","text":"③ 스키마를 첨부해 분류 파이프라인을 실행합니다"},{"t":"type","target":"t1","text":"npx tsx classify.ts reviews.jsonl"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"④ 1만 건을 처리해도 파싱 실패가 0건입니다"},{"t":"reveal","target":"t4"},{"t":"move","target":"t4"},{"t":"caption","text":"✅ 부탁이 아닌 스키마 계약 — 코드가 안심하고 소비합니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'a7bee649-9603-6097-38b4-f718222194c5', 'e0a12f58-20ff-c1f2-fee0-fda67ee4d143', 'prompt-engineering-rag/why-rag', 'why-rag', '왜 RAG인가: 할루시네이션과 최신성',
   $aix$아무리 좋은 모델도 **학습하지 않은 것은 모릅니다.** 그런데 모른다고 말하는 대신 그럴듯하게 지어내는 것이 문제입니다. RAG는 이 구조적 한계에 대한 구조적 해법입니다.
 
@@ -731,11 +755,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 접근 권한이 있는 문서만 검색하게 하면 **권한 관리**도 됩니다.
 
 > 💡 **핵심**: RAG는 모델을 똑똑하게 만드는 기술이 아니라, **모델에게 정답이 담긴 근거를 쥐여주는** 아키텍처입니다.$aix$,
-  $aix${"type":"grid","title":"LLM 단독 사용의 4가지 벽","items":[{"label":"할루시네이션","sublabel":"모르면 지어냄","icon":"alert","tone":"warning"},{"label":"최신성","sublabel":"지식이 cutoff에 정지","icon":"clock","tone":"warning"},{"label":"사내 지식","sublabel":"위키·문서·DB 미학습","icon":"lock","tone":"muted"},{"label":"출처 부재","sublabel":"근거 확인 불가","icon":"eye","tone":"muted"},{"label":"RAG","sublabel":"검색된 근거를 프롬프트에 주입","icon":"search","tone":"primary"},{"label":"결과","sublabel":"갱신 가능 · 출처 표시 · 권한 관리","icon":"check","tone":"success"}],"caption":"네 가지 벽을 하나의 아키텍처(RAG)가 동시에 해결합니다."}$aix$::jsonb, 4, 4
+  $aix${"type":"grid","title":"LLM 단독 사용의 4가지 벽","items":[{"label":"할루시네이션","sublabel":"모르면 지어냄","icon":"alert","tone":"warning"},{"label":"최신성","sublabel":"지식이 cutoff에 정지","icon":"clock","tone":"warning"},{"label":"사내 지식","sublabel":"위키·문서·DB 미학습","icon":"lock","tone":"muted"},{"label":"출처 부재","sublabel":"근거 확인 불가","icon":"eye","tone":"muted"},{"label":"RAG","sublabel":"검색된 근거를 프롬프트에 주입","icon":"search","tone":"primary"},{"label":"결과","sublabel":"갱신 가능 · 출처 표시 · 권한 관리","icon":"check","tone":"success"}],"caption":"네 가지 벽을 하나의 아키텍처(RAG)가 동시에 해결합니다."}$aix$::jsonb, null, 4, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '28a2b80b-6a46-3d18-f978-14076ecb1f4e', 'e0a12f58-20ff-c1f2-fee0-fda67ee4d143', 'prompt-engineering-rag/embeddings-vector-search', 'embeddings-vector-search', '임베딩과 벡터 검색의 원리',
   $aix$"환불 규정"으로 검색했는데 문서에는 "반품 정책"이라고 적혀 있다면? 키워드 검색은 실패하지만 **벡터 검색은 찾아냅니다.** 그 비밀이 임베딩입니다.
 
@@ -758,11 +783,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 임베딩 모델을 교체하면 **전체 문서 재임베딩**이 필요합니다 — 교체 비용을 설계에 반영하세요.
 
 > 💡 **핵심**: 벡터 검색 = 질문과 문서를 **같은 의미 공간의 좌표**로 바꾼 뒤, 가장 가까운 이웃을 찾는 것입니다.$aix$,
-  $aix${"type":"flow","title":"벡터 검색의 흐름","nodes":[{"label":"질문","sublabel":"\"환불 규정 알려줘\"","icon":"message","tone":"primary"},{"label":"임베딩 모델","sublabel":"텍스트 → 1,536차원 벡터","icon":"cpu","tone":"accent","edgeLabel":"문서와 같은 모델 사용"},{"label":"벡터 DB (ANN 인덱스)","sublabel":"미리 임베딩된 문서 벡터들","icon":"database","tone":"muted"},{"label":"최근접 이웃 top-k","sublabel":"\"반품 정책\" 문서 발견","icon":"target","tone":"success","edgeLabel":"코사인 유사도 순 정렬"}],"caption":"단어가 아니라 좌표가 가까운 문서를 찾으므로, 표현이 달라도 의미로 매칭됩니다."}$aix$::jsonb, 6, 5
+  $aix${"type":"flow","title":"벡터 검색의 흐름","nodes":[{"label":"질문","sublabel":"\"환불 규정 알려줘\"","icon":"message","tone":"primary"},{"label":"임베딩 모델","sublabel":"텍스트 → 1,536차원 벡터","icon":"cpu","tone":"accent","edgeLabel":"문서와 같은 모델 사용"},{"label":"벡터 DB (ANN 인덱스)","sublabel":"미리 임베딩된 문서 벡터들","icon":"database","tone":"muted"},{"label":"최근접 이웃 top-k","sublabel":"\"반품 정책\" 문서 발견","icon":"target","tone":"success","edgeLabel":"코사인 유사도 순 정렬"}],"caption":"단어가 아니라 좌표가 가까운 문서를 찾으므로, 표현이 달라도 의미로 매칭됩니다."}$aix$::jsonb, null, 6, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '6f6c67d2-a8f5-bc7d-eced-83f5017b3381', 'e0a12f58-20ff-c1f2-fee0-fda67ee4d143', 'prompt-engineering-rag/chunking-strategies', 'chunking-strategies', '청킹 전략: 크기·오버랩·구조',
   $aix$RAG 품질 문제의 절반은 모델이 아니라 **문서를 자르는 방식**에서 옵니다. 통째로 임베딩하면 의미가 뭉개지고, 너무 잘게 자르면 맥락이 끊깁니다.
 
@@ -784,11 +810,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 정답은 데이터마다 다릅니다. **실제 질문 세트로 검색 품질을 측정**하며 크기를 조정하세요.
 
 > 💡 **핵심**: 청킹의 목표는 "적당히 자르기"가 아니라 **각 청크가 홀로 읽혀도 의미가 통하는 단위**를 만드는 것입니다.$aix$,
-  $aix${"type":"compare","title":"청킹 전략 3가지","columns":[{"title":"작은 고정 크기","icon":"scissors","tone":"muted","items":["토큰 ~200, 기계적 분할","검색은 정밀","맥락 단절 위험","문장이 중간에 끊김"]},{"title":"큰 고정 크기","icon":"file-text","tone":"muted","items":["토큰 ~800 이상","맥락은 풍부","여러 주제가 섞여 검색 흐림","프롬프트 비용 증가"]},{"title":"구조 기반 + 오버랩","icon":"layers","tone":"primary","items":["헤딩·문단·함수 단위로 분할","10~20% 오버랩으로 경계 보완","청크 단독으로 의미가 통함","2026년 실무 기본값"]}],"caption":"고정 크기에서 시작하되, 프로덕션은 문서 구조를 따라 자릅니다."}$aix$::jsonb, 6, 6
+  $aix${"type":"compare","title":"청킹 전략 3가지","columns":[{"title":"작은 고정 크기","icon":"scissors","tone":"muted","items":["토큰 ~200, 기계적 분할","검색은 정밀","맥락 단절 위험","문장이 중간에 끊김"]},{"title":"큰 고정 크기","icon":"file-text","tone":"muted","items":["토큰 ~800 이상","맥락은 풍부","여러 주제가 섞여 검색 흐림","프롬프트 비용 증가"]},{"title":"구조 기반 + 오버랩","icon":"layers","tone":"primary","items":["헤딩·문단·함수 단위로 분할","10~20% 오버랩으로 경계 보완","청크 단독으로 의미가 통함","2026년 실무 기본값"]}],"caption":"고정 크기에서 시작하되, 프로덕션은 문서 구조를 따라 자릅니다."}$aix$::jsonb, null, 6, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'ad20b1cd-0615-bf77-b45c-4e322accc72d', 'e0a12f58-20ff-c1f2-fee0-fda67ee4d143', 'prompt-engineering-rag/rag-pipeline', 'rag-pipeline', '기본 RAG 파이프라인 아키텍처',
   $aix$배운 조각들을 하나의 시스템으로 조립할 차례입니다. 모든 RAG는 **두 개의 흐름** — 미리 준비하는 수집(Ingestion)과 실시간으로 도는 질의(Query) — 로 이루어집니다.
 
@@ -810,11 +837,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 생성 프롬프트에 **"근거에 없으면 모른다고 답하라"**를 반드시 넣으세요. 이 한 줄이 할루시네이션 방어의 마지막 관문입니다.
 
 > 💡 **핵심**: RAG = 오프라인 수집 파이프라인 + 온라인 질의 파이프라인. **두 흐름의 신선도와 품질을 각각 관리**하는 것이 운영의 전부입니다.$aix$,
-  $aix${"type":"stack","title":"RAG 시스템의 레이어","layers":[{"label":"애플리케이션","sublabel":"질문 입력 · 출처 표시된 답변","icon":"message","tone":"primary"},{"label":"생성 레이어","sublabel":"LLM + \"근거 기반으로만 답하라\" 프롬프트","icon":"sparkles","tone":"accent"},{"label":"검색 레이어","sublabel":"질문 임베딩 → top-k 청크","icon":"search","tone":"accent"},{"label":"저장 레이어","sublabel":"벡터 DB: 벡터 + 원문 + 메타데이터","icon":"database","tone":"muted"},{"label":"수집 파이프라인","sublabel":"문서 수집 → 청킹 → 임베딩 (배치 갱신)","icon":"upload","tone":"muted"}],"caption":"아래 두 층(오프라인)이 신선해야 위 세 층(온라인)이 정확합니다."}$aix$::jsonb, 5, 7
+  $aix${"type":"stack","title":"RAG 시스템의 레이어","layers":[{"label":"애플리케이션","sublabel":"질문 입력 · 출처 표시된 답변","icon":"message","tone":"primary"},{"label":"생성 레이어","sublabel":"LLM + \"근거 기반으로만 답하라\" 프롬프트","icon":"sparkles","tone":"accent"},{"label":"검색 레이어","sublabel":"질문 임베딩 → top-k 청크","icon":"search","tone":"accent"},{"label":"저장 레이어","sublabel":"벡터 DB: 벡터 + 원문 + 메타데이터","icon":"database","tone":"muted"},{"label":"수집 파이프라인","sublabel":"문서 수집 → 청킹 → 임베딩 (배치 갱신)","icon":"upload","tone":"muted"}],"caption":"아래 두 층(오프라인)이 신선해야 위 세 층(온라인)이 정확합니다."}$aix$::jsonb, $aix${"title":"RAG 수집 파이프라인 구축 따라하기","app":{"kind":"code-editor","windowTitle":"ingest.ts — RAG 수집 파이프라인","files":[{"id":"f-ingest","name":"ingest.ts","active":true},{"id":"f-query","name":"query.ts"},{"id":"f-docs","name":"docs/"}],"code":[{"id":"i1","text":"// 수집: 문서 → 청킹 → 임베딩 → 저장 (오프라인)","tone":"comment"},{"id":"i2","text":"const docs = await loadDocs(\"./docs\");"},{"id":"i3","text":"const chunks = splitByHeading(docs, {"},{"id":"i4","text":"maxTokens: 512, overlap: 64,","indent":1},{"id":"i5","text":"});"},{"id":"i6","text":"const vectors = await embed(chunks);","tone":"add","hidden":true},{"id":"i7","text":"await db.upsert(vectors, {meta:true});","tone":"add","hidden":true}],"terminal":[{"id":"t1","text":"npx tsx ingest.ts","tone":"cmd","hidden":true},{"id":"t2","text":"→ 문서 128건 로드, 청크 1,842개 생성","tone":"out","hidden":true},{"id":"t3","text":"→ 임베딩 1,842건 완료 (배치 8회)","tone":"out","hidden":true},{"id":"t4","text":"✓ 벡터 DB 인덱싱 완료 — 신선도 2026-07-28","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 구조 기반 청킹에 크기와 오버랩을 설정합니다"},{"t":"move","target":"i3"},{"t":"click"},{"t":"move","target":"i4"},{"t":"dblclick","target":"i4"},{"t":"wait","ms":400},{"t":"caption","text":"② 각 청크를 벡터로 변환하는 임베딩을 추가합니다"},{"t":"type","target":"i6","text":"const vectors = await embed(chunks);"},{"t":"wait","ms":300},{"t":"caption","text":"③ 벡터·원문·메타데이터를 함께 저장합니다"},{"t":"type","target":"i7","text":"await db.upsert(vectors, {meta:true});"},{"t":"wait","ms":400},{"t":"caption","text":"④ 수집 파이프라인을 실행해 인덱싱합니다"},{"t":"type","target":"t1","text":"npx tsx ingest.ts"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"wait","ms":500},{"t":"reveal","target":"t4"},{"t":"move","target":"t4"},{"t":"caption","text":"✅ 오프라인 수집 완료 — 이제 질의가 신선한 근거를 찾습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 5, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'a4e24349-490a-15c8-1b4f-f28472e1e9a3', '33b3514f-c133-d07f-f400-b633fb8d92f5', 'prompt-engineering-rag/hybrid-search-reranking', 'hybrid-search-reranking', '하이브리드 검색과 리랭킹',
   $aix$벡터 검색만 쓰는 RAG는 프로덕션에서 반드시 구멍이 납니다. **"ERR-4042" 같은 코드, 제품명, 고유명사**는 의미 공간에서 이웃이 없기 때문입니다.
 
@@ -835,11 +863,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 기본 RAG의 답변 품질이 아쉬울 때, 모델 교체보다 **하이브리드 + 리랭킹 도입이 먼저**입니다. 비용 대비 효과가 가장 큰 업그레이드입니다.
 
 > 💡 **핵심**: 프로덕션 검색 = **하이브리드로 넓게 건지고, 리랭커로 좁게 고른다.** 이 2단계가 표준입니다.$aix$,
-  $aix${"type":"flow","title":"하이브리드 검색 + 리랭킹 파이프라인","nodes":[{"label":"질문","sublabel":"\"ERR-4042 환불 처리 방법\"","icon":"message","tone":"primary"},{"label":"키워드 검색 ∥ 벡터 검색","sublabel":"BM25는 코드를, 벡터는 의미를 잡음","icon":"search","tone":"accent","edgeLabel":"두 검색을 병렬 실행"},{"label":"RRF 병합","sublabel":"순위 기반 융합 → 후보 100개","icon":"git-branch","tone":"accent"},{"label":"리랭커","sublabel":"cross-encoder 정밀 채점","icon":"filter","tone":"warning","edgeLabel":"넓게 건진 후보를"},{"label":"top-5 → 생성","sublabel":"정밀 선별된 근거만 프롬프트에","icon":"sparkles","tone":"success","edgeLabel":"좁게 고른다"}],"caption":"recall은 하이브리드가, precision은 리랭커가 책임집니다."}$aix$::jsonb, 6, 8
+  $aix${"type":"flow","title":"하이브리드 검색 + 리랭킹 파이프라인","nodes":[{"label":"질문","sublabel":"\"ERR-4042 환불 처리 방법\"","icon":"message","tone":"primary"},{"label":"키워드 검색 ∥ 벡터 검색","sublabel":"BM25는 코드를, 벡터는 의미를 잡음","icon":"search","tone":"accent","edgeLabel":"두 검색을 병렬 실행"},{"label":"RRF 병합","sublabel":"순위 기반 융합 → 후보 100개","icon":"git-branch","tone":"accent"},{"label":"리랭커","sublabel":"cross-encoder 정밀 채점","icon":"filter","tone":"warning","edgeLabel":"넓게 건진 후보를"},{"label":"top-5 → 생성","sublabel":"정밀 선별된 근거만 프롬프트에","icon":"sparkles","tone":"success","edgeLabel":"좁게 고른다"}],"caption":"recall은 하이브리드가, precision은 리랭커가 책임집니다."}$aix$::jsonb, null, 6, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '55cc97a9-260d-e8df-0f17-7bfdb66f8d03', '33b3514f-c133-d07f-f400-b633fb8d92f5', 'prompt-engineering-rag/agentic-rag', 'agentic-rag', 'Agentic RAG: 검색을 도구로 쓰는 에이전트',
   $aix$고정된 "검색 1번 → 생성 1번" 파이프라인은 복잡한 질문 앞에서 무너집니다. 2026년의 답은 **에이전트가 검색을 도구로 쥐고, 필요한 만큼 반복 검색하는** Agentic RAG입니다.
 
@@ -863,11 +892,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 결론: **검색으로 후보를 좁히고, 넉넉한 컨텍스트로 깊게 읽는다** — 둘은 경쟁자가 아니라 조합입니다.
 
 > 💡 **핵심**: Agentic RAG = 에이전트 루프의 도구 자리에 검색을 꽂은 것. 긴 컨텍스트는 RAG를 대체하는 게 아니라 **검색 후 읽는 분량을 늘려줄** 뿐입니다.$aix$,
-  $aix${"type":"cycle","title":"Agentic RAG 루프","center":"충분한 근거를 얻을 때까지","nodes":[{"label":"질문 분석","sublabel":"분해 · 쿼리 재작성","icon":"brain"},{"label":"검색 실행","sublabel":"벡터 DB · SQL · 웹 중 선택","icon":"search"},{"label":"결과 평가","sublabel":"근거가 충분한가?","icon":"eye"},{"label":"답변 생성","sublabel":"출처와 함께 · 부족하면 재검색","icon":"sparkles"}],"caption":"검색 1번으로 끝나지 않습니다 — 에이전트가 근거가 모일 때까지 루프를 돕니다."}$aix$::jsonb, 7, 9
+  $aix${"type":"cycle","title":"Agentic RAG 루프","center":"충분한 근거를 얻을 때까지","nodes":[{"label":"질문 분석","sublabel":"분해 · 쿼리 재작성","icon":"brain"},{"label":"검색 실행","sublabel":"벡터 DB · SQL · 웹 중 선택","icon":"search"},{"label":"결과 평가","sublabel":"근거가 충분한가?","icon":"eye"},{"label":"답변 생성","sublabel":"출처와 함께 · 부족하면 재검색","icon":"sparkles"}],"caption":"검색 1번으로 끝나지 않습니다 — 에이전트가 근거가 모일 때까지 루프를 돕니다."}$aix$::jsonb, null, 7, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '6b003e28-d309-ec1f-69c0-e91f7c74d4f9', '33b3514f-c133-d07f-f400-b633fb8d92f5', 'prompt-engineering-rag/rag-evaluation', 'rag-evaluation', 'RAG 평가: 검색과 생성을 분리해서 측정',
   $aix$"답변이 이상해요"라는 리포트만으로는 아무것도 고칠 수 없습니다. RAG의 실패는 **검색 실패와 생성 실패가 전혀 다른 병**이기 때문에, 반드시 분리해서 측정해야 합니다.
 
@@ -893,10 +923,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 검색 좋음 + 생성 나쁨 → 프롬프트·모델·근거 배치를 고칩니다.
 
 > 💡 **핵심**: RAG 평가의 첫 질문은 "답이 좋은가"가 아니라 **"검색이 실패했는가, 생성이 실패했는가"**입니다.$aix$,
-  $aix${"type":"compare","title":"검색 평가 vs 생성 평가","columns":[{"title":"검색 품질","icon":"search","tone":"primary","items":["질문: 정답 근거가 top-k에 있나","Recall@k · Precision@k · MRR","골든 셋(질문↔정답 청크)으로 측정","낮으면: 청킹·임베딩·하이브리드 수정"]},{"title":"생성 품질","icon":"sparkles","tone":"accent","items":["질문: 근거를 충실히 썼나","충실성 · 답변 관련성","LLM-as-judge로 자동 채점","낮으면: 프롬프트·모델·근거 배치 수정"]}],"caption":"두 지표를 분리하면 '어디를 고칠지'가 즉시 드러납니다 — 진단 없는 치료는 없습니다."}$aix$::jsonb, 6, 10
+  $aix${"type":"compare","title":"검색 평가 vs 생성 평가","columns":[{"title":"검색 품질","icon":"search","tone":"primary","items":["질문: 정답 근거가 top-k에 있나","Recall@k · Precision@k · MRR","골든 셋(질문↔정답 청크)으로 측정","낮으면: 청킹·임베딩·하이브리드 수정"]},{"title":"생성 품질","icon":"sparkles","tone":"accent","items":["질문: 근거를 충실히 썼나","충실성 · 답변 관련성","LLM-as-judge로 자동 채점","낮으면: 프롬프트·모델·근거 배치 수정"]}],"caption":"두 지표를 분리하면 '어디를 고칠지'가 즉시 드러납니다 — 진단 없는 치료는 없습니다."}$aix$::jsonb, null, 6, 10
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: AI 코딩 툴 실전: Claude Code · Cursor · Copilot
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -914,7 +945,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '21b4b59e-9a10-96ff-d917-d7bee99e627a', '2fccce30-a1ac-571c-f6ec-07bc627c2306', 'combo-workflow', '조합 워크플로우', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'dce97307-1b8a-dc51-2bf8-da3f3fbd5bb1', 'a0f271ee-5694-74ce-3eed-78f74d7ac7b7', 'ai-coding-tools/three-categories', 'three-categories', 'AI 코딩 도구 3분류: 자동완성·IDE 에이전트·터미널 에이전트',
   $aix$"어떤 AI 코딩 툴이 제일 좋아요?"는 잘못된 질문입니다. 2026년의 도구들은 서로 **다른 일**을 하기 때문입니다.
 
@@ -935,11 +966,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 세 분류는 경쟁 관계가 아니라 **레이어**입니다. 실무 고수들은 세 층을 동시에 켜 두고 작업 크기에 따라 갈아탑니다. 이 강의의 목표가 바로 그 조합입니다.
 
 > 💡 **핵심**: 도구 선택 기준은 브랜드가 아니라 **작업의 크기와 맡길 자율성의 정도**입니다.$aix$,
-  $aix${"type":"stack","title":"AI 코딩 도구 3층 구조","layers":[{"label":"자동완성형","sublabel":"Copilot · Cursor Tab — 문장 단위, 초 단위 개입","icon":"zap","tone":"accent"},{"label":"IDE 에이전트형","sublabel":"Cursor Agent · Copilot 에이전트 — 여러 파일 수정","icon":"code","tone":"primary"},{"label":"터미널 에이전트형","sublabel":"Claude Code — 파일·명령어·git, 작업 완수","icon":"terminal","tone":"success"}],"caption":"아래로 갈수록 자율성이 커집니다 — 세 층을 함께 쓰는 것이 2026년의 표준입니다."}$aix$::jsonb, 5, 0
+  $aix${"type":"stack","title":"AI 코딩 도구 3층 구조","layers":[{"label":"자동완성형","sublabel":"Copilot · Cursor Tab — 문장 단위, 초 단위 개입","icon":"zap","tone":"accent"},{"label":"IDE 에이전트형","sublabel":"Cursor Agent · Copilot 에이전트 — 여러 파일 수정","icon":"code","tone":"primary"},{"label":"터미널 에이전트형","sublabel":"Claude Code — 파일·명령어·git, 작업 완수","icon":"terminal","tone":"success"}],"caption":"아래로 갈수록 자율성이 커집니다 — 세 층을 함께 쓰는 것이 2026년의 표준입니다."}$aix$::jsonb, null, 5, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '837f448d-7369-238c-581a-09dfbf5411a9', 'a0f271ee-5694-74ce-3eed-78f74d7ac7b7', 'ai-coding-tools/tab-autocomplete', 'tab-autocomplete', '탭 자동완성 잘 쓰는 법: Copilot과 Cursor Tab',
   $aix$자동완성은 켜 두기만 하면 되는 기능이 아닙니다. **좋은 제안을 유도하는 습관**이 있는 사람과 없는 사람의 속도 차이는 큽니다.
 
@@ -961,11 +993,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 3번 연속 엉뚱한 제안이 오면, 자동완성과 싸우지 말고 상위 도구(채팅·에이전트)로 전환하세요.
 
 > 💡 **핵심**: 자동완성의 실력 = **이름·주석·열린 탭**으로 맥락을 공급하는 여러분의 실력입니다.$aix$,
-  $aix${"type":"steps","title":"좋은 제안을 유도하는 4단계 습관","steps":[{"label":"의도가 드러나는 이름 짓기","sublabel":"함수·변수명이 곧 프롬프트","icon":"file-text"},{"label":"한 줄 주석으로 방향 선언","sublabel":"// 만료 쿠폰은 제외하고 합산","icon":"message"},{"label":"참고 파일을 옆 탭에 열기","sublabel":"팀 컨벤션대로 제안 유도","icon":"layers"},{"label":"읽고 나서 탭 누르기","sublabel":"연속 오답이면 상위 도구로 전환","icon":"check"}],"caption":"자동완성은 수동적 기능이 아니라, 맥락을 '공급'하며 쓰는 능동적 도구입니다."}$aix$::jsonb, 5, 1
+  $aix${"type":"steps","title":"좋은 제안을 유도하는 4단계 습관","steps":[{"label":"의도가 드러나는 이름 짓기","sublabel":"함수·변수명이 곧 프롬프트","icon":"file-text"},{"label":"한 줄 주석으로 방향 선언","sublabel":"// 만료 쿠폰은 제외하고 합산","icon":"message"},{"label":"참고 파일을 옆 탭에 열기","sublabel":"팀 컨벤션대로 제안 유도","icon":"layers"},{"label":"읽고 나서 탭 누르기","sublabel":"연속 오답이면 상위 도구로 전환","icon":"check"}],"caption":"자동완성은 수동적 기능이 아니라, 맥락을 '공급'하며 쓰는 능동적 도구입니다."}$aix$::jsonb, $aix${"title":"주석으로 자동완성 유도하기 따라하기","app":{"kind":"code-editor","windowTitle":"coupon.ts — Cursor","files":[{"id":"f-coupon","name":"coupon.ts","active":true},{"id":"f-cart","name":"cart.ts"}],"code":[{"id":"c1","text":"// 만료 쿠폰은 제외하고 합산","tone":"comment","hidden":true},{"id":"c2","text":"function sumValidCoupons(coupons) {","hidden":true},{"id":"c3","text":"const now = Date.now();","indent":1,"tone":"add","hidden":true},{"id":"c4","text":"return coupons","indent":1,"tone":"add","hidden":true},{"id":"c5","text":".filter((c) => c.expiresAt > now)","indent":2,"tone":"add","hidden":true},{"id":"c6","text":".reduce((s, c) => s + c.amount, 0);","indent":2,"tone":"add","hidden":true},{"id":"c7","text":"}","tone":"add","hidden":true}]},"actions":[{"t":"caption","text":"① 참고할 파일을 옆 탭에 열어 맥락을 공급합니다"},{"t":"move","target":"f-cart"},{"t":"click"},{"t":"wait","ms":400},{"t":"move","target":"f-coupon"},{"t":"click"},{"t":"caption","text":"② 한 줄 주석으로 의도를 먼저 선언합니다"},{"t":"type","target":"c1","text":"// 만료 쿠폰은 제외하고 합산"},{"t":"caption","text":"③ 의도가 드러나는 함수명을 타이핑합니다"},{"t":"type","target":"c2","text":"function sumValidCoupons(coupons) {"},{"t":"wait","ms":400},{"t":"caption","text":"④ 구현 전체가 회색 제안으로 나타납니다"},{"t":"reveal","target":"c3"},{"t":"reveal","target":"c4"},{"t":"reveal","target":"c5"},{"t":"reveal","target":"c6"},{"t":"reveal","target":"c7"},{"t":"wait","ms":700},{"t":"caption","text":"⑤ 제안을 끝까지 읽은 뒤 탭으로 수락합니다"},{"t":"move","target":"c5"},{"t":"click"},{"t":"wait","ms":800}]}$aix$::jsonb, 5, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '26396057-df6b-319b-457a-80b628db5a9a', 'a0f271ee-5694-74ce-3eed-78f74d7ac7b7', 'ai-coding-tools/inline-vs-chat', 'inline-vs-chat', '인라인 편집 vs 채팅: 언제 무엇을 쓰나',
   $aix$에디터 안에는 자동완성 말고도 두 개의 입구가 더 있습니다. **인라인 편집**과 **채팅**을 구분해 쓰면 왕복이 줄어듭니다.
 
@@ -991,11 +1024,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 "수정할 **범위를 손으로 선택할 수 있는가?"** — 선택할 수 있으면 인라인, 없으면 채팅입니다. 인라인으로 할 일을 채팅으로 하면 느리고, 채팅으로 할 일을 인라인으로 하면 맥락이 부족해 틀립니다.
 
 > 💡 **핵심**: 범위를 아는 국소 수정은 **인라인**, 범위를 모르는 탐색·다중 파일 작업은 **채팅/에이전트**.$aix$,
-  $aix${"type":"compare","title":"인라인 편집 vs 채팅","columns":[{"title":"인라인 편집 (Cmd+K)","icon":"wand","tone":"accent","items":["블록 선택 → 그 자리에서 지시","범위를 내가 이미 앎","diff가 즉시 그 자리에 표시","국소 수정에 최속"]},{"title":"채팅 / 에이전트","icon":"message","tone":"primary","items":["질문·탐색·설명 요청","범위를 모르는 작업","여러 파일에 걸친 수정","에이전트 모드로 자율 실행"]}],"caption":"판별 질문은 하나 — '수정 범위를 손으로 선택할 수 있는가?'"}$aix$::jsonb, 4, 2
+  $aix${"type":"compare","title":"인라인 편집 vs 채팅","columns":[{"title":"인라인 편집 (Cmd+K)","icon":"wand","tone":"accent","items":["블록 선택 → 그 자리에서 지시","범위를 내가 이미 앎","diff가 즉시 그 자리에 표시","국소 수정에 최속"]},{"title":"채팅 / 에이전트","icon":"message","tone":"primary","items":["질문·탐색·설명 요청","범위를 모르는 작업","여러 파일에 걸친 수정","에이전트 모드로 자율 실행"]}],"caption":"판별 질문은 하나 — '수정 범위를 손으로 선택할 수 있는가?'"}$aix$::jsonb, null, 4, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'ade6384c-af27-a933-c6c6-59db700c4e0f', '3b804477-a8c1-d1fb-5bd4-db038ed6b6f4', 'ai-coding-tools/claude-code-first-task', 'claude-code-first-task', 'Claude Code 시작하기: 설치부터 첫 작업까지',
   $aix$터미널 에이전트는 백문이 불여일견입니다. 10분 안에 설치하고 첫 작업을 맡겨봅니다.
 
@@ -1023,11 +1057,12 @@ claude
 "로그인 버튼 라벨을 '시작하기'로 바꾸고, 빌드가 통과하는지 확인해줘" — 이렇게 **검증까지 포함한 작은 작업**이 좋은 출발점입니다. Claude Code는 파일을 수정하기 전 diff를 보여주고 승인을 요청하므로, 처음에는 하나씩 확인하며 신뢰를 쌓으세요.
 
 > 💡 **핵심**: 첫 작업 공식 = **읽기 요청 → 작은 수정 + 검증**. 자율성은 신뢰가 쌓인 만큼만 넓히세요.$aix$,
-  $aix${"type":"terminal","windowTitle":"claude — 첫 작업","lines":[{"text":"npm install -g @anthropic-ai/claude-code","tone":"cmd"},{"text":"claude","tone":"cmd"},{"text":"# 나: 이 프로젝트 구조를 요약해줘","tone":"comment"},{"text":"Next.js 앱 — app/ 라우트, lib/에 결제·인증 로직","tone":"out"},{"text":"# 나: 로그인 버튼 라벨을 '시작하기'로 바꾸고 빌드 확인해줘","tone":"comment"},{"text":"● app/login/page.tsx 수정 제안 (diff 승인 대기)","tone":"dim"},{"text":"npm run build","tone":"cmd"},{"text":"✓ Compiled successfully","tone":"ok"},{"text":"완료 — 라벨 변경 + 빌드 통과 확인","tone":"ok"}],"caption":"읽기 → 작은 수정 → 검증. 첫 세션에서 이 흐름을 그대로 따라 해보세요."}$aix$::jsonb, 6, 3
+  $aix${"type":"terminal","windowTitle":"claude — 첫 작업","lines":[{"text":"npm install -g @anthropic-ai/claude-code","tone":"cmd"},{"text":"claude","tone":"cmd"},{"text":"# 나: 이 프로젝트 구조를 요약해줘","tone":"comment"},{"text":"Next.js 앱 — app/ 라우트, lib/에 결제·인증 로직","tone":"out"},{"text":"# 나: 로그인 버튼 라벨을 '시작하기'로 바꾸고 빌드 확인해줘","tone":"comment"},{"text":"● app/login/page.tsx 수정 제안 (diff 승인 대기)","tone":"dim"},{"text":"npm run build","tone":"cmd"},{"text":"✓ Compiled successfully","tone":"ok"},{"text":"완료 — 라벨 변경 + 빌드 통과 확인","tone":"ok"}],"caption":"읽기 → 작은 수정 → 검증. 첫 세션에서 이 흐름을 그대로 따라 해보세요."}$aix$::jsonb, $aix${"title":"Claude Code 첫 작업 따라하기","app":{"kind":"code-editor","windowTitle":"my-project — Claude Code 세션","files":[{"id":"f-page","name":"login/page.tsx","active":true},{"id":"f-auth","name":"lib/auth.ts"},{"id":"f-readme","name":"README.md"}],"code":[{"id":"c1","text":"export default function LoginPage() {"},{"id":"c2","text":"return (","indent":1},{"id":"c3","text":"<Button>로그인</Button>","indent":2,"tone":"del"},{"id":"c4","text":"<Button>시작하기</Button>","indent":2,"tone":"add","hidden":true},{"id":"c5","text":");","indent":1},{"id":"c6","text":"}"}],"terminal":[{"id":"t1","text":"claude","tone":"cmd","hidden":true},{"id":"t2","text":"> 로그인 버튼 라벨을 '시작하기'로 바꿔줘","tone":"cmd","hidden":true},{"id":"t3","text":"● login/page.tsx 수정 제안 (diff 승인 대기)","tone":"out","hidden":true},{"id":"t4","text":"npm run build","tone":"cmd","hidden":true},{"id":"t5","text":"✓ Compiled successfully","tone":"ok","hidden":true},{"id":"t6","text":"완료 — 라벨 변경 + 빌드 통과 확인","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 프로젝트 루트에서 claude를 실행합니다"},{"t":"type","target":"t1","text":"claude"},{"t":"wait","ms":500},{"t":"caption","text":"② 작고 검증 가능한 작업을 지시합니다"},{"t":"type","target":"t2","text":"> 로그인 버튼 라벨을 '시작하기'로 바꿔줘"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"③ 에이전트가 제안한 diff를 확인하고 승인합니다"},{"t":"move","target":"c3"},{"t":"click"},{"t":"reveal","target":"c4"},{"t":"wait","ms":500},{"t":"caption","text":"④ 빌드 명령으로 변경을 검증합니다"},{"t":"type","target":"t4","text":"npm run build"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"move","target":"t6"},{"t":"caption","text":"⑤ 작은 수정 + 검증 완료 — 신뢰가 한 칸 쌓였습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'f17360ec-2259-0b41-c46d-aa8400e91b66', '3b804477-a8c1-d1fb-5bd4-db038ed6b6f4', 'ai-coding-tools/claude-md-context', 'claude-md-context', 'CLAUDE.md와 규칙 파일: 프로젝트 맥락 주입',
   $aix$같은 지시를 매번 반복하고 있다면, 그것은 채팅이 아니라 **파일에 적을 내용**입니다. 에이전트 도구들은 프로젝트의 규칙 파일을 매 세션 자동으로 읽습니다.
 
@@ -1053,11 +1088,12 @@ Cursor는 `.cursor/rules`, Copilot은 `.github/copilot-instructions.md`를 읽�
 규칙 파일 한 번 정리 = 앞으로의 **모든 세션에 자동 적용되는 프롬프트**. 팀원이 새 세션을 열어도 같은 규칙이 적용됩니다.
 
 > 💡 **핵심**: 두 번 이상 반복한 지시는 채팅이 아니라 **CLAUDE.md에 적으세요**. 규칙 파일은 '영구 프롬프트'입니다.$aix$,
-  $aix${"type":"grid","title":"규칙 파일 생태계와 CLAUDE.md 구성","items":[{"label":"CLAUDE.md","sublabel":"Claude Code · /init으로 초안 생성","icon":"file-text","tone":"primary"},{"label":".cursor/rules","sublabel":"Cursor 규칙 파일","icon":"settings","tone":"accent"},{"label":"copilot-instructions.md","sublabel":"Copilot 지침 파일","icon":"clipboard","tone":"accent"},{"label":"명령어","sublabel":"빌드·테스트·린트","icon":"terminal","tone":"success"},{"label":"컨벤션","sublabel":"스타일·네이밍 규칙","icon":"check","tone":"success"},{"label":"금지 사항","sublabel":"건드리면 안 되는 것","icon":"shield","tone":"warning"}],"caption":"위: 도구별 규칙 파일 · 아래: 어떤 파일이든 공통으로 담을 3요소."}$aix$::jsonb, 5, 4
+  $aix${"type":"grid","title":"규칙 파일 생태계와 CLAUDE.md 구성","items":[{"label":"CLAUDE.md","sublabel":"Claude Code · /init으로 초안 생성","icon":"file-text","tone":"primary"},{"label":".cursor/rules","sublabel":"Cursor 규칙 파일","icon":"settings","tone":"accent"},{"label":"copilot-instructions.md","sublabel":"Copilot 지침 파일","icon":"clipboard","tone":"accent"},{"label":"명령어","sublabel":"빌드·테스트·린트","icon":"terminal","tone":"success"},{"label":"컨벤션","sublabel":"스타일·네이밍 규칙","icon":"check","tone":"success"},{"label":"금지 사항","sublabel":"건드리면 안 되는 것","icon":"shield","tone":"warning"}],"caption":"위: 도구별 규칙 파일 · 아래: 어떤 파일이든 공통으로 담을 3요소."}$aix$::jsonb, $aix${"title":"CLAUDE.md 규칙 파일 만들기 따라하기","app":{"kind":"code-editor","windowTitle":"CLAUDE.md — 규칙 파일 작성","files":[{"id":"f-md","name":"CLAUDE.md","active":true},{"id":"f-pkg","name":"package.json"},{"id":"f-btn","name":"components/button.tsx"}],"code":[{"id":"c1","text":"# 프로젝트 규칙","tone":"comment","hidden":true},{"id":"c2","text":"- 검증: npm run check","hidden":true},{"id":"c3","text":"- 스타일은 Tailwind만, CSS 파일 생성 금지","hidden":true},{"id":"c4","text":"- 마이그레이션 파일 직접 수정 금지","hidden":true}],"terminal":[{"id":"t1","text":"claude","tone":"cmd","hidden":true},{"id":"t2","text":"> 버튼 컴포넌트에 로딩 상태 추가해줘","tone":"cmd","hidden":true},{"id":"t3","text":"CLAUDE.md 규칙 확인 — Tailwind로만 구현","tone":"out","hidden":true},{"id":"t4","text":"npm run check","tone":"cmd","hidden":true},{"id":"t5","text":"✓ lint + type + test 통과","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 프로젝트 루트에 CLAUDE.md를 만들어 엽니다"},{"t":"move","target":"f-md"},{"t":"click"},{"t":"type","target":"c1","text":"# 프로젝트 규칙"},{"t":"caption","text":"② 검증 명령어를 가장 먼저 적습니다"},{"t":"type","target":"c2","text":"- 검증: npm run check"},{"t":"caption","text":"③ 팀 컨벤션과 금지 사항을 한 줄씩 추가합니다"},{"t":"type","target":"c3","text":"- 스타일은 Tailwind만, CSS 파일 생성 금지"},{"t":"type","target":"c4","text":"- 마이그레이션 파일 직접 수정 금지"},{"t":"wait","ms":500},{"t":"caption","text":"④ 새 세션을 열어 규칙이 자동 적용되는지 확인합니다"},{"t":"type","target":"t1","text":"claude"},{"t":"type","target":"t2","text":"> 버튼 컴포넌트에 로딩 상태 추가해줘"},{"t":"reveal","target":"t3"},{"t":"wait","ms":600},{"t":"caption","text":"⑤ 지시하지 않아도 규칙대로 검증까지 수행합니다"},{"t":"reveal","target":"t4"},{"t":"reveal","target":"t5"},{"t":"move","target":"t5"},{"t":"wait","ms":800}]}$aix$::jsonb, 5, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '0889692f-922c-867e-0c5e-d840126afca8', '3b804477-a8c1-d1fb-5bd4-db038ed6b6f4', 'ai-coding-tools/good-task-prompts', 'good-task-prompts', '좋은 작업 지시문: 목표 + 제약 + 검증',
   $aix$에이전트 결과물의 품질은 모델보다 **지시문의 구조**가 결정하는 경우가 많습니다. 좋은 지시문의 공식은 세 부분입니다.
 
@@ -1077,11 +1113,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - ○ "장바구니에서 같은 상품을 두 번 담으면 수량이 안 올라가는 버그를 고쳐줘. cart.ts의 기존 구조 유지, 수정 후 `npx vitest run`으로 검증해."
 
 > 💡 **핵심**: 지시문 3요소 — **목표(완료 상태) + 제약(경계) + 검증(판정 명령)**. 특히 검증이 챗봇을 에이전트로 바꿉니다.$aix$,
-  $aix${"type":"chat","title":"지시문 구조가 만드는 차이","messages":[{"role":"user","text":"장바구니 버그 고쳐줘"},{"role":"ai","text":"어떤 버그인지 특정하기 어려워 추측으로 수정했습니다. (검증 없이 종료)"},{"role":"user","text":"같은 상품 2번 담으면 수량이 안 올라가는 버그 수정. cart.ts 구조 유지, 테스트 파일 수정 금지. npx vitest run 통과하면 완료."},{"role":"ai","text":"원인: addItem의 중복 체크 누락. 수정 후 vitest 12/12 통과 확인했습니다."}],"caption":"같은 모델, 다른 지시문 — 목표·제약·검증이 갖춰지면 결과가 달라집니다."}$aix$::jsonb, 5, 5
+  $aix${"type":"chat","title":"지시문 구조가 만드는 차이","messages":[{"role":"user","text":"장바구니 버그 고쳐줘"},{"role":"ai","text":"어떤 버그인지 특정하기 어려워 추측으로 수정했습니다. (검증 없이 종료)"},{"role":"user","text":"같은 상품 2번 담으면 수량이 안 올라가는 버그 수정. cart.ts 구조 유지, 테스트 파일 수정 금지. npx vitest run 통과하면 완료."},{"role":"ai","text":"원인: addItem의 중복 체크 누락. 수정 후 vitest 12/12 통과 확인했습니다."}],"caption":"같은 모델, 다른 지시문 — 목표·제약·검증이 갖춰지면 결과가 달라집니다."}$aix$::jsonb, null, 5, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'a6b05232-8ca8-0077-7a5d-061834b61450', '3b804477-a8c1-d1fb-5bd4-db038ed6b6f4', 'ai-coding-tools/plan-mode-large-changes', 'plan-mode-large-changes', '플랜 모드와 대규모 변경',
   $aix$파일 수십 개를 건드리는 작업을 "바로 시작해"라고 맡기면 중간에 산으로 갑니다. 큰 변경의 규율은 **계획과 실행의 분리**입니다.
 
@@ -1102,11 +1139,12 @@ Cursor와 Copilot의 에이전트 모드에도 같은 취지의 계획 단계가
 - **계획을 파일로** — 긴 작업은 계획을 마크다운 파일로 저장하게 하면, 세션이 길어져도 목표가 흐려지지 않습니다.
 
 > 💡 **핵심**: 큰 변경일수록 **계획 승인 → 단계 실행 → 단계 검증**. 계획 단계에서 잡은 오류가 가장 싼 오류입니다.$aix$,
-  $aix${"type":"flow","title":"플랜 모드 기반 대규모 변경","nodes":[{"label":"플랜 모드 진입","sublabel":"Shift+Tab — 읽기 전용","icon":"search","tone":"accent"},{"label":"계획 검토·수정","sublabel":"잘못된 가정을 여기서 교정","icon":"clipboard","tone":"warning"},{"label":"단계 실행","sublabel":"승인 후 한 단계씩","icon":"code","tone":"primary","edgeLabel":"계획 승인"},{"label":"검증 + 커밋","sublabel":"npm run check → git commit","icon":"check","tone":"success"}],"loopBack":{"from":3,"to":2,"label":"다음 단계 반복"},"caption":"계획은 한 번, 실행·검증·커밋은 단계 수만큼 반복합니다."}$aix$::jsonb, 6, 6
+  $aix${"type":"flow","title":"플랜 모드 기반 대규모 변경","nodes":[{"label":"플랜 모드 진입","sublabel":"Shift+Tab — 읽기 전용","icon":"search","tone":"accent"},{"label":"계획 검토·수정","sublabel":"잘못된 가정을 여기서 교정","icon":"clipboard","tone":"warning"},{"label":"단계 실행","sublabel":"승인 후 한 단계씩","icon":"code","tone":"primary","edgeLabel":"계획 승인"},{"label":"검증 + 커밋","sublabel":"npm run check → git commit","icon":"check","tone":"success"}],"loopBack":{"from":3,"to":2,"label":"다음 단계 반복"},"caption":"계획은 한 번, 실행·검증·커밋은 단계 수만큼 반복합니다."}$aix$::jsonb, null, 6, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'b88e2793-a0b6-dbf0-01ee-b1cc93a5fd28', '3b804477-a8c1-d1fb-5bd4-db038ed6b6f4', 'ai-coding-tools/ai-code-review', 'ai-code-review', 'AI 코드 리뷰 활용하기',
   $aix$AI가 쓴 코드가 늘어날수록 리뷰가 병목이 됩니다. 해법은 역설적이게도 **리뷰에도 AI를 넣는 것**입니다.
 
@@ -1126,11 +1164,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 "리뷰해줘"보다 "이 diff에서 **null 처리 누락과 권한 체크 빠진 곳**을 찾아줘"가 훨씬 잘 작동합니다. 팀의 단골 결함 유형을 리뷰 프롬프트로 만들어 두세요.
 
 > 💡 **핵심**: AI 리뷰는 사람 리뷰의 대체가 아니라 **1차 필터**입니다. 패턴 결함은 AI가, 방향 판단은 사람이.$aix$,
-  $aix${"type":"flow","title":"AI 1차 필터 리뷰 파이프라인","nodes":[{"label":"코드 작성","sublabel":"사람 + AI 도구","icon":"code","tone":"primary"},{"label":"커밋 전 셀프 리뷰","sublabel":"Claude Code: 변경사항 리뷰 요청","icon":"eye","tone":"accent"},{"label":"PR 자동 AI 리뷰","sublabel":"별도 세션 — 패턴 결함 필터","icon":"bot","tone":"accent","edgeLabel":"PR 생성 시 자동"},{"label":"사람 리뷰","sublabel":"방향·요구사항 판단만 집중","icon":"user","tone":"success","edgeLabel":"패턴 결함 해소 후"}],"caption":"AI가 패턴 결함을 걸러주면, 사람은 '방향이 맞는가'에만 집중할 수 있습니다."}$aix$::jsonb, 5, 7
+  $aix${"type":"flow","title":"AI 1차 필터 리뷰 파이프라인","nodes":[{"label":"코드 작성","sublabel":"사람 + AI 도구","icon":"code","tone":"primary"},{"label":"커밋 전 셀프 리뷰","sublabel":"Claude Code: 변경사항 리뷰 요청","icon":"eye","tone":"accent"},{"label":"PR 자동 AI 리뷰","sublabel":"별도 세션 — 패턴 결함 필터","icon":"bot","tone":"accent","edgeLabel":"PR 생성 시 자동"},{"label":"사람 리뷰","sublabel":"방향·요구사항 판단만 집중","icon":"user","tone":"success","edgeLabel":"패턴 결함 해소 후"}],"caption":"AI가 패턴 결함을 걸러주면, 사람은 '방향이 맞는가'에만 집중할 수 있습니다."}$aix$::jsonb, null, 5, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '232e52dc-4e43-9fae-ccd7-7c011f95d5a5', '21b4b59e-9a10-96ff-d917-d7bee99e627a', 'ai-coding-tools/daily-workflow', 'daily-workflow', '하루 워크플로우: 탐색은 에이전트, 작성은 탭, 수정은 인라인',
   $aix$이제 배운 도구들을 **실제 하루**에 배치해봅니다. 핵심 원칙은 하나 — 작업의 크기에 도구를 맞추는 것입니다.
 
@@ -1155,11 +1194,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 같은 도구와 3번 이상 씨름하고 있다면 도구가 틀린 것입니다. 자동완성과 싸우면 인라인으로, 인라인이 반복되면 에이전트로 올라가세요.
 
 > 💡 **핵심**: **탐색·리팩토링은 에이전트, 작성은 탭, 국소 수정은 인라인.** 도구를 바꾸는 타이밍이 곧 생산성입니다.$aix$,
-  $aix${"type":"steps","title":"AI 코딩 하루 루틴","steps":[{"label":"아침: 탐색·계획","sublabel":"Claude Code — 원인 분석, 플랜 모드","icon":"search"},{"label":"낮: 구현","sublabel":"탭 자동완성 + 인라인 편집(Cmd+K)","icon":"zap"},{"label":"중간 작업 위임","sublabel":"IDE 에이전트 — 다중 파일 수정 후 diff 검토","icon":"code"},{"label":"오후: 정리·검증","sublabel":"Claude Code — 리팩토링·테스트·커밋 전 리뷰","icon":"check"}],"caption":"작업 크기가 커질수록 아래 층(에이전트)으로, 작아질수록 위 층(탭)으로."}$aix$::jsonb, 6, 8
+  $aix${"type":"steps","title":"AI 코딩 하루 루틴","steps":[{"label":"아침: 탐색·계획","sublabel":"Claude Code — 원인 분석, 플랜 모드","icon":"search"},{"label":"낮: 구현","sublabel":"탭 자동완성 + 인라인 편집(Cmd+K)","icon":"zap"},{"label":"중간 작업 위임","sublabel":"IDE 에이전트 — 다중 파일 수정 후 diff 검토","icon":"code"},{"label":"오후: 정리·검증","sublabel":"Claude Code — 리팩토링·테스트·커밋 전 리뷰","icon":"check"}],"caption":"작업 크기가 커질수록 아래 층(에이전트)으로, 작아질수록 위 층(탭)으로."}$aix$::jsonb, null, 6, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '9bf3b870-e346-696a-da09-0cc0d52573b7', '21b4b59e-9a10-96ff-d917-d7bee99e627a', 'ai-coding-tools/team-adoption', 'team-adoption', '팀 도입 가이드: 컨벤션·보안·리뷰 정책',
   $aix$개인의 도구가 팀의 도구가 되려면 **정책**이 필요합니다. 정책 없는 도입은 "각자 다르게 쓰다가 사고 한 번에 금지"로 끝나기 쉽습니다.
 
@@ -1180,11 +1220,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - AI 생성 코드도 같은 리뷰 기준을 통과해야 하며, "AI가 그렇게 짰어요"는 리뷰 코멘트에 대한 답변이 될 수 없습니다.
 
 > 💡 **핵심**: 팀 도입 3종 세트 = **저장소 안의 규칙 파일 + 민감 데이터 경계 + '머지한 사람이 저자' 원칙**.$aix$,
-  $aix${"type":"grid","title":"팀 도입 정책 체크리스트","items":[{"label":"규칙 파일 버전 관리","sublabel":"CLAUDE.md를 git에","icon":"git-branch","tone":"primary"},{"label":"지시문 라이브러리","sublabel":"리뷰·리팩토링 프롬프트 공유","icon":"book","tone":"primary"},{"label":"민감 파일 차단","sublabel":".env · 고객 데이터 접근 금지","icon":"lock","tone":"warning"},{"label":"조직 계정 정책","sublabel":"학습 미사용 · 보존 통제","icon":"shield","tone":"warning"},{"label":"자율 실행 범위","sublabel":"승인 없는 명령의 한계선","icon":"settings","tone":"accent"},{"label":"머지한 사람이 저자","sublabel":"AI 코드도 같은 리뷰 기준","icon":"users","tone":"success"}],"caption":"컨벤션(위) · 보안(중간) · 리뷰 책임(아래) — 세 축이 모두 있어야 팀 도입입니다."}$aix$::jsonb, 5, 9
+  $aix${"type":"grid","title":"팀 도입 정책 체크리스트","items":[{"label":"규칙 파일 버전 관리","sublabel":"CLAUDE.md를 git에","icon":"git-branch","tone":"primary"},{"label":"지시문 라이브러리","sublabel":"리뷰·리팩토링 프롬프트 공유","icon":"book","tone":"primary"},{"label":"민감 파일 차단","sublabel":".env · 고객 데이터 접근 금지","icon":"lock","tone":"warning"},{"label":"조직 계정 정책","sublabel":"학습 미사용 · 보존 통제","icon":"shield","tone":"warning"},{"label":"자율 실행 범위","sublabel":"승인 없는 명령의 한계선","icon":"settings","tone":"accent"},{"label":"머지한 사람이 저자","sublabel":"AI 코드도 같은 리뷰 기준","icon":"users","tone":"success"}],"caption":"컨벤션(위) · 보안(중간) · 리뷰 책임(아래) — 세 축이 모두 있어야 팀 도입입니다."}$aix$::jsonb, null, 5, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '11661966-fe83-f487-0800-4ae31a1c3eaa', '21b4b59e-9a10-96ff-d917-d7bee99e627a', 'ai-coding-tools/measuring-productivity', 'measuring-productivity', '생산성을 실제로 측정하는 법',
   $aix$"AI 덕분에 빨라진 것 같아요"는 측정이 아닙니다. 도구 투자와 정책을 조정하려면 **숫자**가 필요합니다.
 
@@ -1207,10 +1248,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 3. 월 단위로 비교하고, 나빠진 지표가 있으면 정책(리뷰 기준, 자율 범위)을 조정합니다.
 
 > 💡 **핵심**: 속도 지표(리드 타임)와 **안전 지표(되돌림 비율)를 반드시 함께** 보세요. 한쪽만 보는 측정은 측정이 아닙니다.$aix$,
-  $aix${"type":"cycle","title":"생산성 측정 루프","center":"월 단위 반복","nodes":[{"label":"기준선 수립","sublabel":"도입 전 4주 지표","icon":"gauge"},{"label":"지표 수집","sublabel":"리드 타임 · 되돌림 비율","icon":"chart"},{"label":"비교·해석","sublabel":"속도와 안전을 함께","icon":"eye"},{"label":"정책 조정","sublabel":"리뷰 기준 · 자율 범위","icon":"settings"}],"caption":"측정도 루프입니다 — 기준선 없이 시작한 측정은 해석할 수 없습니다."}$aix$::jsonb, 5, 10
+  $aix${"type":"cycle","title":"생산성 측정 루프","center":"월 단위 반복","nodes":[{"label":"기준선 수립","sublabel":"도입 전 4주 지표","icon":"gauge"},{"label":"지표 수집","sublabel":"리드 타임 · 되돌림 비율","icon":"chart"},{"label":"비교·해석","sublabel":"속도와 안전을 함께","icon":"eye"},{"label":"정책 조정","sublabel":"리뷰 기준 · 자율 범위","icon":"settings"}],"caption":"측정도 루프입니다 — 기준선 없이 시작한 측정은 해석할 수 없습니다."}$aix$::jsonb, null, 5, 10
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: AI 디자인 마스터: Midjourney & Stable Diffusion
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -1228,7 +1270,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '925616d8-fab8-ca22-f82c-b65f57952332', '16df7143-b4d3-92ba-470f-25e9d5bb2d9a', 'commercial-assets', '상업용 에셋 제작', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'e03cbca1-ed8a-17c9-2176-b51ab290b456', '66337546-a796-3c6f-a2da-e7cbd77cc4ec', 'ai-design/prompt-anatomy', 'prompt-anatomy', '프롬프트의 5요소: 주제·스타일·구도·조명·파라미터',
   $aix$"예쁜 그림 그려줘"로는 예쁜 그림이 나오지 않습니다. 좋은 이미지 프롬프트는 **문장이 아니라 설계도**입니다.
 
@@ -1247,11 +1289,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - "조명만 바꿔서 4장" 같은 변주 실험이 가능해집니다 — 이것이 디자이너의 반복 작업 방식입니다.
 
 > 💡 **핵심**: 프롬프트는 한 문장이 아니라 **주제→스타일→구도→조명→파라미터의 5층 설계도**입니다. 층을 나누는 순간 결과를 통제할 수 있게 됩니다.$aix$,
-  $aix${"type":"stack","title":"프롬프트 5층 설계도","layers":[{"label":"주제 (Subject)","sublabel":"무엇을 — 가장 앞, 가장 구체적으로","icon":"target","tone":"primary"},{"label":"스타일 (Style)","sublabel":"화풍·매체·시대의 무드","icon":"palette","tone":"accent"},{"label":"구도 (Composition)","sublabel":"카메라 위치·앵글·여백","icon":"camera","tone":"accent"},{"label":"조명 (Lighting)","sublabel":"빛의 방향·시간대·분위기","icon":"sparkles","tone":"accent"},{"label":"파라미터 (Parameters)","sublabel":"--ar, --stylize 등 숫자 명령","icon":"settings","tone":"muted"}],"caption":"결과가 아쉬우면 전체를 다시 쓰지 말고, 문제가 있는 층 하나만 고치세요."}$aix$::jsonb, 5, 0
+  $aix${"type":"stack","title":"프롬프트 5층 설계도","layers":[{"label":"주제 (Subject)","sublabel":"무엇을 — 가장 앞, 가장 구체적으로","icon":"target","tone":"primary"},{"label":"스타일 (Style)","sublabel":"화풍·매체·시대의 무드","icon":"palette","tone":"accent"},{"label":"구도 (Composition)","sublabel":"카메라 위치·앵글·여백","icon":"camera","tone":"accent"},{"label":"조명 (Lighting)","sublabel":"빛의 방향·시간대·분위기","icon":"sparkles","tone":"accent"},{"label":"파라미터 (Parameters)","sublabel":"--ar, --stylize 등 숫자 명령","icon":"settings","tone":"muted"}],"caption":"결과가 아쉬우면 전체를 다시 쓰지 말고, 문제가 있는 층 하나만 고치세요."}$aix$::jsonb, null, 5, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '98493055-1877-eee9-5cc7-3eec16c3d7b7', '66337546-a796-3c6f-a2da-e7cbd77cc4ec', 'ai-design/bad-vs-good-prompt', 'bad-vs-good-prompt', '나쁜 프롬프트 vs 좋은 프롬프트',
   $aix$같은 모델, 같은 요금제인데 결과가 하늘과 땅 차이인 이유는 단 하나 — **프롬프트의 정보량**입니다.
 
@@ -1272,11 +1315,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 프롬프트를 "주문서"라고 생각하세요. 카페에서 "맛있는 거 주세요"라고 하면 무엇이 나올지 모르지만, "아이스 라떼, 샷 추가, 얼음 적게"는 항상 같은 결과가 나옵니다.
 
 > 💡 **핵심**: 좋은 프롬프트 = 모호한 형용사를 **시각적 사실**로 바꾸고, 5요소의 빈칸을 채운 주문서입니다.$aix$,
-  $aix${"type":"chat","title":"같은 요청, 다른 결과","messages":[{"role":"user","text":"예쁜 카페 그림 고퀄리티로 그려줘"},{"role":"ai","text":"(랜덤 스타일의 평범한 카페 4장 — 매번 다른 결과)"},{"role":"user","text":"미니멀 인테리어의 카페, 통유리창으로 드는 오후 햇살, 광각 인테리어 사진, 필름 톤 --ar 16:9 --no people, text"},{"role":"ai","text":"(의도한 무드·구도·비율이 재현된 4장 — 다시 뽑아도 방향 유지)"}],"caption":"모호한 형용사를 시각적 사실로 바꾸는 것이 프롬프트 개선의 90%입니다."}$aix$::jsonb, 5, 1
+  $aix${"type":"chat","title":"같은 요청, 다른 결과","messages":[{"role":"user","text":"예쁜 카페 그림 고퀄리티로 그려줘"},{"role":"ai","text":"(랜덤 스타일의 평범한 카페 4장 — 매번 다른 결과)"},{"role":"user","text":"미니멀 인테리어의 카페, 통유리창으로 드는 오후 햇살, 광각 인테리어 사진, 필름 톤 --ar 16:9 --no people, text"},{"role":"ai","text":"(의도한 무드·구도·비율이 재현된 4장 — 다시 뽑아도 방향 유지)"}],"caption":"모호한 형용사를 시각적 사실로 바꾸는 것이 프롬프트 개선의 90%입니다."}$aix$::jsonb, null, 5, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '409c53aa-3464-9b11-86b0-687f489f13bd', '66337546-a796-3c6f-a2da-e7cbd77cc4ec', 'ai-design/midjourney-parameters', 'midjourney-parameters', 'Midjourney 핵심 파라미터: --ar, --stylize, --sref',
   $aix$프롬프트가 '무엇을'이라면 파라미터는 '어떻게'입니다. 최신 Midjourney(V7 이후)에서 실무에 쓰는 파라미터는 사실 몇 개 안 됩니다.
 
@@ -1294,11 +1338,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - `--raw` — 미학 보정을 끈 절제된 모드. 사진·제품컷에 유리합니다.
 
 > 💡 **핵심**: 탐색할 때는 `--chaos`를 올리고, 확정할 때는 `--seed`와 `--sref`로 고정하세요. **탐색과 고정의 파라미터는 다릅니다.**$aix$,
-  $aix${"type":"terminal","windowTitle":"Midjourney — /imagine","lines":[{"text":"/imagine minimal cafe interior, afternoon light","tone":"cmd"},{"text":"  --ar 16:9 --stylize 200","tone":"cmd"},{"text":"4장 생성 완료 — 무드 탐색","tone":"ok"},{"text":"# 2번 이미지의 스타일이 마음에 듦 → 고정","tone":"comment"},{"text":"/imagine cozy bookstore interior","tone":"cmd"},{"text":"  --sref https://.../cafe-2.png --sw 300 --ar 16:9","tone":"cmd"},{"text":"같은 색감·무드의 서점 4장 생성","tone":"ok"},{"text":"# 내용은 바뀌고 스타일은 유지됨","tone":"comment"}],"caption":"--sref는 '내용'이 아니라 '스타일'만 이식합니다 — 시리즈 작업의 핵심 무기입니다."}$aix$::jsonb, 6, 2
+  $aix${"type":"terminal","windowTitle":"Midjourney — /imagine","lines":[{"text":"/imagine minimal cafe interior, afternoon light","tone":"cmd"},{"text":"  --ar 16:9 --stylize 200","tone":"cmd"},{"text":"4장 생성 완료 — 무드 탐색","tone":"ok"},{"text":"# 2번 이미지의 스타일이 마음에 듦 → 고정","tone":"comment"},{"text":"/imagine cozy bookstore interior","tone":"cmd"},{"text":"  --sref https://.../cafe-2.png --sw 300 --ar 16:9","tone":"cmd"},{"text":"같은 색감·무드의 서점 4장 생성","tone":"ok"},{"text":"# 내용은 바뀌고 스타일은 유지됨","tone":"comment"}],"caption":"--sref는 '내용'이 아니라 '스타일'만 이식합니다 — 시리즈 작업의 핵심 무기입니다."}$aix$::jsonb, $aix${"title":"Midjourney 웹에서 생성과 업스케일 따라하기","app":{"kind":"browser","url":"midjourney.com/imagine","blocks":[{"id":"mj-head","type":"heading","label":"Imagine"},{"id":"mj-prompt","type":"input","label":"프롬프트를 입력하세요…"},{"id":"mj-generate","type":"button","label":"Generate"},{"id":"mj-loading","type":"badge","label":"생성 중… 4장","hidden":true},{"id":"mj-img1","type":"card","label":"🖼 cafe-01 — 창가 구도","hidden":true},{"id":"mj-img2","type":"card","label":"🖼 cafe-02 — 필름 톤 ✓","hidden":true},{"id":"mj-img3","type":"card","label":"🖼 cafe-03 — 광각","hidden":true},{"id":"mj-img4","type":"card","label":"🖼 cafe-04 — 클로즈업","hidden":true},{"id":"mj-upscale","type":"button","label":"Upscale (Subtle)","hidden":true},{"id":"mj-final","type":"card","label":"✨ cafe-02-4K.png — 업스케일 완료","hidden":true}]},"actions":[{"t":"caption","text":"① 프롬프트 입력창을 클릭합니다"},{"t":"move","target":"mj-prompt"},{"t":"click"},{"t":"caption","text":"② 주제를 먼저 쓰고 파라미터는 뒤에 붙입니다"},{"t":"type","target":"mj-prompt","text":"minimal cafe interior --ar 16:9 --s 200"},{"t":"caption","text":"③ Generate를 눌러 4장을 생성합니다"},{"t":"move","target":"mj-generate"},{"t":"click"},{"t":"reveal","target":"mj-loading"},{"t":"wait","ms":700},{"t":"hide","target":"mj-loading"},{"t":"reveal","target":"mj-img1"},{"t":"reveal","target":"mj-img2"},{"t":"reveal","target":"mj-img3"},{"t":"reveal","target":"mj-img4"},{"t":"caption","text":"④ 무드가 잡힌 2번 컷을 선택합니다"},{"t":"move","target":"mj-img2"},{"t":"click"},{"t":"reveal","target":"mj-upscale"},{"t":"caption","text":"⑤ 충실형 업스케일로 4K 납품본을 만듭니다"},{"t":"move","target":"mj-upscale"},{"t":"click"},{"t":"reveal","target":"mj-final"},{"t":"move","target":"mj-final"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '326e1950-99e9-6b31-1d9e-1d5159bfea75', '66337546-a796-3c6f-a2da-e7cbd77cc4ec', 'ai-design/style-reference-moodboard', 'style-reference-moodboard', '무드보드에서 스타일 레퍼런스로',
   $aix$디자이너는 프롬프트를 쓰기 전에 무드보드부터 만듭니다. 2026년의 무드보드는 감상용이 아니라 **AI에게 직접 먹이는 입력값**입니다.
 
@@ -1316,11 +1361,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 무드보드 이미지 자체를 여러 장 `--sref`로 섞어 나만의 스타일 코드를 만들 수도 있습니다.
 
 > 💡 **핵심**: 무드보드는 감상용 콜라주가 아니라 **수집→선별→언어화→레퍼런스 연결**로 이어지는 스타일 파이프라인의 첫 단계입니다.$aix$,
-  $aix${"type":"steps","title":"무드보드 → 스타일 레퍼런스 4단계","steps":[{"label":"수집","sublabel":"무드에 맞는 이미지 10~20장","icon":"search"},{"label":"선별","sublabel":"색감·질감이 일관된 3~5장","icon":"filter"},{"label":"언어화","sublabel":"공통점을 5요소 키워드로","icon":"file-text"},{"label":"레퍼런스 연결","sublabel":"--sref + 키워드로 생성","icon":"wand"}],"caption":"언어화 단계를 건너뛰면 스타일을 다른 도구·팀원에게 이식할 수 없습니다."}$aix$::jsonb, 5, 3
+  $aix${"type":"steps","title":"무드보드 → 스타일 레퍼런스 4단계","steps":[{"label":"수집","sublabel":"무드에 맞는 이미지 10~20장","icon":"search"},{"label":"선별","sublabel":"색감·질감이 일관된 3~5장","icon":"filter"},{"label":"언어화","sublabel":"공통점을 5요소 키워드로","icon":"file-text"},{"label":"레퍼런스 연결","sublabel":"--sref + 키워드로 생성","icon":"wand"}],"caption":"언어화 단계를 건너뛰면 스타일을 다른 도구·팀원에게 이식할 수 없습니다."}$aix$::jsonb, null, 5, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '64966b79-ff83-089d-7a42-699e24fe23c2', 'ef9d1973-62ed-7dac-3251-51b5ac3dc553', 'ai-design/controlnet-basics', 'controlnet-basics', 'ControlNet: 포즈와 구도를 못 박는 법',
   $aix$프롬프트로는 "왼손을 든 캐릭터"를 정확히 만들 수 없습니다. **구조를 통제하려면 구조를 입력**해야 합니다 — 그것이 ControlNet입니다.
 
@@ -1343,11 +1389,12 @@ Stable Diffusion은 원래 텍스트만 보고 그립니다. ControlNet은 여�
 ComfyUI가 사실상 표준 작업대이며, SDXL·FLUX 계열 모델에도 같은 개념의 컨트롤 어댑터가 제공됩니다. 도구가 바뀌어도 **"구조 추출 → 조건 주입"** 원리는 동일합니다.
 
 > 💡 **핵심**: 프롬프트는 '내용'을, ControlNet은 '구조'를 담당합니다. 이 분업을 이해하면 우연이 아니라 **설계로** 그림을 만들 수 있습니다.$aix$,
-  $aix${"type":"flow","title":"ControlNet 파이프라인","nodes":[{"label":"레퍼런스 이미지","sublabel":"원하는 포즈·구도의 사진","icon":"image","tone":"muted"},{"label":"전처리기","sublabel":"OpenPose · Depth · Canny","icon":"scissors","tone":"accent","edgeLabel":"구조만 추출"},{"label":"ControlNet + 프롬프트","sublabel":"구조는 조건으로, 내용은 텍스트로","icon":"layers","tone":"primary","edgeLabel":"조건 주입"},{"label":"결과 이미지","sublabel":"포즈 고정 + 새로운 화풍","icon":"sparkles","tone":"success"}],"caption":"구조(뼈대)와 내용(살)을 분리해서 입력하는 것이 ControlNet의 전부입니다."}$aix$::jsonb, 6, 4
+  $aix${"type":"flow","title":"ControlNet 파이프라인","nodes":[{"label":"레퍼런스 이미지","sublabel":"원하는 포즈·구도의 사진","icon":"image","tone":"muted"},{"label":"전처리기","sublabel":"OpenPose · Depth · Canny","icon":"scissors","tone":"accent","edgeLabel":"구조만 추출"},{"label":"ControlNet + 프롬프트","sublabel":"구조는 조건으로, 내용은 텍스트로","icon":"layers","tone":"primary","edgeLabel":"조건 주입"},{"label":"결과 이미지","sublabel":"포즈 고정 + 새로운 화풍","icon":"sparkles","tone":"success"}],"caption":"구조(뼈대)와 내용(살)을 분리해서 입력하는 것이 ControlNet의 전부입니다."}$aix$::jsonb, $aix${"title":"ControlNet 포즈 고정 생성 따라하기","app":{"kind":"browser","url":"localhost:8188/controlnet","blocks":[{"id":"cn-head","type":"heading","label":"ControlNet — 구조는 이미지로, 내용은 텍스트로"},{"id":"cn-upload","type":"button","label":"📤 포즈 레퍼런스 업로드"},{"id":"cn-pose","type":"card","label":"🧍 pose-ref.jpg — 왼손을 든 포즈","hidden":true},{"id":"cn-prep","type":"button","label":"전처리기: OpenPose"},{"id":"cn-skeleton","type":"card","label":"🦴 skeleton.png — 뼈대만 추출됨","hidden":true},{"id":"cn-prompt","type":"input","label":"프롬프트를 입력하세요…"},{"id":"cn-generate","type":"button","label":"Generate"},{"id":"cn-result","type":"card","label":"🎨 결과 — 수채화 기사, 포즈는 그대로","hidden":true},{"id":"cn-badge","type":"badge","label":"✓ 구조 일치 — 포즈 고정 성공","hidden":true}]},"actions":[{"t":"caption","text":"① 원하는 포즈의 레퍼런스를 업로드합니다"},{"t":"move","target":"cn-upload"},{"t":"click"},{"t":"reveal","target":"cn-pose"},{"t":"wait","ms":500},{"t":"caption","text":"② OpenPose 전처리기로 뼈대만 추출합니다"},{"t":"move","target":"cn-prep"},{"t":"click"},{"t":"reveal","target":"cn-skeleton"},{"t":"wait","ms":600},{"t":"caption","text":"③ 내용은 프롬프트로 씁니다 — 화풍과 주제"},{"t":"move","target":"cn-prompt"},{"t":"click"},{"t":"type","target":"cn-prompt","text":"watercolor knight, dramatic light"},{"t":"caption","text":"④ 생성합니다 — 구조는 조건, 내용은 텍스트"},{"t":"move","target":"cn-generate"},{"t":"click"},{"t":"reveal","target":"cn-result"},{"t":"wait","ms":500},{"t":"reveal","target":"cn-badge"},{"t":"caption","text":"⑤ 포즈는 그대로, 화풍만 바뀌었습니다"},{"t":"move","target":"cn-result"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'e495d9c9-ab2c-9d50-9d88-8c8f2713005e', 'ef9d1973-62ed-7dac-3251-51b5ac3dc553', 'ai-design/consistent-character', 'consistent-character', '일관된 캐릭터 만들기: 시트·시드·레퍼런스',
   $aix$웹툰, 브랜드 마스코트, 게임 일러스트의 공통 난제 — "다음 컷에서도 같은 얼굴"입니다. 한 장의 행운을 **반복 가능한 시스템**으로 바꿔봅니다.
 
@@ -1366,11 +1413,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - **서술문 재사용**: 레퍼런스가 있어도 외모 서술문은 항상 함께 씁니다. 이미지와 텍스트가 서로를 보강합니다.
 
 > 💡 **핵심**: 캐릭터 일관성은 한 번의 프롬프트가 아니라 **생성→선별→시트화→레퍼런스 재투입**을 반복하는 루프에서 나옵니다.$aix$,
-  $aix${"type":"cycle","title":"캐릭터 일관성 루프","center":"돌수록 캐릭터가 단단해짐","nodes":[{"label":"베이스 생성","sublabel":"외모를 완전히 언어화","icon":"user"},{"label":"베스트 컷 선별","sublabel":"정체성이 가장 또렷한 1장","icon":"eye"},{"label":"캐릭터 시트화","sublabel":"정면·측면·표정 모음","icon":"clipboard"},{"label":"레퍼런스 재투입","sublabel":"--oref · LoRA로 새 장면","icon":"refresh"}],"caption":"새 장면의 좋은 컷을 다시 시트에 추가하면 일관성이 누적됩니다."}$aix$::jsonb, 7, 5
+  $aix${"type":"cycle","title":"캐릭터 일관성 루프","center":"돌수록 캐릭터가 단단해짐","nodes":[{"label":"베이스 생성","sublabel":"외모를 완전히 언어화","icon":"user"},{"label":"베스트 컷 선별","sublabel":"정체성이 가장 또렷한 1장","icon":"eye"},{"label":"캐릭터 시트화","sublabel":"정면·측면·표정 모음","icon":"clipboard"},{"label":"레퍼런스 재투입","sublabel":"--oref · LoRA로 새 장면","icon":"refresh"}],"caption":"새 장면의 좋은 컷을 다시 시트에 추가하면 일관성이 누적됩니다."}$aix$::jsonb, null, 7, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'b0c53e8f-1da6-fbff-00fd-090b7a917a28', 'ef9d1973-62ed-7dac-3251-51b5ac3dc553', 'ai-design/upscale-pipeline', 'upscale-pipeline', '업스케일과 후보정: 뽑고 끝이 아니다',
   $aix$AI가 처음 내놓는 이미지는 '시안'입니다. 상업용 퀄리티는 **생성 이후의 파이프라인**에서 만들어집니다.
 
@@ -1387,11 +1435,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - **창작형**(디테일 생성): 일러스트·배경 — 질감을 새로 그려 넣어 화려하지만, 얼굴이 변형될 수 있어 인물엔 주의가 필요합니다.
 
 > 💡 **핵심**: 생성은 시작일 뿐입니다. **수리→업스케일→톤 통일→포맷 최적화**까지 마쳐야 상업용 결과물입니다.$aix$,
-  $aix${"type":"flow","title":"생성 이후 후보정 파이프라인","nodes":[{"label":"원본 생성물","sublabel":"1~2K 시안","icon":"image","tone":"muted"},{"label":"인페인팅 수리","sublabel":"손·눈·디테일만 부분 재생성","icon":"wrench","tone":"accent"},{"label":"업스케일","sublabel":"충실형 vs 창작형 선택","icon":"trending-up","tone":"primary"},{"label":"톤 통일 + 포맷 최적화","sublabel":"시리즈 프리셋 · WebP/AVIF","icon":"check","tone":"success"}],"caption":"인물은 충실형, 배경·일러스트는 창작형 업스케일러가 기본 선택입니다."}$aix$::jsonb, 5, 6
+  $aix${"type":"flow","title":"생성 이후 후보정 파이프라인","nodes":[{"label":"원본 생성물","sublabel":"1~2K 시안","icon":"image","tone":"muted"},{"label":"인페인팅 수리","sublabel":"손·눈·디테일만 부분 재생성","icon":"wrench","tone":"accent"},{"label":"업스케일","sublabel":"충실형 vs 창작형 선택","icon":"trending-up","tone":"primary"},{"label":"톤 통일 + 포맷 최적화","sublabel":"시리즈 프리셋 · WebP/AVIF","icon":"check","tone":"success"}],"caption":"인물은 충실형, 배경·일러스트는 창작형 업스케일러가 기본 선택입니다."}$aix$::jsonb, null, 5, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'ef7d39a5-502e-888e-3fe6-5f857d4c1737', '925616d8-fab8-ca22-f82c-b65f57952332', 'ai-design/web-asset-workflow', 'web-asset-workflow', '웹 디자인 에셋 제작: 히어로·아이콘·배경',
   $aix$실무에서 AI 디자인의 최대 수요처는 웹사이트입니다. 에셋 종류마다 **요구 조건이 다르므로 프롬프트 전략도 달라야** 합니다.
 
@@ -1409,11 +1458,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 파일은 용도별 해상도 + WebP/AVIF로 정리합니다.
 
 > 💡 **핵심**: 웹 에셋은 '예쁜 그림'이 아니라 **텍스트 여백, 축소 내성, 저대비, 반응형 크롭**이라는 제약 조건을 통과한 그림입니다.$aix$,
-  $aix${"type":"grid","title":"웹 에셋 4종과 핵심 제약","items":[{"label":"히어로 이미지","sublabel":"와이드 비율 + 텍스트 여백","icon":"monitor","tone":"primary"},{"label":"아이콘 세트","sublabel":"같은 sref로 시리즈 통일","icon":"zap","tone":"accent"},{"label":"배경·패턴","sublabel":"이음새 없음 + 저대비","icon":"layers","tone":"muted"},{"label":"스팟 일러스트","sublabel":"캐릭터 레퍼런스로 일관성","icon":"smartphone","tone":"success"}],"caption":"에셋 종류가 바뀌면 비율·대비·여백 등 제약 조건부터 다시 정의하세요."}$aix$::jsonb, 6, 7
+  $aix${"type":"grid","title":"웹 에셋 4종과 핵심 제약","items":[{"label":"히어로 이미지","sublabel":"와이드 비율 + 텍스트 여백","icon":"monitor","tone":"primary"},{"label":"아이콘 세트","sublabel":"같은 sref로 시리즈 통일","icon":"zap","tone":"accent"},{"label":"배경·패턴","sublabel":"이음새 없음 + 저대비","icon":"layers","tone":"muted"},{"label":"스팟 일러스트","sublabel":"캐릭터 레퍼런스로 일관성","icon":"smartphone","tone":"success"}],"caption":"에셋 종류가 바뀌면 비율·대비·여백 등 제약 조건부터 다시 정의하세요."}$aix$::jsonb, $aix${"title":"디자인 에디터에서 히어로 섹션 조립 따라하기","app":{"kind":"design-canvas","windowTitle":"landing-hero — Figma","tools":[{"id":"tool-frame","icon":"layers","label":"프레임"},{"id":"tool-image","icon":"image","label":"이미지"},{"id":"tool-text","icon":"file-text","label":"텍스트"},{"id":"tool-rect","icon":"target","label":"사각형"}],"objects":[{"id":"frame-hero","shape":"frame","label":"Hero 1440×600","x":6,"y":8,"w":88,"h":58},{"id":"img-hero","shape":"image","label":"AI 히어로 이미지 (21:9 생성물)","x":9,"y":13,"w":42,"h":48,"hidden":true},{"id":"text-head","shape":"text","label":"AI로 디자인을 10배 빠르게","x":56,"y":18,"w":34,"h":10,"hidden":true},{"id":"text-sub","shape":"text","label":"프롬프트 템플릿으로 팀 톤 유지","x":56,"y":32,"w":32,"h":8,"hidden":true},{"id":"btn-cta","shape":"rect","label":"시작하기","x":56,"y":46,"w":16,"h":9,"color":"#f59e0b","hidden":true}]},"actions":[{"t":"caption","text":"① 21:9 와이드 히어로 프레임을 확인합니다"},{"t":"move","target":"frame-hero"},{"t":"click"},{"t":"caption","text":"② 이미지 툴로 AI 생성 히어로를 배치합니다"},{"t":"move","target":"tool-image"},{"t":"click"},{"t":"drag","from":"frame-hero","to":"img-hero"},{"t":"reveal","target":"img-hero"},{"t":"wait","ms":500},{"t":"caption","text":"③ 비워둔 여백에 헤드라인을 올립니다"},{"t":"move","target":"tool-text"},{"t":"click"},{"t":"type","target":"text-head","text":"AI로 디자인을 10배 빠르게"},{"t":"type","target":"text-sub","text":"프롬프트 템플릿으로 팀 톤 유지"},{"t":"caption","text":"④ 사각형 툴로 CTA 버튼을 그립니다"},{"t":"move","target":"tool-rect"},{"t":"click"},{"t":"drag","from":"text-sub","to":"btn-cta"},{"t":"reveal","target":"btn-cta"},{"t":"caption","text":"⑤ 텍스트 가독성과 여백 균형을 확인합니다"},{"t":"move","target":"img-hero"},{"t":"move","target":"text-head"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '50b3228d-84d2-6f21-d0e8-77bf6cbe99bf', '925616d8-fab8-ca22-f82c-b65f57952332', 'ai-design/brand-consistency', 'brand-consistency', '브랜드 일관성: 스타일 시스템으로 굳히기',
   $aix$에셋 하나하나가 훌륭해도 서로 따로 놀면 브랜드가 무너집니다. 해법은 재능이 아니라 **시스템**입니다.
 
@@ -1430,11 +1480,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 분기마다 전체 에셋을 한 화면에 모아 **일관성 감사**를 합니다.
 
 > 💡 **핵심**: 브랜드 일관성 = **고정 레퍼런스 + 프롬프트 템플릿 + 후처리 프리셋**. 개인의 감각을 팀의 시스템으로 바꾸는 것이 프로의 방식입니다.$aix$,
-  $aix${"type":"compare","title":"그때그때 생성 vs 스타일 시스템","columns":[{"title":"그때그때 생성","icon":"alert","tone":"warning","items":["에셋마다 프롬프트를 새로 작성","담당자마다 다른 톤","색감이 페이지마다 미묘하게 다름","리뉴얼 때 전부 다시 제작"]},{"title":"스타일 시스템","icon":"layers","tone":"primary","items":["고정 sref + 프롬프트 템플릿","누가 뽑아도 같은 브랜드 톤","후처리 프리셋으로 색을 잠금","템플릿 버전만 올리면 갱신 끝"]}],"caption":"감각은 사람에게, 일관성은 시스템에 맡기세요."}$aix$::jsonb, 5, 8
+  $aix${"type":"compare","title":"그때그때 생성 vs 스타일 시스템","columns":[{"title":"그때그때 생성","icon":"alert","tone":"warning","items":["에셋마다 프롬프트를 새로 작성","담당자마다 다른 톤","색감이 페이지마다 미묘하게 다름","리뉴얼 때 전부 다시 제작"]},{"title":"스타일 시스템","icon":"layers","tone":"primary","items":["고정 sref + 프롬프트 템플릿","누가 뽑아도 같은 브랜드 톤","후처리 프리셋으로 색을 잠금","템플릿 버전만 올리면 갱신 끝"]}],"caption":"감각은 사람에게, 일관성은 시스템에 맡기세요."}$aix$::jsonb, null, 5, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '91c5ce2a-3183-976b-e0a3-3eb2fdcba440', '925616d8-fab8-ca22-f82c-b65f57952332', 'ai-design/license-and-copyright', 'license-and-copyright', '상업적 이용: 라이선스와 저작권 (2026년 기준)',
   $aix$상업 프로젝트에서 가장 비싼 실수는 그림이 아니라 **법적 검토 누락**입니다. 2026년 기준으로 반드시 확인할 것들을 정리합니다.
 
@@ -1455,10 +1506,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 프롬프트·생성 일시·사용 모델을 **기록으로 남깁니다**. 분쟁 시 인간 기여를 입증하는 자료가 됩니다.
 
 > 💡 **핵심**: "생성 가능"과 "상업적으로 안전"은 다릅니다. **플랜·모델 라이선스 확인 + 인간 기여 + 표시 의무 + 기록 보관**이 2026년의 4대 안전장치입니다.$aix$,
-  $aix${"type":"grid","title":"상업 이용 전 4대 체크포인트","items":[{"label":"플랜·모델 라이선스","sublabel":"유료 플랜 조건 · 모델별 확인","icon":"key","tone":"primary"},{"label":"인간의 창작적 기여","sublabel":"편집·합성 없인 저작권 없음","icon":"user","tone":"accent"},{"label":"AI 생성물 표시","sublabel":"EU AI Act · 한국 AI 기본법","icon":"alert","tone":"warning"},{"label":"기록 보관","sublabel":"프롬프트·모델·일시 증빙","icon":"clipboard","tone":"success"},{"label":"타인 IP 배제","sublabel":"작가명·캐릭터·로고 금지","icon":"shield","tone":"warning"},{"label":"계약서 명시","sublabel":"클라이언트에 AI 사용 고지","icon":"file-text","tone":"muted"}],"caption":"네 가지 안전장치에 'IP 배제'와 '고지'까지 더하면 실무 체크리스트가 완성됩니다."}$aix$::jsonb, 6, 9
+  $aix${"type":"grid","title":"상업 이용 전 4대 체크포인트","items":[{"label":"플랜·모델 라이선스","sublabel":"유료 플랜 조건 · 모델별 확인","icon":"key","tone":"primary"},{"label":"인간의 창작적 기여","sublabel":"편집·합성 없인 저작권 없음","icon":"user","tone":"accent"},{"label":"AI 생성물 표시","sublabel":"EU AI Act · 한국 AI 기본법","icon":"alert","tone":"warning"},{"label":"기록 보관","sublabel":"프롬프트·모델·일시 증빙","icon":"clipboard","tone":"success"},{"label":"타인 IP 배제","sublabel":"작가명·캐릭터·로고 금지","icon":"shield","tone":"warning"},{"label":"계약서 명시","sublabel":"클라이언트에 AI 사용 고지","icon":"file-text","tone":"muted"}],"caption":"네 가지 안전장치에 'IP 배제'와 '고지'까지 더하면 실무 체크리스트가 완성됩니다."}$aix$::jsonb, null, 6, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: AI 영상 제작: Sora · Runway · Veo와 숏폼 자동화
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -1476,7 +1528,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '717803d4-4348-4f09-db6f-0c46782b1570', 'fb2289d4-2769-d76f-0c55-f213a266a1bb', 'shortform-automation', '숏폼 자동화', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '65e6c1b4-1ac8-b271-5e30-883e06404fcd', 'ac3869b9-6f78-a9d2-52bf-bca94f865af8', 'ai-video/how-video-ai-works', 'how-video-ai-works', '영상 생성 AI의 원리와 한계',
   $aix$텍스트 한 줄이 영상이 되는 마법의 정체는 **노이즈에서 프레임을 조각해내는 확산(Diffusion) 모델**입니다. 원리를 알면 한계도, 우회법도 보입니다.
 
@@ -1496,11 +1548,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 한계는 회피 대상이지 극복 대상이 아닙니다. 물리가 무너지기 쉬운 장면(손 클로즈업, 군중)은 피해서 설계하고, 긴 서사는 짧은 클립의 합으로 쪼갭니다.
 
 > 💡 **핵심**: 영상 생성 AI는 "물리 시뮬레이터"가 아니라 "그럴듯함 생성기"입니다. 한계를 아는 사람이 한계 안에서 완성도를 만듭니다.$aix$,
-  $aix${"type":"flow","title":"텍스트가 영상이 되기까지","nodes":[{"label":"프롬프트 이해","sublabel":"장면·피사체·카메라 해석","icon":"file-text","tone":"primary"},{"label":"잠재 공간 노이즈","sublabel":"무작위 상태에서 시작","icon":"sparkles","tone":"muted"},{"label":"확산 디노이징","sublabel":"수십 단계 반복으로 프레임 조각","icon":"wand","tone":"accent","edgeLabel":"시간축 포함 한 덩어리로"},{"label":"클립 완성 (5~15초)","sublabel":"오디오 동시 생성 모델도 등장","icon":"video","tone":"success"}],"caption":"물리 법칙은 '계산'이 아니라 '흉내' — 그래서 손·액체·군중이 약점입니다."}$aix$::jsonb, 5, 0
+  $aix${"type":"flow","title":"텍스트가 영상이 되기까지","nodes":[{"label":"프롬프트 이해","sublabel":"장면·피사체·카메라 해석","icon":"file-text","tone":"primary"},{"label":"잠재 공간 노이즈","sublabel":"무작위 상태에서 시작","icon":"sparkles","tone":"muted"},{"label":"확산 디노이징","sublabel":"수십 단계 반복으로 프레임 조각","icon":"wand","tone":"accent","edgeLabel":"시간축 포함 한 덩어리로"},{"label":"클립 완성 (5~15초)","sublabel":"오디오 동시 생성 모델도 등장","icon":"video","tone":"success"}],"caption":"물리 법칙은 '계산'이 아니라 '흉내' — 그래서 손·액체·군중이 약점입니다."}$aix$::jsonb, null, 5, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'cedc9990-4f9b-5497-dd9d-5b8fc3506fd3', 'ac3869b9-6f78-a9d2-52bf-bca94f865af8', 'ai-video/tool-landscape-2026', 'tool-landscape-2026', '2026 도구 지형도: Sora · Runway · Veo · Pika · Kling',
   $aix$도구가 너무 많아서 못 고르겠다는 말은 이제 핑계입니다. 2026년의 지형도는 **용도별로 뚜렷하게 갈라져** 있습니다.
 
@@ -1523,11 +1576,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 도구는 계속 바뀝니다. "어떤 도구가 최고인가"보다 **"내 파이프라인의 어느 단계에 어떤 도구를 꽂는가"**를 기준으로 판단하세요.
 
 > 💡 **핵심**: 2026년의 정답은 단일 도구가 아니라 **조합**입니다 — 연출은 Runway, 완성형은 Veo/Sora, 물량은 Kling/Pika.$aix$,
-  $aix${"type":"grid","title":"2026 텍스트-투-비디오 지형도","items":[{"label":"Sora","sublabel":"복잡한 연출 · 소셜 결합","icon":"sparkles","tone":"primary"},{"label":"Runway","sublabel":"연출 통제력 · 편집 도구 성숙","icon":"camera","tone":"primary"},{"label":"Google Veo","sublabel":"네이티브 오디오 · 프롬프트 충실","icon":"music","tone":"accent"},{"label":"Pika","sublabel":"밈 · 이펙트 특화","icon":"zap","tone":"muted"},{"label":"Kling","sublabel":"가성비 · 인물 동작","icon":"users","tone":"muted"},{"label":"선택 기준","sublabel":"통제력 / 오디오 / 단가","icon":"target","tone":"warning"}],"caption":"단일 도구가 아니라 파이프라인 단계별 조합으로 고릅니다."}$aix$::jsonb, 6, 1
+  $aix${"type":"grid","title":"2026 텍스트-투-비디오 지형도","items":[{"label":"Sora","sublabel":"복잡한 연출 · 소셜 결합","icon":"sparkles","tone":"primary"},{"label":"Runway","sublabel":"연출 통제력 · 편집 도구 성숙","icon":"camera","tone":"primary"},{"label":"Google Veo","sublabel":"네이티브 오디오 · 프롬프트 충실","icon":"music","tone":"accent"},{"label":"Pika","sublabel":"밈 · 이펙트 특화","icon":"zap","tone":"muted"},{"label":"Kling","sublabel":"가성비 · 인물 동작","icon":"users","tone":"muted"},{"label":"선택 기준","sublabel":"통제력 / 오디오 / 단가","icon":"target","tone":"warning"}],"caption":"단일 도구가 아니라 파이프라인 단계별 조합으로 고릅니다."}$aix$::jsonb, null, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '9c224ef1-348c-8804-82cb-495a2525bdf7', 'ac3869b9-6f78-a9d2-52bf-bca94f865af8', 'ai-video/cinematography-prompts', 'cinematography-prompts', '프롬프트의 시네마토그래피: 감독의 언어로 쓰기',
   $aix$"예쁜 노을 영상"이라고 쓰면 모델은 평범한 스톡 영상을 줍니다. 모델이 학습한 것은 **영화 제작 현장의 언어**이기 때문에, 감독처럼 써야 감독의 결과물이 나옵니다.
 
@@ -1547,11 +1601,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 "아름다운, 멋진" 같은 감상 형용사는 자리만 차지합니다. 그 자리에 조명과 렌즈 단어를 넣으세요.
 
 > 💡 **핵심**: 좋은 영상 프롬프트는 소설이 아니라 **콘티 지문**입니다 — 샷·움직임·조명을 기술 용어로 지정하세요.$aix$,
-  $aix${"type":"chat","title":"감상 프롬프트 vs 시네마토그래피 프롬프트","messages":[{"role":"user","text":"바닷가에서 달리는 강아지의 아름답고 감동적인 영상"},{"role":"ai","text":"→ 평범한 스톡 영상 느낌의 결과물 (연출 정보 없음)"},{"role":"user","text":"트래킹 샷: 골든 리트리버가 해질녘 해변을 달린다. 로우 앵글, 느린 트래킹, 골든 아워 역광, 얕은 심도, 35mm 필름 룩"},{"role":"ai","text":"→ 카메라가 함께 달리는 영화적 장면 (샷·움직임·조명이 모두 지정됨)"}],"caption":"감상 형용사를 빼고 그 자리에 샷·카메라·조명 용어를 넣으세요."}$aix$::jsonb, 6, 2
+  $aix${"type":"chat","title":"감상 프롬프트 vs 시네마토그래피 프롬프트","messages":[{"role":"user","text":"바닷가에서 달리는 강아지의 아름답고 감동적인 영상"},{"role":"ai","text":"→ 평범한 스톡 영상 느낌의 결과물 (연출 정보 없음)"},{"role":"user","text":"트래킹 샷: 골든 리트리버가 해질녘 해변을 달린다. 로우 앵글, 느린 트래킹, 골든 아워 역광, 얕은 심도, 35mm 필름 룩"},{"role":"ai","text":"→ 카메라가 함께 달리는 영화적 장면 (샷·움직임·조명이 모두 지정됨)"}],"caption":"감상 형용사를 빼고 그 자리에 샷·카메라·조명 용어를 넣으세요."}$aix$::jsonb, $aix${"title":"Runway에서 시네마토그래피 프롬프트 따라하기","app":{"kind":"browser","url":"app.runwayml.com/generate","blocks":[{"id":"b-head","type":"heading","label":"Generate Video — Runway Gen-4"},{"id":"b-prompt","type":"input","label":"샷·피사체·배경 프롬프트 입력…"},{"id":"b-style","type":"input","label":"카메라·조명·질감 옵션 입력…"},{"id":"b-ratio","type":"badge","label":"9:16 · 10초 · Gen-4"},{"id":"b-generate","type":"button","label":"Generate"},{"id":"b-progress","type":"badge","label":"생성 중… 디노이징 45%","hidden":true},{"id":"b-clip1","type":"card","label":"🎬 beach-run_v1.mp4 · 10초","hidden":true},{"id":"b-clip2","type":"card","label":"🎬 beach-run_v2.mp4 · 10초","hidden":true},{"id":"b-play","type":"button","label":"▶ 미리보기 재생","hidden":true}]},"actions":[{"t":"caption","text":"① 샷 종류와 피사체·행동을 먼저 지정합니다"},{"t":"move","target":"b-prompt"},{"t":"click"},{"t":"type","target":"b-prompt","text":"트래킹 샷: 해질녘 해변을 달리는 리트리버"},{"t":"caption","text":"② 감상 형용사 대신 조명·렌즈 언어를 넣습니다"},{"t":"click","target":"b-style"},{"t":"type","target":"b-style","text":"골든 아워 역광, 얕은 심도, 35mm 필름 룩"},{"t":"caption","text":"③ 비율과 길이를 확인하고 생성을 시작합니다"},{"t":"move","target":"b-ratio"},{"t":"click","target":"b-generate"},{"t":"reveal","target":"b-progress"},{"t":"wait","ms":900},{"t":"hide","target":"b-progress"},{"t":"caption","text":"④ 변형 2개를 비교해 베스트를 고릅니다"},{"t":"reveal","target":"b-clip1"},{"t":"reveal","target":"b-clip2"},{"t":"move","target":"b-clip1"},{"t":"dblclick"},{"t":"caption","text":"⑤ 재생하며 물리 붕괴 프레임이 없는지 검수합니다"},{"t":"reveal","target":"b-play"},{"t":"click","target":"b-play"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '29594c0c-deac-0dc7-2095-b6a30752061a', '2e800625-0718-244a-324f-b6c33fd0a71d', 'ai-video/storyboard-pipeline', 'storyboard-pipeline', '스토리보드→클립→편집: 파이프라인으로 만들기',
   $aix$클립 한 개는 누구나 뽑습니다. 차이는 **여러 클립을 하나의 영상으로 완성하는 파이프라인**에서 갈립니다. 5~15초 길이 제한이 있는 한, 편집 없는 AI 영상은 없습니다.
 
@@ -1572,11 +1627,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 생성 단계가 비용의 대부분입니다. 씬당 변형 개수 × 씬 수가 곧 예산이므로, 스토리보드에서 씬 수를 먼저 확정하고 생성에 들어가세요.
 
 > 💡 **핵심**: AI 영상 제작은 "생성"이 아니라 **"기획→생성→편집" 파이프라인 운영**입니다. 스토리보드 표가 그 파이프라인의 설계도입니다.$aix$,
-  $aix${"type":"steps","title":"AI 영상 제작 파이프라인","steps":[{"label":"대본 작성","sublabel":"씬 단위로 분할 (씬 = 클립)","icon":"file-text"},{"label":"스토리보드 표","sublabel":"씬별 샷·카메라·조명 프롬프트","icon":"clipboard"},{"label":"클립 생성","sublabel":"씬당 2~4개 변형 → 베스트 선택","icon":"video"},{"label":"편집·검수","sublabel":"이어붙이기 + 물리 붕괴 프레임 제거","icon":"scissors"}],"caption":"표로 관리하면 실패한 씬만 골라 재생성할 수 있습니다."}$aix$::jsonb, 5, 3
+  $aix${"type":"steps","title":"AI 영상 제작 파이프라인","steps":[{"label":"대본 작성","sublabel":"씬 단위로 분할 (씬 = 클립)","icon":"file-text"},{"label":"스토리보드 표","sublabel":"씬별 샷·카메라·조명 프롬프트","icon":"clipboard"},{"label":"클립 생성","sublabel":"씬당 2~4개 변형 → 베스트 선택","icon":"video"},{"label":"편집·검수","sublabel":"이어붙이기 + 물리 붕괴 프레임 제거","icon":"scissors"}],"caption":"표로 관리하면 실패한 씬만 골라 재생성할 수 있습니다."}$aix$::jsonb, null, 5, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'fc130973-c645-e350-7503-e4f8cbc28b07', '2e800625-0718-244a-324f-b6c33fd0a71d', 'ai-video/image-to-video-consistency', 'image-to-video-consistency', '이미지-투-비디오: 일관성을 지키는 기술',
   $aix$클립을 이어 붙였더니 주인공 얼굴이 씬마다 다르다면, 시청자는 3초 안에 이탈합니다. 일관성 문제의 표준 해법이 **이미지-투-비디오(I2V)**입니다.
 
@@ -1595,11 +1651,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 앞 클립의 마지막 프레임을 다음 클립의 시작 프레임으로 쓰면, 클립 경계가 자연스럽게 이어집니다.
 
 > 💡 **핵심**: 일관성은 프롬프트가 아니라 **이미지로 고정**합니다. "이미지에서 정체성, 프롬프트에서 움직임" — 이 분업이 I2V의 공식입니다.$aix$,
-  $aix${"type":"flow","title":"일관성을 지키는 I2V 워크플로우","nodes":[{"label":"캐릭터 시트","sublabel":"기준 이미지 + 각도·의상 변형","icon":"user","tone":"primary"},{"label":"씬별 키프레임","sublabel":"정지 이미지로 먼저 확정 (싸고 빠름)","icon":"image","tone":"accent","edgeLabel":"레퍼런스로 캐릭터 고정"},{"label":"I2V 변환","sublabel":"이미지 = 정체성, 프롬프트 = 움직임","icon":"play","tone":"primary","edgeLabel":"시작 프레임으로 입력"},{"label":"클립 연결","sublabel":"끝 프레임 → 다음 클립 시작 프레임","icon":"link","tone":"success"}],"loopBack":{"from":3,"to":1,"label":"다음 씬 반복"},"caption":"텍스트-투-비디오는 복권, 이미지-투-비디오는 설계입니다."}$aix$::jsonb, 6, 4
+  $aix${"type":"flow","title":"일관성을 지키는 I2V 워크플로우","nodes":[{"label":"캐릭터 시트","sublabel":"기준 이미지 + 각도·의상 변형","icon":"user","tone":"primary"},{"label":"씬별 키프레임","sublabel":"정지 이미지로 먼저 확정 (싸고 빠름)","icon":"image","tone":"accent","edgeLabel":"레퍼런스로 캐릭터 고정"},{"label":"I2V 변환","sublabel":"이미지 = 정체성, 프롬프트 = 움직임","icon":"play","tone":"primary","edgeLabel":"시작 프레임으로 입력"},{"label":"클립 연결","sublabel":"끝 프레임 → 다음 클립 시작 프레임","icon":"link","tone":"success"}],"loopBack":{"from":3,"to":1,"label":"다음 씬 반복"},"caption":"텍스트-투-비디오는 복권, 이미지-투-비디오는 설계입니다."}$aix$::jsonb, null, 6, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '104b7c4b-d2db-fc7e-958c-e14b9ac74d98', '2e800625-0718-244a-324f-b6c33fd0a71d', 'ai-video/capcut-editing', 'capcut-editing', '캡컷 연동 편집: 자막·템포·트랜지션',
   $aix$생성된 클립은 재료일 뿐, 시청 완주율을 만드는 것은 **편집**입니다. 숏폼 편집의 사실상 표준인 캡컷(CapCut)에서 챙길 것은 딱 세 가지입니다.
 
@@ -1624,11 +1681,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 자막 스타일·인트로·아웃트로를 한 번 만들어 **템플릿으로 저장**하면, 다음 영상부터 편집 시간이 절반으로 줄어듭니다.
 
 > 💡 **핵심**: 편집의 우선순위는 **자막 > 템포 > 트랜지션**입니다. 화려함이 아니라 리듬이 완주율을 만듭니다.$aix$,
-  $aix${"type":"grid","title":"캡컷 편집 체크리스트","items":[{"label":"자동 캡션","sublabel":"무음 시청 대비 · 키워드만 강조","icon":"message","tone":"primary"},{"label":"컷 템포","sublabel":"컷 길이 2~4초 유지","icon":"scissors","tone":"accent"},{"label":"비트 싱크","sublabel":"음악 비트에 컷을 스냅","icon":"music","tone":"accent"},{"label":"하드 컷 기본","sublabel":"전환 효과는 씬 전환에만","icon":"zap","tone":"muted"},{"label":"배속 조절","sublabel":"늘어지는 구간 1.2~1.5배속","icon":"gauge","tone":"muted"},{"label":"템플릿 저장","sublabel":"자막·인트로 재사용","icon":"layers","tone":"success"}],"caption":"우선순위는 자막 > 템포 > 트랜지션 — 리듬이 완주율을 만듭니다."}$aix$::jsonb, 5, 5
+  $aix${"type":"grid","title":"캡컷 편집 체크리스트","items":[{"label":"자동 캡션","sublabel":"무음 시청 대비 · 키워드만 강조","icon":"message","tone":"primary"},{"label":"컷 템포","sublabel":"컷 길이 2~4초 유지","icon":"scissors","tone":"accent"},{"label":"비트 싱크","sublabel":"음악 비트에 컷을 스냅","icon":"music","tone":"accent"},{"label":"하드 컷 기본","sublabel":"전환 효과는 씬 전환에만","icon":"zap","tone":"muted"},{"label":"배속 조절","sublabel":"늘어지는 구간 1.2~1.5배속","icon":"gauge","tone":"muted"},{"label":"템플릿 저장","sublabel":"자막·인트로 재사용","icon":"layers","tone":"success"}],"caption":"우선순위는 자막 > 템포 > 트랜지션 — 리듬이 완주율을 만듭니다."}$aix$::jsonb, $aix${"title":"캡컷 타임라인 편집 따라하기","app":{"kind":"design-canvas","windowTitle":"숏폼 시퀀스 편집 — CapCut","tools":[{"id":"tool-select","icon":"target","label":"선택"},{"id":"tool-cut","icon":"scissors","label":"분할"},{"id":"tool-text","icon":"file-text","label":"텍스트"},{"id":"tool-music","icon":"music","label":"오디오"}],"objects":[{"id":"preview","shape":"frame","label":"미리보기 (9:16)","x":8,"y":8,"w":34,"h":44},{"id":"sub-text","shape":"text","label":"3가지만 기억하세요","x":12,"y":40,"w":26,"h":6,"hidden":true},{"id":"sub-style","shape":"text","label":"강조: 키워드만 노랑 · 120%","x":12,"y":14,"w":26,"h":6,"color":"#f59e0b","hidden":true},{"id":"timeline","shape":"frame","label":"타임라인","x":8,"y":58,"w":84,"h":34},{"id":"clip-hook","shape":"rect","label":"훅 3초","x":10,"y":66,"w":16,"h":12,"color":"#ec4899"},{"id":"clip-cta","shape":"rect","label":"CTA 4초","x":28,"y":66,"w":16,"h":12,"color":"#f59e0b"},{"id":"clip-body","shape":"rect","label":"전개 8초","x":46,"y":66,"w":26,"h":12,"color":"#8b5cf6"},{"id":"clip-cta-end","shape":"rect","label":"CTA 4초","x":74,"y":66,"w":16,"h":12,"color":"#f59e0b","hidden":true},{"id":"cut-mark","shape":"ellipse","x":58,"y":63,"w":3,"h":3,"color":"#22d3ee","hidden":true}]},"actions":[{"t":"caption","text":"① 생성한 클립들을 타임라인에서 확인합니다"},{"t":"move","target":"clip-hook"},{"t":"click"},{"t":"move","target":"clip-body"},{"t":"caption","text":"② 순서가 어긋난 CTA 클립을 맨 뒤로 옮깁니다"},{"t":"click","target":"clip-cta"},{"t":"drag","from":"clip-cta","to":"clip-cta-end","ms":1000},{"t":"hide","target":"clip-cta"},{"t":"reveal","target":"clip-cta-end"},{"t":"wait","ms":500},{"t":"caption","text":"③ 텍스트 도구로 훅 자막을 얹습니다"},{"t":"click","target":"tool-text"},{"t":"click","target":"preview"},{"t":"type","target":"sub-text","text":"3가지만 기억하세요"},{"t":"caption","text":"④ 문장 전체가 아니라 키워드만 강조합니다"},{"t":"dblclick","target":"sub-text"},{"t":"reveal","target":"sub-style"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 분할 도구로 비트에 맞춰 컷을 나눕니다"},{"t":"click","target":"tool-cut"},{"t":"move","target":"clip-body"},{"t":"click"},{"t":"reveal","target":"cut-mark"},{"t":"wait","ms":800}]}$aix$::jsonb, 5, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'f551a4c9-5941-0ece-03c6-d67b9a44c921', '717803d4-4348-4f09-db6f-0c46782b1570', 'ai-video/shortform-formula', 'shortform-formula', '숏폼의 공식: 훅 3초와 구조 설계',
   $aix$숏폼은 시청자가 '선택'하는 매체가 아니라 알고리즘이 '배달'하는 매체입니다. 그래서 승부는 **스크롤을 멈추게 하는 첫 3초**에서 끝납니다.
 
@@ -1650,11 +1708,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 이 구조가 고정되어 있기 때문에 자동화가 가능합니다. 다음 레슨에서 이 구조를 파이프라인 코드로 옮깁니다.
 
 > 💡 **핵심**: 숏폼은 창의력 승부이기 전에 **구조 승부**입니다. 훅→전개→반전→CTA 구조를 고정하면, 나머지는 자동화할 수 있습니다.$aix$,
-  $aix${"type":"stack","title":"숏폼 60초의 구조 (위 = 시작)","layers":[{"label":"훅 (0~3초)","sublabel":"질문 · 결과 선공개 · 패턴 파괴","icon":"zap","tone":"warning"},{"label":"전개 (3~25초)","sublabel":"빠른 템포 · 5~7초마다 화면 변화","icon":"play","tone":"primary"},{"label":"반전·클라이맥스 (25~40초)","sublabel":"완주할 이유 제공","icon":"sparkles","tone":"accent"},{"label":"CTA·루프 (마지막 5초)","sublabel":"팔로우 유도 또는 처음으로 연결","icon":"repeat","tone":"success"}],"caption":"첫 3초 이탈률이 전체 노출량을 결정합니다 — 훅에 예산의 절반을 쓰세요."}$aix$::jsonb, 5, 6
+  $aix${"type":"stack","title":"숏폼 60초의 구조 (위 = 시작)","layers":[{"label":"훅 (0~3초)","sublabel":"질문 · 결과 선공개 · 패턴 파괴","icon":"zap","tone":"warning"},{"label":"전개 (3~25초)","sublabel":"빠른 템포 · 5~7초마다 화면 변화","icon":"play","tone":"primary"},{"label":"반전·클라이맥스 (25~40초)","sublabel":"완주할 이유 제공","icon":"sparkles","tone":"accent"},{"label":"CTA·루프 (마지막 5초)","sublabel":"팔로우 유도 또는 처음으로 연결","icon":"repeat","tone":"success"}],"caption":"첫 3초 이탈률이 전체 노출량을 결정합니다 — 훅에 예산의 절반을 쓰세요."}$aix$::jsonb, null, 5, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'ac30a314-b972-15c7-64b8-0ea84b2ae608', '717803d4-4348-4f09-db6f-0c46782b1570', 'ai-video/automation-pipeline', 'automation-pipeline', '자동화 파이프라인: 대본→음성→클립→자막',
   $aix$매일 1개씩 올리는 채널을 손으로 운영하면 반드시 지칩니다. 숏폼 제작을 **4단계 자동 파이프라인**으로 옮기면, 사람은 기획과 검수만 하면 됩니다.
 
@@ -1671,11 +1730,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - **사람의 검수 관문은 두 곳** — 대본 확정 직후(방향 검수)와 업로드 직전(품질 검수). 전 과정 무검수 자동화는 채널 품질을 무너뜨립니다.
 
 > 💡 **핵심**: 자동화의 목표는 "사람 제거"가 아니라 **반복 노동 제거**입니다. 기획과 검수에만 사람을 남기고, 나머지는 파이프라인에 맡기세요.$aix$,
-  $aix${"type":"terminal","windowTitle":"shortform-pipeline — 1회 실행 로그","lines":[{"text":"python pipeline.py --topic '우주에서 가장 추운 곳'","tone":"cmd"},{"text":"[1/4] 대본 생성 (LLM) ... script.json 저장","tone":"out"},{"text":"      훅/전개/반전/CTA · 씬 6개 · 프롬프트 포함","tone":"dim"},{"text":"# 사람 검수: 대본 방향 승인","tone":"comment"},{"text":"[2/4] TTS 합성 ... voice.mp3 (42.3초)","tone":"out"},{"text":"[3/4] 클립 생성 6건 병렬 요청 ...","tone":"out"},{"text":"      scene_04 실패 → 해당 씬만 재시도 ✓","tone":"dim"},{"text":"[4/4] FFmpeg 조립 + STT 자막 ... final.mp4","tone":"out"},{"text":"✓ 완료 (총 11분) — 업로드 전 품질 검수 대기","tone":"ok"}],"caption":"중간 산출물을 파일로 남기면 실패한 단계만 재실행할 수 있습니다."}$aix$::jsonb, 7, 7
+  $aix${"type":"terminal","windowTitle":"shortform-pipeline — 1회 실행 로그","lines":[{"text":"python pipeline.py --topic '우주에서 가장 추운 곳'","tone":"cmd"},{"text":"[1/4] 대본 생성 (LLM) ... script.json 저장","tone":"out"},{"text":"      훅/전개/반전/CTA · 씬 6개 · 프롬프트 포함","tone":"dim"},{"text":"# 사람 검수: 대본 방향 승인","tone":"comment"},{"text":"[2/4] TTS 합성 ... voice.mp3 (42.3초)","tone":"out"},{"text":"[3/4] 클립 생성 6건 병렬 요청 ...","tone":"out"},{"text":"      scene_04 실패 → 해당 씬만 재시도 ✓","tone":"dim"},{"text":"[4/4] FFmpeg 조립 + STT 자막 ... final.mp4","tone":"out"},{"text":"✓ 완료 (총 11분) — 업로드 전 품질 검수 대기","tone":"ok"}],"caption":"중간 산출물을 파일로 남기면 실패한 단계만 재실행할 수 있습니다."}$aix$::jsonb, $aix${"title":"Make에서 숏폼 자동화 시나리오 따라하기","app":{"kind":"automation-canvas","windowTitle":"숏폼 자동 제작 파이프라인 — Make","nodes":[{"id":"n-script","icon":"file-text","label":"대본 생성","sublabel":"LLM · 훅→전개→CTA","tone":"accent"},{"id":"n-tts","icon":"mic","label":"음성 합성","sublabel":"ElevenLabs TTS","hidden":true},{"id":"n-clip","icon":"video","label":"클립 생성","sublabel":"Runway · 씬별 병렬","hidden":true},{"id":"n-caption","icon":"message","label":"조립·자막","sublabel":"FFmpeg + STT","hidden":true},{"id":"n-review","icon":"eye","label":"품질 검수","sublabel":"사람 관문","tone":"warning","hidden":true},{"id":"n-upload","icon":"upload","label":"예약 업로드","sublabel":"릴스·쇼츠·틱톡","tone":"success","hidden":true}],"runLog":[{"id":"log1","text":"▶ 시나리오 실행 — 주제: 우주에서 가장 추운 곳","tone":"out","hidden":true},{"id":"log2","text":"✓ 대본 script.json 저장 (씬 6개)","tone":"ok","hidden":true},{"id":"log3","text":"✓ 음성 voice.mp3 합성 (42.3초)","tone":"ok","hidden":true},{"id":"log4","text":"✓ 클립 6건 생성 — scene_04 재시도 성공","tone":"ok","hidden":true},{"id":"log5","text":"✓ final.mp4 조립 완료 — 품질 검수 대기","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 시작 노드는 LLM 대본 생성입니다"},{"t":"move","target":"n-script"},{"t":"click"},{"t":"caption","text":"② 음성→클립→자막 노드를 차례로 잇습니다"},{"t":"reveal","target":"n-tts"},{"t":"move","target":"n-tts"},{"t":"reveal","target":"n-clip"},{"t":"move","target":"n-clip"},{"t":"reveal","target":"n-caption"},{"t":"wait","ms":400},{"t":"caption","text":"③ 업로드 직전에 사람 검수 관문을 둡니다"},{"t":"reveal","target":"n-review"},{"t":"move","target":"n-review"},{"t":"click"},{"t":"reveal","target":"n-upload"},{"t":"wait","ms":500},{"t":"caption","text":"④ 시나리오를 실행해 단계별 로그를 확인합니다"},{"t":"reveal","target":"log1"},{"t":"reveal","target":"log2"},{"t":"reveal","target":"log3"},{"t":"reveal","target":"log4"},{"t":"caption","text":"⑤ 검수만 통과하면 3개 플랫폼에 자동 배포됩니다"},{"t":"reveal","target":"log5"},{"t":"move","target":"n-upload"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '650017c5-feac-90aa-e608-9fc330be3387', '717803d4-4348-4f09-db6f-0c46782b1570', 'ai-video/platform-optimization', 'platform-optimization', '플랫폼별 최적화: 릴스 · 쇼츠 · 틱톡',
   $aix$같은 영상을 세 플랫폼에 그대로 복사해 올리면 세 곳 모두에서 어중간해집니다. 알고리즘과 시청 문화가 다르기 때문에 **배포 단계에서 변형**이 필요합니다.
 
@@ -1696,11 +1756,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 처음에는 **한 플랫폼에 집중**해 공식을 찾고, 검증된 뒤에 3개 동시 배포로 확장하세요.
 
 > 💡 **핵심**: "하나 만들어 셋에 뿌리기"가 아니라 **"하나의 마스터, 셋의 변형"**입니다. 분기 지점은 제목·해시태그·커버·사운드입니다.$aix$,
-  $aix${"type":"compare","title":"3대 숏폼 플랫폼 비교","columns":[{"title":"틱톡","icon":"music","tone":"primary","items":["트렌드 반응 속도가 생명","유행 사운드·챌린지 결합","날것의 감성 선호"]},{"title":"유튜브 쇼츠","icon":"play","tone":"accent","items":["검색·구독 자산으로 축적","제목·해시태그 키워드 중요","롱폼 유입 구조 설계 가능"]},{"title":"인스타 릴스","icon":"camera","tone":"success","items":["비주얼 완성도·톤 일관성","커버 이미지가 그리드 자산","공유(DM)를 부르는 콘텐츠"]}],"caption":"마스터 영상은 하나, 제목·해시태그·커버·사운드는 플랫폼별 분기."}$aix$::jsonb, 5, 8
+  $aix${"type":"compare","title":"3대 숏폼 플랫폼 비교","columns":[{"title":"틱톡","icon":"music","tone":"primary","items":["트렌드 반응 속도가 생명","유행 사운드·챌린지 결합","날것의 감성 선호"]},{"title":"유튜브 쇼츠","icon":"play","tone":"accent","items":["검색·구독 자산으로 축적","제목·해시태그 키워드 중요","롱폼 유입 구조 설계 가능"]},{"title":"인스타 릴스","icon":"camera","tone":"success","items":["비주얼 완성도·톤 일관성","커버 이미지가 그리드 자산","공유(DM)를 부르는 콘텐츠"]}],"caption":"마스터 영상은 하나, 제목·해시태그·커버·사운드는 플랫폼별 분기."}$aix$::jsonb, null, 5, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '219d35af-bcc2-f597-3293-86d70c5bb92f', '717803d4-4348-4f09-db6f-0c46782b1570', 'ai-video/operate-and-improve', 'operate-and-improve', '운영 사이클: 데이터로 다음 영상을 만들기',
   $aix$자동화 파이프라인의 진짜 힘은 '많이 만드는 것'이 아니라 **빨리 배우는 것**입니다. 업로드는 끝이 아니라 다음 영상을 위한 데이터 수집의 시작입니다.
 
@@ -1723,10 +1784,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 손 제작이면 주 2편으로 배우지만, 파이프라인이면 주 10편으로 배웁니다. **실험 횟수 자체가 경쟁력**입니다. 단, 품질 검수 관문은 끝까지 유지하세요 — 저품질 대량 업로드는 채널 신뢰도를 깎습니다.
 
 > 💡 **핵심**: 숏폼 채널 운영은 기획→생성→배포→분석의 **루프**입니다. 자동화는 이 루프의 회전 속도를 높이는 장치입니다.$aix$,
-  $aix${"type":"cycle","title":"숏폼 운영 사이클","center":"주 단위로 회전","nodes":[{"label":"기획","sublabel":"상위 20% 영상의 공통점 추출","icon":"lightbulb"},{"label":"대량 생성","sublabel":"파이프라인 · 훅 A/B 변형","icon":"workflow"},{"label":"배포","sublabel":"예약 업로드 · 주기 유지","icon":"upload"},{"label":"분석","sublabel":"3초 유지율 · 완주율","icon":"chart"}],"caption":"조회수가 아니라 3초 유지율과 완주율이 다음 영상의 설계도입니다."}$aix$::jsonb, 5, 9
+  $aix${"type":"cycle","title":"숏폼 운영 사이클","center":"주 단위로 회전","nodes":[{"label":"기획","sublabel":"상위 20% 영상의 공통점 추출","icon":"lightbulb"},{"label":"대량 생성","sublabel":"파이프라인 · 훅 A/B 변형","icon":"workflow"},{"label":"배포","sublabel":"예약 업로드 · 주기 유지","icon":"upload"},{"label":"분석","sublabel":"3초 유지율 · 완주율","icon":"chart"}],"caption":"조회수가 아니라 3초 유지율과 완주율이 다음 영상의 설계도입니다."}$aix$::jsonb, null, 5, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: AI 음악과 더빙: Suno & ElevenLabs
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -1744,7 +1806,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   'a7c86bcd-9639-11de-3642-91f5870b3aac', 'c9d90d0a-539d-878d-53a0-cd5fbc6a4ed2', 'sound-pipeline', '사운드 통합 파이프라인', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '1d19ad25-2ff7-33ae-a390-e16a62dd0d08', 'a17fd4bb-2025-42d4-1e88-e7961ce0e3be', 'ai-audio/how-music-ai-works', 'how-music-ai-works', '음악 생성 AI의 원리와 Suno 시작하기',
   $aix$작곡을 배운 적 없어도, 이제 문장 하나로 3분짜리 곡을 만들 수 있습니다. 원리를 알면 프롬프트가 달라집니다.
 
@@ -1764,11 +1826,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 한 번에 곡이 2개씩 생성되니, 마음에 드는 쪽을 **Extend**로 이어서 발전시키세요.
 
 > 💡 **핵심**: 음악 생성 AI는 '설명 → 특징 → 소리'로 변환하는 기계입니다. 좋은 곡은 좋은 설명에서 나옵니다.$aix$,
-  $aix${"type":"flow","title":"텍스트가 곡이 되기까지","nodes":[{"label":"프롬프트 입력","sublabel":"\"lo-fi, 따뜻한, 새벽 감성\"","icon":"file-text","tone":"primary"},{"label":"음악적 특징으로 해석","sublabel":"장르 · 무드 · 악기 · 템포","icon":"brain","tone":"accent"},{"label":"오디오 생성","sublabel":"곡 2개가 동시에 생성됨","icon":"music","tone":"success"},{"label":"선택 · 발전","sublabel":"Extend로 이어 만들기","icon":"wand","tone":"muted","edgeLabel":"마음에 드는 쪽만"}],"loopBack":{"from":3,"to":0,"label":"프롬프트 수정 후 재생성"},"caption":"한 번에 완성이 아니라 '생성 → 선택 → 수정'을 반복하는 과정입니다."}$aix$::jsonb, 4, 0
+  $aix${"type":"flow","title":"텍스트가 곡이 되기까지","nodes":[{"label":"프롬프트 입력","sublabel":"\"lo-fi, 따뜻한, 새벽 감성\"","icon":"file-text","tone":"primary"},{"label":"음악적 특징으로 해석","sublabel":"장르 · 무드 · 악기 · 템포","icon":"brain","tone":"accent"},{"label":"오디오 생성","sublabel":"곡 2개가 동시에 생성됨","icon":"music","tone":"success"},{"label":"선택 · 발전","sublabel":"Extend로 이어 만들기","icon":"wand","tone":"muted","edgeLabel":"마음에 드는 쪽만"}],"loopBack":{"from":3,"to":0,"label":"프롬프트 수정 후 재생성"},"caption":"한 번에 완성이 아니라 '생성 → 선택 → 수정'을 반복하는 과정입니다."}$aix$::jsonb, null, 4, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '881829d2-07b4-c4bf-7bab-d1274bdeef49', 'a17fd4bb-2025-42d4-1e88-e7961ce0e3be', 'ai-audio/style-tags-and-lyrics', 'style-tags-and-lyrics', '스타일 태그와 가사 프롬프트: 음악을 설명하는 언어',
   $aix$"신나는 노래"라고 쓰면 AI도 감으로 만듭니다. 원하는 소리를 얻으려면 **네 가지 축의 언어**가 필요합니다.
 
@@ -1795,11 +1858,12 @@ Custom 모드의 가사 칸에서는 **대괄호 구조 태그**로 곡의 전�
 - 아티스트 실명은 정책상 무시되거나 차단됩니다. 이름 대신 **소리를 묘사**하세요.
 
 > 💡 **핵심**: 스타일 태그 = 장르 + 무드 + 악기 + BPM. 이 네 축만 채우면 프롬프트의 80%는 완성입니다.$aix$,
-  $aix${"type":"chat","title":"스타일 프롬프트 개선 예시","messages":[{"role":"user","text":"신나는 노래 만들어줘"},{"role":"ai","text":"장르·무드·악기·BPM이 없어 임의로 생성합니다 → 매번 다른 결과"},{"role":"user","text":"upbeat synthwave, retro, punchy drums, analog synth, 118 BPM, no vocals"},{"role":"ai","text":"4축이 모두 지정됨 → 의도한 소리를 재현 가능하게 생성"}],"caption":"막연한 형용사 대신 음악을 설명하는 4축 언어를 쓰세요."}$aix$::jsonb, 6, 1
+  $aix${"type":"chat","title":"스타일 프롬프트 개선 예시","messages":[{"role":"user","text":"신나는 노래 만들어줘"},{"role":"ai","text":"장르·무드·악기·BPM이 없어 임의로 생성합니다 → 매번 다른 결과"},{"role":"user","text":"upbeat synthwave, retro, punchy drums, analog synth, 118 BPM, no vocals"},{"role":"ai","text":"4축이 모두 지정됨 → 의도한 소리를 재현 가능하게 생성"}],"caption":"막연한 형용사 대신 음악을 설명하는 4축 언어를 쓰세요."}$aix$::jsonb, $aix${"title":"Suno에서 스타일 태그로 BGM 만들기 따라하기","app":{"kind":"browser","url":"app.suno.ai/create","blocks":[{"id":"h1","type":"heading","label":"Create"},{"id":"badge-mode","type":"badge","label":"Custom 모드"},{"id":"lbl-style","type":"text","label":"스타일 프롬프트 (Styles)"},{"id":"in-style","type":"input","label":"장르, 무드, 악기, BPM을 쉼표로 입력…"},{"id":"lbl-lyrics","type":"text","label":"가사 (Lyrics) — 구조 태그 사용 가능"},{"id":"in-lyrics","type":"input","label":"[Verse] [Chorus] 구조 태그 입력…"},{"id":"btn-create","type":"button","label":"Create"},{"id":"badge-gen","type":"badge","label":"생성 중… 곡 2개를 만들고 있습니다","hidden":true},{"id":"card-1","type":"card","label":"🎵 새벽 감성 lo-fi — v1 (2:58)","hidden":true},{"id":"card-2","type":"card","label":"🎵 새벽 감성 lo-fi — v2 (3:04)","hidden":true},{"id":"btn-extend","type":"button","label":"Extend — 이어서 발전시키기","hidden":true}]},"actions":[{"t":"caption","text":"① Custom 모드에서 스타일 입력창을 클릭합니다"},{"t":"move","target":"in-style"},{"t":"click"},{"t":"caption","text":"② 장르·무드·악기·BPM, 4축 언어로 스타일을 적습니다"},{"t":"type","target":"in-style","text":"lo-fi, dreamy, piano, 80 BPM, no vocals"},{"t":"wait","ms":400},{"t":"caption","text":"③ 가사 칸에는 대괄호 구조 태그로 전개를 지정합니다"},{"t":"click","target":"in-lyrics"},{"t":"type","target":"in-lyrics","text":"[Intro] [Verse] [Chorus] [Outro]"},{"t":"caption","text":"④ Create를 눌러 생성을 시작합니다"},{"t":"move","target":"btn-create"},{"t":"click"},{"t":"reveal","target":"badge-gen"},{"t":"wait","ms":800},{"t":"hide","target":"badge-gen"},{"t":"caption","text":"⑤ 동시에 생성된 곡 2개를 비교해 마음에 드는 쪽을 고릅니다"},{"t":"reveal","target":"card-1"},{"t":"reveal","target":"card-2"},{"t":"move","target":"card-2"},{"t":"click"},{"t":"caption","text":"⑥ Extend로 고른 곡을 이어서 발전시킵니다"},{"t":"reveal","target":"btn-extend"},{"t":"move","target":"btn-extend"},{"t":"click"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '4e6a1ad9-ce46-2427-1972-701552dd6cd9', 'a17fd4bb-2025-42d4-1e88-e7961ce0e3be', 'ai-audio/bgm-by-purpose', 'bgm-by-purpose', '콘텐츠 용도별 BGM 제작: 인트로·브이로그·광고',
   $aix$좋은 BGM의 기준은 '좋은 곡'이 아니라 **'영상에 맞는 곡'**입니다. 용도가 다르면 설계 공식이 다릅니다.
 
@@ -1822,11 +1886,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 제품 등장 타이밍에 클라이맥스가 오도록 편집점을 역산하세요.
 
 > 💡 **핵심**: BGM 프롬프트는 곡 설명이 아니라 **영상의 역할 설명**에서 출발합니다 — "이 소리가 시청자에게 무엇을 시키는가"를 먼저 정하세요.$aix$,
-  $aix${"type":"compare","title":"용도별 BGM 설계 공식","columns":[{"title":"인트로","icon":"zap","tone":"primary","items":["5~15초","즉시 훅, 빌드업 없음","채널 사운드 로고화","energetic · catchy"]},{"title":"브이로그","icon":"camera","tone":"accent","items":["목소리가 주인공","no vocals 필수","일정한 에너지 유지","chill · mellow"]},{"title":"광고","icon":"trending-up","tone":"success","items":["15~30초","도입→상승→클라이맥스","제품 등장 = 절정","uplifting · climactic"]}],"caption":"같은 Suno라도 용도에 따라 길이·에너지 곡선·보컬 여부가 달라집니다."}$aix$::jsonb, 5, 2
+  $aix${"type":"compare","title":"용도별 BGM 설계 공식","columns":[{"title":"인트로","icon":"zap","tone":"primary","items":["5~15초","즉시 훅, 빌드업 없음","채널 사운드 로고화","energetic · catchy"]},{"title":"브이로그","icon":"camera","tone":"accent","items":["목소리가 주인공","no vocals 필수","일정한 에너지 유지","chill · mellow"]},{"title":"광고","icon":"trending-up","tone":"success","items":["15~30초","도입→상승→클라이맥스","제품 등장 = 절정","uplifting · climactic"]}],"caption":"같은 Suno라도 용도에 따라 길이·에너지 곡선·보컬 여부가 달라집니다."}$aix$::jsonb, null, 5, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'f5d3735f-c505-55f5-34f0-d406dbc15989', 'c1f815f0-14f9-b1c8-14ba-12d38904e061', 'ai-audio/tts-basics', 'tts-basics', 'TTS 기초와 보이스 선택',
   $aix$AI 음성의 품질은 절반이 **보이스 선택**에서 결정됩니다. 좋은 원고도 안 맞는 목소리로 읽으면 어색해집니다.
 
@@ -1848,11 +1913,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - **Similarity**: 원본 보이스 특성 유지 강도입니다. 과하게 높이면 잡음까지 재현될 수 있습니다.
 
 > 💡 **핵심**: 샘플 듣고 고르지 말고 **내 원고로 시험**해서 고르세요. 그리고 한 채널엔 한 보이스 — 목소리가 곧 브랜드입니다.$aix$,
-  $aix${"type":"steps","title":"보이스 선택 4단계","steps":[{"label":"언어로 필터","sublabel":"Voice Library에서 한국어 지원 확인","icon":"globe"},{"label":"톤 태그 확인","sublabel":"calm · energetic · narrative","icon":"filter"},{"label":"내 원고로 시험","sublabel":"샘플 문장 말고 실제 첫 문단으로","icon":"mic"},{"label":"채널 고정 보이스 확정","sublabel":"후보 2~3개 비교 후 하나로","icon":"check"}],"caption":"목소리는 채널의 브랜드 자산 — 한 번 정하면 유지하세요."}$aix$::jsonb, 5, 3
+  $aix${"type":"steps","title":"보이스 선택 4단계","steps":[{"label":"언어로 필터","sublabel":"Voice Library에서 한국어 지원 확인","icon":"globe"},{"label":"톤 태그 확인","sublabel":"calm · energetic · narrative","icon":"filter"},{"label":"내 원고로 시험","sublabel":"샘플 문장 말고 실제 첫 문단으로","icon":"mic"},{"label":"채널 고정 보이스 확정","sublabel":"후보 2~3개 비교 후 하나로","icon":"check"}],"caption":"목소리는 채널의 브랜드 자산 — 한 번 정하면 유지하세요."}$aix$::jsonb, $aix${"title":"ElevenLabs에서 보이스 시험 생성 따라하기","app":{"kind":"browser","url":"elevenlabs.io/text-to-speech","blocks":[{"id":"h1","type":"heading","label":"Text to Speech"},{"id":"lbl-lib","type":"text","label":"Voice Library — 한국어 필터 적용됨"},{"id":"voice-1","type":"card","label":"🎙️ 지호 — calm · narrative"},{"id":"voice-2","type":"card","label":"🎙️ 세라 — energetic · bright"},{"id":"badge-sel","type":"badge","label":"선택됨: 지호 (내레이션용)","hidden":true},{"id":"in-script","type":"input","label":"실제 원고의 첫 문단을 입력하세요…"},{"id":"lbl-stab","type":"text","label":"Stability: 중간~높음 (내레이션 권장)"},{"id":"btn-gen","type":"button","label":"Generate"},{"id":"card-audio","type":"card","label":"🔊 내레이션_시험.mp3 (0:14)","hidden":true},{"id":"btn-dl","type":"button","label":"다운로드","hidden":true}]},"actions":[{"t":"caption","text":"① Voice Library에서 한국어 보이스 후보를 비교합니다"},{"t":"move","target":"voice-1"},{"t":"click"},{"t":"move","target":"voice-2"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"② 톤 태그를 보고 내레이션용 보이스를 확정합니다"},{"t":"click","target":"voice-1"},{"t":"reveal","target":"badge-sel"},{"t":"wait","ms":400},{"t":"caption","text":"③ 샘플 문장 대신 실제 원고의 첫 문단을 입력합니다"},{"t":"click","target":"in-script"},{"t":"type","target":"in-script","text":"안녕하세요, 오늘은 AI 더빙을 배워봅니다."},{"t":"wait","ms":400},{"t":"caption","text":"④ Generate를 눌러 음성을 생성합니다"},{"t":"move","target":"btn-gen"},{"t":"click"},{"t":"wait","ms":800},{"t":"reveal","target":"card-audio"},{"t":"move","target":"card-audio"},{"t":"click"},{"t":"caption","text":"⑤ 들어보고 어색함이 없으면 다운로드합니다"},{"t":"reveal","target":"btn-dl"},{"t":"move","target":"btn-dl"},{"t":"click"}]}$aix$::jsonb, 5, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '03267aa3-68de-49f0-89df-74f564953d98', 'c1f815f0-14f9-b1c8-14ba-12d38904e061', 'ai-audio/voice-cloning-ethics', 'voice-cloning-ethics', '보이스 클로닝과 윤리: 동의가 먼저입니다',
   $aix$1분 녹음으로 내 목소리를 복제하는 시대입니다. 강력한 만큼, **이 레슨의 규칙을 지키지 않으면 법적 문제가 됩니다.**
 
@@ -1874,11 +1940,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 공개 시 "AI 보이스 사용" 고지 문구 추가
 
 > 💡 **핵심**: 클로닝의 기준은 기술이 아니라 **동의**입니다. 동의 → 녹음 → 복제 → 고지, 이 순서를 벗어나면 만들지 마세요.$aix$,
-  $aix${"type":"flow","title":"동의 기반 클로닝 워크플로우","nodes":[{"label":"동의 확보","sublabel":"본인 목소리 or 서면 동의","icon":"clipboard","tone":"warning"},{"label":"깨끗한 샘플 녹음","sublabel":"잡음 없는 1~30분","icon":"mic","tone":"primary","edgeLabel":"동의 없으면 여기서 중단"},{"label":"클로닝 + 본인 인증","sublabel":"Professional은 음성 캡차","icon":"lock","tone":"accent"},{"label":"AI 사용 고지 후 공개","sublabel":"EU AI Act · 플랫폼 표시 의무","icon":"shield","tone":"success"}],"caption":"첫 관문이 '동의'인 이유 — 이후 모든 단계의 합법성이 여기서 결정됩니다."}$aix$::jsonb, 5, 4
+  $aix${"type":"flow","title":"동의 기반 클로닝 워크플로우","nodes":[{"label":"동의 확보","sublabel":"본인 목소리 or 서면 동의","icon":"clipboard","tone":"warning"},{"label":"깨끗한 샘플 녹음","sublabel":"잡음 없는 1~30분","icon":"mic","tone":"primary","edgeLabel":"동의 없으면 여기서 중단"},{"label":"클로닝 + 본인 인증","sublabel":"Professional은 음성 캡차","icon":"lock","tone":"accent"},{"label":"AI 사용 고지 후 공개","sublabel":"EU AI Act · 플랫폼 표시 의무","icon":"shield","tone":"success"}],"caption":"첫 관문이 '동의'인 이유 — 이후 모든 단계의 합법성이 여기서 결정됩니다."}$aix$::jsonb, null, 5, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'd175d35a-54ef-aaf2-6948-15f48c5be2d7', 'c1f815f0-14f9-b1c8-14ba-12d38904e061', 'ai-audio/emotion-and-pronunciation', 'emotion-and-pronunciation', '감정·톤 제어와 발음 교정',
   $aix$밋밋한 낭독과 살아있는 내레이션의 차이는 **연출 지시**에 있습니다. ElevenLabs는 텍스트 안에 연기 지문을 넣을 수 있습니다.
 
@@ -1903,11 +1970,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 반복 사용하는 용어는 사전(Pronunciation Dictionary)에 등록하면 프로젝트 전체에 적용됩니다.
 
 > 💡 **핵심**: TTS 원고는 '읽을 글'이 아니라 **'연기 대본'**입니다. 태그와 문장 부호가 여러분의 연출 도구입니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"elevenlabs — 연기 대본 vs 평문","lines":[{"text":"# 평문 원고 (밋밋한 낭독)","tone":"comment"},{"text":"오늘은 정말 놀라운 소식이 있습니다. 드디어 신제품이 나왔습니다.","tone":"dim"},{"text":"# 연기 대본 (오디오 태그 + 리듬)","tone":"comment"},{"text":"[excited] 오늘은… 정말 놀라운 소식이 있습니다!","tone":"cmd"},{"text":"[pause]","tone":"cmd"},{"text":"[whispers] 드디어, 신제품이 나왔거든요.","tone":"cmd"},{"text":"✓ 같은 문장, 태그 하나로 전달력이 달라집니다","tone":"ok"}],"caption":"태그는 문장 앞에, 문단당 1~2개만 — 과유불급입니다."}$aix$::jsonb, 6, 5
+  $aix${"type":"terminal","windowTitle":"elevenlabs — 연기 대본 vs 평문","lines":[{"text":"# 평문 원고 (밋밋한 낭독)","tone":"comment"},{"text":"오늘은 정말 놀라운 소식이 있습니다. 드디어 신제품이 나왔습니다.","tone":"dim"},{"text":"# 연기 대본 (오디오 태그 + 리듬)","tone":"comment"},{"text":"[excited] 오늘은… 정말 놀라운 소식이 있습니다!","tone":"cmd"},{"text":"[pause]","tone":"cmd"},{"text":"[whispers] 드디어, 신제품이 나왔거든요.","tone":"cmd"},{"text":"✓ 같은 문장, 태그 하나로 전달력이 달라집니다","tone":"ok"}],"caption":"태그는 문장 앞에, 문단당 1~2개만 — 과유불급입니다."}$aix$::jsonb, null, 6, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '0975668d-ada4-8d55-c4e5-5d9a67e2b26d', 'c1f815f0-14f9-b1c8-14ba-12d38904e061', 'ai-audio/multilingual-dubbing', 'multilingual-dubbing', '다국어 더빙 워크플로우',
   $aix$한국어 영상 하나로 영어·일본어·스페인어 시청자까지 — 더빙 자동화는 2026년 크리에이터의 표준 확장 전략입니다.
 
@@ -1931,11 +1999,12 @@ ElevenLabs Dubbing Studio에 영상을 올리면 아래 과정이 자동으로 �
 - 처음엔 **자막 대신 더빙**이 필요한 콘텐츠인지부터 판단하세요 — 얼굴이 안 나오는 내레이션 영상이 더빙 효과가 가장 큽니다.
 
 > 💡 **핵심**: 더빙 자동화에서 기계가 못 하는 단계는 단 하나, **번역 검수**입니다. 그 한 단계에 사람을 배치하세요.$aix$,
-  $aix${"type":"steps","title":"다국어 더빙 5단계","steps":[{"label":"전사","sublabel":"음성 → 텍스트, 화자 분리","icon":"file-text"},{"label":"번역","sublabel":"사람 검수 필수 구간","icon":"globe"},{"label":"음성 생성","sublabel":"원래 목소리 특성 유지","icon":"mic"},{"label":"타이밍 정렬","sublabel":"원본 발화 길이에 맞춤","icon":"clock"},{"label":"검수 · 내보내기","sublabel":"구간별 확인 후 출력","icon":"check"}],"caption":"5단계 중 4단계는 자동 — 사람의 가치는 2단계(번역 검수)에 있습니다."}$aix$::jsonb, 6, 6
+  $aix${"type":"steps","title":"다국어 더빙 5단계","steps":[{"label":"전사","sublabel":"음성 → 텍스트, 화자 분리","icon":"file-text"},{"label":"번역","sublabel":"사람 검수 필수 구간","icon":"globe"},{"label":"음성 생성","sublabel":"원래 목소리 특성 유지","icon":"mic"},{"label":"타이밍 정렬","sublabel":"원본 발화 길이에 맞춤","icon":"clock"},{"label":"검수 · 내보내기","sublabel":"구간별 확인 후 출력","icon":"check"}],"caption":"5단계 중 4단계는 자동 — 사람의 가치는 2단계(번역 검수)에 있습니다."}$aix$::jsonb, null, 6, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '1ebc8a8c-d9d7-a681-b9c7-19cd4a7eb07e', 'a7c86bcd-9639-11de-3642-91f5870b3aac', 'ai-audio/mixing-bgm-and-voice', 'mixing-bgm-and-voice', '영상에 BGM과 더빙 입히기: 레벨 밸런스와 덕킹',
   $aix$좋은 BGM과 좋은 더빙을 만들어도, 섞는 순간 망칠 수 있습니다. 믹싱의 규칙은 단순합니다 — **목소리가 왕**입니다.
 
@@ -1960,11 +2029,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 전체 라우드니스는 유튜브 기준 약 **-14 LUFS**에 맞추면 플랫폼 자동 볼륨 조정에 안전합니다.
 
 > 💡 **핵심**: 믹싱 우선순위는 목소리 > 효과음 > BGM. 그리고 덕킹 기능이 이 서열을 자동으로 지켜줍니다.$aix$,
-  $aix${"type":"stack","title":"오디오 트랙의 서열","layers":[{"label":"내레이션 (더빙)","sublabel":"가장 크게 · 항상 왕좌","icon":"mic","tone":"primary"},{"label":"효과음","sublabel":"내레이션보다 한 단계 아래","icon":"zap","tone":"accent"},{"label":"BGM","sublabel":"목소리 나오면 덕킹으로 자동 하강","icon":"music","tone":"muted"},{"label":"최종 라우드니스","sublabel":"유튜브 기준 약 -14 LUFS","icon":"gauge","tone":"success"}],"caption":"위층이 나올 때 아래층이 비켜주는 구조 — 이것이 덕킹입니다."}$aix$::jsonb, 6, 7
+  $aix${"type":"stack","title":"오디오 트랙의 서열","layers":[{"label":"내레이션 (더빙)","sublabel":"가장 크게 · 항상 왕좌","icon":"mic","tone":"primary"},{"label":"효과음","sublabel":"내레이션보다 한 단계 아래","icon":"zap","tone":"accent"},{"label":"BGM","sublabel":"목소리 나오면 덕킹으로 자동 하강","icon":"music","tone":"muted"},{"label":"최종 라우드니스","sublabel":"유튜브 기준 약 -14 LUFS","icon":"gauge","tone":"success"}],"caption":"위층이 나올 때 아래층이 비켜주는 구조 — 이것이 덕킹입니다."}$aix$::jsonb, $aix${"title":"타임라인에서 레벨 밸런스와 덕킹 따라하기","app":{"kind":"design-canvas","windowTitle":"사운드 믹싱 — 오디오 타임라인","tools":[{"id":"tool-mic","icon":"mic","label":"더빙 트랙"},{"id":"tool-music","icon":"music","label":"BGM 트랙"},{"id":"tool-duck","icon":"gauge","label":"덕킹"}],"objects":[{"id":"timeline","shape":"frame","label":"오디오 타임라인","x":4,"y":6,"w":92,"h":88},{"id":"video-track","shape":"rect","label":"영상 트랙","x":8,"y":14,"w":84,"h":14,"color":"#64748b"},{"id":"voice-track","shape":"rect","label":"내레이션 -9dB","x":22,"y":36,"w":56,"h":13,"color":"#8b5cf6","hidden":true},{"id":"voice-track-aligned","shape":"rect","label":"내레이션 -9dB","x":8,"y":36,"w":56,"h":13,"color":"#8b5cf6","hidden":true},{"id":"bgm-track","shape":"rect","label":"BGM -22dB","x":8,"y":58,"w":84,"h":13,"color":"#14b8a6","hidden":true},{"id":"bgm-duck","shape":"rect","label":"덕킹: 목소리 구간 -25dB","x":8,"y":74,"w":56,"h":10,"color":"#0f766e","hidden":true},{"id":"lufs-badge","shape":"text","label":"최종 -14 LUFS ✓","x":68,"y":76,"w":24,"h":8,"hidden":true}]},"actions":[{"t":"caption","text":"① 더빙 트랙 도구로 내레이션을 타임라인에 올립니다"},{"t":"move","target":"tool-mic"},{"t":"click"},{"t":"drag","from":"video-track","to":"voice-track"},{"t":"reveal","target":"voice-track"},{"t":"wait","ms":400},{"t":"caption","text":"② 드래그로 내레이션을 영상 시작점에 맞춰 정렬합니다"},{"t":"drag","from":"voice-track","to":"voice-track-aligned"},{"t":"hide","target":"voice-track"},{"t":"reveal","target":"voice-track-aligned"},{"t":"wait","ms":400},{"t":"caption","text":"③ BGM은 목소리보다 작게, 맨 아래 층에 깔아줍니다"},{"t":"move","target":"tool-music"},{"t":"click"},{"t":"drag","from":"voice-track-aligned","to":"bgm-track"},{"t":"reveal","target":"bgm-track"},{"t":"wait","ms":400},{"t":"caption","text":"④ 덕킹을 켜 목소리 구간의 BGM을 자동으로 낮춥니다"},{"t":"move","target":"tool-duck"},{"t":"click"},{"t":"reveal","target":"bgm-duck"},{"t":"caption","text":"⑤ 스마트폰 스피커로 확인하고 -14 LUFS로 마무리합니다"},{"t":"reveal","target":"lufs-badge"},{"t":"move","target":"lufs-badge"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '8330e7e2-30a7-64ef-2613-5b3191ae6f87', 'a7c86bcd-9639-11de-3642-91f5870b3aac', 'ai-audio/podcast-audiobook-automation', 'podcast-audiobook-automation', '팟캐스트·오디오북 자동화 파이프라인',
   $aix$원고만 쓰면 나머지는 기계가 하는 시대입니다. 매주 반복되는 오디오 콘텐츠는 **파이프라인으로 만들면** 제작 시간이 10분의 1로 줄어듭니다.
 
@@ -1985,11 +2055,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 자동화해도 **발행 전 전체 듣기**는 생략하지 마세요. 발음 오류·어색한 번역투는 아직 사람 귀가 가장 빨리 잡습니다.
 
 > 💡 **핵심**: '원고 → 음성 → 후반 → 발행'을 한 번 파이프라인으로 만들면, 이후엔 원고만 넣으면 됩니다. 반복 작업은 설계 대상입니다.$aix$,
-  $aix${"type":"cycle","title":"주간 오디오 콘텐츠 파이프라인","center":"매주 반복","nodes":[{"label":"원고 변환","sublabel":"문어체 → 구어체 대본","icon":"file-text"},{"label":"음성 생성","sublabel":"고정 보이스 API 호출","icon":"mic"},{"label":"후반 작업","sublabel":"징글 + 라우드니스 정규화","icon":"settings"},{"label":"검수 · 발행","sublabel":"전체 듣기 후 업로드","icon":"upload"}],"caption":"사이클 중 자동화 불가 구간은 '검수' 하나 — 나머지는 기계에 맡기세요."}$aix$::jsonb, 5, 8
+  $aix${"type":"cycle","title":"주간 오디오 콘텐츠 파이프라인","center":"매주 반복","nodes":[{"label":"원고 변환","sublabel":"문어체 → 구어체 대본","icon":"file-text"},{"label":"음성 생성","sublabel":"고정 보이스 API 호출","icon":"mic"},{"label":"후반 작업","sublabel":"징글 + 라우드니스 정규화","icon":"settings"},{"label":"검수 · 발행","sublabel":"전체 듣기 후 업로드","icon":"upload"}],"caption":"사이클 중 자동화 불가 구간은 '검수' 하나 — 나머지는 기계에 맡기세요."}$aix$::jsonb, null, 5, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '45000cb9-1376-bf64-439f-10893fd0a608', 'a7c86bcd-9639-11de-3642-91f5870b3aac', 'ai-audio/copyright-and-policy', 'copyright-and-policy', '음원 저작권과 플랫폼 정책: 2026 상업 이용 가이드',
   $aix$만드는 것보다 중요한 것이 **쓸 수 있는가**입니다. AI 음원의 권리는 "어떤 플랜으로 만들었나"에 따라 달라집니다.
 
@@ -2012,10 +2083,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 약관은 바뀝니다. **연 1회 재확인**을 캘린더에 넣으세요.
 
 > 💡 **핵심**: 상업 이용의 3요소 — **유료 플랜으로 생성 + 생성 기록 보관 + 플랫폼 고지 준수**. 이 세 가지면 대부분의 분쟁을 예방합니다.$aix$,
-  $aix${"type":"grid","title":"상업 이용 전 점검 항목","items":[{"label":"플랜 확인","sublabel":"유료 플랜 생성분만 상업 이용","icon":"dollar","tone":"primary"},{"label":"생성 기록 보관","sublabel":"날짜 · 플랜 · 프롬프트","icon":"clipboard","tone":"accent"},{"label":"AI 고지","sublabel":"유튜브 합성 콘텐츠 설정","icon":"alert","tone":"warning"},{"label":"사칭 금지","sublabel":"아티스트 이름 홍보 불가","icon":"x","tone":"muted"},{"label":"계약서 명시","sublabel":"납품 시 AI 생성물 고지","icon":"file-text","tone":"accent"},{"label":"약관 재확인","sublabel":"연 1회, 정책은 바뀝니다","icon":"refresh","tone":"success"}],"caption":"여섯 칸 모두 체크되면 안심하고 발행해도 됩니다."}$aix$::jsonb, 5, 9
+  $aix${"type":"grid","title":"상업 이용 전 점검 항목","items":[{"label":"플랜 확인","sublabel":"유료 플랜 생성분만 상업 이용","icon":"dollar","tone":"primary"},{"label":"생성 기록 보관","sublabel":"날짜 · 플랜 · 프롬프트","icon":"clipboard","tone":"accent"},{"label":"AI 고지","sublabel":"유튜브 합성 콘텐츠 설정","icon":"alert","tone":"warning"},{"label":"사칭 금지","sublabel":"아티스트 이름 홍보 불가","icon":"x","tone":"muted"},{"label":"계약서 명시","sublabel":"납품 시 AI 생성물 고지","icon":"file-text","tone":"accent"},{"label":"약관 재확인","sublabel":"연 1회, 정책은 바뀝니다","icon":"refresh","tone":"success"}],"caption":"여섯 칸 모두 체크되면 안심하고 발행해도 됩니다."}$aix$::jsonb, null, 5, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: 노코드 자동화: Make.com & Zapier 마스터
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -2033,7 +2105,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '78ec5d66-2ade-8a21-60e8-93c519f0bbaf', '7d6ec359-983c-9bd8-d4a4-d60256613829', 'ai-automation', 'AI 결합 자동화', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '29c4c4a9-f639-8547-a4e6-43faf9333089', '0ac23c4e-607f-e717-793d-2ac4049637ed', 'nocode-automation/trigger-action-node', 'trigger-action-node', '자동화의 3요소: 트리거, 액션, 노드',
   $aix$세상의 모든 업무 자동화는 단 하나의 문장으로 요약됩니다. **"무언가 일어나면(트리거), 무언가를 한다(액션)."**
 
@@ -2054,11 +2126,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 내 업무 중 "A가 생기면 B에 옮겨 적는다"에 해당하는 일을 하나 떠올려 보세요. 그것이 여러분의 첫 시나리오 후보입니다.
 
 > 💡 **핵심**: 자동화 설계 = "무슨 사건이(트리거) → 어떤 데이터가 흘러서(노드 연결) → 무슨 일이 일어나는가(액션)"를 그리는 일입니다.$aix$,
-  $aix${"type":"flow","title":"자동화 시나리오의 뼈대","nodes":[{"label":"트리거","sublabel":"폼 응답 도착","icon":"zap","tone":"warning"},{"label":"액션 노드 1","sublabel":"스프레드시트에 행 추가","icon":"database","tone":"primary","edgeLabel":"응답 데이터"},{"label":"액션 노드 2","sublabel":"팀 채널에 알림 발송","icon":"send","tone":"accent","edgeLabel":"저장 완료"}],"caption":"노드 사이를 흐르는 것은 데이터 — 앞 노드의 출력이 뒷 노드의 입력입니다."}$aix$::jsonb, 4, 0
+  $aix${"type":"flow","title":"자동화 시나리오의 뼈대","nodes":[{"label":"트리거","sublabel":"폼 응답 도착","icon":"zap","tone":"warning"},{"label":"액션 노드 1","sublabel":"스프레드시트에 행 추가","icon":"database","tone":"primary","edgeLabel":"응답 데이터"},{"label":"액션 노드 2","sublabel":"팀 채널에 알림 발송","icon":"send","tone":"accent","edgeLabel":"저장 완료"}],"caption":"노드 사이를 흐르는 것은 데이터 — 앞 노드의 출력이 뒷 노드의 입력입니다."}$aix$::jsonb, $aix${"title":"Gmail 트리거가 울리는 순간 따라하기","app":{"kind":"email-app","folders":[{"id":"fd-inbox","name":"받은편지함","count":2,"active":true},{"id":"fd-sent","name":"보낸편지함"},{"id":"fd-auto","name":"자동화/처리됨"}],"emails":[{"id":"e-old","from":"주간 뉴스레터","subject":"7월 넷째 주 업계 소식","preview":"이번 주 하이라이트를 전해드립니다…"},{"id":"e-new","from":"고객 김민준","subject":"Pro 플랜 신청 문의드립니다","preview":"안녕하세요, 신청 절차가 궁금해서 연락드립니다…","unread":true,"hidden":true}],"compose":{"id":"cp","toId":"cp-to","subjectId":"cp-subj","bodyId":"cp-body","sendId":"cp-send"}},"actions":[{"t":"caption","text":"① 받은편지함에 새 메일 도착 — 이 사건이 트리거입니다"},{"t":"reveal","target":"e-new"},{"t":"wait","ms":600},{"t":"caption","text":"② 사람은 메일을 클릭해 확인만 합니다"},{"t":"move","target":"e-new"},{"t":"click"},{"t":"wait","ms":500},{"t":"caption","text":"③ 트리거가 울리면 자동화가 액션(자동 회신)을 시작합니다"},{"t":"reveal","target":"cp"},{"t":"type","target":"cp-to","text":"minjun.kim@example.com"},{"t":"type","target":"cp-subj","text":"문의 접수 안내 (자동 회신)"},{"t":"type","target":"cp-body","text":"접수되었습니다. 1영업일 내 답변드립니다."},{"t":"wait","ms":400},{"t":"caption","text":"④ 발송 버튼까지 자동화가 누릅니다 — 액션 완료"},{"t":"move","target":"cp-send"},{"t":"click"},{"t":"hide","target":"cp"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 처리된 메일은 전용 폴더로 정리됩니다"},{"t":"move","target":"fd-auto"},{"t":"click"},{"t":"hide","target":"e-new"},{"t":"caption","text":"✅ 트리거 1번 = 액션 자동 실행 — 이것이 자동화입니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 4, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '52bfdf6e-16e9-2507-9dd3-8559562cd855', '0ac23c4e-607f-e717-793d-2ac4049637ed', 'nocode-automation/make-vs-zapier-vs-n8n', 'make-vs-zapier-vs-n8n', 'Make vs Zapier vs n8n: 무엇으로 시작할까',
   $aix$도구 선택으로 일주일을 고민하는 분이 많습니다. 2026년 기준, 세 도구의 성격만 알면 10분 안에 결정할 수 있습니다.
 
@@ -2079,11 +2152,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 기본 개념은 세 도구가 동일하므로, 이 강의는 **Make를 기준**으로 하되 Zapier 용어를 병기합니다. 하나를 익히면 갈아타는 데 하루면 충분합니다.
 
 > 💡 **핵심**: 도구보다 **개념(트리거·노드·데이터 흐름)**이 자산입니다. 일단 하나로 시작하세요 — 이 강의에서는 Make입니다.$aix$,
-  $aix${"type":"compare","title":"2026년 자동화 도구 3파전","columns":[{"title":"Zapier","icon":"zap","tone":"accent","items":["연동 앱 8,000개+ 최다","직선형 Zap, 가장 쉬움","Zapier Agents (AI)","태스크당 비용은 높은 편"]},{"title":"Make.com","icon":"workflow","tone":"primary","items":["시각적 캔버스 · 분기 강함","오퍼레이션 단가 저렴","AI Agents 내장","이 강의의 기준 도구"]},{"title":"n8n","icon":"server","tone":"muted","items":["오픈소스 · 셀프호스팅","실행량 과금 없음(자체 서버)","코드·AI 노드 확장성 최고","서버 관리 부담 있음"]}],"caption":"쉬움 → Zapier, 복잡·대량 → Make, 보안·확장 → n8n."}$aix$::jsonb, 6, 1
+  $aix${"type":"compare","title":"2026년 자동화 도구 3파전","columns":[{"title":"Zapier","icon":"zap","tone":"accent","items":["연동 앱 8,000개+ 최다","직선형 Zap, 가장 쉬움","Zapier Agents (AI)","태스크당 비용은 높은 편"]},{"title":"Make.com","icon":"workflow","tone":"primary","items":["시각적 캔버스 · 분기 강함","오퍼레이션 단가 저렴","AI Agents 내장","이 강의의 기준 도구"]},{"title":"n8n","icon":"server","tone":"muted","items":["오픈소스 · 셀프호스팅","실행량 과금 없음(자체 서버)","코드·AI 노드 확장성 최고","서버 관리 부담 있음"]}],"caption":"쉬움 → Zapier, 복잡·대량 → Make, 보안·확장 → n8n."}$aix$::jsonb, null, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'e5472b16-535e-ec6d-b48e-b656790707fd', '0ac23c4e-607f-e717-793d-2ac4049637ed', 'nocode-automation/first-scenario', 'first-scenario', '실습: 첫 시나리오 — 폼 응답을 시트와 알림으로',
   $aix$백문이 불여일런(run)입니다. 가장 보편적인 자동화 — **폼 응답 → 스프레드시트 저장 → 팀 알림** — 을 Make에서 직접 만들어 봅니다.
 
@@ -2105,11 +2179,12 @@ Google Forms에 신청이 들어오면, Google Sheets에 자동 기록하고 Sla
 - 알림이 두 번 온다면 → 시나리오가 중복 활성화된 것입니다.
 
 > 💡 **핵심**: 트리거 연결 직후 **반드시 한 번 실행해 실제 데이터를 확보**하세요. 매핑은 언제나 진짜 데이터 위에서 합니다.$aix$,
-  $aix${"type":"steps","title":"첫 시나리오 5단계","steps":[{"label":"트리거 배치","sublabel":"Google Forms · Watch Responses","icon":"zap"},{"label":"테스트 실행","sublabel":"Run once로 실데이터 확보","icon":"play"},{"label":"시트 노드 연결","sublabel":"응답 필드를 열에 매핑","icon":"database"},{"label":"슬랙 노드 연결","sublabel":"알림 문구에 필드 삽입","icon":"send"},{"label":"스케줄 활성화","sublabel":"토글 ON — 자동 운행 시작","icon":"check"}],"caption":"5단계, 약 15분 — 여러분의 첫 자동화가 돌기 시작합니다."}$aix$::jsonb, 7, 2
+  $aix${"type":"steps","title":"첫 시나리오 5단계","steps":[{"label":"트리거 배치","sublabel":"Google Forms · Watch Responses","icon":"zap"},{"label":"테스트 실행","sublabel":"Run once로 실데이터 확보","icon":"play"},{"label":"시트 노드 연결","sublabel":"응답 필드를 열에 매핑","icon":"database"},{"label":"슬랙 노드 연결","sublabel":"알림 문구에 필드 삽입","icon":"send"},{"label":"스케줄 활성화","sublabel":"토글 ON — 자동 운행 시작","icon":"check"}],"caption":"5단계, 약 15분 — 여러분의 첫 자동화가 돌기 시작합니다."}$aix$::jsonb, $aix${"title":"Make 캔버스에서 첫 시나리오 조립 따라하기","app":{"kind":"automation-canvas","windowTitle":"폼 응답 알림 시나리오 — Make","nodes":[{"id":"n-forms","icon":"zap","label":"Google Forms","sublabel":"Watch Responses","tone":"warning","hidden":true},{"id":"n-sheets","icon":"database","label":"Google Sheets","sublabel":"Add a Row","tone":"primary","hidden":true},{"id":"n-slack","icon":"send","label":"Slack","sublabel":"Create a Message","tone":"accent","hidden":true}],"runLog":[{"id":"log-run","text":"▶ Run once — 테스트 실행","tone":"out","hidden":true},{"id":"log-forms","text":"✓ Google Forms: 응답 1건 수신 (김민준)","tone":"ok","hidden":true},{"id":"log-sheets","text":"✓ Google Sheets: 3행에 기록 완료","tone":"ok","hidden":true},{"id":"log-slack","text":"✓ Slack: #신청-알림 채널 발송 — 시나리오 성공","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 트리거 슬롯을 클릭해 Google Forms를 배치합니다"},{"t":"move","target":"n-forms"},{"t":"click"},{"t":"reveal","target":"n-forms"},{"t":"wait","ms":500},{"t":"caption","text":"② Run once로 실제 응답 데이터를 확보합니다"},{"t":"reveal","target":"log-run"},{"t":"reveal","target":"log-forms"},{"t":"wait","ms":600},{"t":"caption","text":"③ 시트 노드를 연결하고 이름·이메일 필드를 매핑합니다"},{"t":"move","target":"n-sheets"},{"t":"click"},{"t":"reveal","target":"n-sheets"},{"t":"wait","ms":500},{"t":"caption","text":"④ 슬랙 노드를 붙여 알림 문구에 필드를 끼워 넣습니다"},{"t":"move","target":"n-slack"},{"t":"click"},{"t":"reveal","target":"n-slack"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 전체 실행 — 세 노드가 차례로 초록 불이 됩니다"},{"t":"reveal","target":"log-sheets"},{"t":"reveal","target":"log-slack"},{"t":"move","target":"log-slack"},{"t":"caption","text":"✅ 첫 시나리오 완성 — 토글을 켜면 자동 운행됩니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '92d72b40-90a9-c431-c684-a8d1c2188c14', 'e0b47e73-c0fe-a504-c669-923206e31b19', 'nocode-automation/routers-and-filters', 'routers-and-filters', '라우터와 필터: 조건에 따라 길을 나누기',
   $aix$실무의 자동화는 직선이 아닙니다. "VIP 문의는 매니저에게, 일반 문의는 시트에만" — 이런 **분기**를 만드는 부품이 라우터와 필터입니다.
 
@@ -2131,11 +2206,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 경로가 4개를 넘으면 시나리오를 쪼개는 편이 유지보수에 낫습니다.
 
 > 💡 **핵심**: 필터는 "통과/차단", 라우터는 "갈림길". 그리고 **폴백 경로 없는 라우터는 데이터를 흘립니다** — 반드시 기본 경로를 두세요.$aix$,
-  $aix${"type":"flow","title":"라우터 분기 파이프라인","nodes":[{"label":"트리거: 문의 접수","icon":"mail","tone":"warning"},{"label":"라우터","sublabel":"문의 유형으로 경로 결정","icon":"git-branch","tone":"primary"},{"label":"환불 경로 → CS팀 배정","icon":"users","tone":"accent","edgeLabel":"유형 = 환불"},{"label":"폴백 경로 → 기본 시트 기록","icon":"database","tone":"muted","edgeLabel":"그 외 전부"}],"caption":"각 경로의 필터 조건은 겹치지 않게, 폴백은 반드시 하나."}$aix$::jsonb, 5, 3
+  $aix${"type":"flow","title":"라우터 분기 파이프라인","nodes":[{"label":"트리거: 문의 접수","icon":"mail","tone":"warning"},{"label":"라우터","sublabel":"문의 유형으로 경로 결정","icon":"git-branch","tone":"primary"},{"label":"환불 경로 → CS팀 배정","icon":"users","tone":"accent","edgeLabel":"유형 = 환불"},{"label":"폴백 경로 → 기본 시트 기록","icon":"database","tone":"muted","edgeLabel":"그 외 전부"}],"caption":"각 경로의 필터 조건은 겹치지 않게, 폴백은 반드시 하나."}$aix$::jsonb, null, 5, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '3c5d46ec-f89c-da7f-4d3a-79ac00fcc4a4', 'e0b47e73-c0fe-a504-c669-923206e31b19', 'nocode-automation/data-transformation', 'data-transformation', '데이터 변환: 매핑, 포매터, 집계',
   $aix$자동화가 깨지는 원인 1위는 연결이 아니라 **데이터 모양**입니다. 앞 노드가 주는 형태와 뒷 노드가 원하는 형태를 맞추는 기술이 데이터 변환입니다.
 
@@ -2156,11 +2232,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 반대 방향은 **이터레이터(Iterator)** — 배열 하나를 낱개로 풀어 반복 처리합니다.
 
 > 💡 **핵심**: 노드 연결이 뼈대라면 변환은 관절입니다. 막히면 항상 **"앞 노드의 출력 데이터가 실제로 어떤 모양인지"**부터 확인하세요.$aix$,
-  $aix${"type":"grid","title":"데이터 변환 도구 상자","items":[{"label":"매핑","sublabel":"필드 ↔ 칸 연결","icon":"link","tone":"primary"},{"label":"날짜 포매터","sublabel":"형식·타임존 변환","icon":"calendar","tone":"accent"},{"label":"텍스트 포매터","sublabel":"분리·치환·정리","icon":"scissors","tone":"accent"},{"label":"숫자 포매터","sublabel":"통화·반올림","icon":"dollar","tone":"accent"},{"label":"집계 (Aggregator)","sublabel":"여러 행 → 하나로","icon":"layers","tone":"success"},{"label":"이터레이터","sublabel":"배열 → 낱개 반복","icon":"repeat","tone":"warning"}],"caption":"막히면 변환 도구부터 — 연결 문제의 대부분은 데이터 모양 문제입니다."}$aix$::jsonb, 5, 4
+  $aix${"type":"grid","title":"데이터 변환 도구 상자","items":[{"label":"매핑","sublabel":"필드 ↔ 칸 연결","icon":"link","tone":"primary"},{"label":"날짜 포매터","sublabel":"형식·타임존 변환","icon":"calendar","tone":"accent"},{"label":"텍스트 포매터","sublabel":"분리·치환·정리","icon":"scissors","tone":"accent"},{"label":"숫자 포매터","sublabel":"통화·반올림","icon":"dollar","tone":"accent"},{"label":"집계 (Aggregator)","sublabel":"여러 행 → 하나로","icon":"layers","tone":"success"},{"label":"이터레이터","sublabel":"배열 → 낱개 반복","icon":"repeat","tone":"warning"}],"caption":"막히면 변환 도구부터 — 연결 문제의 대부분은 데이터 모양 문제입니다."}$aix$::jsonb, null, 5, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '716e51e7-3431-8cfc-7f98-ff41930d098c', 'e0b47e73-c0fe-a504-c669-923206e31b19', 'nocode-automation/webhooks', 'webhooks', '웹훅: 목록에 없는 서비스도 연결하기',
   $aix$"우리 사내 시스템은 연동 목록에 없는데요?" — 괜찮습니다. **웹훅(Webhook)**을 알면 HTTP를 쓰는 어떤 서비스든 연결할 수 있습니다.
 
@@ -2185,11 +2262,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 검증용 시크릿 헤더나 토큰 필드를 하나 넣어 걸러내는 습관을 들이세요.
 
 > 💡 **핵심**: 연동 목록은 편의일 뿐, 본질은 HTTP입니다. **웹훅(받기) + HTTP 모듈(보내기)**만 있으면 사실상 모든 서비스가 연결 대상입니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"terminal — 웹훅 테스트","lines":[{"text":"# Make에서 발급받은 웹훅 URL로 테스트 데이터 전송","tone":"comment"},{"text":"curl -X POST https://hook.make.com/abc123 \\","tone":"cmd"},{"text":"  -H 'Content-Type: application/json' \\","tone":"cmd"},{"text":"  -d '{\"name\":\"김민준\",\"plan\":\"pro\",\"amount\":29000}'","tone":"cmd"},{"text":"Accepted","tone":"ok"},{"text":"# Make 캔버스: 웹훅 노드에 초록 불 — 시나리오 즉시 실행","tone":"comment"},{"text":"# name/plan/amount 필드가 다음 노드에서 매핑 가능해짐","tone":"dim"}],"caption":"curl 한 줄이면 웹훅의 동작 원리가 눈앞에서 확인됩니다."}$aix$::jsonb, 6, 5
+  $aix${"type":"terminal","windowTitle":"terminal — 웹훅 테스트","lines":[{"text":"# Make에서 발급받은 웹훅 URL로 테스트 데이터 전송","tone":"comment"},{"text":"curl -X POST https://hook.make.com/abc123 \\","tone":"cmd"},{"text":"  -H 'Content-Type: application/json' \\","tone":"cmd"},{"text":"  -d '{\"name\":\"김민준\",\"plan\":\"pro\",\"amount\":29000}'","tone":"cmd"},{"text":"Accepted","tone":"ok"},{"text":"# Make 캔버스: 웹훅 노드에 초록 불 — 시나리오 즉시 실행","tone":"comment"},{"text":"# name/plan/amount 필드가 다음 노드에서 매핑 가능해짐","tone":"dim"}],"caption":"curl 한 줄이면 웹훅의 동작 원리가 눈앞에서 확인됩니다."}$aix$::jsonb, null, 6, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '72eaf81e-36a3-438f-242f-74ee02f739fd', 'e0b47e73-c0fe-a504-c669-923206e31b19', 'nocode-automation/error-handling', 'error-handling', '에러 처리와 재시도: 무너지지 않는 파이프라인',
   $aix$자동화는 만들 때가 아니라 **한 달 뒤 조용히 실패할 때** 진짜 실력이 드러납니다. 에러 처리 없는 시나리오는 언젠가 반드시 데이터를 흘립니다.
 
@@ -2212,11 +2290,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 3. 실패한 실행은 **Incomplete Executions**에 보관해 두고, 원인 수정 후 재실행합니다.
 
 > 💡 **핵심**: 설계 질문은 "실패하면 어쩌지?"가 아니라 **"일시적 실패는 재시도, 영구적 실패는 누구에게 어떻게 알릴 것인가"**입니다.$aix$,
-  $aix${"type":"flow","title":"에러 처리 표준 패턴","nodes":[{"label":"외부 API 호출","icon":"cloud","tone":"primary"},{"label":"실패 감지","sublabel":"일시적? 영구적?","icon":"alert","tone":"warning","edgeLabel":"에러 발생 시"},{"label":"재시도 (Break)","sublabel":"15분 간격 · 최대 3회","icon":"refresh","tone":"accent","edgeLabel":"일시적 에러"},{"label":"사람에게 알림 + 실행 보관","sublabel":"슬랙 보고 · 수정 후 재실행","icon":"shield","tone":"success","edgeLabel":"3회 초과 또는 영구적 에러"}],"loopBack":{"from":2,"to":0,"label":"재시도 (최대 3회)"},"caption":"재시도로 풀리는 실패는 기계가, 안 풀리는 실패는 사람이."}$aix$::jsonb, 5, 6
+  $aix${"type":"flow","title":"에러 처리 표준 패턴","nodes":[{"label":"외부 API 호출","icon":"cloud","tone":"primary"},{"label":"실패 감지","sublabel":"일시적? 영구적?","icon":"alert","tone":"warning","edgeLabel":"에러 발생 시"},{"label":"재시도 (Break)","sublabel":"15분 간격 · 최대 3회","icon":"refresh","tone":"accent","edgeLabel":"일시적 에러"},{"label":"사람에게 알림 + 실행 보관","sublabel":"슬랙 보고 · 수정 후 재실행","icon":"shield","tone":"success","edgeLabel":"3회 초과 또는 영구적 에러"}],"loopBack":{"from":2,"to":0,"label":"재시도 (최대 3회)"},"caption":"재시도로 풀리는 실패는 기계가, 안 풀리는 실패는 사람이."}$aix$::jsonb, null, 5, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'e9b2af84-cd90-04a3-dcc6-bf78c13a6694', '78ec5d66-2ade-8a21-60e8-93c519f0bbaf', 'nocode-automation/ai-modules', 'ai-modules', '시나리오에 AI 모듈 넣기: 분류·요약·생성',
   $aix$라우터의 조건식으로는 "이 문의가 화가 난 고객인지"를 판별할 수 없습니다. **규칙으로 못 가르는 것을 가르는 노드**, 그것이 AI 모듈입니다.
 
@@ -2236,11 +2315,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 AI의 출력은 **다음 노드가 기계적으로 읽어야** 합니다. "환불, 배송, 제휴, 기타 중 한 단어로만 답하라"처럼 형식을 고정하세요. 라우터 필터가 그 단어로 분기합니다.
 
 > 💡 **핵심**: 자동화 속 AI는 수다쟁이가 아니라 부품입니다. **출력 형식을 한 단어/JSON으로 고정**해야 뒷 노드와 맞물립니다.$aix$,
-  $aix${"type":"chat","title":"AI 분류 노드의 프롬프트 설계","messages":[{"role":"system","text":"너는 고객 문의 분류기다. 반드시 환불/배송/제휴/기타 중 한 단어로만 답하라."},{"role":"user","text":"{문의 내용 필드} ← 앞 노드에서 매핑: \"주문한 지 2주가 지났는데 아직도 안 왔어요. 취소하고 싶습니다.\""},{"role":"ai","text":"환불"}],"caption":"출력이 한 단어로 고정되어야 라우터가 기계적으로 분기할 수 있습니다."}$aix$::jsonb, 5, 7
+  $aix${"type":"chat","title":"AI 분류 노드의 프롬프트 설계","messages":[{"role":"system","text":"너는 고객 문의 분류기다. 반드시 환불/배송/제휴/기타 중 한 단어로만 답하라."},{"role":"user","text":"{문의 내용 필드} ← 앞 노드에서 매핑: \"주문한 지 2주가 지났는데 아직도 안 왔어요. 취소하고 싶습니다.\""},{"role":"ai","text":"환불"}],"caption":"출력이 한 단어로 고정되어야 라우터가 기계적으로 분기할 수 있습니다."}$aix$::jsonb, null, 5, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '01c1c136-70cd-e951-d07b-64973ef845ee', '78ec5d66-2ade-8a21-60e8-93c519f0bbaf', 'nocode-automation/ai-inquiry-pipeline', 'ai-inquiry-pipeline', '실전: 고객 문의 분류 → 답변 초안 → 담당자 배정',
   $aix$배운 것을 전부 조립할 시간입니다. 실제 회사에서 가장 수요가 많은 파이프라인 — **문의 접수부터 담당자 배정까지** — 를 만들어 봅니다.
 
@@ -2259,11 +2339,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 분류 정확도가 검증되면(예: 95%+) '기타' 외 유형부터 단계적으로 자동 발송을 열 수 있습니다.
 
 > 💡 **핵심**: AI 자동화의 정석은 **판단(분류)과 초안은 AI, 최종 발송은 사람**. 신뢰가 데이터로 쌓인 뒤에 자동화 범위를 넓히세요.$aix$,
-  $aix${"type":"flow","title":"고객 문의 AI 파이프라인","nodes":[{"label":"문의 수신","sublabel":"이메일 · 폼 · 웹훅","icon":"mail","tone":"warning"},{"label":"AI 분류","sublabel":"유형 + 긴급도 → JSON","icon":"brain","tone":"primary","edgeLabel":"문의 원문"},{"label":"AI 답변 초안","sublabel":"사람이 검토할 초안 생성","icon":"sparkles","tone":"accent","edgeLabel":"분류 결과"},{"label":"라우터 → 담당팀 배정","sublabel":"긴급도 상 = 매니저 멘션","icon":"users","tone":"success","edgeLabel":"유형별 분기"},{"label":"전 건 시트/CRM 기록","sublabel":"분류 정확도 검수용 데이터","icon":"database","tone":"muted"}],"caption":"AI는 분류와 초안까지, 고객에게 보내는 마지막 클릭은 사람이."}$aix$::jsonb, 7, 8
+  $aix${"type":"flow","title":"고객 문의 AI 파이프라인","nodes":[{"label":"문의 수신","sublabel":"이메일 · 폼 · 웹훅","icon":"mail","tone":"warning"},{"label":"AI 분류","sublabel":"유형 + 긴급도 → JSON","icon":"brain","tone":"primary","edgeLabel":"문의 원문"},{"label":"AI 답변 초안","sublabel":"사람이 검토할 초안 생성","icon":"sparkles","tone":"accent","edgeLabel":"분류 결과"},{"label":"라우터 → 담당팀 배정","sublabel":"긴급도 상 = 매니저 멘션","icon":"users","tone":"success","edgeLabel":"유형별 분기"},{"label":"전 건 시트/CRM 기록","sublabel":"분류 정확도 검수용 데이터","icon":"database","tone":"muted"}],"caption":"AI는 분류와 초안까지, 고객에게 보내는 마지막 클릭은 사람이."}$aix$::jsonb, $aix${"title":"Slack에서 AI 분류 알림 받기 따라하기","app":{"kind":"chat-app","workspace":"우리 회사 워크스페이스","channels":[{"id":"ch-refund","name":"cs-환불","active":true},{"id":"ch-ship","name":"cs-배송"},{"id":"ch-biz","name":"제휴-문의"}],"composerId":"composer","messages":[{"id":"m-notice","author":"자동화봇","bot":true,"time":"오전 10:12","text":"새 문의 도착 — AI 분류: 환불 / 긴급도: 상","hidden":true},{"id":"m-summary","author":"자동화봇","bot":true,"time":"오전 10:12","text":"요약: 주문 2주째 미도착, 취소 요청. 긴급도 상 → @매니저 확인 바랍니다.","hidden":true},{"id":"m-draft","author":"자동화봇","bot":true,"time":"오전 10:12","text":"답변 초안: \"배송 지연으로 불편을 드려 죄송합니다. 요청하신 환불 절차를 바로 안내드리겠습니다…\"","hidden":true},{"id":"m-human","author":"나 (CS 담당)","time":"오전 10:15","text":"초안 확인했습니다. 다듬어서 발송할게요 ✅","hidden":true},{"id":"m-done","author":"자동화봇","bot":true,"time":"오전 10:15","text":"✓ 전 건 시트에 기록 완료 — 분류 정확도 검수 데이터로 적재했습니다.","hidden":true}]},"actions":[{"t":"caption","text":"① AI가 문의를 분류해 담당 채널로 알림을 보냅니다"},{"t":"reveal","target":"m-notice"},{"t":"wait","ms":600},{"t":"caption","text":"② 긴급도 '상' — 요약과 매니저 멘션이 붙습니다"},{"t":"reveal","target":"m-summary"},{"t":"move","target":"m-summary"},{"t":"wait","ms":500},{"t":"caption","text":"③ AI가 만든 답변 초안까지 함께 도착합니다"},{"t":"reveal","target":"m-draft"},{"t":"move","target":"m-draft"},{"t":"click"},{"t":"wait","ms":600},{"t":"caption","text":"④ 최종 발송은 사람 — 담당자가 초안을 검토합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"초안 확인했습니다. 다듬어서 발송할게요 ✅"},{"t":"wait","ms":400},{"t":"hide","target":"composer"},{"t":"reveal","target":"composer"},{"t":"reveal","target":"m-human"},{"t":"caption","text":"⑤ 전 과정이 시트에 쌓여 AI 검수 데이터가 됩니다"},{"t":"reveal","target":"m-done"},{"t":"move","target":"m-done"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '535566e3-fd85-4ec8-ea45-a392c8fcf784', '78ec5d66-2ade-8a21-60e8-93c519f0bbaf', 'nocode-automation/operations-and-cost', 'operations-and-cost', '운영 관리: 실행 로그, 비용, 오퍼레이션 최적화',
   $aix$만든 자동화가 10개를 넘는 순간, 여러분의 역할은 제작자에서 **운영자**로 바뀝니다. 운영의 핵심은 로그와 비용, 두 개의 숫자를 읽는 일입니다.
 
@@ -2285,10 +2366,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 3. **AI 입력 다이어트** — 이메일 전체가 아니라 필요한 필드만 프롬프트에 넣습니다.
 
 > 💡 **핵심**: 운영 = **로그(건강)와 오퍼레이션(비용)** 두 계기판 읽기. 필터는 앞으로, 폴링은 웹훅으로, AI 입력은 가볍게.$aix$,
-  $aix${"type":"cycle","title":"자동화 운영 사이클","center":"매주 반복","nodes":[{"label":"로그 점검","sublabel":"History · 실패 건 확인","icon":"eye"},{"label":"비용 분석","sublabel":"오퍼레이션 · AI 토큰","icon":"chart"},{"label":"최적화","sublabel":"필터 전진 · 웹훅화","icon":"wrench"},{"label":"재배포","sublabel":"수정 후 다시 활성화","icon":"rocket"}],"caption":"만들고 끝이 아닙니다 — 점검·분석·최적화가 매주 도는 운영 루프입니다."}$aix$::jsonb, 5, 9
+  $aix${"type":"cycle","title":"자동화 운영 사이클","center":"매주 반복","nodes":[{"label":"로그 점검","sublabel":"History · 실패 건 확인","icon":"eye"},{"label":"비용 분석","sublabel":"오퍼레이션 · AI 토큰","icon":"chart"},{"label":"최적화","sublabel":"필터 전진 · 웹훅화","icon":"wrench"},{"label":"재배포","sublabel":"수정 후 다시 활성화","icon":"rocket"}],"caption":"만들고 끝이 아닙니다 — 점검·분석·최적화가 매주 도는 운영 루프입니다."}$aix$::jsonb, null, 5, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: SNS 자동 포스팅 봇 구축: AI API + Make
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -2306,7 +2388,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '4d6e7968-627d-db7b-affa-b7be3076d42b', 'bf429837-e82a-5733-adbf-eda7e89203bc', 'safe-operations', '운영: 품질과 계정을 지키는 루프', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '09e50aa7-0d38-c4d0-c7e9-e6d0f74283b4', 'fee0e334-e049-cd8d-d93a-5dc76ab6d51c', 'sns-auto-bot/auto-posting-architecture', 'auto-posting-architecture', '전체 아키텍처: 주제에서 발행까지의 파이프라인',
   $aix$"매일 올리자"는 다짐은 3주를 못 갑니다. 오래가는 계정은 의지가 아니라 **시스템** 위에서 돌아갑니다.
 
@@ -2327,11 +2409,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 이 강의의 나머지 전부는 이 다섯 상자를 하나씩 채우는 과정입니다.
 
 > 💡 **핵심**: 자동 포스팅 봇 = **큐 → 생성 → 검수 → 발행 → 환류**. 발행에서 끝나지 않고 데이터가 큐로 되돌아와야 '시스템'입니다.$aix$,
-  $aix${"type":"flow","title":"자동 포스팅 파이프라인","nodes":[{"label":"주제 큐","sublabel":"스프레드시트 · 노션","icon":"calendar","tone":"muted"},{"label":"AI 생성","sublabel":"카피 + 이미지","icon":"sparkles","tone":"primary"},{"label":"검수 게이트","sublabel":"금칙어 · 형식 · 승인","icon":"shield","tone":"warning"},{"label":"발행","sublabel":"인스타그램 · 블로그","icon":"send","tone":"accent"},{"label":"성과 수집","sublabel":"도달 · 참여 데이터","icon":"chart","tone":"success"}],"loopBack":{"from":4,"to":0,"label":"잘된 주제를 큐에 환류"},"caption":"성과 데이터가 주제 큐로 되돌아오는 순간, 봇은 스스로 나아지기 시작합니다."}$aix$::jsonb, 5, 0
+  $aix${"type":"flow","title":"자동 포스팅 파이프라인","nodes":[{"label":"주제 큐","sublabel":"스프레드시트 · 노션","icon":"calendar","tone":"muted"},{"label":"AI 생성","sublabel":"카피 + 이미지","icon":"sparkles","tone":"primary"},{"label":"검수 게이트","sublabel":"금칙어 · 형식 · 승인","icon":"shield","tone":"warning"},{"label":"발행","sublabel":"인스타그램 · 블로그","icon":"send","tone":"accent"},{"label":"성과 수집","sublabel":"도달 · 참여 데이터","icon":"chart","tone":"success"}],"loopBack":{"from":4,"to":0,"label":"잘된 주제를 큐에 환류"},"caption":"성과 데이터가 주제 큐로 되돌아오는 순간, 봇은 스스로 나아지기 시작합니다."}$aix$::jsonb, null, 5, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '8094cd94-4041-7e80-44c9-2c4dbb4ee2b9', 'fee0e334-e049-cd8d-d93a-5dc76ab6d51c', 'sns-auto-bot/content-calendar-queue', 'content-calendar-queue', '콘텐츠 캘린더와 주제 큐 설계',
   $aix$봇이 매일 멈추지 않으려면 "오늘 뭘 올리지?"라는 질문이 시스템 안에서 이미 답해져 있어야 합니다. 그 답이 **주제 큐**입니다.
 
@@ -2352,11 +2435,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 잔여 큐가 7개 미만이면 알림을 보내는 시나리오를 하나 더 둡니다.
 
 > 💡 **핵심**: 상태 컬럼이 곧 봇의 신호등입니다. Make는 "상태 = 승인"인 행만 집어 발행하고, 끝나면 "발행됨"으로 바꿉니다.$aix$,
-  $aix${"type":"steps","title":"주제 큐 구축 4단계","steps":[{"label":"필러 정하기","sublabel":"정보 · 후기 · 프로모션 등 3~4개","icon":"target"},{"label":"큐 시트 만들기","sublabel":"주제 · 발행일 · 상태 · 결과 컬럼","icon":"clipboard"},{"label":"AI로 대량 채우기","sublabel":"필러별 주제 20개 생성 → 사람이 선별","icon":"sparkles"},{"label":"Make에 연결","sublabel":"상태 값 기준으로 행을 읽고 갱신","icon":"workflow"}],"caption":"사람은 주 1회 큐를 채우고, 나머지 6일은 봇이 큐를 소비합니다."}$aix$::jsonb, 5, 1
+  $aix${"type":"steps","title":"주제 큐 구축 4단계","steps":[{"label":"필러 정하기","sublabel":"정보 · 후기 · 프로모션 등 3~4개","icon":"target"},{"label":"큐 시트 만들기","sublabel":"주제 · 발행일 · 상태 · 결과 컬럼","icon":"clipboard"},{"label":"AI로 대량 채우기","sublabel":"필러별 주제 20개 생성 → 사람이 선별","icon":"sparkles"},{"label":"Make에 연결","sublabel":"상태 값 기준으로 행을 읽고 갱신","icon":"workflow"}],"caption":"사람은 주 1회 큐를 채우고, 나머지 6일은 봇이 큐를 소비합니다."}$aix$::jsonb, null, 5, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '8708642c-ae0e-f48f-ca70-68619adf1a94', 'fee0e334-e049-cd8d-d93a-5dc76ab6d51c', 'sns-auto-bot/brand-voice-copywriting', 'brand-voice-copywriting', 'AI 카피 생성: 브랜드 보이스와 플랫폼별 형식',
   $aix$AI 카피의 문제는 못 쓰는 게 아니라 **누가 써도 똑같다**는 것입니다. 해법은 브랜드 보이스를 프롬프트에 박제하는 것입니다.
 
@@ -2384,11 +2468,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 JSON으로 받아야 Make가 필드를 그대로 다음 모듈에 꽂을 수 있습니다.
 
 > 💡 **핵심**: 보이스는 **시스템 프롬프트에 예시로**, 형식은 **JSON 출력 스펙으로**. 이 분리가 자동화 가능한 카피의 조건입니다.$aix$,
-  $aix${"type":"chat","title":"브랜드 보이스 프롬프트 실전","messages":[{"role":"system","text":"10년 차 여행 가이드가 친구에게 말하듯. 해요체, 과장 금지, 이모지 문단당 1개. [예시 포스트 2건 첨부]"},{"role":"user","text":"주제: 여름 휴가철 짐 싸기 체크리스트. 인스타 캡션과 블로그 글을 JSON으로."},{"role":"ai","text":"{ \"instagram\": { \"caption\": \"캐리어 앞에서 30분째 고민 중이라면… ✈️ 이 5가지만 기억하세요.\", \"hashtags\": [\"#여름휴가\", \"#짐싸기꿀팁\", …] }, \"blog\": { \"title\": \"여름 휴가 짐 싸기 체크리스트 5가지\", … } }"}],"caption":"같은 주제, 한 번의 호출로 플랫폼별 완성본 두 벌을 받습니다."}$aix$::jsonb, 6, 2
+  $aix${"type":"chat","title":"브랜드 보이스 프롬프트 실전","messages":[{"role":"system","text":"10년 차 여행 가이드가 친구에게 말하듯. 해요체, 과장 금지, 이모지 문단당 1개. [예시 포스트 2건 첨부]"},{"role":"user","text":"주제: 여름 휴가철 짐 싸기 체크리스트. 인스타 캡션과 블로그 글을 JSON으로."},{"role":"ai","text":"{ \"instagram\": { \"caption\": \"캐리어 앞에서 30분째 고민 중이라면… ✈️ 이 5가지만 기억하세요.\", \"hashtags\": [\"#여름휴가\", \"#짐싸기꿀팁\", …] }, \"blog\": { \"title\": \"여름 휴가 짐 싸기 체크리스트 5가지\", … } }"}],"caption":"같은 주제, 한 번의 호출로 플랫폼별 완성본 두 벌을 받습니다."}$aix$::jsonb, $aix${"title":"브랜드 보이스 카피 생성 따라하기","app":{"kind":"browser","url":"playground.ai-studio.dev","blocks":[{"id":"b-head","type":"heading","label":"AI 카피 스튜디오"},{"id":"b-sys-label","type":"text","label":"시스템 프롬프트 (브랜드 보이스)"},{"id":"b-sys-input","type":"input","label":"브랜드 보이스를 입력하세요…"},{"id":"b-topic-input","type":"input","label":"오늘의 주제를 입력하세요…"},{"id":"b-json-badge","type":"badge","label":"JSON 출력 모드"},{"id":"b-gen-btn","type":"button","label":"카피 생성"},{"id":"b-card-insta","type":"card","label":"📸 Instagram — \"캐리어 앞에서 30분째 고민 중이라면… ✈️\"","hidden":true},{"id":"b-card-tags","type":"card","label":"#여름휴가 #짐싸기꿀팁 #여행준비 외 7개","hidden":true},{"id":"b-card-blog","type":"card","label":"📝 Blog — 여름 휴가 짐 싸기 체크리스트 5가지 (1,800자)","hidden":true}]},"actions":[{"t":"caption","text":"① 브랜드 보이스를 시스템 프롬프트에 입력합니다"},{"t":"move","target":"b-sys-input"},{"t":"click"},{"t":"type","target":"b-sys-input","text":"10년 차 여행 가이드처럼 해요체, 과장 금지"},{"t":"wait","ms":400},{"t":"caption","text":"② 주제 큐에서 가져온 오늘의 소재를 붙여넣습니다"},{"t":"click","target":"b-topic-input"},{"t":"type","target":"b-topic-input","text":"여름 휴가철 짐 싸기 체크리스트"},{"t":"caption","text":"③ JSON 출력 모드를 켜고 생성을 실행합니다"},{"t":"move","target":"b-json-badge"},{"t":"click"},{"t":"move","target":"b-gen-btn"},{"t":"click"},{"t":"wait","ms":700},{"t":"caption","text":"④ 인스타그램 캡션과 해시태그가 먼저 도착합니다"},{"t":"reveal","target":"b-card-insta"},{"t":"reveal","target":"b-card-tags"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 같은 호출에서 블로그 버전도 함께 받습니다"},{"t":"reveal","target":"b-card-blog"},{"t":"move","target":"b-card-blog"},{"t":"caption","text":"✅ 한 번의 호출로 두 플랫폼 완성본 — Make가 필드를 그대로 씁니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'a77d817a-1d19-a42f-0e88-25354d64653d', 'a76bb583-7de2-68c3-2284-c72dc71e594b', 'sns-auto-bot/auto-image-generation', 'auto-image-generation', '이미지 자동 생성: 카드뉴스와 썸네일',
   $aix$인스타그램은 결국 이미지 플랫폼입니다. 텍스트 봇에서 멈추면 절반짜리 자동화입니다.
 
@@ -2414,11 +2499,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 템플릿을 규격별로 미리 만들어두면 리사이즈 단계가 통째로 사라집니다.
 
 > 💡 **핵심**: 브랜드 일관성이 필요한 이미지는 **생성이 아니라 치환**입니다. AI는 소재를, 템플릿은 톤을 담당합니다.$aix$,
-  $aix${"type":"grid","title":"이미지 자동화 구성 요소","items":[{"label":"AI 이미지 생성","sublabel":"새로운 비주얼 소재","icon":"wand","tone":"primary"},{"label":"템플릿 렌더링","sublabel":"카드뉴스 · 변수 치환","icon":"palette","tone":"accent"},{"label":"브랜드 에셋","sublabel":"로고 · 폰트 · 컬러 고정","icon":"layers","tone":"muted"},{"label":"플랫폼 규격","sublabel":"1:1 · 4:5 · 9:16 · 16:9","icon":"image","tone":"muted"},{"label":"이미지 URL 전달","sublabel":"발행 API가 URL로 수신","icon":"link","tone":"success"},{"label":"대체 텍스트","sublabel":"접근성 + 검색 노출","icon":"file-text","tone":"muted"}],"caption":"여섯 조각이 모여 '사람이 만든 것 같은' 이미지 라인이 됩니다."}$aix$::jsonb, 6, 3
+  $aix${"type":"grid","title":"이미지 자동화 구성 요소","items":[{"label":"AI 이미지 생성","sublabel":"새로운 비주얼 소재","icon":"wand","tone":"primary"},{"label":"템플릿 렌더링","sublabel":"카드뉴스 · 변수 치환","icon":"palette","tone":"accent"},{"label":"브랜드 에셋","sublabel":"로고 · 폰트 · 컬러 고정","icon":"layers","tone":"muted"},{"label":"플랫폼 규격","sublabel":"1:1 · 4:5 · 9:16 · 16:9","icon":"image","tone":"muted"},{"label":"이미지 URL 전달","sublabel":"발행 API가 URL로 수신","icon":"link","tone":"success"},{"label":"대체 텍스트","sublabel":"접근성 + 검색 노출","icon":"file-text","tone":"muted"}],"caption":"여섯 조각이 모여 '사람이 만든 것 같은' 이미지 라인이 됩니다."}$aix$::jsonb, null, 6, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'de5927e6-6d7d-8a60-258f-0f12d045f386', 'a76bb583-7de2-68c3-2284-c72dc71e594b', 'sns-auto-bot/instagram-graph-api', 'instagram-graph-api', '인스타그램 그래프 API: 계정 연결과 제약',
   $aix$인스타그램 자동 발행의 관문은 코드가 아니라 **계정 설정**입니다. 여기서 90%가 막히니 순서대로 갑니다.
 
@@ -2437,11 +2523,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 스토리·릴스 발행은 지원 범위와 형식 제약이 다르므로 피드부터 안정화하세요.
 
 > 💡 **핵심**: 순서는 **비즈니스 계정 → 페이지 연결 → 권한 → Make 로그인**. 발행 실패의 대부분은 코드가 아니라 이 사슬의 어딘가가 끊긴 것입니다.$aix$,
-  $aix${"type":"stack","title":"인스타그램 발행의 연결 사슬","layers":[{"label":"Make 시나리오","sublabel":"발행 모듈 · 토큰 자동 갱신","icon":"workflow","tone":"primary"},{"label":"Meta 개발자 앱","sublabel":"instagram_content_publish 권한","icon":"key","tone":"accent"},{"label":"페이스북 페이지","sublabel":"인스타그램 계정과 연결","icon":"link","tone":"muted"},{"label":"인스타그램 비즈니스 계정","sublabel":"개인 계정은 API 발행 불가","icon":"camera","tone":"warning"}],"caption":"위에서 아래까지 한 층이라도 끊기면 발행은 실패합니다 — 아래층부터 점검하세요."}$aix$::jsonb, 7, 4
+  $aix${"type":"stack","title":"인스타그램 발행의 연결 사슬","layers":[{"label":"Make 시나리오","sublabel":"발행 모듈 · 토큰 자동 갱신","icon":"workflow","tone":"primary"},{"label":"Meta 개발자 앱","sublabel":"instagram_content_publish 권한","icon":"key","tone":"accent"},{"label":"페이스북 페이지","sublabel":"인스타그램 계정과 연결","icon":"link","tone":"muted"},{"label":"인스타그램 비즈니스 계정","sublabel":"개인 계정은 API 발행 불가","icon":"camera","tone":"warning"}],"caption":"위에서 아래까지 한 층이라도 끊기면 발행은 실패합니다 — 아래층부터 점검하세요."}$aix$::jsonb, $aix${"title":"Make에서 발행 시나리오 조립 따라하기","app":{"kind":"automation-canvas","windowTitle":"daily-post 시나리오 — Make","nodes":[{"id":"n-sheet","icon":"clipboard","label":"Google Sheets","sublabel":"상태=승인 행 읽기","tone":"accent"},{"id":"n-copy","icon":"sparkles","label":"AI 카피","sublabel":"JSON 두 벌 생성","tone":"primary","hidden":true},{"id":"n-image","icon":"image","label":"이미지 렌더링","sublabel":"템플릿 변수 치환","tone":"muted","hidden":true},{"id":"n-insta","icon":"camera","label":"Instagram 발행","sublabel":"비즈니스 계정 · 공개 URL","tone":"warning","hidden":true},{"id":"n-update","icon":"refresh","label":"시트 갱신","sublabel":"상태=발행됨 기록","tone":"success","hidden":true}],"runLog":[{"id":"log-run","text":"▶ 시나리오 1회 실행 시작","tone":"out","hidden":true},{"id":"log-sheet","text":"✓ 시트: 승인 상태 1건 로드","tone":"ok","hidden":true},{"id":"log-container","text":"✓ 미디어 컨테이너 생성 — 2단계 발행 1/2","tone":"ok","hidden":true},{"id":"log-publish","text":"✓ 발행 확정 — 게시물 ID 1789… (2/2)","tone":"ok","hidden":true},{"id":"log-done","text":"✓ 시트 갱신: 상태=발행됨, 결과 링크 기록","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 주제 큐를 읽는 구글 시트 모듈부터 놓습니다"},{"t":"move","target":"n-sheet"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"② 카피를 만드는 AI 모듈을 이어 붙입니다"},{"t":"reveal","target":"n-copy"},{"t":"move","target":"n-copy"},{"t":"click"},{"t":"caption","text":"③ 이미지 렌더링과 인스타그램 발행 모듈을 연결합니다"},{"t":"reveal","target":"n-image"},{"t":"reveal","target":"n-insta"},{"t":"move","target":"n-insta"},{"t":"click"},{"t":"caption","text":"④ 마지막에 시트 상태를 갱신하는 모듈을 답니다"},{"t":"reveal","target":"n-update"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 1회 실행으로 컨테이너 생성 → 발행 확정 2단계를 확인합니다"},{"t":"reveal","target":"log-run"},{"t":"reveal","target":"log-sheet"},{"t":"reveal","target":"log-container"},{"t":"reveal","target":"log-publish"},{"t":"move","target":"log-publish"},{"t":"reveal","target":"log-done"},{"t":"caption","text":"✅ 큐에서 발행까지 무인 라인 완성 — 실패하면 로그의 단계부터 봅니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '9a160035-af47-4377-8dc3-26da6ea61b93', 'a76bb583-7de2-68c3-2284-c72dc71e594b', 'sns-auto-bot/blog-publishing', 'blog-publishing', '블로그 발행 자동화: 워드프레스와 티스토리',
   $aix$블로그는 인스타그램과 반대로 **검색 유입의 저수지**입니다. 같은 파이프라인에서 긴 글 버전을 흘려보냅니다.
 
@@ -2463,11 +2550,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 같은 URL을 인스타그램 프로필 링크 도구나 스토리로 재활용하면 채널 간 순환이 생깁니다.
 
 > 💡 **핵심**: 자동화 친화도는 플랫폼마다 다릅니다. **API가 열려 있는 곳에 본진**을 두고, 닫힌 곳은 반자동으로 타협하세요.$aix$,
-  $aix${"type":"compare","title":"워드프레스 vs 티스토리 자동화","columns":[{"title":"워드프레스","icon":"globe","tone":"primary","items":["공식 REST API + Make 전용 모듈","예약 발행 · 카테고리 · 대표 이미지 제어","자체 도메인 — 정지 리스크 없음","완전 무인 발행 가능"]},{"title":"티스토리","icon":"alert","tone":"warning","items":["Open API 신규 발급 중단","반자동(원고 전달 → 수동 게시)이 현실적","브라우저 자동화는 차단 리스크","장기적으로 이전 검토 권장"]}],"caption":"본진은 API가 열린 플랫폼에 — 자동화 가능성이 곧 플랫폼 선택 기준입니다."}$aix$::jsonb, 5, 5
+  $aix${"type":"compare","title":"워드프레스 vs 티스토리 자동화","columns":[{"title":"워드프레스","icon":"globe","tone":"primary","items":["공식 REST API + Make 전용 모듈","예약 발행 · 카테고리 · 대표 이미지 제어","자체 도메인 — 정지 리스크 없음","완전 무인 발행 가능"]},{"title":"티스토리","icon":"alert","tone":"warning","items":["Open API 신규 발급 중단","반자동(원고 전달 → 수동 게시)이 현실적","브라우저 자동화는 차단 리스크","장기적으로 이전 검토 권장"]}],"caption":"본진은 API가 열린 플랫폼에 — 자동화 가능성이 곧 플랫폼 선택 기준입니다."}$aix$::jsonb, null, 5, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '59b745b7-bf8b-979d-8ff6-ffb86dfa0fbc', 'a76bb583-7de2-68c3-2284-c72dc71e594b', 'sns-auto-bot/scheduling', 'scheduling', '스케줄링과 최적 발행 시간',
   $aix$콘텐츠가 준비됐어도 **언제 올리느냐**로 도달이 갈립니다. 스케줄링은 봇의 심장 박동입니다.
 
@@ -2487,11 +2575,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 발행 성공/실패를 슬랙·텔레그램으로 알림 받는 모듈을 끝에 붙이세요. 침묵하는 봇이 가장 위험합니다.
 
 > 💡 **핵심**: 스케줄은 **고정값이 아니라 실험 변수**입니다. 시각 컬럼 하나로 발행 시간을 데이터로 관리하세요.$aix$,
-  $aix${"type":"terminal","windowTitle":"Make — 시나리오 실행 로그","lines":[{"text":"[07:30:00] 시나리오 'daily-post' 시작","tone":"cmd"},{"text":"큐 조회: 상태=승인, 예약시각≤07:30 → 1건","tone":"out"},{"text":"AI 카피 로드 · 이미지 URL 확인 … OK","tone":"ok"},{"text":"Instagram: 컨테이너 생성 → 발행 완료 (id: 1789…)","tone":"ok"},{"text":"WordPress: 초안 → 공개 전환 완료","tone":"ok"},{"text":"시트 갱신: 상태=발행됨, 결과 링크 기록","tone":"out"},{"text":"# 실패 시: 텔레그램 알림 + 상태=오류","tone":"comment"},{"text":"[07:30:41] 완료 — 다음 실행 07:45","tone":"dim"}],"caption":"15분 주기로 도는 시나리오가 예약 시각이 된 행만 집어 발행합니다."}$aix$::jsonb, 5, 6
+  $aix${"type":"terminal","windowTitle":"Make — 시나리오 실행 로그","lines":[{"text":"[07:30:00] 시나리오 'daily-post' 시작","tone":"cmd"},{"text":"큐 조회: 상태=승인, 예약시각≤07:30 → 1건","tone":"out"},{"text":"AI 카피 로드 · 이미지 URL 확인 … OK","tone":"ok"},{"text":"Instagram: 컨테이너 생성 → 발행 완료 (id: 1789…)","tone":"ok"},{"text":"WordPress: 초안 → 공개 전환 완료","tone":"ok"},{"text":"시트 갱신: 상태=발행됨, 결과 링크 기록","tone":"out"},{"text":"# 실패 시: 텔레그램 알림 + 상태=오류","tone":"comment"},{"text":"[07:30:41] 완료 — 다음 실행 07:45","tone":"dim"}],"caption":"15분 주기로 도는 시나리오가 예약 시각이 된 행만 집어 발행합니다."}$aix$::jsonb, null, 5, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '47651e39-1d27-dbe2-6f4e-f883b7cf1dc3', '4d6e7968-627d-db7b-affa-b7be3076d42b', 'sns-auto-bot/quality-gate', 'quality-gate', '품질 가드: 발행 전 검수 게이트 만들기',
   $aix$자동화의 진짜 리스크는 오타가 아니라 **틀린 내용이 브랜드 이름으로 매일 나가는 것**입니다. 발행 앞에 게이트를 세웁니다.
 
@@ -2510,11 +2599,12 @@ Make 시나리오에서 발행 모듈 **직전**에 필터를 겹칩니다.
 - 반려된 포스트는 반려 사유와 함께 생성 단계로 되돌립니다. 이 반려 루프가 프롬프트 개선의 원료가 됩니다.
 
 > 💡 **핵심**: 게이트는 **기계 검사 3겹 + 사람 승인 다이얼**. 신뢰가 쌓이는 만큼만 다이얼을 자동 쪽으로 돌리세요.$aix$,
-  $aix${"type":"flow","title":"발행 전 검수 게이트","nodes":[{"label":"AI 생성 완료","sublabel":"카피 + 이미지","icon":"sparkles","tone":"muted"},{"label":"자동 검사","sublabel":"금칙어 · 형식 · 링크","icon":"filter","tone":"accent"},{"label":"AI 교차 검수","sublabel":"다른 모델이 사실·보이스 채점","icon":"eye","tone":"primary","edgeLabel":"자동 검사 통과 시"},{"label":"휴먼 승인","sublabel":"텔레그램 버튼 승인 (다이얼 조절)","icon":"user","tone":"warning"},{"label":"발행","sublabel":"인스타그램 · 블로그","icon":"send","tone":"success"}],"loopBack":{"from":3,"to":0,"label":"반려 시 사유와 함께 재생성"},"caption":"반려 사유가 생성 단계로 되돌아가는 루프가 품질을 누적시킵니다."}$aix$::jsonb, 6, 7
+  $aix${"type":"flow","title":"발행 전 검수 게이트","nodes":[{"label":"AI 생성 완료","sublabel":"카피 + 이미지","icon":"sparkles","tone":"muted"},{"label":"자동 검사","sublabel":"금칙어 · 형식 · 링크","icon":"filter","tone":"accent"},{"label":"AI 교차 검수","sublabel":"다른 모델이 사실·보이스 채점","icon":"eye","tone":"primary","edgeLabel":"자동 검사 통과 시"},{"label":"휴먼 승인","sublabel":"텔레그램 버튼 승인 (다이얼 조절)","icon":"user","tone":"warning"},{"label":"발행","sublabel":"인스타그램 · 블로그","icon":"send","tone":"success"}],"loopBack":{"from":3,"to":0,"label":"반려 시 사유와 함께 재생성"},"caption":"반려 사유가 생성 단계로 되돌아가는 루프가 품질을 누적시킵니다."}$aix$::jsonb, $aix${"title":"발행 전 검수 승인 따라하기","app":{"kind":"chat-app","workspace":"브랜드 운영팀","channels":[{"id":"ch-review","name":"포스팅-검수","active":true},{"id":"ch-publish","name":"발행-알림"},{"id":"ch-report","name":"성과-리포트"}],"composerId":"composer","messages":[{"id":"m-draft","author":"포스팅봇","bot":true,"time":"오후 6:02","text":"내일 07:30 발행 예정 초안입니다.\n주제: 여름 휴가철 짐 싸기 체크리스트\n훅: \"캐리어 앞에서 30분째 고민 중이라면… ✈️\"","hidden":true},{"id":"m-auto-check","author":"포스팅봇","bot":true,"time":"오후 6:02","text":"자동 검사 통과: 금칙어 0건 · 해시태그 9개 · 이미지 URL 정상","hidden":true},{"id":"m-cross-check","author":"포스팅봇","bot":true,"time":"오후 6:03","text":"AI 교차 검수(다른 모델): 사실 오류 없음 · 과장 표현 없음 · 보이스 점수 9/10","hidden":true},{"id":"m-approve","author":"나 (운영자)","time":"오후 6:07","text":"검수 결과 확인했습니다. 승인합니다 ✅","hidden":true},{"id":"m-scheduled","author":"포스팅봇","bot":true,"time":"오후 6:07","text":"✅ 큐 시트 상태=승인 갱신 — 내일 07:30 인스타그램·블로그 발행 예약 완료","hidden":true}]},"actions":[{"t":"caption","text":"① 봇이 발행 전 초안과 자동 검사 결과를 올립니다"},{"t":"reveal","target":"m-draft"},{"t":"reveal","target":"m-auto-check"},{"t":"wait","ms":600},{"t":"caption","text":"② 다른 모델의 교차 검수 점수까지 확인합니다"},{"t":"reveal","target":"m-cross-check"},{"t":"move","target":"m-cross-check"},{"t":"click"},{"t":"wait","ms":500},{"t":"caption","text":"③ 사람은 판단만 — 승인 코멘트를 입력합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"검수 결과 확인했습니다. 승인합니다 ✅"},{"t":"wait","ms":400},{"t":"hide","target":"composer"},{"t":"reveal","target":"composer"},{"t":"reveal","target":"m-approve"},{"t":"caption","text":"④ 승인 즉시 봇이 큐 상태를 갱신하고 발행을 예약합니다"},{"t":"reveal","target":"m-scheduled"},{"t":"move","target":"m-scheduled"},{"t":"caption","text":"✅ 검수 게이트 통과 — 판단은 사람, 실행은 봇의 몫입니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '87e76eba-0a98-db6f-902f-df40526eb508', '4d6e7968-627d-db7b-affa-b7be3076d42b', 'sns-auto-bot/measure-improve', 'measure-improve', '성과 측정과 개선 루프: 데이터가 큐를 채운다',
   $aix$발행까지 자동화했다면 절반입니다. 나머지 절반은 **무엇이 통했는지를 시스템이 스스로 배우게** 하는 것입니다.
 
@@ -2537,11 +2627,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 주간 리포트를 읽고 방향만 결정합니다 — "이번 달은 후기 필러 강화". 실행은 다시 봇의 몫입니다.
 
 > 💡 **핵심**: 성과 데이터가 **주제 큐와 프롬프트 예시로 되돌아가는** 순간, 봇은 반복기가 아니라 학습기가 됩니다.$aix$,
-  $aix${"type":"cycle","title":"주간 개선 루프","center":"매주 1회 자동 순환","nodes":[{"label":"발행","sublabel":"매일 자동 포스팅","icon":"send"},{"label":"수집","sublabel":"도달 · 저장 · 검색 유입","icon":"chart"},{"label":"분석","sublabel":"AI가 상·하위 패턴 요약","icon":"brain"},{"label":"반영","sublabel":"큐 비중 · 프롬프트 예시 갱신","icon":"refresh"}],"caption":"이 사이클이 돌 때마다 다음 주 콘텐츠의 평균 성적이 올라갑니다."}$aix$::jsonb, 5, 8
+  $aix${"type":"cycle","title":"주간 개선 루프","center":"매주 1회 자동 순환","nodes":[{"label":"발행","sublabel":"매일 자동 포스팅","icon":"send"},{"label":"수집","sublabel":"도달 · 저장 · 검색 유입","icon":"chart"},{"label":"분석","sublabel":"AI가 상·하위 패턴 요약","icon":"brain"},{"label":"반영","sublabel":"큐 비중 · 프롬프트 예시 갱신","icon":"refresh"}],"caption":"이 사이클이 돌 때마다 다음 주 콘텐츠의 평균 성적이 올라갑니다."}$aix$::jsonb, null, 5, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '4985e147-503c-7a3c-e736-ada35fd4b925', '4d6e7968-627d-db7b-affa-b7be3076d42b', 'sns-auto-bot/policy-and-account-safety', 'policy-and-account-safety', '플랫폼 정책 준수: 계정이 살아야 봇도 산다',
   $aix$자동화 봇 최악의 결말은 버그가 아니라 **계정 정지**입니다. 몇 년 키운 계정은 복구가 안 되니, 정책 준수는 기능이 아니라 전제입니다.
 
@@ -2562,10 +2653,11 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 토큰 만료·정책 변경 공지를 월 1회 점검하는 캘린더 반복 일정을 만드세요. 봇은 방치한 만큼 위험해집니다.
 
 > 💡 **핵심**: 오래가는 봇의 조건은 기술이 아니라 **절제**입니다 — 공식 API, 사람 같은 빈도, 반복 없는 콘텐츠.$aix$,
-  $aix${"type":"compare","title":"정지당하는 봇 vs 오래가는 봇","columns":[{"title":"정지당하는 봇","icon":"x","tone":"warning","items":["비공식 앱 · 매크로로 발행","하루 수십 건 폭탄 발행","같은 해시태그 세트 복붙","자동 팔로우 · 좋아요 · DM"]},{"title":"오래가는 봇","icon":"shield","tone":"success","items":["공식 그래프 API + Make","하루 1~2회, 일정한 리듬","해시태그 풀 30개 이상 회전","발행만 자동화, 소통은 사람이"]}],"caption":"계정은 봇의 유일한 자산입니다 — 절제가 곧 수명입니다."}$aix$::jsonb, 5, 9
+  $aix${"type":"compare","title":"정지당하는 봇 vs 오래가는 봇","columns":[{"title":"정지당하는 봇","icon":"x","tone":"warning","items":["비공식 앱 · 매크로로 발행","하루 수십 건 폭탄 발행","같은 해시태그 세트 복붙","자동 팔로우 · 좋아요 · DM"]},{"title":"오래가는 봇","icon":"shield","tone":"success","items":["공식 그래프 API + Make","하루 1~2회, 일정한 리듬","해시태그 풀 30개 이상 회전","발행만 자동화, 소통은 사람이"]}],"caption":"계정은 봇의 유일한 자산입니다 — 절제가 곧 수명입니다."}$aix$::jsonb, null, 5, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 -- 강의: AI 수익화: 전자책 · 스톡 이미지 파이프라인
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
@@ -2583,7 +2675,7 @@ insert into public.modules (id, course_id, slug, title, order_index) values (
 insert into public.modules (id, course_id, slug, title, order_index) values (
   '9a0cec31-c225-d7a0-2f84-875c820e39ca', '206a3f5e-81d2-d22f-39ed-625dae1dc109', 'stock-image-pipeline', '스톡 이미지 파이프라인', 2
 ) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'db8849f6-23c2-5e88-11ea-ea71b8557589', '83964f32-349e-a6d2-f48a-556b196341e0', 'ai-passive-income/realistic-expectations', 'realistic-expectations', '현실적 기대치: ''월 천만 원'' 광고 해부하기',
   $aix$AI 수익화에서 가장 먼저 만들어야 할 자산은 전자책이 아니라 **정확한 기대치**입니다.
 
@@ -2605,11 +2697,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - AI는 제작 원가를 극적으로 낮췄습니다. 남은 승부처는 **기획과 선별**입니다.
 
 > 💡 **핵심**: AI 수익화는 복권이 아니라 **소액 자산을 꾸준히 쌓는 파이프라인 사업**입니다. 기대치가 정확해야 3개월을 버팁니다.$aix$,
-  $aix${"type":"compare","title":"과장 마케팅 vs 현실","columns":[{"title":"광고가 말하는 것","icon":"alert","tone":"warning","items":["하루 10분, 클릭 몇 번","첫 달부터 월 천만 원","AI가 전부 알아서","누구나 즉시 가능"]},{"title":"실제 수익 구조","icon":"chart","tone":"primary","items":["자산 1개 수익은 소액","자산 수 × 시간으로 누적","선별·편집은 사람의 몫","첫 수익까지 1~3개월"]}],"caption":"제작 원가는 내려갔지만, 기획·선별·개선의 노동은 그대로 남아 있습니다."}$aix$::jsonb, 5, 0
+  $aix${"type":"compare","title":"과장 마케팅 vs 현실","columns":[{"title":"광고가 말하는 것","icon":"alert","tone":"warning","items":["하루 10분, 클릭 몇 번","첫 달부터 월 천만 원","AI가 전부 알아서","누구나 즉시 가능"]},{"title":"실제 수익 구조","icon":"chart","tone":"primary","items":["자산 1개 수익은 소액","자산 수 × 시간으로 누적","선별·편집은 사람의 몫","첫 수익까지 1~3개월"]}],"caption":"제작 원가는 내려갔지만, 기획·선별·개선의 노동은 그대로 남아 있습니다."}$aix$::jsonb, null, 5, 0
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '0bf2b54a-30cd-8019-4573-db69c5246d27', '83964f32-349e-a6d2-f48a-556b196341e0', 'ai-passive-income/finding-your-niche', 'finding-your-niche', '팔리는 니치 찾기: 수요와 경쟁의 교차점',
   $aix$무엇을 만들지 정하는 30분이 무엇을 만드는 30시간보다 수익을 더 크게 좌우합니다.
 
@@ -2634,11 +2727,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 반대로 수요만 보고 레드오션(다이어트, 재테크 일반론)에 들어가는 것도 실패 공식입니다.
 
 > 💡 **핵심**: 니치 선정은 감이 아니라 **검색량 × 경쟁 강도 표**로 결정하세요. 데이터 30분이 제작 30시간을 살립니다.$aix$,
-  $aix${"type":"steps","title":"니치 검증 4단계","steps":[{"label":"하위 키워드 20개 발산","sublabel":"AI 브레인스토밍 + 검색 자동완성","icon":"lightbulb"},{"label":"수요 × 경쟁 표 만들기","sublabel":"검색량, 상위 상품 리뷰 수·평점","icon":"search"},{"label":"후보 3개로 압축","sublabel":"수요 중간 이상 + 경쟁 약함","icon":"filter"},{"label":"불만 리뷰에서 각도 찾기","sublabel":"'사긴 사는데 불만족'이 기회","icon":"target"}],"caption":"취향이 아니라 데이터가 니치를 고릅니다."}$aix$::jsonb, 6, 1
+  $aix${"type":"steps","title":"니치 검증 4단계","steps":[{"label":"하위 키워드 20개 발산","sublabel":"AI 브레인스토밍 + 검색 자동완성","icon":"lightbulb"},{"label":"수요 × 경쟁 표 만들기","sublabel":"검색량, 상위 상품 리뷰 수·평점","icon":"search"},{"label":"후보 3개로 압축","sublabel":"수요 중간 이상 + 경쟁 약함","icon":"filter"},{"label":"불만 리뷰에서 각도 찾기","sublabel":"'사긴 사는데 불만족'이 기회","icon":"target"}],"caption":"취향이 아니라 데이터가 니치를 고릅니다."}$aix$::jsonb, null, 6, 1
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'e47ae9e4-3c87-00c6-3aa8-896b61eb690a', '83964f32-349e-a6d2-f48a-556b196341e0', 'ai-passive-income/your-added-value', 'your-added-value', '나만의 부가가치: AI 100% 생성물은 왜 안 팔리나',
   $aix$프롬프트 한 줄로 만든 결과물은 이제 **누구나 1분 만에** 만들 수 있습니다. 누구나 만들 수 있는 것에는 가격이 붙지 않습니다.
 
@@ -2662,11 +2756,12 @@ AI 출력물은 원재료입니다. 그 위에 사람만 얹을 수 있는 층�
 "AI가 만든 것"이 아니라 "AI로 **내가** 만든 것"이 팔립니다. 구매자가 돈을 내는 대상은 생성이 아니라 **판단**입니다.
 
 > 💡 **핵심**: AI는 원재료 공장입니다. 경험 · 큐레이션 · 구조 · 검증 — 이 4개 층이 여러분의 마진입니다.$aix$,
-  $aix${"type":"stack","title":"가격이 붙는 가치의 층","layers":[{"label":"검증","sublabel":"사실 확인 · 최신화 · 오류 수정","icon":"shield","tone":"success"},{"label":"구조","sublabel":"독자 문제 순서의 목차 · 시리즈 스타일","icon":"layers","tone":"primary"},{"label":"경험 · 큐레이션","sublabel":"직접 해본 사례 · 100개 중 8개 선별","icon":"eye","tone":"accent"},{"label":"AI 생성물 (원재료)","sublabel":"누구나 1분 만에 — 그 자체론 가격 0원","icon":"sparkles","tone":"muted"}],"caption":"아래층(생성)은 흔해졌고, 위층(판단)으로 갈수록 희소해집니다."}$aix$::jsonb, 5, 2
+  $aix${"type":"stack","title":"가격이 붙는 가치의 층","layers":[{"label":"검증","sublabel":"사실 확인 · 최신화 · 오류 수정","icon":"shield","tone":"success"},{"label":"구조","sublabel":"독자 문제 순서의 목차 · 시리즈 스타일","icon":"layers","tone":"primary"},{"label":"경험 · 큐레이션","sublabel":"직접 해본 사례 · 100개 중 8개 선별","icon":"eye","tone":"accent"},{"label":"AI 생성물 (원재료)","sublabel":"누구나 1분 만에 — 그 자체론 가격 0원","icon":"sparkles","tone":"muted"}],"caption":"아래층(생성)은 흔해졌고, 위층(판단)으로 갈수록 희소해집니다."}$aix$::jsonb, null, 5, 2
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'fe9971d5-32b9-988a-fd61-eaaa642242f9', '42e48838-8148-c842-f738-80e882570a01', 'ai-passive-income/planning-and-outline', 'planning-and-outline', '기획과 목차 설계: AI 브레인스토밍 활용법',
   $aix$전자책의 판매량은 집필 전에 이미 절반이 결정됩니다. 목차가 곧 상품 기획서이기 때문입니다.
 
@@ -2688,11 +2783,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 얇게 여러 권(시리즈)이 두껍게 한 권보다 노출 기회와 수익 면에서 유리합니다.
 
 > 💡 **핵심**: AI로 질문을 발산하고, 사람이 "돈 낼 질문"만 수렴하세요. 목차의 각 장은 독자가 얻는 능력 한 줄로 검증합니다.$aix$,
-  $aix${"type":"chat","title":"목차 브레인스토밍 프롬프트","messages":[{"role":"user","text":"'1인 사업자 세금 신고' 전자책을 기획 중이야. 초보 독자가 실제로 검색할 법한 질문 30개를 뽑아줘."},{"role":"ai","text":"1. 홈택스 첫 신고, 뭐부터 눌러야 하나요? 2. 경비 처리 되는 것과 안 되는 것은? 3. 세금계산서와 현금영수증의 차이는? …"},{"role":"user","text":"좋아. 이 질문들을 '신고 전 준비 → 신고 당일 → 신고 후 관리' 순서로 묶어서 3부 목차로 재구성해줘."},{"role":"ai","text":"1부 준비: 장부와 증빙 모으기(질문 2,3,7…) / 2부 실전: 홈택스 화면 순서대로(질문 1,5…) / 3부 관리: 환급·경정청구(질문 12…)"}],"caption":"AI는 질문을 발산하고, 사람은 독자의 문제 순서로 수렴합니다."}$aix$::jsonb, 5, 3
+  $aix${"type":"chat","title":"목차 브레인스토밍 프롬프트","messages":[{"role":"user","text":"'1인 사업자 세금 신고' 전자책을 기획 중이야. 초보 독자가 실제로 검색할 법한 질문 30개를 뽑아줘."},{"role":"ai","text":"1. 홈택스 첫 신고, 뭐부터 눌러야 하나요? 2. 경비 처리 되는 것과 안 되는 것은? 3. 세금계산서와 현금영수증의 차이는? …"},{"role":"user","text":"좋아. 이 질문들을 '신고 전 준비 → 신고 당일 → 신고 후 관리' 순서로 묶어서 3부 목차로 재구성해줘."},{"role":"ai","text":"1부 준비: 장부와 증빙 모으기(질문 2,3,7…) / 2부 실전: 홈택스 화면 순서대로(질문 1,5…) / 3부 관리: 환급·경정청구(질문 12…)"}],"caption":"AI는 질문을 발산하고, 사람은 독자의 문제 순서로 수렴합니다."}$aix$::jsonb, null, 5, 3
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '6d7c5109-3e38-19af-135d-52daed2eb337', '42e48838-8148-c842-f738-80e882570a01', 'ai-passive-income/writing-workflow', 'writing-workflow', '집필 워크플로우: 초안은 AI, 편집은 사람',
   $aix$전자책 집필에서 시간이 가장 오래 걸리는 일은 이제 쓰기가 아니라 **고치기와 확인하기**입니다. 워크플로우도 거기에 맞춰 설계합니다.
 
@@ -2713,11 +2809,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 편집하다 구조 문제를 발견하면 목차로 되돌아가는 것을 두려워하지 마세요 — 파이프라인은 원래 되돌아갑니다.
 
 > 💡 **핵심**: AI가 빨라진 만큼 병목은 편집과 사실 확인으로 이동했습니다. **초안 30% : 편집·검증 70%**로 시간을 배분하세요.$aix$,
-  $aix${"type":"flow","title":"장(챕터) 단위 집필 루프","nodes":[{"label":"AI 초안 생성","sublabel":"장 단위 · 개요+독자+금지사항 프롬프트","icon":"wand","tone":"accent"},{"label":"사람의 편집","sublabel":"경험 삽입 · AI 문체 제거","icon":"user","tone":"primary"},{"label":"사실 확인","sublabel":"숫자·법규·URL 출처 대조","icon":"shield","tone":"warning"},{"label":"장 완성 → 다음 장","sublabel":"하루 1장 사이클","icon":"check","tone":"success","edgeLabel":"검증 통과 시"}],"loopBack":{"from":2,"to":0,"label":"오류·구조 문제 발견 시 재작성"},"caption":"생성은 빨라졌으니, 시간의 70%는 편집과 검증에 씁니다."}$aix$::jsonb, 6, 4
+  $aix${"type":"flow","title":"장(챕터) 단위 집필 루프","nodes":[{"label":"AI 초안 생성","sublabel":"장 단위 · 개요+독자+금지사항 프롬프트","icon":"wand","tone":"accent"},{"label":"사람의 편집","sublabel":"경험 삽입 · AI 문체 제거","icon":"user","tone":"primary"},{"label":"사실 확인","sublabel":"숫자·법규·URL 출처 대조","icon":"shield","tone":"warning"},{"label":"장 완성 → 다음 장","sublabel":"하루 1장 사이클","icon":"check","tone":"success","edgeLabel":"검증 통과 시"}],"loopBack":{"from":2,"to":0,"label":"오류·구조 문제 발견 시 재작성"},"caption":"생성은 빨라졌으니, 시간의 70%는 편집과 검증에 씁니다."}$aix$::jsonb, $aix${"title":"AI 초안 → 사람 편집 워크플로우 따라하기","app":{"kind":"browser","url":"app.ai-writer.example/project/tax-guide","blocks":[{"id":"b-head","type":"heading","label":"전자책 집필 어시스턴트 — 1인 사업자 세금 신고"},{"id":"b-prompt","type":"input","label":"AI에게 요청할 내용을 입력하세요…"},{"id":"b-send","type":"button","label":"요청 보내기"},{"id":"b-outline","type":"card","label":"📑 목차 초안 — 1부 준비 / 2부 홈택스 실전 / 3부 신고 후 관리","hidden":true},{"id":"b-confirm","type":"badge","label":"목차 확정 — 독자의 문제 순서로 재배열","hidden":true},{"id":"b-draft","type":"card","label":"📝 2부 1장 초안 (1,200자) — [확인 필요] 표시 2곳 포함","hidden":true},{"id":"b-flag","type":"badge","label":"[확인 필요] 홈택스 화면 개편 여부 — 출처 직접 대조","hidden":true},{"id":"b-edit","type":"card","label":"✍️ 사람 편집 — 내 실패 사례 삽입 · AI 문체 제거","hidden":true},{"id":"b-done","type":"badge","label":"1장 완성 — 사실 확인 통과","hidden":true}]},"actions":[{"t":"caption","text":"① 니치 키워드로 목차 초안을 요청합니다"},{"t":"click","target":"b-prompt"},{"t":"type","target":"b-prompt","text":"1인 사업자 세금 신고, 3부 목차 구성해줘"},{"t":"click","target":"b-send"},{"t":"reveal","target":"b-outline"},{"t":"wait","ms":600},{"t":"caption","text":"② 사람이 독자의 문제 순서로 목차를 확정합니다"},{"t":"move","target":"b-outline"},{"t":"click"},{"t":"reveal","target":"b-confirm"},{"t":"caption","text":"③ 장 단위로 초안을 요청합니다 — 금지사항 포함"},{"t":"hide","target":"b-prompt"},{"t":"type","target":"b-prompt","text":"2부 1장 초안. 불확실하면 [확인 필요] 표시해"},{"t":"click","target":"b-send"},{"t":"reveal","target":"b-draft"},{"t":"reveal","target":"b-flag"},{"t":"caption","text":"④ [확인 필요] 표시는 사람이 원본 출처로 검증합니다"},{"t":"dblclick","target":"b-flag"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 경험 삽입과 문체 정리는 사람의 몫입니다"},{"t":"reveal","target":"b-edit"},{"t":"move","target":"b-edit"},{"t":"reveal","target":"b-done"},{"t":"caption","text":"✅ 초안 30% : 편집·검증 70% — 하루 1장 사이클"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 4
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'af4d487d-8e9d-9549-def6-d5202d760523', '42e48838-8148-c842-f738-80e882570a01', 'ai-passive-income/formatting-and-cover', 'formatting-and-cover', '자동 포맷팅과 표지 제작',
   $aix$내용이 같아도 조판과 표지가 조악하면 '싸구려 AI 책'으로 보입니다. 다행히 이 단계는 거의 전부 자동화됩니다.
 
@@ -2740,11 +2837,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 표지가 흑백·축소 상태에서도 판독되는가
 
 > 💡 **핵심**: 원고는 마크다운으로, 변환은 pandoc으로, 표지 텍스트는 사람 손으로. 포맷팅은 **한 번 만든 스크립트를 시리즈 전체에 재사용**하는 단계입니다.$aix$,
-  $aix${"type":"terminal","windowTitle":"포맷팅 파이프라인 — 명령 한 줄 변환","lines":[{"text":"# 마크다운 원고 → EPUB (목차·스타일 자동)","tone":"comment"},{"text":"pandoc book.md -o book.epub --toc --css=style.css \\","tone":"cmd"},{"text":"  --metadata title=\"1인 사업자 세금 신고\"","tone":"cmd"},{"text":"✓ book.epub 생성 완료","tone":"ok"},{"text":"# 같은 원고로 PDF 판매본도 동시에","tone":"comment"},{"text":"pandoc book.md -o book.pdf --toc","tone":"cmd"},{"text":"✓ book.pdf 생성 완료","tone":"ok"},{"text":"epubcheck book.epub","tone":"cmd"},{"text":"✓ 검증 통과 — 오류 0건","tone":"ok"}],"caption":"한 번 만든 변환 스크립트는 시리즈 전권에 그대로 재사용됩니다."}$aix$::jsonb, 5, 5
+  $aix${"type":"terminal","windowTitle":"포맷팅 파이프라인 — 명령 한 줄 변환","lines":[{"text":"# 마크다운 원고 → EPUB (목차·스타일 자동)","tone":"comment"},{"text":"pandoc book.md -o book.epub --toc --css=style.css \\","tone":"cmd"},{"text":"  --metadata title=\"1인 사업자 세금 신고\"","tone":"cmd"},{"text":"✓ book.epub 생성 완료","tone":"ok"},{"text":"# 같은 원고로 PDF 판매본도 동시에","tone":"comment"},{"text":"pandoc book.md -o book.pdf --toc","tone":"cmd"},{"text":"✓ book.pdf 생성 완료","tone":"ok"},{"text":"epubcheck book.epub","tone":"cmd"},{"text":"✓ 검증 통과 — 오류 0건","tone":"ok"}],"caption":"한 번 만든 변환 스크립트는 시리즈 전권에 그대로 재사용됩니다."}$aix$::jsonb, null, 5, 5
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '935eca3d-8fb9-c78b-da57-2987b324061b', '42e48838-8148-c842-f738-80e882570a01', 'ai-passive-income/publishing-and-disclosure', 'publishing-and-disclosure', '퍼블리싱 등록과 AI 콘텐츠 고지 정책',
   $aix$다 만든 책이 계정 정지로 사라지는 일은 실제로 일어납니다. 등록 절차보다 먼저 알아야 할 것이 **각 플랫폼의 AI 콘텐츠 정책**입니다.
 
@@ -2765,11 +2863,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 가격은 경쟁작 범위 안에서 시작하고, 이후 데이터로 조정합니다.
 
 > 💡 **핵심**: AI 사용은 숨길 것이 아니라 **정책에 맞게 고지**할 대상입니다. 계정은 파이프라인 전체가 걸린 자산이라, 정책 위반은 최대 리스크입니다.$aix$,
-  $aix${"type":"grid","title":"퍼블리싱 채널 지도","items":[{"label":"아마존 KDP","sublabel":"AI 생성 여부 고지 의무","icon":"book","tone":"primary"},{"label":"국내 이북 플랫폼","sublabel":"리디·교보 등 — 약관 확인","icon":"smartphone","tone":"accent"},{"label":"지식마켓","sublabel":"크몽 등 — PDF 직판","icon":"shopping-cart","tone":"accent"},{"label":"직접 판매","sublabel":"Gumroad 등 — 수수료 최소","icon":"globe","tone":"success"},{"label":"독점 계약 주의","sublabel":"타 플랫폼 판매 금지 조건","icon":"alert","tone":"warning"},{"label":"계정 = 핵심 자산","sublabel":"정책 위반은 최대 리스크","icon":"key","tone":"muted"}],"caption":"첫 책은 비독점 다중 등록으로 — 계정 안전이 수익보다 우선입니다."}$aix$::jsonb, 6, 6
+  $aix${"type":"grid","title":"퍼블리싱 채널 지도","items":[{"label":"아마존 KDP","sublabel":"AI 생성 여부 고지 의무","icon":"book","tone":"primary"},{"label":"국내 이북 플랫폼","sublabel":"리디·교보 등 — 약관 확인","icon":"smartphone","tone":"accent"},{"label":"지식마켓","sublabel":"크몽 등 — PDF 직판","icon":"shopping-cart","tone":"accent"},{"label":"직접 판매","sublabel":"Gumroad 등 — 수수료 최소","icon":"globe","tone":"success"},{"label":"독점 계약 주의","sublabel":"타 플랫폼 판매 금지 조건","icon":"alert","tone":"warning"},{"label":"계정 = 핵심 자산","sublabel":"정책 위반은 최대 리스크","icon":"key","tone":"muted"}],"caption":"첫 책은 비독점 다중 등록으로 — 계정 안전이 수익보다 우선입니다."}$aix$::jsonb, $aix${"title":"KDP 등록과 AI 콘텐츠 고지 따라하기","app":{"kind":"browser","url":"kdp.amazon.com/ko_KR/title-setup/kindle","blocks":[{"id":"k-head","type":"heading","label":"Kindle 전자책 세부 정보 등록"},{"id":"k-title","type":"input","label":"도서 제목 입력…"},{"id":"k-desc","type":"input","label":"도서 소개문 입력…"},{"id":"k-ai-q","type":"card","label":"생성형 AI 사용 여부 — 텍스트·이미지에 AI 생성 콘텐츠가 포함되어 있습니까?"},{"id":"k-ai-yes","type":"button","label":"예 — AI 생성 콘텐츠 포함"},{"id":"k-ai-badge","type":"badge","label":"☑ AI 생성 고지 완료 — 허위 고지 시 계정 정지 위험","hidden":true},{"id":"k-upload","type":"button","label":"원고·표지 업로드"},{"id":"k-file","type":"card","label":"📄 book.epub · cover.jpg — 업로드 완료 (epubcheck 통과본)","hidden":true},{"id":"k-publish","type":"button","label":"출간 신청"},{"id":"k-review","type":"badge","label":"🕒 심사 대기 중 — 보통 72시간 이내","hidden":true}]},"actions":[{"t":"caption","text":"① 니치 조사로 검증한 제목을 입력합니다"},{"t":"click","target":"k-title"},{"t":"type","target":"k-title","text":"1인 사업자 세금 신고, 30분 가이드"},{"t":"wait","ms":400},{"t":"caption","text":"② 소개문에는 불만 리뷰의 언어를 그대로 씁니다"},{"t":"click","target":"k-desc"},{"t":"type","target":"k-desc","text":"홈택스, 뭐부터 눌러야 할지 막막하다면"},{"t":"wait","ms":400},{"t":"caption","text":"③ AI 사용 여부는 정직하게 고지합니다"},{"t":"move","target":"k-ai-q"},{"t":"wait","ms":500},{"t":"click","target":"k-ai-yes"},{"t":"reveal","target":"k-ai-badge"},{"t":"wait","ms":500},{"t":"caption","text":"④ 검증을 통과한 EPUB과 표지를 업로드합니다"},{"t":"click","target":"k-upload"},{"t":"reveal","target":"k-file"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 출간을 신청하고 심사 상태를 확인합니다"},{"t":"click","target":"k-publish"},{"t":"reveal","target":"k-review"},{"t":"move","target":"k-review"},{"t":"caption","text":"✅ 정책에 맞는 고지로 등록 완료 — 심사 대기"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 6
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '5695498d-7bff-b467-74f9-df557acc76f0', '9a0cec31-c225-d7a0-2f84-875c820e39ca', 'ai-passive-income/stock-policy-landscape', 'stock-policy-landscape', '스톡 시장의 AI 정책 지형: 어디에 올릴 수 있나',
   $aix$스톡 이미지 수익화의 첫 관문은 그림 실력이 아니라 **플랫폼 정책 독해**입니다. AI 이미지를 받는 곳과 금지하는 곳이 명확히 갈립니다.
 
@@ -2791,11 +2890,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 - 실사 인물 이미지는 초상권 문제로 심사 거절률이 높습니다. 초보자는 **사물·배경·개념 일러스트**부터가 안전합니다.
 
 > 💡 **핵심**: "어디에 팔 수 있는가"를 먼저 확정하세요. 허용 플랫폼에 정직하게 고지하고 올리는 것이 유일하게 지속 가능한 전략입니다.$aix$,
-  $aix${"type":"compare","title":"AI 이미지 정책: 플랫폼 진영","columns":[{"title":"허용 (고지 조건부)","icon":"check","tone":"success","items":["Adobe Stock","Freepik · Vecteezy","Dreamstime","'AI 생성' 표시 의무"]},{"title":"금지 · 제한","icon":"x","tone":"muted","items":["Getty / iStock","Shutterstock (외부 AI 제한)","정책 수시 변경 — 최신 가이드 확인","허위 미고지 시 계정 정지"]}],"caption":"허용 플랫폼 2~3곳 병행 업로드가 기본 전략입니다."}$aix$::jsonb, 5, 7
+  $aix${"type":"compare","title":"AI 이미지 정책: 플랫폼 진영","columns":[{"title":"허용 (고지 조건부)","icon":"check","tone":"success","items":["Adobe Stock","Freepik · Vecteezy","Dreamstime","'AI 생성' 표시 의무"]},{"title":"금지 · 제한","icon":"x","tone":"muted","items":["Getty / iStock","Shutterstock (외부 AI 제한)","정책 수시 변경 — 최신 가이드 확인","허위 미고지 시 계정 정지"]}],"caption":"허용 플랫폼 2~3곳 병행 업로드가 기본 전략입니다."}$aix$::jsonb, null, 5, 7
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '2648db5a-e014-f5f1-2273-280236be220d', '9a0cec31-c225-d7a0-2f84-875c820e39ca', 'ai-passive-income/batch-generation-pipeline', 'batch-generation-pipeline', '대량 생성 파이프라인: 주제 리스트 → 배치 → 선별',
   $aix$스톡 수익은 한 장의 걸작이 아니라 **꾸준히 팔리는 수백 장의 포트폴리오**에서 나옵니다. 그래서 생산 방식도 공장처럼 설계합니다.
 
@@ -2816,11 +2916,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 주 1회 "주제 5개 × 생성 100장 × 선별 15장 업로드" 같은 **고정 리듬**이 몰아치기보다 오래 갑니다.
 
 > 💡 **핵심**: 생성은 기계에게, 선별은 사람에게. **생성량의 80~90%를 버리는 용기**가 포트폴리오 품질이자 계정 신뢰도입니다.$aix$,
-  $aix${"type":"flow","title":"주간 배치 생산 파이프라인","nodes":[{"label":"주제 리스트업","sublabel":"수요 검증된 주제 스프레드시트","icon":"clipboard","tone":"accent"},{"label":"배치 생성","sublabel":"주제당 프롬프트 변형 × 수십 장","icon":"image","tone":"primary"},{"label":"선별 (10~20% 생존)","sublabel":"결함 검수 · 용도 · 시리즈 일관성","icon":"filter","tone":"warning"},{"label":"플랫폼 업로드","sublabel":"AI 생성 고지 체크","icon":"upload","tone":"success","edgeLabel":"합격작만"}],"loopBack":{"from":3,"to":0,"label":"주 1회 고정 리듬으로 반복"},"caption":"80~90%를 버리는 선별이 이 파이프라인의 품질 관문입니다."}$aix$::jsonb, 6, 8
+  $aix${"type":"flow","title":"주간 배치 생산 파이프라인","nodes":[{"label":"주제 리스트업","sublabel":"수요 검증된 주제 스프레드시트","icon":"clipboard","tone":"accent"},{"label":"배치 생성","sublabel":"주제당 프롬프트 변형 × 수십 장","icon":"image","tone":"primary"},{"label":"선별 (10~20% 생존)","sublabel":"결함 검수 · 용도 · 시리즈 일관성","icon":"filter","tone":"warning"},{"label":"플랫폼 업로드","sublabel":"AI 생성 고지 체크","icon":"upload","tone":"success","edgeLabel":"합격작만"}],"loopBack":{"from":3,"to":0,"label":"주 1회 고정 리듬으로 반복"},"caption":"80~90%를 버리는 선별이 이 파이프라인의 품질 관문입니다."}$aix$::jsonb, null, 6, 8
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   '606d8cf3-ac69-6202-827c-5a2ecba651b5', '9a0cec31-c225-d7a0-2f84-875c820e39ca', 'ai-passive-income/metadata-automation', 'metadata-automation', '메타데이터 자동화: 제목과 키워드가 곧 유통망',
   $aix$스톡 이미지는 검색으로만 팔립니다. 아무리 좋은 이미지도 **제목·키워드가 부실하면 존재하지 않는 것**과 같습니다.
 
@@ -2841,11 +2942,12 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 수작업 시 이미지 1장당 메타데이터 5~10분 — 100장이면 10시간입니다. 자동화하면 검수 포함 1~2시간으로 줄어듭니다. 이 차이가 파이프라인의 채산성을 결정합니다.
 
 > 💡 **핵심**: 메타데이터는 AI로 일괄 생성하고 사람이 스팸 키워드만 걷어내세요. **검색되지 않는 이미지는 존재하지 않는 이미지**입니다.$aix$,
-  $aix${"type":"steps","title":"메타데이터 일괄 처리 절차","steps":[{"label":"선별작 폴더 정리","sublabel":"업로드 확정본만 모으기","icon":"camera"},{"label":"AI 일괄 분석","sublabel":"이미지 → 제목 + 키워드 40개","icon":"wand"},{"label":"CSV 생성 · 스팸 검수","sublabel":"무관 키워드 삭제 (페널티 예방)","icon":"file-text"},{"label":"CSV 일괄 업로드","sublabel":"AI 생성 고지 플래그 포함","icon":"upload"}],"caption":"100장 10시간짜리 수작업이 검수 포함 1~2시간으로 줄어듭니다."}$aix$::jsonb, 5, 9
+  $aix${"type":"steps","title":"메타데이터 일괄 처리 절차","steps":[{"label":"선별작 폴더 정리","sublabel":"업로드 확정본만 모으기","icon":"camera"},{"label":"AI 일괄 분석","sublabel":"이미지 → 제목 + 키워드 40개","icon":"wand"},{"label":"CSV 생성 · 스팸 검수","sublabel":"무관 키워드 삭제 (페널티 예방)","icon":"file-text"},{"label":"CSV 일괄 업로드","sublabel":"AI 생성 고지 플래그 포함","icon":"upload"}],"caption":"100장 10시간짜리 수작업이 검수 포함 1~2시간으로 줄어듭니다."}$aix$::jsonb, $aix${"title":"메타데이터 자동화 시나리오 따라하기","app":{"kind":"automation-canvas","windowTitle":"스톡 메타데이터 일괄 처리 — Make","nodes":[{"id":"n-folder","icon":"camera","label":"선별작 폴더 감시","sublabel":"업로드 확정본 15장","tone":"accent"},{"id":"n-vision","icon":"brain","label":"AI 이미지 분석","sublabel":"제목 1개 + 키워드 40개","hidden":true},{"id":"n-csv","icon":"file-text","label":"CSV 생성","sublabel":"플랫폼 양식으로 변환","hidden":true},{"id":"n-review","icon":"filter","label":"사람 검수","sublabel":"스팸 키워드 삭제","tone":"warning","hidden":true},{"id":"n-upload","icon":"upload","label":"일괄 업로드","sublabel":"AI 생성 고지 플래그 ON","tone":"success","hidden":true}],"runLog":[{"id":"log-run","text":"▶ 시나리오 실행 — 신규 이미지 15장 감지","tone":"out","hidden":true},{"id":"log-meta","text":"✓ 제목·키워드 생성 완료 (15/15)","tone":"ok","hidden":true},{"id":"log-spam","text":"⚠ 무관 키워드 3건 감지 — 사람 검수 대기","tone":"err","hidden":true},{"id":"log-done","text":"✓ metadata.csv 업로드 완료 — 고지 플래그 포함","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 선별을 통과한 이미지 폴더가 시작점입니다"},{"t":"move","target":"n-folder"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"② AI 분석 노드로 제목·키워드를 일괄 생성합니다"},{"t":"reveal","target":"n-vision"},{"t":"move","target":"n-vision"},{"t":"click"},{"t":"caption","text":"③ CSV 변환 뒤에 사람 검수 노드를 꼭 넣습니다"},{"t":"reveal","target":"n-csv"},{"t":"reveal","target":"n-review"},{"t":"move","target":"n-review"},{"t":"click"},{"t":"caption","text":"④ 업로드 노드에 AI 생성 고지 플래그를 켭니다"},{"t":"reveal","target":"n-upload"},{"t":"dblclick","target":"n-upload"},{"t":"wait","ms":400},{"t":"caption","text":"⑤ 시나리오를 실행하고 로그로 검수합니다"},{"t":"reveal","target":"log-run"},{"t":"reveal","target":"log-meta"},{"t":"reveal","target":"log-spam"},{"t":"dblclick","target":"log-spam"},{"t":"reveal","target":"log-done"},{"t":"move","target":"log-done"},{"t":"caption","text":"✅ 100장 10시간 작업이 검수 포함 1~2시간으로"},{"t":"wait","ms":900}]}$aix$::jsonb, 5, 9
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
-insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
   'b9c7d332-cad2-03db-66f4-15710e6e087b', '9a0cec31-c225-d7a0-2f84-875c820e39ca', 'ai-passive-income/sales-data-improvement-loop', 'sales-data-improvement-loop', '판매 데이터 개선 루프: 팔린 것이 다음 주제를 정한다',
   $aix$업로드가 끝이 아니라 시작입니다. 수익이 커지는 계정과 정체되는 계정의 차이는 **판매 데이터를 다음 제작에 반영하는가**뿐입니다.
 
@@ -2867,9 +2969,10 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 이 구조는 전자책도 동일합니다. 팔린 책의 주제로 시리즈 다음 권을 내는 것이 신규 주제 개척보다 성공률이 몇 배 높습니다.
 
 > 💡 **핵심**: 첫 업로드는 가설, 판매 데이터는 검증입니다. **팔린 것의 변형을 늘리고 안 팔린 것을 끊는 월간 루프**가 수익 곡선의 기울기를 만듭니다.$aix$,
-  $aix${"type":"cycle","title":"월간 판매 데이터 개선 루프","center":"팔린 것이 다음 주제를 정한다","nodes":[{"label":"업로드·판매","sublabel":"포트폴리오 노출","icon":"shopping-cart"},{"label":"데이터 분석","sublabel":"판매 상위작의 공통점","icon":"chart"},{"label":"주제 리스트 갱신","sublabel":"팔린 주제의 변형 추가","icon":"trending-up"},{"label":"변형 시리즈 제작","sublabel":"안 팔린 스타일은 중단","icon":"refresh"}],"caption":"이 루프가 닫히는 순간, 부업이 시스템이 됩니다."}$aix$::jsonb, 6, 10
+  $aix${"type":"cycle","title":"월간 판매 데이터 개선 루프","center":"팔린 것이 다음 주제를 정한다","nodes":[{"label":"업로드·판매","sublabel":"포트폴리오 노출","icon":"shopping-cart"},{"label":"데이터 분석","sublabel":"판매 상위작의 공통점","icon":"chart"},{"label":"주제 리스트 갱신","sublabel":"팔린 주제의 변형 추가","icon":"trending-up"},{"label":"변형 시리즈 제작","sublabel":"안 팔린 스타일은 중단","icon":"refresh"}],"caption":"이 루프가 닫히는 순간, 부업이 시스템이 됩니다."}$aix$::jsonb, null, 6, 10
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
-  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
 
 commit;

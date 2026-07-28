@@ -9,6 +9,10 @@
  * `src/components/illustrations/` 의 렌더러가 일관된 스타일로 그립니다.
  */
 
+import type { DemoScene } from "./demo-types";
+
+export type * from "./demo-types";
+
 export type Category = "dev" | "creative" | "business";
 
 export type Level = "beginner" | "intermediate" | "advanced";
@@ -194,6 +198,8 @@ export interface Lesson {
   content: string;
   /** 우측(모바일에서는 상단)에 고정 배치될 일러스트 */
   illustration: Illustration;
+  /** 따라하기 데모 (시뮬레이션 스크린캐스트) — 있으면 뷰어에 재생 탭 표시 */
+  demo?: DemoScene;
 }
 
 export interface Module {

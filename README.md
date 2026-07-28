@@ -5,6 +5,7 @@
 - **강의 10개 / 레슨 103개** — 2026년 최신 트렌드 기준 (에이전틱 워크플로우, AI 하네스/Evals, MCP, RAG, Sora·Runway, Suno·ElevenLabs, Make.com 자동화, AI 수익화)
 - **핵심 UI**: 한 화면에 하나의 개념 — 좌측 텍스트 + 우측 일러스트 스플릿 뷰, [이전/다음 단계] 스텝 네비게이션 (키보드 ←/→ 지원)
 - **일러스트 시스템**: 이미지 파일 대신 구조화된 데이터(flow/cycle/compare/stack/steps/grid/terminal/chat)를 커스텀 렌더러가 그려 103개 레슨 전체의 비주얼 일관성 보장
+- **따라하기 데모 (시뮬레이션 스크린캐스트)**: 실무 도구 화면(코드 에디터·디자인 캔버스·Make 자동화·Slack·Gmail·브라우저)을 재현하고, 커서가 움직이며 클릭(물결 1회)·더블클릭(물결 2회)·타이핑·드래그를 시연 — 재생/일시정지/배속 지원
 - **진도 트래킹**: [다음 단계] 클릭 시 자동 저장, 이어보기, 코스별 진도율
 - **게이미피케이션**: 배지 8종, 학습 잔디(최근 18주), 연속 학습 스트릭
 - **이중 모드**: Supabase 없이 데모(게스트) 모드로 완전 동작 → 환경변수만 넣으면 인증 + DB 동기화 활성화
@@ -95,4 +96,5 @@ scripts/generate-seed.ts     # 콘텐츠 → 시드 SQL 변환기
 | `npm run dev` | 개발 서버 |
 | `npm run build` | 프로덕션 빌드 (타입체크 포함) |
 | `npm run seed:generate` | 콘텐츠 → `supabase/seed.sql` 재생성 |
+| `npm run content:check` | 콘텐츠 무결성 검증 (데모 target 참조, 슬러그 중복 등) |
 | `npm run lint` | ESLint |

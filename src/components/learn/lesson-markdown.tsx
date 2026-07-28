@@ -25,6 +25,7 @@ export function LessonMarkdown({ content }: { content: string }) {
         prose-strong:text-foreground
         prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[13px] prose-code:font-medium prose-code:before:content-none prose-code:after:content-none
         prose-pre:rounded-xl prose-pre:border prose-pre:bg-zinc-950 prose-pre:text-[13px] dark:prose-pre:bg-zinc-900
+        [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:font-normal [&_pre_code]:text-zinc-200
         prose-blockquote:rounded-xl prose-blockquote:border prose-blockquote:border-violet-200 prose-blockquote:bg-violet-50/60 prose-blockquote:px-4 prose-blockquote:py-1 prose-blockquote:not-italic prose-blockquote:font-normal prose-blockquote:text-foreground dark:prose-blockquote:border-violet-500/30 dark:prose-blockquote:bg-violet-500/10
         [&_blockquote_p]:my-2
         [&_blockquote_p:first-of-type]:before:content-none

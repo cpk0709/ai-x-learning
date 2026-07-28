@@ -32,7 +32,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IllustrationView } from "@/components/illustrations/illustration";
+import { DemoPlayer } from "@/components/demo/demo-player";
 import { LessonMarkdown } from "./lesson-markdown";
 import {
   courseProgress,
@@ -194,7 +196,22 @@ export function LessonViewer({
 
         <div className="order-1 border-b bg-muted/30 px-4 py-6 sm:px-6 lg:order-2 lg:border-b-0 lg:border-l lg:px-8 lg:py-10">
           <div className="lg:sticky lg:top-32">
-            <IllustrationView data={current.lesson.illustration} />
+            {current.lesson.demo ? (
+              <Tabs defaultValue="demo" key={current.lesson.slug}>
+                <TabsList className="mb-3">
+                  <TabsTrigger value="demo">🎬 따라하기 데모</TabsTrigger>
+                  <TabsTrigger value="diagram">📊 다이어그램</TabsTrigger>
+                </TabsList>
+                <TabsContent value="demo">
+                  <DemoPlayer scene={current.lesson.demo} />
+                </TabsContent>
+                <TabsContent value="diagram">
+                  <IllustrationView data={current.lesson.illustration} />
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <IllustrationView data={current.lesson.illustration} />
+            )}
           </div>
         </div>
       </div>

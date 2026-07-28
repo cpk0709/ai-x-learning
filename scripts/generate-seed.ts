@@ -72,14 +72,18 @@ for (const course of COURSES) {
     const moduleId = uuidOf("module", `${course.slug}/${module.slug}`);
     const lessonId = uuidOf("lesson", `${course.slug}/${lesson.slug}`);
     const key = lessonKey(course.slug, lesson.slug);
+    const demoSql = lesson.demo
+      ? `${dq(JSON.stringify(lesson.demo))}::jsonb`
+      : "null";
     lines.push(
-      `insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, minutes, order_index) values (`,
+      `insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (`,
       `  '${lessonId}', '${moduleId}', ${q(key)}, ${q(lesson.slug)}, ${q(lesson.title)},`,
       `  ${dq(lesson.content)},`,
-      `  ${dq(JSON.stringify(lesson.illustration))}::jsonb, ${lesson.minutes}, ${index}`,
+      `  ${dq(JSON.stringify(lesson.illustration))}::jsonb, ${demoSql}, ${lesson.minutes}, ${index}`,
       `) on conflict (id) do update set`,
       `  title = excluded.title, content_markdown = excluded.content_markdown,`,
-      `  illustration = excluded.illustration, minutes = excluded.minutes, order_index = excluded.order_index;`
+      `  illustration = excluded.illustration, demo = excluded.demo,`,
+      `  minutes = excluded.minutes, order_index = excluded.order_index;`
     );
   }
 }
