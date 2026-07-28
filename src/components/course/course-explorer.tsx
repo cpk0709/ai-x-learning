@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, SearchX } from "lucide-react";
 import type { Category, Course } from "@/content/types";
 import { CATEGORY_META } from "@/content/types";
@@ -16,19 +16,15 @@ const TABS: { value: Category | "all"; label: string }[] = [
   { value: "business", label: CATEGORY_META.business.label },
 ];
 
-export function CourseExplorer({
-  courses,
-  initialCategory,
-}: {
-  courses: Course[];
-  initialCategory?: string;
-}) {
+export function CourseExplorer({ courses }: { courses: Course[] }) {
   const router = useRouter();
   const pathname = usePathname();
-  const validInitial = TABS.some((t) => t.value === initialCategory)
-    ? (initialCategory as Category | "all")
+  const searchParams = useSearchParams();
+  // URL이 단일 소스 — GNB 링크로 카테고리가 바뀌어도 즉시 반영 (정적 내보내기 호환)
+  const raw = searchParams.get("category");
+  const category: Category | "all" = TABS.some((t) => t.value === raw)
+    ? (raw as Category | "all")
     : "all";
-  const [category, setCategory] = useState<Category | "all">(validInitial);
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -45,7 +41,6 @@ export function CourseExplorer({
 
   const onCategoryChange = (value: string) => {
     const next = value as Category | "all";
-    setCategory(next);
     router.replace(next === "all" ? pathname : `${pathname}?category=${next}`, {
       scroll: false,
     });

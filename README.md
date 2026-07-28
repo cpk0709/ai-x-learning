@@ -95,9 +95,19 @@ supabase/
 scripts/generate-seed.ts     # 콘텐츠 → 시드 SQL 변환기
 ```
 
-## 배포 (Vercel)
+## 배포
 
-1. GitHub에 푸시 후 Vercel에서 Import
+### GitHub Pages (기본 — 자동 배포 중)
+
+`main` 브랜치에 푸시하면 GitHub Actions(`.github/workflows/deploy-pages.yml`)가 정적 내보내기(`GITHUB_PAGES=true npm run build` → `out/`)를 빌드해 자동 배포합니다.
+
+- **배포 주소**: https://cpk0709.github.io/ai-x-learning/
+- 데모(게스트) 모드로 완전 동작 — 진도는 브라우저에 저장됩니다
+- 정적 호스팅 특성상 basePath(`/ai-x-learning`)와 trailingSlash가 적용됩니다 (로컬 개발에는 영향 없음)
+
+### Vercel (Supabase 연동 시 권장)
+
+1. Vercel에서 이 저장소 Import
 2. (Supabase 사용 시) 환경변수 2개 추가
 3. Deploy — 169개 페이지가 정적 생성됩니다
 

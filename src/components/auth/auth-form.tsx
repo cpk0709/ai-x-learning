@@ -67,9 +67,10 @@ export function AuthForm() {
     const supabase = getSupabaseBrowser();
     if (!supabase) return;
     setPending(provider);
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${window.location.origin}${basePath}/auth/callback` },
     });
     if (error) {
       toast.error(`로그인 실패: ${error.message}`);
