@@ -1,1 +1,34 @@
 @AGENTS.md
+
+# AI-X Learn 개발 가이드
+
+일러스트 기반 스텝바이스텝 AI 학습 플랫폼. 아키텍처 개요와 실행 방법은 `README.md`, 기획 원본은 `../AI_Mastery_Platform_PRD.md`, 시행착오 기록은 `docs/DEVLOG.md` 참고.
+
+## 개발 방향 (변하지 않는 원칙)
+
+1. **콘텐츠의 단일 소스는 코드** — 강의는 `src/content/courses/*.ts`가 원본이다. DB(Supabase)는 인증·진도 동기화 전용이며, 콘텐츠를 DB에서 읽도록 바꾸지 않는다. 콘텐츠 변경 후에는 반드시 `npm run seed:generate`로 시드를 재생성한다.
+2. **일러스트는 데이터, 렌더링은 렌더러** — 레슨 비주얼은 8종 타입(flow/cycle/compare/stack/steps/grid/terminal/chat)의 구조화 데이터로만 정의한다. 개별 레슨용 커스텀 컴포넌트나 이미지 파일을 만들지 말 것. 새 비주얼이 필요하면 `illustration.tsx`에 타입을 추가해 전체가 일관되게 한다.
+3. **데모 모드 우선** — 모든 기능은 Supabase 환경변수 없이 동작해야 한다. Supabase 의존 코드는 항상 null 체크 후 조용히 no-op (`src/lib/supabase/client.ts` 패턴).
+4. **품질 기준은 loop-engineering.ts** — 새 강의를 쓰거나 에이전트에게 집필시킬 때 이 파일을 스타일 가이드로 참조시킨다 (톤·분량·마크다운 구조·일러스트 활용법).
+5. 검증 파이프라인: `npx tsc --noEmit` → `npm run lint` → `npm run build`. 세 개 모두 통과해야 커밋한다.
+
+## 콘텐츠 작성 규칙 (실수 방지 — 근거는 DEVLOG 참고)
+
+- 레슨 `content`는 TS 템플릿 리터럴이다. **본문 안의 모든 백틱은 `\`` 로 이스케이프** (코드펜스 ```` \`\`\` ````, 인라인 코드 모두). 미이스케이프 시 파일 전체가 구문 에러.
+- 마크다운에서 `**"따옴표 포함 볼드"**한글` 패턴은 CommonMark 규칙상 볼드가 풀리지만, 렌더러(`lesson-markdown.tsx`의 `fixBoldQuotes`)가 자동 보정하므로 콘텐츠는 자연스럽게 쓰면 된다. 단, 이 전처리를 제거하지 말 것.
+- `IconKey`는 `src/content/types.ts`에 정의된 값만 사용. lucide 아이콘을 임의로 추가하려면 `icon-map.tsx`에 먼저 등록.
+- 강의 추가 절차: ① `courses/새강의.ts` 작성 → ② `src/content/index.ts` COURSES에 등록 → ③ `npm run seed:generate` → ④ 빌드 확인.
+
+## 기술 스택 주의사항
+
+- **Next.js 16**: `params`/`searchParams`는 Promise — 반드시 `await`. 새 페이지 작성 시 기존 페이지 패턴을 복사할 것.
+- **shadcn CLI**: `-b` 옵션은 base color가 아니라 컴포넌트 라이브러리(radix/base/aria). 컴포넌트 추가는 `npx shadcn@latest add <name>`.
+- **lucide-react**: 브랜드 아이콘(Github 등)이 제거됨 — 필요하면 인라인 SVG로 (auth-form.tsx 패턴).
+- **개발/프로덕션 서버 재시작**: `pkill -f "next start"`는 프로세스를 못 잡는 경우가 있다. 반드시 `lsof -ti :포트 | xargs kill -9`로 포트 기준으로 정리할 것. 죽지 않은 옛 서버가 새 빌드의 CSS 해시와 어긋나 스타일이 통째로 깨진 것처럼 보인다.
+- `next.config.ts`의 `turbopack.root` 고정은 홈 디렉토리의 잘못된 package-lock.json 때문 — 제거하지 말 것.
+
+## 히스토리 관리
+
+- 시행착오·버그의 원인과 해결은 `docs/DEVLOG.md`에 누적 기록한다 (날짜, 증상, 원인, 해결, 교훈).
+- 같은 실수가 반복되지 않도록, DEVLOG에 기록한 교훈 중 "규칙화할 것"은 이 파일(CLAUDE.md)에도 승격시킨다.
+- 커밋 메시지는 상세하게: 무엇을/왜 변경했는지, 관련 시행착오가 있으면 언급.
