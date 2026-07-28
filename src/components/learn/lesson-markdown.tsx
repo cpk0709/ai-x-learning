@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { glossarify } from "./glossarify";
 
 /**
  * CommonMark 플랭킹 규칙 보정:
@@ -12,9 +13,13 @@ function fixBoldQuotes(md: string): string {
 
 /**
  * 레슨 본문 마크다운 렌더러.
- * `> 💡 **핵심**:` 블록쿼트가 강조 콜아웃으로 보이도록 스타일링합니다.
+ * - `> 💡 **핵심**:` 블록쿼트가 강조 콜아웃으로 보이도록 스타일링
+ * - 용어사전 단어의 첫 등장을 자동으로 감지해 호버 설명 툴팁 부착
  */
 export function LessonMarkdown({ content }: { content: string }) {
+  // 레슨(컴포넌트 렌더) 단위로 용어별 첫 등장 1회만 툴팁 표시
+  const used = new Set<string>();
+
   return (
     <div
       className="prose prose-neutral max-w-none dark:prose-invert
@@ -31,7 +36,13 @@ export function LessonMarkdown({ content }: { content: string }) {
         [&_blockquote_p:first-of-type]:before:content-none
         [&_blockquote_p:last-of-type]:after:content-none"
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          p: ({ children }) => <p>{glossarify(children, used)}</p>,
+          li: ({ children }) => <li>{glossarify(children, used)}</li>,
+        }}
+      >
         {fixBoldQuotes(content)}
       </ReactMarkdown>
     </div>

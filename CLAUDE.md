@@ -23,6 +23,7 @@
 - `IconKey`는 `src/content/types.ts`에 정의된 값만 사용. lucide 아이콘을 임의로 추가하려면 `icon-map.tsx`에 먼저 등록.
 - 강의 추가 절차: ① `courses/새강의.ts` 작성 → ② `src/content/index.ts` COURSES에 등록 → ③ `npm run seed:generate` → ④ 빌드 확인.
 - **데모 작성 시**: 액션의 target은 반드시 앱 요소 id와 일치해야 한다 (오타는 타입체크로 못 잡고 데모가 조용히 깨짐) — 작성 후 `npm run content:check`로 검증 필수. 스타일 기준은 loop-engineering.ts의 demo 2곳 (caption ①②③ 단계 안내, 액션 15~25개, type 텍스트 40자 이내).
+- **초보자 눈높이**: 긴 문장은 쪼개고, 핵심 개념엔 일상 비유 1개, 실습은 버튼 위치까지 구체적으로 + "여기서 막힌다면" 안내. `src/content/glossary.ts`에 등재된 용어는 자동 툴팁이 뜨므로 본문에서 재설명하지 말 것. 등재 안 된 어려운 용어는 첫 등장에 괄호 한 줄 풀이. **본문 표기와 용어사전 표기를 일치**시켜야 툴팁이 걸린다 (예: '환각' 대신 '할루시네이션').
 
 ## 기술 스택 주의사항
 
