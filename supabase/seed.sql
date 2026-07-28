@@ -4360,4 +4360,325 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
   illustration = excluded.illustration, demo = excluded.demo,
   minutes = excluded.minutes, order_index = excluded.order_index;
 
+-- 강의: AX 팀 만들기: AI 전환 조직 설계와 운영
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '4e9e6c09-eecf-a289-4b68-01bf0151e534', 'ax-team', 'AX 팀 만들기: AI 전환 조직 설계와 운영', $aix$AI 도구를 사고 라이선스를 뿌리는 것만으로는 조직이 바뀌지 않습니다. 2025년 MIT 조사에서 기업 생성형 AI 파일럿의 약 95%가 손익에 측정 가능한 영향을 남기지 못했고, 원인의 대부분은 모델이 아니라 조직이었습니다. 이 강의는 AX(AI 전환) 전담 팀을 실제로 세우고 운영하는 사람을 위한 설계서입니다. 성숙도 진단, 5개 핵심 역할과 채용 순서, 허브앤스포크 운영 모델, 과제 인테이크와 스코어링, 90일 파일럿 설계, 채택률·개입률 중심의 성과 보고, 섀도우 AI를 막는 최소 거버넌스와 챔피언 네트워크까지 — 조직에 AI를 심는 순서를 다룹니다.$aix$,
+  null, 'business', 'intermediate', array['AX', 'AI 전환', '조직 설계', 'CoE', '체인지 매니지먼트']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '7e166bda-67c2-32c1-2687-e0aeba6e2056', '4e9e6c09-eecf-a289-4b68-01bf0151e534', 'ax-foundation', 'AX의 정의와 진단', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'c7a2aaa0-8ae1-db0e-48d5-29bd96846348', '4e9e6c09-eecf-a289-4b68-01bf0151e534', 'team-design', '팀 설계: 자리와 운영 모델', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '7a82f1b8-1076-a8bf-4104-b271b38ee280', '4e9e6c09-eecf-a289-4b68-01bf0151e534', 'execution-scale', '실행: 발굴에서 확산까지', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1bb822a6-150d-f33d-a6df-702e91fbf19e', '7e166bda-67c2-32c1-2687-e0aeba6e2056', 'ax-team/ax-vs-dx', 'ax-vs-dx', 'AX란 무엇인가: DX와 결정적으로 다른 점',
+  $aix$많은 조직이 AX를 "DX 시즌 2"로 이해합니다. 그 오해가 첫 번째 실패의 원인입니다.
+
+## DX는 프로세스를 옮겼고, AX는 판단을 옮깁니다
+
+- DX는 종이와 전화로 하던 일을 시스템으로 옮기는 일이었습니다. 정답이 정해진 절차를 자동화하니, 결과가 **예측 가능**했습니다.
+- AX는 사람이 **판단하던 일**의 일부를 AI에게 넘깁니다. 같은 입력에도 다른 출력이 나올 수 있는, 확률적인 전환입니다.
+- 비유하면 이렇습니다. DX는 계단을 에스컬레이터로 바꾸는 일이고, AX는 길을 스스로 찾는 안내원을 채용하는 일입니다. 에스컬레이터는 점검만 하면 되지만, 안내원은 **교육하고 평가해야** 합니다.
+
+## 그래서 팀의 일이 달라집니다
+
+- DX 프로젝트는 "구축 후 이관"으로 끝났습니다. AX는 **출시 후가 시작**입니다 — 품질을 계속 재고 프롬프트와 데이터를 고쳐야 합니다.
+- 필요한 자리도 다릅니다. 만드는 인력보다 **평가하고 운영하는 인력**의 비중이 커집니다.
+- 성공 기준도 다릅니다. DX는 "가동되는가", AX는 **"사람들이 실제로 쓰는가, 결과가 쓸 만한가"**입니다.
+
+## AX 팀이 실제로 파는 것
+
+도구가 아니라 **일하는 방식의 변경**입니다. 도구 도입은 한 달이면 되지만, 방식 변경은 보통 1년이 걸립니다. 이 시간 차이를 경영진과 미리 합의하지 않으면 6개월 뒤에 "성과가 없다"는 평가를 받습니다.
+
+> 💡 **핵심**: DX가 시스템을 바꾸는 일이라면, AX는 **판단의 주체를 바꾸는 일**입니다. 그래서 AX 팀 업무의 절반은 기술이 아니라 조직 설계입니다.$aix$,
+  $aix${"type":"compare","title":"DX vs AX","columns":[{"title":"DX (디지털 전환)","icon":"monitor","tone":"muted","items":["정해진 절차를 시스템으로","결과가 예측 가능 (결정적)","구축 후 이관하면 끝","성공 기준: 정상 가동 여부","필요 인력: 구축·개발"]},{"title":"AX (AI 전환)","icon":"brain","tone":"primary","items":["사람의 판단 일부를 AI로","같은 입력에 다른 출력 (확률적)","출시 후가 진짜 시작","성공 기준: 채택률과 품질","필요 인력: 평가·운영·교육"]}],"caption":"에스컬레이터는 점검만 하면 되지만, 안내원은 교육하고 평가해야 합니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6f4eedd4-8104-5960-0825-f51a25ce0f13', '7e166bda-67c2-32c1-2687-e0aeba6e2056', 'ax-team/pilot-purgatory', 'pilot-purgatory', '파일럿 지옥: AX가 실패하는 5가지 패턴',
+  $aix$2025년 MIT 연구팀(Project NANDA)의 조사에서, 기업 생성형 AI 파일럿의 약 **95%가 손익에 측정 가능한 영향을 주지 못했다**는 결과가 나왔습니다. 300여 개 공개 사례와 150여 명의 리더 설문에 기반한 예비 보고라 표본의 한계는 있지만, 실패의 이유가 모델 성능이 아니었다는 점은 여러 조사에서 반복 확인됩니다.
+
+## 5가지 실패 패턴
+
+1. **파일럿 지옥** — 시연은 성공하는데 프로덕션 진입은 0건. 파일럿의 성공 기준을 "시연"으로 잡았기 때문입니다.
+2. **도구만 뿌리기** — 전사 라이선스를 배포하고 교육과 업무 재설계를 생략하면, 3개월 뒤 실사용률이 한 자릿수로 내려앉습니다.
+3. **눈에 띄는 곳부터 손대기** — 같은 조사에서 예산의 절반가량이 세일즈·마케팅에 갔지만, 가장 분명한 수익은 지루한 백오피스 자동화에서 나왔습니다.
+4. **사람 문제를 기술 문제로 착각** — Prosci가 실무자 1,107명을 조사한 결과, 어려움의 약 38%는 사용자 숙련도 문제였고 순수 기술 문제는 약 16%였습니다.
+5. **측정 없는 확산** — PwC의 2026년 설문에서 CEO 56%가 AI로 재무적 수익이 전혀 없다고 답했습니다. 대부분 기준선을 재두지 않아 증명할 숫자가 없는 경우입니다.
+
+## 공통 원인은 하나입니다
+
+다섯 패턴 모두 **"끝까지 책임지는 자리가 없는 구조"**에서 나옵니다. 파일럿 담당자는 시연까지만 책임지고, 현업은 시간이 없고, IT는 리스크만 봅니다. 그 사이에서 과제가 멈춥니다.
+
+AX 팀의 존재 이유가 바로 여기 있습니다. **발굴부터 정착까지를 한 팀이 끝까지 책임지는 것** — 이것이 도구 도입과 AX의 차이입니다.
+
+> 💡 **핵심**: AX 실패는 모델이 약해서가 아니라 **끝까지 책임지는 자리가 없어서** 일어납니다. 조직도를 고치는 것이 첫 번째 기술 과제입니다.$aix$,
+  $aix${"type":"grid","title":"AX 실패 5패턴과 처방","items":[{"label":"파일럿 지옥","sublabel":"시연은 성공, 프로덕션 진입 0건","icon":"repeat","tone":"warning"},{"label":"도구만 뿌리기","sublabel":"교육·업무 재설계 없는 라이선스 배포","icon":"download","tone":"warning"},{"label":"눈에 띄는 곳부터","sublabel":"예산은 마케팅, 수익은 백오피스","icon":"eye","tone":"warning"},{"label":"사람 문제를 기술로 착각","sublabel":"어려움의 38%는 숙련도 문제","icon":"users","tone":"warning"},{"label":"측정 없는 확산","sublabel":"기준선이 없어 증명할 숫자가 없음","icon":"chart","tone":"warning"},{"label":"처방: 끝까지 책임지는 팀","sublabel":"발굴 → 파일럿 → 이관까지 한 팀","icon":"target","tone":"primary"}],"caption":"다섯 패턴의 뿌리는 같습니다 — 과제를 끝까지 끌고 갈 주인이 없는 것."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '18d70465-5154-7859-a2f0-f9d4e4a6938f', '7e166bda-67c2-32c1-2687-e0aeba6e2056', 'ax-team/maturity-diagnosis', 'maturity-diagnosis', '성숙도 진단: 우리 조직은 몇 단계인가',
+  $aix$로드맵을 그리기 전에 현재 위치를 알아야 합니다. AX 성숙도는 업계에서 보통 5단계로 봅니다.
+
+## 성숙도 5단계
+
+1. **임시** — 개인이 각자 알아서 씁니다. 공식 전략도, 규정도 없습니다.
+2. **실험** — PoC와 파일럿이 여기저기 생깁니다. 성과 측정은 아직 없습니다.
+3. **운영화** — 몇 개 업무가 실제 운영에 들어가고, 볼 수 있는 지표가 생깁니다.
+4. **전환** — 핵심 프로세스가 AI를 전제로 재설계됩니다.
+5. **최적화** — 조직의 기본 작동 방식이 AI 우선입니다.
+
+## 진단은 한 점수가 아니라 5개 축으로
+
+전략·정렬 / 데이터·연동 / 기술·도구 / 인재·문화 / 거버넌스 — 이 다섯 축을 따로 매깁니다. 대부분 조직은 **들쭉날쭉**합니다. 도구는 3단계인데 거버넌스는 1단계인 경우가 가장 흔합니다.
+
+## 진단의 실전 규칙 3가지
+
+- 조직의 실제 단계는 평균이 아니라 **가장 낮은 축**이 결정합니다. 물통에 담기는 물의 높이는 가장 낮은 널이 정하죠.
+- 다음 목표는 5단계가 아니라 **바로 다음 한 단계**입니다. 두 단계를 건너뛰려는 계획은 대부분 파일럿 지옥으로 갑니다.
+- 진단은 설문이 아니라 **증거**로 합니다. "우리는 중급인 것 같다"가 아니라 "채택률 숫자를 댈 수 있는가", "AI 사용 규정 문서가 실제로 있는가"로 판정하세요.
+
+## 진단 결과를 쓰는 법
+
+가장 낮은 축 하나가 곧 다음 분기의 1순위 과제입니다. 아래 데모에서 실제 진단 시트를 채워보며, 낮은 축을 찾아 다음 목표로 옮기는 흐름을 따라가 보세요.
+
+> 💡 **핵심**: 성숙도 진단의 목적은 점수를 매기는 게 아니라 **가장 낮은 축 하나를 찾는 것**입니다. 그 한 축이 다음 분기 로드맵입니다.$aix$,
+  $aix${"type":"steps","title":"AX 성숙도 5단계","steps":[{"label":"1단계 · 임시","sublabel":"개인이 각자 사용 · 전략·규정 없음","icon":"user"},{"label":"2단계 · 실험","sublabel":"PoC·파일럿 산재 · 성과 측정 없음","icon":"test-tube"},{"label":"3단계 · 운영화","sublabel":"일부 업무 실제 운영 · 지표 생김","icon":"gauge"},{"label":"4단계 · 전환","sublabel":"핵심 프로세스를 AI 전제로 재설계","icon":"workflow"},{"label":"5단계 · 최적화","sublabel":"조직의 기본 작동 방식이 AI 우선","icon":"rocket"}],"caption":"조직의 단계는 평균이 아니라 가장 낮은 축이 결정합니다 — 목표는 항상 '다음 한 단계'."}$aix$::jsonb, $aix${"title":"성숙도 자가진단 시트 채워보기","app":{"kind":"browser","url":"ax.internal/maturity/2026-q3","blocks":[{"id":"b-head","type":"heading","label":"AX 성숙도 자가진단 — 2026년 3분기"},{"id":"b-hint","type":"text","label":"각 축을 1~5단계로 매기고, 근거가 되는 숫자나 문서명을 함께 적습니다"},{"id":"b-strategy","type":"card","label":"① 전략·정렬 — 경영진 스폰서 있음 · 연간 목표 문서 있음 → 3단계"},{"id":"b-data","type":"card","label":"② 데이터·연동 — 업무 데이터 접근 일부만 가능 → 2단계"},{"id":"b-tool","type":"card","label":"③ 기술·도구 — 승인 도구 2종 · 계정 관리 있음 → 3단계"},{"id":"b-people","type":"card","label":"④ 인재·문화 — 전사 교육 1회 · 부서 챔피언 없음 → 2단계"},{"id":"b-evidence","type":"input","label":"⑤ 거버넌스 축의 증거를 입력하세요…"},{"id":"b-gov","type":"card","label":"⑤ 거버넌스 — 사용 규정 문서 없음 · 사용 기록 수집 안 함 → 1단계","hidden":true},{"id":"b-submit","type":"button","label":"진단 결과 계산"},{"id":"b-result","type":"card","label":"종합 — 전략 3 · 데이터 2 · 도구 3 · 문화 2 · 거버넌스 1","hidden":true},{"id":"b-lowest","type":"badge","label":"실제 단계 = 가장 낮은 축 → 우리 조직은 1단계","hidden":true},{"id":"b-next","type":"card","label":"다음 목표는 '거버넌스 2단계' 하나 — 사용 규정 1장 + 도구 기록 수집","hidden":true},{"id":"b-anti","type":"badge","label":"함정: 5단계를 목표로 잡으면 어느 축도 오르지 않습니다","hidden":true}]},"actions":[{"t":"caption","text":"① 다섯 축을 각각 매깁니다 — 한 점수로 뭉치지 않습니다"},{"t":"move","target":"b-strategy"},{"t":"click"},{"t":"move","target":"b-data"},{"t":"move","target":"b-people"},{"t":"wait","ms":500},{"t":"caption","text":"② 판정은 느낌이 아니라 증거로 — 문서명·숫자를 적습니다"},{"t":"click","target":"b-evidence"},{"t":"type","target":"b-evidence","text":"사용 규정 문서 없음 / 사용 기록 수집 안 함"},{"t":"reveal","target":"b-gov"},{"t":"wait","ms":600},{"t":"caption","text":"③ 결과를 계산합니다"},{"t":"click","target":"b-submit"},{"t":"reveal","target":"b-result"},{"t":"wait","ms":500},{"t":"caption","text":"④ 평균이 아니라 가장 낮은 축이 조직의 실제 단계입니다"},{"t":"reveal","target":"b-lowest"},{"t":"move","target":"b-lowest"},{"t":"wait","ms":600},{"t":"caption","text":"⑤ 다음 목표는 '5단계'가 아니라 낮은 축의 다음 한 단계"},{"t":"reveal","target":"b-next"},{"t":"reveal","target":"b-anti"},{"t":"move","target":"b-next"},{"t":"caption","text":"✅ 진단 결과 = 다음 분기 1순위 과제 한 줄"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '45ce74f2-1e21-d499-bf77-b014695d3fe9', 'c7a2aaa0-8ae1-db0e-48d5-29bd96846348', 'ax-team/five-roles', 'five-roles', 'AX 팀의 5개 자리와 채용 순서',
+  $aix$"AX 팀을 만들라"는 지시를 받으면 가장 먼저 막히는 질문이 **"몇 명, 어떤 사람"**입니다. 2026년 실무에서 반복적으로 확인되는 구성은 5개 자리입니다.
+
+## 반드시 있어야 하는 5개 자리
+
+- **AX 리드** — 과제 선정과 우선순위의 최종 결정권을 가집니다. 겸직으로 두면 대개 실패합니다. 가장 먼저 채워야 하는 자리입니다.
+- **AX 프로덕트 오너** — 현업 업무를 뜯어보고 어디를 AI에게 넘길지 설계합니다. 기술 지식보다 **도메인 지식**이 중요합니다.
+- **AI 엔지니어** — 도구 연결, 사내 데이터 연동, 에이전트 구축을 맡습니다. RAG와 평가 파이프라인을 다룰 수 있어야 합니다.
+- **평가·운영 담당(에이전트 옵스)** — 2026년에 새로 생긴 자리입니다. Deloitte는 올해 조직들이 에이전트를 감시·교육·통제하는 전담 팀을 두게 될 것으로 전망했습니다. 돌아가는 AI의 품질을 계속 재고 실패를 분류하는 역할입니다.
+- **인케이블먼트 담당** — 교육, 사내 사례 문서, 챔피언 네트워크 운영. **채택률을 실제로 올리는 자리**이지만 가장 자주 생략됩니다.
+
+## 채용 순서: 3명 → 5명 → 8명
+
+- **3명(첫 6개월)**: 리드 + 프로덕트 오너 + AI 엔지니어. 과제 2~3개를 끝까지 밀어봅니다.
+- **5명(운영화 진입)**: + 평가·운영 + 인케이블먼트. 돌아가는 것을 지키고 퍼뜨리는 인력이 이때 필요해집니다.
+- **8명 이상**: 도메인별 스쿼드로 쪼갭니다. 한 팀이 모든 부서를 상대하면 대기열이 됩니다.
+
+## 흔한 실수 두 가지
+
+- **엔지니어부터 뽑기** — 만들 것을 고르는 사람이 없으면 결과물은 쌓이고 성과는 없습니다.
+- **전원 신규 채용** — 최소 절반은 **현업 출신 내부 인력**이어야 합니다. 업무를 모르면 어디가 병목인지 찾지 못하고, 현업의 신뢰도 얻지 못합니다.
+
+> 💡 **핵심**: 첫 채용은 엔지니어가 아니라 **결정권을 가진 리드**입니다. AX 팀의 병목은 대개 기술력이 아니라 의사결정 속도입니다.$aix$,
+  $aix${"type":"grid","title":"AX 팀의 5개 자리 (+겸직 챔피언)","items":[{"label":"AX 리드","sublabel":"과제 선정·우선순위 최종 결정 · 1순위 채용","icon":"target","tone":"primary"},{"label":"AX 프로덕트 오너","sublabel":"업무 분해와 설계 · 도메인 지식 우선","icon":"clipboard","tone":"primary"},{"label":"AI 엔지니어","sublabel":"도구 연결·데이터 연동·에이전트 구축","icon":"code","tone":"accent"},{"label":"평가·운영 (에이전트 옵스)","sublabel":"품질 측정·실패 분류 · 2026년 신설 자리","icon":"gauge","tone":"accent"},{"label":"인케이블먼트","sublabel":"교육·사례 문서·챔피언 운영 → 채택률","icon":"graduation-cap","tone":"success"},{"label":"부서 챔피언 (겸직)","sublabel":"각 부서 1명 · 현장 확산의 마지막 1미터","icon":"users","tone":"muted"}],"caption":"3명(리드·PO·엔지니어)으로 시작해 운영화 시점에 평가·교육 인력을 더합니다."}$aix$::jsonb, null, 7, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b9d1a0a9-cfce-0543-a871-2f4cccb1af17', 'c7a2aaa0-8ae1-db0e-48d5-29bd96846348', 'ax-team/operating-models', 'operating-models', '운영 모델 3형태: 중앙집중 · 분산 · 허브앤스포크',
+  $aix$팀을 조직도의 어디에 두는지가 성과를 크게 갈라놓습니다. 선택지는 사실상 세 가지입니다.
+
+## 1. 중앙집중 — AX 팀이 모든 과제를 직접 수행
+
+- 장점: 표준과 품질을 통제하기 쉽고, 초기 학습이 한곳에 쌓입니다.
+- 단점: **AX 팀의 인원이 곧 조직의 한계**입니다. 요청 대기열이 밀리기 시작하면 AX 팀 자체가 병목이 됩니다.
+- 적합: 성숙도 1~2단계, 시작 후 6~12개월.
+
+## 2. 분산(임베디드) — 각 부서가 알아서 진행
+
+- 장점: 현업에 밀착해 속도가 빠릅니다.
+- 단점: 같은 것을 여러 부서가 중복 구축하고, 섀도우 AI와 품질 편차가 커집니다.
+- 적합: 거버넌스와 플랫폼이 이미 서 있는 조직. 그 전에는 위험합니다.
+
+## 3. 허브앤스포크 — 2026년 사실상의 표준
+
+- **허브(AX 팀)**는 플랫폼·표준·거버넌스·측정을 소유하고, **스포크(각 부서)**는 자기 과제와 성과를 소유합니다.
+- 결정적 차이: 허브가 **승인 게이트가 아니라 조력자**라는 점입니다. 허브가 결재 창구가 되면 다시 중앙집중의 병목으로 돌아갑니다.
+- 개발을 스포크가 하기 때문에, 허브 인원 수가 조직이 굴릴 수 있는 과제 수를 제한하지 않습니다.
+
+## 선택 기준
+
+- 성숙도 1~2단계 → 중앙집중으로 시작
+- 3단계 이상이고 부서에 실무 인력이 있음 → 허브앤스포크로 전환
+- 순수 분산 → 규정과 플랫폼이 서기 전에는 선택하지 않습니다
+
+> 💡 **핵심**: 대부분 조직은 **중앙집중으로 시작해 허브앤스포크로 진화**합니다. 허브의 성공 지표는 "우리가 만든 개수"가 아니라 **"부서가 스스로 만든 개수"**입니다.$aix$,
+  $aix${"type":"compare","title":"운영 모델 3형태","columns":[{"title":"중앙집중","icon":"server","tone":"accent","items":["AX 팀이 직접 다 만듦","표준·품질 통제 쉬움","팀 인원 = 조직의 한계","적합: 성숙도 1~2단계"]},{"title":"분산 (임베디드)","icon":"git-branch","tone":"warning","items":["각 부서가 알아서 진행","현업 밀착·속도 빠름","중복 구축·섀도우 AI 위험","적합: 거버넌스 선행된 조직"]},{"title":"허브앤스포크","icon":"workflow","tone":"primary","items":["허브: 플랫폼·표준·측정","스포크: 과제와 성과 소유","허브는 게이트가 아닌 조력자","2026년 사실상의 표준"]}],"caption":"허브가 승인 창구가 되는 순간, 허브앤스포크는 중앙집중으로 되돌아갑니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5d59c560-54ef-1e7b-2641-7b511bb3d52c', 'c7a2aaa0-8ae1-db0e-48d5-29bd96846348', 'ax-team/charter-and-mandate', 'charter-and-mandate', '팀 차터: 권한과 경계를 문서로 못박기',
+  $aix$AX 팀이 6개월 만에 소진되는 가장 흔한 이유는 실력 부족이 아니라 **권한 없이 책임만 받았기 때문**입니다. 출발할 때 한 장으로 정리해 두면 1년을 벌 수 있습니다.
+
+## 차터에 반드시 들어갈 5줄
+
+1. **미션** — 한 문장, 측정 가능하게. "AI를 도입한다"가 아니라 "2026년 안에 고객 응대 처리 시간을 30% 줄인다".
+2. **결정 권한** — AX 팀이 단독으로 결정하는 것과 스폰서 승인이 필요한 것을 나눠 적습니다. 도구 선정·과제 우선순위는 보통 단독, 인력과 예산 변경은 승인.
+3. **제외 범위** — 하지 않을 일. 예: "개인 PC의 AI 도구 사용 문의는 IT 헬프데스크로 보낸다".
+4. **성공 기준과 기간** — 분기 단위 지표 2개. 3개 이상이면 아무것도 관리되지 않습니다.
+5. **에스컬레이션 경로** — 현업이 시간을 내주지 않을 때 누구에게, 며칠 안에 올리는가.
+
+## 경영진 스폰서가 실제로 해야 할 일
+
+- 예산 승인이 아니라 **현업의 시간을 확보해 주는 것**입니다. 챔피언 프로그램이 90일을 못 넘기는 가장 큰 이유가 스폰서 부재라는 분석이 반복적으로 나옵니다.
+- 분기 리뷰에 **직접 참석**하기. 스폰서가 빠지는 순간 AX는 곁가지 업무로 취급됩니다.
+
+## 다섯 줄 중 가장 중요한 것은 제외 범위입니다
+
+AX 팀은 "AI 관련 모든 것"의 창구가 되기 쉽습니다. 프린터 고장 문의까지 오는 조직도 있습니다. **하지 않을 일을 적어야 할 일을 할 수 있습니다.**
+
+> 💡 **핵심**: 차터의 핵심은 멋진 미션 문장이 아니라 **제외 범위와 결정 권한**입니다. 이 두 줄이 없으면 AX 팀은 만능 헬프데스크가 됩니다.$aix$,
+  $aix${"type":"stack","title":"권한 위임 스택","layers":[{"label":"경영진 스폰서","sublabel":"예산 + 현업의 시간 확보 · 분기 리뷰 직접 참석","icon":"shield","tone":"warning"},{"label":"AX 팀 차터","sublabel":"미션 · 결정 권한 · 제외 범위 · 지표 2개 · 에스컬레이션","icon":"clipboard","tone":"primary"},{"label":"부서 스쿼드 (스포크)","sublabel":"과제 실행과 성과 책임","icon":"users","tone":"accent"},{"label":"현업 챔피언","sublabel":"현장 확산과 피드백 수집","icon":"user","tone":"muted"}],"caption":"위층이 시간을 확보해 주지 않으면 아래층은 아무것도 실행하지 못합니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '99a3d81a-9bdd-42ed-cc5b-b6e3f5f09225', '7a82f1b8-1076-a8bf-4104-b271b38ee280', 'ax-team/intake-pipeline', 'intake-pipeline', '과제 발굴과 우선순위: 인테이크 파이프라인',
+  $aix$요청은 메신저, 메일, 복도, 회의에서 무작위로 들어옵니다. **창구를 하나로 만드는 것**이 AX 운영의 실질적인 시작입니다.
+
+## 접수 창구를 하나로, 양식을 다섯 칸으로
+
+사내 채널 하나를 정하고 다음 다섯 칸만 받습니다.
+
+- 업무명 / 빈도(하루·주 몇 건) / 1건당 소요 시간 / 담당 인원 / 현재 처리 방식
+
+양식의 목적은 거절이 아니라 **계산**입니다. 빈도 × 소요 시간 × 근무일 = 연간 절감 가능 시간이 자동으로 나옵니다. 이 숫자가 없으면 우선순위는 목소리 큰 순서로 정해집니다.
+
+## 스코어링: 임팩트 × 실현 가능성
+
+- **임팩트**: 연간 절감 시간, 또는 매출·비용에 미치는 영향
+- **실현 가능성**: 데이터에 접근할 수 있는가 / 결과가 맞는지 판정할 수 있는가 / 틀렸을 때 비용이 낮은가
+
+두 축으로 네 칸이 나옵니다.
+
+- 임팩트 상 · 실현 상 → **즉시 파일럿**
+- 임팩트 상 · 실현 하 → **데이터 준비 과제**로 분리 (AI 과제가 아직 아님)
+- 임팩트 하 · 실현 상 → **셀프 서비스**로 안내 (부서 챔피언이 직접)
+- 임팩트 하 · 실현 하 → **거절**, 단 사유를 회신
+
+## 첫 파일럿은 지루한 곳에서 고르세요
+
+MIT 조사에서 예산은 세일즈·마케팅에 쏠렸지만 분명한 수익은 백오피스 자동화에서 나왔습니다. 눈에 잘 띄는 과제보다 **반복적이고 정답 판정이 쉬운 업무**가 첫 파일럿의 성공률이 훨씬 높습니다.
+
+## 동시 진행은 3~5개로 제한
+
+포트폴리오 상한을 정해두지 않으면 10개가 동시에 돌다가 전부 시연 단계에서 멈춥니다. 상한을 넘긴 요청은 대기열에 넣고, 대기 중임을 요청자에게 알립니다.
+
+> 💡 **핵심**: 좋은 과제는 발견되는 게 아니라 **계산됩니다**. 접수 양식과 스코어링 기준이 AX 팀의 가장 강력한 도구입니다.$aix$,
+  $aix${"type":"flow","title":"과제 인테이크 파이프라인","nodes":[{"label":"단일 창구 접수","sublabel":"양식 5칸: 업무·빈도·소요시간·인원·현재방식","icon":"send","tone":"accent"},{"label":"절감 시간 계산","sublabel":"빈도 × 소요 시간 × 근무일","icon":"chart","tone":"primary","edgeLabel":"목소리 크기가 아니라 숫자로"},{"label":"임팩트 × 실현 가능성 스코어링","sublabel":"데이터 접근 · 판정 가능 · 실패 비용","icon":"filter","tone":"primary"},{"label":"4갈래 결정","sublabel":"파일럿 / 데이터 준비 / 셀프 서비스 / 거절","icon":"git-branch","tone":"success","edgeLabel":"동시 파일럿 3~5개 상한"}],"loopBack":{"from":3,"to":0,"label":"결정과 사유를 요청자에게 회신"},"caption":"거절도 회신합니다 — 사유 없는 침묵이 다음 요청을 음지로 보냅니다."}$aix$::jsonb, $aix${"title":"사내 채널에서 과제 접수·스코어링 따라하기","app":{"kind":"chat-app","workspace":"우리 회사 워크스페이스","composerId":"ax-composer","channels":[{"id":"ch-intake","name":"ax-요청","active":true},{"id":"ch-notice","name":"ax-공지"},{"id":"ch-champion","name":"ax-챔피언"}],"messages":[{"id":"m1","author":"박지연 (고객지원팀)","time":"오전 9:12","text":"AX 요청드립니다.\n업무: 환불 문의 1차 답변 초안 작성\n빈도: 하루 40건\n1건당 소요: 8분\n담당: 3명\n현재 방식: 템플릿 복사 후 손으로 수정","hidden":true},{"id":"m2","author":"AX봇","bot":true,"time":"오전 9:12","text":"접수 완료 — AX-2026-118\n연간 절감 가능 시간: 40건 × 8분 × 250일 ≈ 1,333시간","hidden":true},{"id":"m3","author":"나 (AX 리드)","time":"오전 9:30","text":"실현 가능성 점검: 과거 답변 데이터 있음 ✅ / 상담원이 정답 판정 가능 ✅ / 발송 전 사람 확인이라 실패 비용 낮음 ✅","hidden":true},{"id":"m4","author":"나 (AX 리드)","time":"오전 9:33","text":"임팩트 상 × 실현 상 → 6주 파일럿 진행. 중단 조건: 상담원 수정률 40% 초과가 2주 연속이면 접습니다.","hidden":true},{"id":"m5","author":"AX봇","bot":true,"time":"오전 9:33","text":"파일럿 큐 등록 — 진행 중 4/5건. 이후 요청은 대기열로 들어갑니다.","hidden":true},{"id":"m6","author":"김도현 (마케팅팀)","time":"오전 10:05","text":"AX 요청: 주간 회의록 요약 (주 2회, 1건 20분, 담당 1명)","hidden":true},{"id":"m7","author":"나 (AX 리드)","time":"오전 10:11","text":"임팩트 하 × 실현 상 → 파일럿 대신 셀프 서비스로 안내드립니다. 마케팅팀 챔피언이 사내 템플릿으로 30분 안에 세팅해 드릴 수 있어요.","hidden":true}]},"actions":[{"t":"caption","text":"① 요청은 정해진 다섯 칸 양식으로만 받습니다"},{"t":"move","target":"ch-intake"},{"t":"click"},{"t":"reveal","target":"m1"},{"t":"wait","ms":700},{"t":"caption","text":"② 절감 시간은 접수 즉시 자동 계산됩니다 — 우선순위의 근거"},{"t":"reveal","target":"m2"},{"t":"move","target":"m2"},{"t":"wait","ms":600},{"t":"caption","text":"③ 실현 가능성을 3가지 질문으로 점검합니다"},{"t":"click","target":"ax-composer"},{"t":"type","target":"ax-composer","text":"데이터 있음 / 판정 가능 / 실패 비용 낮음"},{"t":"reveal","target":"m3"},{"t":"wait","ms":500},{"t":"caption","text":"④ 결정할 때 중단 조건을 함께 적습니다 — 시작하는 날에"},{"t":"hide","target":"ax-composer"},{"t":"type","target":"ax-composer","text":"6주 파일럿 진행 · 중단 조건 명시"},{"t":"reveal","target":"m4"},{"t":"reveal","target":"m5"},{"t":"wait","ms":600},{"t":"caption","text":"⑤ 임팩트가 낮으면 거절이 아니라 셀프 서비스로 넘깁니다"},{"t":"reveal","target":"m6"},{"t":"reveal","target":"m7"},{"t":"move","target":"m7"},{"t":"caption","text":"✅ 모든 요청에 결정과 사유가 회신됩니다 — 침묵이 섀도우 AI를 만듭니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0aeca14b-537c-f184-c569-9cf1dab3f26c', '7a82f1b8-1076-a8bf-4104-b271b38ee280', 'ax-team/pilot-to-production', 'pilot-to-production', '파일럿에서 프로덕션까지: 90일 설계',
+  $aix$파일럿의 성공 기준을 "시연"으로 잡으면 조직은 영원히 시연만 합니다. 시작하는 날 **프로덕션 진입 조건**을 함께 적어야 파일럿 지옥을 벗어납니다.
+
+## 시작 전에 정하는 3줄 (파일럿 계약)
+
+- **판정 방법** — 무엇을 재서 성공을 판단하는가. 비교할 **기준선**을 첫 주에 반드시 측정해 둡니다.
+- **기간과 표본** — 예: 6주, 실제 업무 200건. "될 때까지"는 기간이 아닙니다.
+- **중단 조건** — 이 선 아래면 접는다. 예: 품질 기준 미달이 2주 연속.
+
+## 90일 골격
+
+- **1~30일**: 기준선 측정 + 현업 5명과 함께 AI 없이 수동으로 해봅니다. 이 과정에서 "무엇이 정답인지"의 판정 기준이 확정됩니다. 이 단계를 건너뛴 파일럿은 나중에 품질 논쟁으로 멈춥니다.
+- **31~60일**: 좁은 범위에 실제 투입. 사람이 최종 확인하는 휴먼 인 더 루프 구조로 시작하고, 실패 사례를 모아 유형별로 분류합니다.
+- **61~90일**: 확대 또는 중단 결정. 확대라면 **운영 주체·모니터링·예산을 현업에 이관**합니다.
+
+## 프로덕션 진입 체크리스트
+
+- 실패했을 때 사람이 개입하는 경로가 있는가
+- 품질을 매주 확인할 수 있는 화면이 있는가
+- 운영 담당자가 정해졌는가 (AX 팀이 영구 운영하면 다음 과제를 못 합니다)
+- 사용자가 "왜 이렇게 나왔냐"고 물을 때 답할 근거와 기록이 있는가
+
+## 중단도 성과로 세기
+
+6주 만에 접은 파일럿은 실패가 아니라 **6주 만에 산 정보**입니다. 분기 보고에 중단 건수를 함께 적는 팀이 오래 갑니다. 중단이 0건인 팀은 대개 결정을 미루고 있는 팀입니다.
+
+> 💡 **핵심**: 파일럿의 성공 기준은 시연이 아니라 **이관**입니다. 시작하는 날 중단 조건과 인수자를 함께 적으세요.$aix$,
+  $aix${"type":"steps","title":"파일럿 90일 설계","steps":[{"label":"0일 · 파일럿 계약 3줄","sublabel":"판정 방법 · 기간과 표본 · 중단 조건","icon":"clipboard"},{"label":"1~30일 · 기준선과 판정 기준","sublabel":"현업 5명과 AI 없이 수동으로 먼저","icon":"gauge"},{"label":"31~60일 · 좁게 실투입","sublabel":"사람 최종 확인 + 실패 사례 분류","icon":"test-tube"},{"label":"61~90일 · 이관 또는 중단","sublabel":"운영 주체·모니터링·예산을 현업으로","icon":"check"}],"caption":"이관받을 사람 이름이 없는 파일럿은 확대가 아니라 AX 팀의 운영 부채가 됩니다."}$aix$::jsonb, null, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e2d7a3b7-c35a-e91c-e632-8184d0996d43', '7a82f1b8-1076-a8bf-4104-b271b38ee280', 'ax-team/measure-and-report', 'measure-and-report', '성과 측정과 보고: 채택률에서 손익까지',
+  $aix$"AI로 생산성이 올랐습니다"라는 보고는 다음 분기 예산을 지켜주지 않습니다. 숫자가 필요하고, 단계에 맞는 숫자가 따로 있습니다.
+
+## 도입 초기(0~6개월)에 보는 지표
+
+- **채택률** — 대상자 중 주 1회 이상 실제로 쓴 사람의 비율. 라이선스 발급 수는 성과가 아닙니다.
+- **인간 개입률(오버라이드율)** — AI 결과를 사람이 고친 비율. 품질을 가장 정직하게 보여주는 지표입니다. 이 값이 내려가는 추세가 곧 학습의 증거입니다.
+- **처리 시간 단축** — 가장 먼저 잡히는 프로세스 지표. 기준선과 비교해야 의미가 생깁니다.
+
+## 확산 이후(6개월~)에 보는 지표
+
+- 오류율, 의사결정 소요 시간, 그리고 **손익 영향**(매출, 전환율, 건당 처리 비용)
+- 직원 만족도 같은 '소프트 ROI'에서 손익에 책임지는 '하드 ROI'로 옮겨가는 것이 2026년의 흐름입니다. PwC 설문에서 CEO 56%가 재무적 수익이 없다고 답한 배경에는, 애초에 손익으로 환산할 설계가 없었던 경우가 많습니다.
+
+## 보고는 3단으로
+
+1. **숫자 3개** — 채택률 / 절감 시간 / 손익 영향
+2. **결정 목록** — 확대·유지·중단을 건별로
+3. **막힌 것 하나와 필요한 지원** — 스폰서가 결정해 줄 것 딱 하나
+
+## 측정의 두 가지 함정
+
+- **사용량을 성과로 세기** — 호출 수나 대화 수는 활동량일 뿐입니다. 많이 쓰는 것과 잘 쓰는 것은 다릅니다.
+- **기준선 없이 시작하기** — 파일럿 첫 주에 기존 방식의 시간과 품질을 재두지 않으면, 나중에 어떤 숫자도 증명할 수 없습니다. 이건 되돌릴 수 없는 실수입니다.
+
+> 💡 **핵심**: 초기엔 **채택률과 개입률**, 확산 후엔 **손익**. 그리고 기준선은 파일럿 첫 주에 재두세요 — 나중에는 못 잽니다.$aix$,
+  $aix${"type":"grid","title":"단계별 AX 성과 지표","items":[{"label":"채택률","sublabel":"대상자 중 주 1회 이상 사용 · 초기 1순위","icon":"users","tone":"primary"},{"label":"인간 개입률","sublabel":"사람이 고친 비율 · 품질의 정직한 신호","icon":"wrench","tone":"primary"},{"label":"처리 시간 단축","sublabel":"기준선 대비 % · 가장 먼저 잡히는 지표","icon":"clock","tone":"accent"},{"label":"오류율","sublabel":"확산 이후 · 재작업 비용과 연결","icon":"alert","tone":"accent"},{"label":"손익 영향","sublabel":"매출·전환율·건당 처리 비용","icon":"dollar","tone":"success"},{"label":"사용량 (함정)","sublabel":"호출 수는 활동량 · 성과로 세지 말 것","icon":"x","tone":"warning"}],"caption":"초기 6개월은 채택률·개입률, 그 이후는 손익 — 단계를 건너뛴 보고는 신뢰를 잃습니다."}$aix$::jsonb, $aix${"title":"분기 성과 대시보드 읽고 보고 만들기","app":{"kind":"browser","url":"ax.internal/dashboard/2026-q3","blocks":[{"id":"d-head","type":"heading","label":"AX 분기 성과 대시보드 — 2026년 3분기"},{"id":"d-adopt","type":"card","label":"채택률 — 대상 210명 중 주 1회 이상 128명 (61%)"},{"id":"d-override","type":"card","label":"인간 개입률 — 답변 초안 수정 34% (지난 분기 52%)"},{"id":"d-time","type":"card","label":"처리 시간 — 환불 문의 1건 8분 → 3분 (기준선 대비 −62%)"},{"id":"d-license","type":"badge","label":"⚠ 라이선스 발급 210건 — 이 숫자는 성과가 아닙니다"},{"id":"d-filter","type":"input","label":"기간·부서 필터를 입력하세요…"},{"id":"d-pl","type":"card","label":"손익 영향 — 건당 처리 비용 1,900원 → 780원 · 분기 환산 약 2,700만원","hidden":true},{"id":"d-stop","type":"card","label":"중단 1건 — 영업 제안서 자동 생성 (품질 기준 2주 연속 미달)","hidden":true},{"id":"d-ask","type":"card","label":"필요한 지원 — 부서 챔피언 겸직 시간 주 4시간 공식화 (스폰서 결정)","hidden":true},{"id":"d-report","type":"badge","label":"보고 3단 — 숫자 3개 / 결정 목록 / 막힌 것 1개","hidden":true},{"id":"d-export","type":"button","label":"분기 보고 3단으로 내보내기"}]},"actions":[{"t":"caption","text":"① 초기 지표부터 봅니다 — 채택률은 발급 수가 아니라 실사용 비율"},{"t":"move","target":"d-adopt"},{"t":"click"},{"t":"move","target":"d-license"},{"t":"wait","ms":600},{"t":"caption","text":"② 개입률의 '추세'가 품질 학습의 증거입니다 (52% → 34%)"},{"t":"move","target":"d-override"},{"t":"dblclick"},{"t":"wait","ms":500},{"t":"caption","text":"③ 처리 시간은 기준선과 비교해야 의미가 생깁니다"},{"t":"move","target":"d-time"},{"t":"click"},{"t":"caption","text":"④ 확산 단계 과제만 손익으로 환산해 봅니다"},{"t":"click","target":"d-filter"},{"t":"type","target":"d-filter","text":"고객지원팀 / 확산 단계 과제"},{"t":"reveal","target":"d-pl"},{"t":"wait","ms":600},{"t":"caption","text":"⑤ 중단한 파일럿도 성과로 함께 보고합니다"},{"t":"reveal","target":"d-stop"},{"t":"move","target":"d-stop"},{"t":"caption","text":"⑥ 마지막은 스폰서가 결정할 것 딱 하나"},{"t":"reveal","target":"d-ask"},{"t":"click","target":"d-export"},{"t":"reveal","target":"d-report"},{"t":"caption","text":"✅ 숫자 3개 · 결정 목록 · 지원 요청 1개로 마무리"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'd4305ebd-5f91-7f4d-d54d-671e19ab162d', '7a82f1b8-1076-a8bf-4104-b271b38ee280', 'ax-team/governance-enablement', 'governance-enablement', '거버넌스와 확산: 섀도우 AI와 챔피언 네트워크',
+  $aix$규정을 만들지 않으면 직원들은 이미 각자의 방법으로 AI를 쓰고 있습니다. 회사의 승인 없이 개인적으로 쓰는 이런 도구를 **섀도우 AI**라고 부릅니다.
+
+## 지금 조직의 현실
+
+- 여러 조사에서 AI 사용 규정을 갖춘 조직은 소수인데, 승인되지 않은 도구를 쓰는 직원의 비율은 훨씬 높게 나옵니다. IDC 조사에서는 유럽 기업의 57%가 최근 1년 안에 섀도우 AI 사례를 최소 한 건 발견했다고 답했습니다.
+- 유럽에서 사업한다면 일정도 걸립니다. EU AI Act의 고위험 AI 관련 의무와 범용 AI·합성 미디어 투명성 의무가 **2026년 8월 2일부터** 적용됩니다(일부 독립형 고위험 시스템은 유예 기간이 있습니다). 규정을 만들 이유가 이미 규제로 존재합니다.
+
+## 최소 거버넌스 3장
+
+1. **허용 목록** — 승인된 도구와, 각 도구에 넣어도 되는 데이터 등급.
+2. **금지 3줄** — 개인정보, 미공개 재무 정보, 고객 식별 정보는 승인되지 않은 도구에 넣지 않는다.
+3. **기록** — 무엇을 쓰는지 보이게 합니다. 볼 수 없는 것은 통제할 수 없습니다.
+
+중요한 것은 순서입니다. **금지만 있는 규정은 섀도우 AI를 늘립니다.** 막을 때는 반드시 "그럼 이걸 쓰세요"라는 안전한 길을 함께 줘야 합니다.
+
+## 확산의 마지막 1미터는 챔피언이 만듭니다
+
+- 각 부서에서 1명씩 겸직 챔피언을 둡니다(주 2~4시간). 외부 컨설턴트가 아니라 **동료**이기 때문에 신뢰가 생기고, 같은 불안을 알기 때문에 설득이 됩니다.
+- 챔피언에게 줘야 하는 세 가지: 사례 템플릿, 월 1회 모임, 그리고 **인정**(평가에 반영되지 않는 겸직은 오래가지 않습니다).
+- 저항의 실체는 대개 반감이 아니라 **불안**입니다. 최근 조사에서 직원 약 40%가 AI로 일자리를 잃을까 걱정한다고 답했습니다. "누가 대체되는가"에 대한 조직의 답을 먼저 정하지 않으면, 어떤 교육을 해도 채택률은 오르지 않습니다.
+
+> 💡 **핵심**: 거버넌스는 금지 목록이 아니라 **안전한 사용 경로**입니다. 그리고 확산의 마지막 1미터는 AX 팀이 아니라 옆자리 동료가 만듭니다.$aix$,
+  $aix${"type":"flow","title":"거버넌스에서 확산까지","nodes":[{"label":"섀도우 AI 현황 파악","sublabel":"지금 무엇을 쓰고 있는지 먼저 본다","icon":"search","tone":"warning"},{"label":"최소 거버넌스 3장","sublabel":"허용 목록 · 금지 3줄 · 사용 기록","icon":"shield","tone":"primary","edgeLabel":"금지만 있으면 음지로 갑니다"},{"label":"안전한 길 제공","sublabel":"승인 도구 + 교육 + 사례 템플릿","icon":"graduation-cap","tone":"accent"},{"label":"부서 챔피언 확산","sublabel":"동료가 옆자리에 퍼뜨리는 마지막 1미터","icon":"users","tone":"success","edgeLabel":"겸직 시간과 인정을 공식화"}],"loopBack":{"from":3,"to":0,"label":"새 도구 요청은 다시 검토 대기열로"},"caption":"규정과 확산은 한 사이클입니다 — 현장에서 올라온 새 도구 요청이 다음 허용 목록을 만듭니다."}$aix$::jsonb, null, 6, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
 commit;

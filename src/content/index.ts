@@ -13,6 +13,7 @@ import { n8nAutomation } from "./courses/n8n-automation";
 import { snsAutoBot } from "./courses/sns-auto-bot";
 import { aiPassiveIncome } from "./courses/ai-passive-income";
 import { aiPm } from "./courses/ai-pm";
+import { axTeam } from "./courses/ax-team";
 
 /**
  * 강의 레지스트리 — 카테고리 내 표시 순서대로 나열합니다.
@@ -36,6 +37,7 @@ export const COURSES: Course[] = [
   snsAutoBot,
   aiPassiveIncome,
   aiPm,
+  axTeam,
 ];
 
 export function getCourse(slug: string): Course | undefined {
