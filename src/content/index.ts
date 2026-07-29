@@ -1,6 +1,7 @@
 import type { Category, Course } from "./types";
 import { aiHarness } from "./courses/ai-harness";
 import { loopEngineering } from "./courses/loop-engineering";
+import { aiAgentTeam } from "./courses/ai-agent-team";
 import { promptEngineeringRag } from "./courses/prompt-engineering-rag";
 import { aiCodingTools } from "./courses/ai-coding-tools";
 import { aiGameDev } from "./courses/ai-game-dev";
@@ -22,6 +23,7 @@ import { axTeam } from "./courses/ax-team";
 export const COURSES: Course[] = [
   // Track 1: AI 개발
   loopEngineering,
+  aiAgentTeam,
   aiHarness,
   promptEngineeringRag,
   aiCodingTools,
