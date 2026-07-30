@@ -245,7 +245,7 @@ export const CATEGORY_META: Record<
   },
   business: {
     label: "비즈니스 & 커리어",
-    description: "노코드 자동화, n8n, SNS 봇, 수익 창출, AI 시대의 PM",
+    description: "생성형 AI 업무 활용, 노코드 자동화, n8n, SNS 봇, 수익 창출, AI 시대의 PM",
   },
 };
 

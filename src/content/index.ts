@@ -15,31 +15,33 @@ import { snsAutoBot } from "./courses/sns-auto-bot";
 import { aiPassiveIncome } from "./courses/ai-passive-income";
 import { aiPm } from "./courses/ai-pm";
 import { axTeam } from "./courses/ax-team";
+import { genAiOfficeBasics } from "./courses/gen-ai-office-basics";
 
 /**
  * 강의 레지스트리 — 카테고리 내 표시 순서대로 나열합니다.
  * 새 강의를 추가하려면 courses/ 에 파일을 만들고 여기에 등록하세요.
  */
 export const COURSES: Course[] = [
-  // Track 1: AI 개발
-  loopEngineering,
-  aiAgentTeam,
-  aiHarness,
-  promptEngineeringRag,
-  aiCodingTools,
-  aiGameDev,
-  // Track 2: 크리에이티브
-  aiDesign,
-  figmaProductDesign,
-  aiVideo,
-  aiAudio,
-  // Track 3: 비즈니스 & 커리어
-  nocodeAutomation,
-  n8nAutomation,
-  snsAutoBot,
-  aiPassiveIncome,
-  aiPm,
-  axTeam,
+  // Track 1: AI 개발 — 학습 순서(입문 → 심화)대로 나열
+  aiCodingTools, // beginner: AI 코딩 도구 첫걸음
+  aiAgentTeam, // beginner: 도구에 익숙해진 뒤 멀티 에이전트 입문
+  promptEngineeringRag, // intermediate: 프롬프트 설계 원리와 RAG
+  loopEngineering, // intermediate: 프롬프트 위에 에이전틱 워크플로우 설계
+  aiGameDev, // intermediate: 응용 프로젝트
+  aiHarness, // advanced: 평가·테스트 프레임워크
+  // Track 2: 크리에이티브 — 학습 순서(입문 → 심화)대로 나열
+  aiDesign, // beginner: 이미지 생성 기초
+  aiAudio, // beginner: 음악·더빙
+  aiVideo, // intermediate: 이미지 다음 단계인 영상 제작
+  figmaProductDesign, // intermediate: 프로덕트 디자인 전문 워크플로우
+  // Track 3: 비즈니스 & 커리어 — 학습 순서(입문 → 심화)대로 나열
+  genAiOfficeBasics, // beginner: 생성형 AI 첫 강의 (플랫폼 진입점)
+  nocodeAutomation, // beginner: 자동화 기초 도구
+  aiPassiveIncome, // beginner: 자동화를 활용한 수익화
+  aiPm, // beginner: 개념 중심 커리어 강의
+  snsAutoBot, // intermediate: Make 위에 AI API 결합
+  n8nAutomation, // intermediate: 셀프호스팅 자동화 심화
+  axTeam, // intermediate: 조직 단위 AI 전환
 ];
 
 export function getCourse(slug: string): Course | undefined {
