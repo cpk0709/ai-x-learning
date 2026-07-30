@@ -1,6 +1,8 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { glossarify } from "./glossarify";
+import { GLOSSARY } from "@/content/glossary";
+import { rehypeGlossary } from "./rehype-glossary";
+import { GlossaryTerm } from "./glossary-term";
 
 /**
  * CommonMark 플랭킹 규칙 보정:
@@ -11,15 +13,33 @@ function fixBoldQuotes(md: string): string {
   return md.replace(/\*\*"([^"*\n]+)"\*\*/g, '"**$1**"');
 }
 
+/** rehype-glossary가 삽입한 <glossary-term term="..."> 요소를 툴팁으로 렌더링 */
+function GlossaryTermElement({
+  term,
+  children,
+}: {
+  term?: string;
+  children?: React.ReactNode;
+}) {
+  if (!term || !GLOSSARY[term]) return <>{children}</>;
+  return (
+    <GlossaryTerm term={term} definition={GLOSSARY[term]}>
+      {children}
+    </GlossaryTerm>
+  );
+}
+
+const components = {
+  "glossary-term": GlossaryTermElement,
+} as Components;
+
 /**
  * 레슨 본문 마크다운 렌더러.
  * - `> 💡 **핵심**:` 블록쿼트가 강조 콜아웃으로 보이도록 스타일링
- * - 용어사전 단어의 첫 등장을 자동으로 감지해 호버 설명 툴팁 부착
+ * - 용어사전 단어의 첫 등장을 rehype 단계에서 감지해 호버 설명 툴팁 부착
+ *   (렌더 중 상태 변이 금지 — hydration mismatch 원인이었음, DEVLOG #11)
  */
 export function LessonMarkdown({ content }: { content: string }) {
-  // 레슨(컴포넌트 렌더) 단위로 용어별 첫 등장 1회만 툴팁 표시
-  const used = new Set<string>();
-
   return (
     <div
       className="prose prose-neutral max-w-none dark:prose-invert
@@ -38,10 +58,8 @@ export function LessonMarkdown({ content }: { content: string }) {
     >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        components={{
-          p: ({ children }) => <p>{glossarify(children, used)}</p>,
-          li: ({ children }) => <li>{glossarify(children, used)}</li>,
-        }}
+        rehypePlugins={[rehypeGlossary]}
+        components={components}
       >
         {fixBoldQuotes(content)}
       </ReactMarkdown>
