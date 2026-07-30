@@ -16,6 +16,10 @@ import { aiPassiveIncome } from "./courses/ai-passive-income";
 import { aiPm } from "./courses/ai-pm";
 import { axTeam } from "./courses/ax-team";
 import { genAiOfficeBasics } from "./courses/gen-ai-office-basics";
+import { realEstateBasics } from "./courses/real-estate-basics";
+import { realEstateFirstHome } from "./courses/real-estate-first-home";
+import { realEstateMarketTax } from "./courses/real-estate-market-tax";
+import { realEstateAdvanced } from "./courses/real-estate-advanced";
 
 /**
  * 강의 레지스트리 — 카테고리 내 표시 순서대로 나열합니다.
@@ -42,6 +46,11 @@ export const COURSES: Course[] = [
   snsAutoBot, // intermediate: Make 위에 AI API 결합
   n8nAutomation, // intermediate: 셀프호스팅 자동화 심화
   axTeam, // intermediate: 조직 단위 AI 전환
+  // Track 4: 부동산 — 학습 순서(입문 → 초보 → 중급 → 고급)대로 나열
+  realEstateBasics, // beginner(입문): 전월세·계약·보증금 지키기
+  realEstateFirstHome, // beginner(초보): 청약·대출·매매 내 집 마련
+  realEstateMarketTax, // intermediate(중급): 시장 분석과 세금 설계
+  realEstateAdvanced, // advanced(고급): 경매·재개발·절세 전략
 ];
 
 export function getCourse(slug: string): Course | undefined {

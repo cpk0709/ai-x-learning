@@ -14,6 +14,7 @@ const TABS: { value: Category | "all"; label: string }[] = [
   { value: "dev", label: CATEGORY_META.dev.label },
   { value: "creative", label: CATEGORY_META.creative.label },
   { value: "business", label: CATEGORY_META.business.label },
+  { value: "realestate", label: CATEGORY_META.realestate.label },
 ];
 
 export function CourseExplorer({ courses }: { courses: Course[] }) {

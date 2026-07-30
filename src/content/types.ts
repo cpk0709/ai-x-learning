@@ -13,7 +13,7 @@ import type { DemoScene } from "./demo-types";
 
 export type * from "./demo-types";
 
-export type Category = "dev" | "creative" | "business";
+export type Category = "dev" | "creative" | "business" | "realestate";
 
 export type Level = "beginner" | "intermediate" | "advanced";
 
@@ -79,7 +79,19 @@ export type IconKey =
   | "camera"
   | "play"
   | "smartphone"
-  | "monitor";
+  | "monitor"
+  | "home"
+  | "building"
+  | "landmark"
+  | "scale"
+  | "banknote"
+  | "gavel"
+  | "map-pin"
+  | "percent"
+  | "wallet"
+  | "handshake"
+  | "file-pen"
+  | "receipt";
 
 /** 노드/레이어/컬럼의 시각적 강조 톤 */
 export type Tone = "primary" | "accent" | "success" | "warning" | "muted";
@@ -246,6 +258,10 @@ export const CATEGORY_META: Record<
   business: {
     label: "비즈니스 & 커리어",
     description: "생성형 AI 업무 활용, 노코드 자동화, n8n, SNS 봇, 수익 창출, AI 시대의 PM",
+  },
+  realestate: {
+    label: "부동산",
+    description: "전월세 계약, 청약과 대출, 세금, 투자와 경매까지 — 생활 부동산 지식",
   },
 };
 

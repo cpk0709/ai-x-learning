@@ -5741,4 +5741,1806 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
   illustration = excluded.illustration, demo = excluded.demo,
   minutes = excluded.minutes, order_index = excluded.order_index;
 
+-- 강의: 생활 부동산 입문: 전월세부터 시작하기
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '0376b432-557c-2a9b-ab01-696875729ad2', 'real-estate-basics', '생활 부동산 입문: 전월세부터 시작하기', $aix$인생 첫 집 구하기는 인생에서 가장 큰 돈이 움직이는 순간입니다. 하지만 학교는 전월세 계약을 가르쳐 주지 않죠. 이 강의는 책과 유튜브, 커뮤니티에 흩어져 있던 생활 부동산 지식을 '집 구하기 여정' 순서대로 체계화했습니다. 주택 유형과 전세·월세 선택부터 등기부등본 읽는 법, 전세사기 걸러내기, 계약·전입신고·확정일자, 그리고 보증금을 무사히 돌려받는 퇴거까지 — 부동산을 전혀 몰라도 따라올 수 있게 만들었습니다.$aix$,
+  null, 'realestate', 'beginner', array['전월세', '임대차 계약', '등기부등본', '전세사기 예방', '사회초년생']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'd3b7ce52-071f-dad5-a8f6-6da092f975d3', '0376b432-557c-2a9b-ab01-696875729ad2', 'first-steps', '부동산과 첫 만남', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '15bb7b39-1205-8e60-45ac-99eca6f78908', '0376b432-557c-2a9b-ab01-696875729ad2', 'safety-check', '계약 전 안전 점검', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'e8a0a5ba-d86a-62ae-b409-45bd8140b5cd', '0376b432-557c-2a9b-ab01-696875729ad2', 'contract-to-moveout', '계약과 입주, 그리고 퇴거', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'aeda440a-c8ab-df63-b768-2682ca17067d', 'd3b7ce52-071f-dad5-a8f6-6da092f975d3', 'real-estate-basics/why-real-estate', 'why-real-estate', '첫 독립, 부동산을 왜 알아야 할까',
+  $aix$첫 집을 구하는 순간, 통장에서 인생 최대의 돈이 움직입니다. 그런데 학교도 회사도 전월세 계약은 가르쳐 주지 않죠.
+
+## 모르면 그대로 위험이 됩니다
+
+- 전월세 보증금은 보통 **수백만 원에서 수억 원**. 사회초년생 전 재산인 경우가 대부분입니다.
+- 계약서에 도장 찍는 순간 법률관계가 시작됩니다. 몰랐다는 이유로 봐주지 않습니다.
+- 전세사기 뉴스의 피해자 상당수가 **첫 계약을 하는 20~30대**였습니다. 노린 겁니다.
+
+운전에 비유하면, 부동산 지식은 면허 없이 고속도로에 올라가지 않기 위한 **최소한의 도로교통법**입니다.
+
+## 이 강의의 여정 지도
+
+집 구하기는 결국 6단계 여정입니다. 이 강의도 같은 순서로 갑니다.
+
+1. **기초 체력** — 주택 유형, 전세·월세 구조, 시세 읽는 법 (모듈 1)
+2. **안전 점검** — 등기부등본, 전세사기 수법, 중개사 검증 (모듈 2)
+3. **계약과 그 이후** — 계약·입주·거주·퇴거까지 (모듈 3)
+
+각 레슨은 4~6분. 지금 당장 집 구할 일이 없어도, 순서대로 한 번 훑어 두면 필요할 때 지도처럼 꺼내 쓸 수 있습니다.
+
+> 💡 **핵심**: 부동산 공부의 목적은 투자가 아니라 **내 보증금을 지키는 것**부터입니다. 여정의 순서를 머리에 넣고 시작하세요.$aix$,
+  $aix${"type":"flow","title":"집 구하기 6단계 여정","nodes":[{"label":"예산·조건 정하기","sublabel":"보증금·월세·출퇴근 거리","icon":"wallet","tone":"muted"},{"label":"시세 조사","sublabel":"실거래가·시세 앱","icon":"search","tone":"primary"},{"label":"안전 점검","sublabel":"등기부등본·위험 신호","icon":"shield","tone":"warning"},{"label":"계약","sublabel":"특약·중개사 확인","icon":"file-pen","tone":"primary"},{"label":"입주 신고","sublabel":"전입신고·확정일자","icon":"map-pin","tone":"accent"},{"label":"거주와 퇴거","sublabel":"갱신·보증금 반환","icon":"home","tone":"success"}],"caption":"이 강의는 이 여정을 순서대로 따라갑니다 — 지금 몇 단계에 있는지 체크해 보세요."}$aix$::jsonb, null, 4, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '9961e598-49b7-ccf1-8f70-d3bb161ef1c4', 'd3b7ce52-071f-dad5-a8f6-6da092f975d3', 'real-estate-basics/housing-types', 'housing-types', '아파트·빌라·오피스텔: 집의 종류부터 구분하기',
+  $aix$앱에서 '빌라'라고 뜨는 집이 법적으로는 세 종류일 수 있다는 사실, 알고 계셨나요? 집의 종류에 따라 보증금의 안전도가 달라집니다.
+
+## 자주 만나는 주택 유형
+
+- **아파트** — 5층 이상 공동주택. 시세 정보가 풍부해 가격 검증이 가장 쉽습니다.
+- **오피스텔** — 법적으로는 업무시설. 주거용으로 쓰면 임차인 보호는 받지만, 관리비가 비싼 편이고 전용면적이 같은 평형 아파트보다 작게 나옵니다.
+- **빌라(연립·다세대)** — 4층 이하 소형 공동주택을 묶어 부르는 일상어. 시세 확인이 어려워 **전세사기가 집중되는 유형**입니다.
+
+## 함정 주의: 다세대 vs 다가구
+
+겉모습은 똑같은 4층 건물이어도 법적 구조가 다릅니다.
+
+- **다세대주택** — 호수마다 등기가 따로 있는 공동주택. 301호의 주인과 302호의 주인이 다를 수 있습니다.
+- **다가구주택** — 건물 전체가 **집주인 한 명** 소유인 단독주택. 내 계약 전에 들어온 다른 세입자들의 보증금이 전부 나보다 선순위(먼저 돌려받을 권리)일 수 있습니다.
+
+아파트가 각자 통장이라면, 다가구는 **여러 명이 한 통장에 돈을 넣어 둔 것**과 같습니다. 먼저 넣은 사람부터 빼 가죠.
+
+## 면적 표기도 두 가지
+
+- 전용면적: 현관문 안쪽, 실제 내가 쓰는 공간
+- 공급면적: 전용면적 + 복도·계단 등 공용 공간
+
+광고는 공급면적(평수)을 크게 쓰는 경우가 많으니, **비교는 항상 전용면적으로** 하세요.
+
+> 💡 **핵심**: 계약 전에 이 집이 다세대인지 다가구인지부터 확인하세요. 다가구라면 먼저 들어온 세입자들의 보증금 총액 확인이 필수입니다.$aix$,
+  $aix${"type":"grid","title":"주택 유형 지도","items":[{"label":"아파트","sublabel":"5층↑ · 시세 검증 쉬움","icon":"building","tone":"primary"},{"label":"오피스텔","sublabel":"법적으론 업무시설","icon":"monitor","tone":"accent"},{"label":"연립·다세대","sublabel":"호수별 등기 · 시세 불투명","icon":"home","tone":"warning"},{"label":"다가구","sublabel":"건물 전체 주인 1명","icon":"user","tone":"warning"},{"label":"전용면적","sublabel":"실제 쓰는 공간","icon":"check","tone":"success"},{"label":"공급면적","sublabel":"공용 공간 포함 표기","icon":"layers","tone":"muted"}],"caption":"같은 '빌라'여도 다세대와 다가구는 보증금 안전 구조가 완전히 다릅니다."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f618ccc7-d5e4-85a5-0c72-d09aed691760', 'd3b7ce52-071f-dad5-a8f6-6da092f975d3', 'real-estate-basics/jeonse-wolse-maemae', 'jeonse-wolse-maemae', '전세·월세·매매: 나에게 맞는 선택은',
+  $aix$"전세가 이득이야, 월세가 이득이야?"라는 질문에 정답은 없습니다. 있는 건 **내 상황에 맞는 선택 기준**뿐입니다.
+
+## 세 가지 방식의 구조
+
+- **전세** — 큰 보증금을 맡기고 매달 내는 돈 없이 삽니다. 은행에 목돈을 맡기고 이자 대신 '거주'를 받는 구조라고 생각하면 쉽습니다.
+- **월세** — 보증금은 작게, 매달 임대료를 냅니다. 보증금을 올리고 월세를 낮추는 반전세(보증부 월세)도 흔합니다.
+- **매매** — 집을 사서 소유합니다. 취득세 등 세금과 대출 상환이 따라오고, 이 강의(입문)의 범위를 넘어 다음 단계에서 다룹니다.
+
+## 선택 기준 4가지
+
+1. **목돈과 대출** — 전세는 목돈이 필요합니다. 전세자금대출을 쓰면 이자가 사실상의 월세가 되니, **대출 이자와 월세를 직접 비교**해 보세요.
+2. **보증금 리스크** — 전세는 맡기는 돈이 큰 만큼 떼일 때 피해도 큽니다. 월세는 리스크가 작은 대신 매달 비용이 나갑니다.
+3. **거주 기간** — 짧게 살 계획이면 월세가 유연합니다.
+4. **집의 안전도** — 시세 확인이 어려운 빌라 전세는 위험도가 높습니다. 같은 집이라면 월세가 안전한 선택일 수 있습니다.
+
+## 사회초년생이 자주 놓치는 것
+
+- 월세 계약도 보증금이 있는 한 **이 강의의 안전 점검이 똑같이 필요**합니다.
+- 전세자금대출은 은행이 집을 심사해 주는 효과가 있지만, 대출이 나왔다고 안전한 집이라는 보장은 아닙니다.
+
+> 💡 **핵심**: "전세 이자 상당액 vs 월세"를 숫자로 비교하고, 거기에 **보증금 리스크**를 얹어 판단하세요. 싼 전세가 비싼 월세보다 위험할 수 있습니다.$aix$,
+  $aix${"type":"compare","title":"전세 vs 월세 vs 매매","columns":[{"title":"전세","icon":"banknote","tone":"primary","items":["큰 보증금, 월 부담 없음","목돈 or 전세자금대출 필요","보증금 리스크 큼","안전 점검 필수"]},{"title":"월세","icon":"receipt","tone":"accent","items":["작은 보증금 + 매달 임대료","초기 자금 부담 적음","리스크 작고 이동 유연","매달 비용 누적"]},{"title":"매매","icon":"landmark","tone":"muted","items":["소유권 취득","취득세·대출 상환 동반","가격 변동 위험 부담","다음 단계 강의에서"]}],"caption":"정답은 없습니다 — 목돈·거주 기간·리스크 감수 범위로 고르는 겁니다."}$aix$::jsonb, null, 5, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0c7d6a48-2b13-129d-f7a6-249b1de9193d', 'd3b7ce52-071f-dad5-a8f6-6da092f975d3', 'real-estate-basics/price-research', 'price-research', '시세 조사: 실거래가로 부르는 값 검증하기',
+  $aix$부동산 광고에 적힌 가격은 집주인이 '부르는 값'입니다. 진짜 가격은 국가에 신고된 **실거래가**에 있습니다.
+
+## 호가와 실거래가를 구분하세요
+
+- **호가** — 팔거나 세 놓고 싶은 희망 가격. 네이버부동산 등 매물 광고의 가격입니다.
+- **실거래가** — 실제 계약돼 국토교통부에 신고된 가격. 시세 판단의 기준점입니다.
+
+중고 거래에 비유하면, 호가는 판매글의 가격이고 실거래가는 **실제로 팔린 가격**입니다. 검증은 늘 팔린 가격으로 해야죠.
+
+## 시세 조사 도구 4가지
+
+- **국토교통부 실거래가 공개시스템** (rt.molit.go.kr) — 공식 원본 데이터. 웹에서 주소로 바로 조회됩니다.
+- **네이버부동산** — 현재 나와 있는 매물과 호가 확인.
+- **호갱노노** — 아파트·오피스텔 실거래가를 지도 위에서 한눈에.
+- **아실** — 단지 간 가격 비교, 매매가·전세가 흐름 차트에 강합니다.
+
+민간 앱들의 실거래 데이터 출처는 결국 국토부 신고 자료로 같습니다. **보기 편한 앱으로 확인하고, 애매하면 공식 시스템에서 재확인**하는 식으로 쓰세요.
+
+## 실전 순서
+
+1. 실거래가 공개시스템 또는 앱에서 해당 단지·동네의 **최근 매매가와 전세가**를 계약일 기준 최신순으로 확인
+2. 네이버부동산에서 현재 호가와 비교 — 호가가 실거래가보다 크게 높으면 협상 여지
+3. 빌라처럼 거래가 드문 집은 **주변 비슷한 집의 거래**까지 넓혀서 확인
+4. 마지막은 임장 — 낮과 밤, 평일과 주말에 직접 가 보세요. 채광·소음·언덕은 화면에 안 나옵니다.
+
+> 💡 **핵심**: 매매 실거래가를 모르면 전세가가 싼지 위험한지 판단할 수 없습니다. **매매가와 전세가를 항상 세트로** 조사하세요 — 다음 모듈의 안전 진단 재료가 됩니다.$aix$,
+  $aix${"type":"steps","title":"시세 조사 4단계","steps":[{"label":"실거래가 확인","sublabel":"국토부 공개시스템 · 최근 계약일순","icon":"search"},{"label":"호가와 비교","sublabel":"네이버부동산 매물 가격","icon":"trending-up"},{"label":"매매가·전세가 세트 조사","sublabel":"호갱노노 · 아실 차트","icon":"chart"},{"label":"임장","sublabel":"낮·밤 직접 방문","icon":"map-pin"}],"caption":"호가(부르는 값)가 아니라 실거래가(팔린 값)로 검증하는 것이 시세 조사의 전부입니다."}$aix$::jsonb, null, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1ee50fca-a68d-95d7-d81d-6d8a22dfcb81', '15bb7b39-1205-8e60-45ac-99eca6f78908', 'real-estate-basics/register-reading', 'register-reading', '등기부등본: 집의 이력서 읽는 법',
+  $aix$계약하려는 집에 빚이 얼마나 있는지, 진짜 주인이 누구인지 — 전부 서류 한 장에 적혀 있습니다. 그런데 이 서류, **집주인 허락 없이 누구나 뗄 수 있습니다**.
+
+## 열람 방법: 주소만 알면 1분
+
+1. 대법원 인터넷등기소(iros.go.kr) 접속 → 부동산 등기 열람/발급
+2. 집 주소 입력 (다세대·오피스텔은 **동·호수까지 정확히**)
+3. 열람은 700원, 발급은 1,000원 — 확인용이면 열람으로 충분합니다.
+
+부동산이 보여주는 것만 믿지 말고, **반드시 내 손으로 직접** 떼 보세요. 계약 당일에도 최신본으로 한 번 더 확인합니다.
+
+## 세 부분만 읽으면 됩니다
+
+- **표제부** — 집의 기본 정보. 주소·면적·용도가 계약하려는 집과 일치하는지 확인합니다.
+- **갑구** — 소유권에 관한 내용. **현재 소유자가 계약 상대방과 동일인**인지 신분증과 대조하세요. 압류·가압류·가처분·경매 개시, '신탁' 같은 단어가 보이면 일단 멈춥니다.
+- **을구** — 소유권 이외의 권리, 쉽게 말해 **집 잡힌 빚 목록**. 근저당권이 있다면 은행에서 이 집을 담보로 돈을 빌렸다는 뜻입니다.
+
+## 을구의 숫자: 채권최고액
+
+을구의 근저당권에는 채권최고액(실제 빌린 돈보다 보통 20~30% 높게 잡아 두는 담보 한도)이 적혀 있습니다. 안전 진단에서는 **이 채권최고액을 빚으로 간주**하고 계산합니다.
+
+이 집이 사람이라면 갑구는 신분증, 을구는 **신용카드 빚 내역**입니다. 빚 많은 사람에게 전 재산을 맡기지 않듯이요.
+
+> 💡 **핵심**: 계약 전과 계약 당일, 최소 두 번 등기부등본을 직접 떼세요. 갑구에서 '주인이 맞는지', 을구에서 '빚이 얼마인지'만 읽어도 사고의 대부분을 거를 수 있습니다.$aix$,
+  $aix${"type":"stack","title":"등기부등본의 3단 구조","layers":[{"label":"표제부","sublabel":"집의 신상 — 주소·면적·용도","icon":"home","tone":"muted"},{"label":"갑구","sublabel":"소유권 — 주인이 누구인가, 압류·신탁 여부","icon":"user","tone":"primary"},{"label":"을구","sublabel":"빚 목록 — 근저당권·채권최고액","icon":"alert","tone":"warning"}],"caption":"인터넷등기소에서 열람 700원 — 주소만 알면 누구나, 집주인 동의 없이 확인할 수 있습니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '032fcd2b-6e6f-9150-a165-a290e2aa83ce', '15bb7b39-1205-8e60-45ac-99eca6f78908', 'real-estate-basics/jeonse-fraud-patterns', 'jeonse-fraud-patterns', '깡통전세와 전세사기: 대표 수법 5가지',
+  $aix$전세사기는 어리숙한 사람만 당하는 게 아닙니다. 수법을 모르면 **꼼꼼한 사람도 당하도록 설계**되어 있습니다. 수법을 알면 시나리오가 보입니다.
+
+## 대표 수법 5가지
+
+1. **깡통전세** — 집값보다 '전세보증금 + 근저당권 빚'이 커진 집. 물이 넘치기 직전까지 찬 컵처럼, 집이 경매로 넘어가면 내 보증금까지 돌아올 몫이 없습니다. 시세가 불투명한 신축 빌라에서 전세가를 시세보다 부풀려 계약시키는 방식이 전형적입니다.
+2. **이중계약·중복계약** — 대리인이나 중개인이 집주인에게는 월세 계약이라 속이고 세입자에게는 전세 계약을 맺어 보증금을 가로채거나, 한 집에 여러 세입자와 중복 계약하는 수법.
+3. **신탁 부동산 사기** — 등기부등본 갑구에 '신탁'이 있으면 소유권이 신탁회사에 있어, 원래 집주인이 마음대로 임대차 계약을 맺을 수 없습니다. 이걸 숨기고 계약하면 임차인 보호를 못 받을 수 있습니다.
+4. **바뀐 집주인(계약 직후 매도)** — 계약 직후 집을 빚 많은 사람이나 갚을 능력 없는 명의자에게 팔아넘기는 수법. 계약 시점 등기부등본이 깨끗해도 안심할 수 없는 이유입니다.
+5. **가짜 임대인·대리인** — 신분증 위조, 위임장 없는 대리 계약. 소유자 본인 확인과 대리 계약 시 위임장·인감증명서 확인이 필수입니다.
+
+## 최근 흐름: '계약 후'를 노린다
+
+최근 사기는 계약 시점엔 멀쩡해 보이다가 **계약 이후** 근저당권 설정, 소유자 변경, 세금 체납으로 위험이 만들어지는 경우가 많습니다. 그래서 다음 레슨의 사전 진단과 함께, 계약 후에도 등기부등본을 다시 확인하는 습관이 필요합니다.
+
+> 💡 **핵심**: 전세사기의 공통 구조는 **"시세를 모르게 하고, 서류를 안 보게 하는 것"**입니다. 시세 조사와 등기부등본, 이 두 가지를 직접 하는 사람은 표적에서 벗어납니다.$aix$,
+  $aix${"type":"grid","title":"전세사기 수법 지도","items":[{"label":"깡통전세","sublabel":"빚+보증금 > 집값","icon":"alert","tone":"warning"},{"label":"이중계약","sublabel":"월세라 속이고 전세 계약","icon":"users","tone":"warning"},{"label":"신탁 사기","sublabel":"계약 권한 없는 집주인","icon":"lock","tone":"warning"},{"label":"바뀐 집주인","sublabel":"계약 직후 매도·추가 대출","icon":"refresh","tone":"warning"},{"label":"가짜 임대인","sublabel":"위조 신분증·무단 대리","icon":"x","tone":"warning"},{"label":"방어법","sublabel":"시세 조사 + 등기부 직접 확인","icon":"shield","tone":"success"}],"caption":"수법은 다양해도 뿌리는 하나 — 시세와 서류를 남에게 맡기게 만드는 것입니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6e0ef9a4-2a56-43de-27c4-81ea50298561', '15bb7b39-1205-8e60-45ac-99eca6f78908', 'real-estate-basics/deposit-safety-check', 'deposit-safety-check', '보증금 안전 진단: 계약 전 최종 체크리스트',
+  $aix$마음에 드는 집을 찾았다면, 계약서를 쓰기 전에 마지막 관문이 남았습니다. **이 집이 내 보증금을 삼키지 않을지** 숫자로 진단하는 겁니다.
+
+## 핵심 공식: 남는 돈이 있는가
+
+집이 최악의 경우 경매로 넘어간다고 가정하고 계산합니다.
+
+- **매매 시세 - 선순위 빚(을구의 채권최고액 합계) ≥ 내 보증금**이어야 최소한의 안전선입니다.
+- 경매에서는 집이 시세보다 싸게 팔리는 일이 흔하니, 시세를 **보수적으로 낮춰** 잡으세요.
+- 많은 가이드가 '보증금 + 선순위 빚'이 시세의 70~80%를 넘으면 위험 신호로 봅니다. 정확한 안전 기준은 다음 레슨의 반환보증 가입 가능 여부로 다시 검증합니다.
+
+## 다가구주택이라면 한 줄 추가
+
+먼저 입주한 다른 세입자들의 보증금도 선순위 빚처럼 계산에 넣어야 합니다. 임대인이나 중개사에게 **선순위 보증금 총액 확인을 요구**하세요. 확인을 거부하면 그 자체가 위험 신호입니다.
+
+## 계약 전 체크리스트
+
+- 매매 시세, 전세가 최근 실거래 확인했는가 (모듈 1)
+- 등기부등본을 내가 직접 뗐는가 — 갑구 압류·신탁, 을구 채권최고액
+- 소유자와 계약 상대방 신분증 대조 (대리인이면 위임장 + 인감증명서)
+- 임대인의 국세·지방세 체납 확인 — 임대차 계약 관련 미납 세금 열람 제도가 있으니 중개사에게 절차를 요청하세요
+- HUG 안심전세 앱 등으로 시세·위험도 보조 진단
+- **전세보증금반환보증 가입이 가능한 집인지** 사전 확인 (가입 불가 = 기관도 위험하다고 본 집)
+
+> 💡 **핵심**: "시세 - 빚 ≥ 보증금"이 안 나오는 집은 아무리 마음에 들어도 접으세요. 집은 다시 찾을 수 있지만 보증금은 다시 모으기 어렵습니다.$aix$,
+  $aix${"type":"flow","title":"보증금 안전 진단 플로우","nodes":[{"label":"매매 시세 확인","sublabel":"보수적으로 낮춰 잡기","icon":"search","tone":"primary"},{"label":"선순위 빚 합산","sublabel":"채권최고액 + 선순위 보증금","icon":"receipt","tone":"warning"},{"label":"시세 - 빚 ≥ 내 보증금?","sublabel":"경매 가정 최악 시나리오","icon":"scale","tone":"accent","edgeLabel":"숫자로 비교"},{"label":"반환보증 가입 가능?","sublabel":"HUG 등 기관 사전 확인","icon":"shield","tone":"accent"},{"label":"계약 진행","sublabel":"하나라도 NO면 포기","icon":"check","tone":"success"}],"caption":"감이 아니라 뺄셈으로 판단합니다 — 남는 돈이 없으면 그 집은 아닙니다."}$aix$::jsonb, null, 5, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a3181f50-242f-146a-2a30-2fe964344fe7', '15bb7b39-1205-8e60-45ac-99eca6f78908', 'real-estate-basics/agent-verification', 'agent-verification', '공인중개사 검증과 중개대상물 확인·설명서',
+  $aix$중개사무소 간판이 있다고 다 정식 중개사는 아닙니다. 전세사기 사건 중 상당수에 **무자격·공모 중개인**이 끼어 있었습니다.
+
+## 중개사 검증 3가지
+
+- **등록 여부 조회** — 사무소에 걸린 중개사무소 등록증·공인중개사 자격증을 확인하고, 관할 시·군·구청 홈페이지나 부동산 정보 포털의 중개업소 조회 서비스에서 등록번호를 검색해 대조하세요.
+- **공제증서 확인** — 중개사고 시 손해배상을 보장하는 서류입니다. 계약 시 사본을 받아 두세요. 단, 공제 한도가 내 보증금 전액을 보장하는 건 아니니 과신은 금물입니다.
+- **계약 상대 확인 의무** — 중개사가 소유자 신분 확인, 등기부등본 제시를 생략하려 하면 그 자체로 이상 신호입니다.
+
+## 중개대상물 확인·설명서 = 집의 성적표
+
+계약할 때 중개사는 **중개대상물 확인·설명서**(집의 권리관계·상태·입지를 항목별로 적은 법정 서류)를 작성해 교부할 의무가 있습니다.
+
+- 권리관계(근저당권 등), 수도·전기·난방 상태, 누수 여부 항목을 **구두 설명과 대조하며** 읽으세요.
+- 여기 적힌 내용은 나중에 분쟁 시 증거가 됩니다. 대충 서명하지 마세요.
+
+## 중개보수는 협의 대상
+
+중개보수는 거래 금액 구간별 **상한 요율**이 시·도 조례로 정해져 있고, 그 안에서 협의로 정합니다. 정해진 고정 가격이 아니라 '최대치'라는 뜻입니다. 지역별 요율표는 지자체 홈페이지나 국토교통부 부동산거래 전자계약시스템에서 확인하고, **계약 전에 금액을 미리 합의**하세요.
+
+> 💡 **핵심**: 등록 조회 1분, 공제증서 사본 1장, 확인·설명서 정독 10분 — 이 세 가지가 중개사고에 대한 기본 보험입니다.$aix$,
+  $aix${"type":"steps","title":"중개사 검증 절차","steps":[{"label":"등록 중개사인지 조회","sublabel":"지자체 중개업소 조회 서비스","icon":"search"},{"label":"공제증서 사본 받기","sublabel":"중개사고 손해배상 보장","icon":"shield"},{"label":"확인·설명서 정독","sublabel":"권리관계·집 상태 항목 대조","icon":"file-text"},{"label":"중개보수 사전 협의","sublabel":"상한 요율 내에서 합의","icon":"handshake"}],"caption":"중개보수 요율은 지역 조례마다 다릅니다 — 계약 전에 요율표를 확인하고 합의하세요."}$aix$::jsonb, null, 4, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '98a97817-f8cb-72f9-45cc-13c50d3886de', 'e8a0a5ba-d86a-62ae-b409-45bd8140b5cd', 'real-estate-basics/contract-day', 'contract-day', '계약 당일: 절차와 특약 작성법',
+  $aix$계약서에 도장을 찍는 순간부터는 되돌리기 어렵습니다. 계약 당일의 순서와 **특약 몇 줄**이 앞으로 2년의 안전을 좌우합니다.
+
+## 계약 당일 순서
+
+1. **최신 등기부등본 재확인** — 며칠 전 본 서류를 믿지 말고 당일 아침에 다시 뗍니다.
+2. **신분 확인** — 등기부등본 갑구의 소유자와 계약 상대 신분증 대조. 대리인이라면 위임장 + 소유자 인감증명서 + 소유자와 직접 통화.
+3. **계약서 작성** — 주소는 등기부등본 표기 그대로(동·호수까지), 보증금·기간·특약 명시.
+4. **입금은 반드시 임대인 명의 계좌로** — 대리인·중개사 계좌로 보내라고 하면 거절하세요.
+5. 계약금(통상 보증금의 10%)을 걸고, 잔금은 입주일에 치릅니다.
+
+## 임차인을 지키는 특약 예시
+
+특약은 계약서에 추가하는 맞춤 약속입니다. 다음과 같은 취지의 문구가 널리 쓰입니다.
+
+- "임대인은 잔금 지급일 다음 날까지 근저당권 등 새로운 권리를 설정하지 않으며, 위반 시 계약을 해제하고 손해를 배상한다" — 잔금일에 몰래 대출받는 수법 차단
+- "전세보증금반환보증 가입이 불가한 경우 계약을 무효로 하고 계약금을 즉시 반환한다"
+- "임대인이 잔금일 전까지 현재 등기부등본상 근저당권을 말소한다" (해당 시)
+- 입주 전 수리 항목과 완료 기한
+
+특약은 문구 하나로 효력이 갈립니다. **최종 문구는 계약 전에 공인중개사·법률 전문가와 확인**하세요.
+
+## 계약 후 5분 투자
+
+계약 직후 임대차 신고(주택 임대차 계약 신고제)가 필요합니다. 보통 다음 레슨의 전입신고와 묶어 처리되지만, 지역·상황별 절차는 정부24나 관할 주민센터에서 확인하세요.
+
+> 💡 **핵심**: 돈은 임대인 명의 계좌로만, 특약에는 "잔금일 다음 날까지 신규 권리 설정 금지"를 반드시. 이 두 줄이 계약 단계의 절반입니다.$aix$,
+  $aix${"type":"flow","title":"계약 당일 체크 플로우","nodes":[{"label":"등기부등본 당일 재확인","sublabel":"아침에 최신본 열람","icon":"refresh","tone":"primary"},{"label":"소유자 신분 대조","sublabel":"갑구 소유자 = 계약 상대","icon":"user","tone":"primary"},{"label":"특약 작성","sublabel":"신규 권리 설정 금지 등","icon":"file-pen","tone":"accent"},{"label":"임대인 명의 계좌로 입금","sublabel":"대리인 계좌는 거절","icon":"banknote","tone":"warning"},{"label":"계약서·서류 보관","sublabel":"확인설명서·공제증서 포함","icon":"clipboard","tone":"success"}],"caption":"특약 문구의 최종 확인은 전문가와 — 한 줄 차이로 효력이 달라집니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ede51db7-752b-636e-37cc-6a4c09e2922b', 'e8a0a5ba-d86a-62ae-b409-45bd8140b5cd', 'real-estate-basics/move-in-day', 'move-in-day', '이사 당일: 전입신고와 확정일자로 방패 만들기',
+  $aix$잔금을 치르고 열쇠를 받은 날, 짐 정리보다 먼저 할 일이 있습니다. **그날 안에** 전입신고와 확정일자를 끝내는 것 — 내 보증금의 법적 방패가 이날 만들어집니다.
+
+## 방패 1: 대항력
+
+대항력은 '집 인도(입주) + 전입신고' 두 가지가 갖춰지면 생깁니다. 집주인이 바뀌어도 새 주인에게 내 임대차를 주장할 수 있게 되죠.
+
+**중요한 함정**: 대항력은 신고 당일이 아니라 **다음 날 0시부터** 효력이 생깁니다. 즉 잔금일 당일에 임대인이 대출을 받아 근저당권이 설정되면 그 빚이 나보다 앞섭니다. 앞 레슨의 특약("잔금일 다음 날까지 신규 권리 설정 금지")이 바로 이 하루의 공백을 막는 장치입니다.
+
+## 방패 2: 우선변제권
+
+대항력에 확정일자까지 받으면 우선변제권이 생깁니다. 집이 경매에 넘어가도 **확정일자 순번대로** 배당받을 수 있죠. 은행 번호표와 같습니다 — 늦게 뽑을수록 내 앞에 선 채권자가 많아집니다.
+
+## 처리 방법: 온라인 5분
+
+- **전입신고** — 정부24(gov.kr)에서 24시간 무료 신청. 검색창에 "전입신고" 입력 → 본인 인증 → 이사한 주소 입력.
+- **확정일자** — 정부24 전입신고 화면 마지막 단계의 '확정일자 부여 신청' 체크박스로 함께 신청하거나, 인터넷등기소에서 계약서를 올려 온라인 부여(소액 수수료). 주민센터 방문 시엔 계약서 원본을 지참하세요.
+
+## 소액임차인 최우선변제
+
+보증금이 일정 기준 이하인 소액임차인은 순번과 무관하게 일정액을 가장 먼저 변제받는 제도가 있습니다. 다만 **기준 금액이 지역별로 다르고 시행령 개정으로 수시로 바뀌며**, 적용 기준 시점에 함정(선순위 근저당권 설정 당시의 기준이 적용될 수 있음)이 있으니, 국가법령정보센터(law.go.kr)에서 주택임대차보호법 시행령 최신 기준을 확인하세요.
+
+> 💡 **핵심**: 잔금 → 입주 → 전입신고 + 확정일자를 **하루 안에**. 이 루틴이 대항력과 우선변제권이라는 2중 방패를 만듭니다.$aix$,
+  $aix${"type":"steps","title":"이사 당일 필수 루틴","steps":[{"label":"잔금 지급 + 열쇠 인수","sublabel":"집 인도 = 방패의 첫 조건","icon":"key"},{"label":"전입신고","sublabel":"정부24 · 24시간 무료","icon":"map-pin"},{"label":"확정일자 받기","sublabel":"전입신고와 동시 신청 가능","icon":"calendar"},{"label":"다음 날 0시 효력 발생","sublabel":"그 전 하루는 특약으로 방어","icon":"clock"}],"caption":"전입신고+입주 = 대항력, 여기에 확정일자 = 우선변제권. 미루면 방패에 구멍이 납니다."}$aix$::jsonb, null, 6, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '549ddb89-0e69-9ff0-bcb6-ec7e5ae3bcf2', 'e8a0a5ba-d86a-62ae-b409-45bd8140b5cd', 'real-estate-basics/deposit-guarantee', 'deposit-guarantee', '전세보증금반환보증: 보증금의 보험 들기',
+  $aix$대항력과 우선변제권이 있어도, 경매 결과에 따라 보증금을 다 못 받을 수 있습니다. 마지막 안전장치가 전세보증금반환보증 — **임대인이 못 돌려주면 보증기관이 대신 지급**하는 제도입니다.
+
+## 어디서 가입하나
+
+- **HUG(주택도시보증공사)** — 가장 많이 이용. 안심전세 포털·앱에서 조건 확인과 신청까지 가능합니다.
+- **HF(한국주택금융공사)** — 주로 전세자금대출과 연계.
+- **SGI(서울보증보험)** — 상대적으로 높은 보증금액도 다루는 편.
+
+기관마다 대상 주택·보증료·한도가 다르니 세 곳 조건을 비교해 보세요. 일부 지자체는 청년 대상 **보증료 지원 사업**도 운영하니 거주지 지자체 홈페이지를 확인하면 보증료를 아낄 수 있습니다.
+
+## 꼭 알아야 할 두 가지
+
+1. **신청 기한이 있습니다** — 신규 계약 기준, 잔금지급일과 전입신고일 중 늦은 날부터 **전세계약기간의 절반이 지나기 전**까지 신청해야 합니다. 미루다 기한을 넘기는 경우가 정말 많습니다.
+2. **가입 요건은 계속 강화되는 추세입니다** — 시세 대비 전세보증금 비율(전세가율)이 기준을 넘으면 가입이 거절됩니다. 구체 기준은 수시로 바뀌니 HUG 안심전세 앱 등에서 **계약 전에** 최신 기준을 확인하세요.
+
+## 순서를 뒤집으세요
+
+"계약하고 나서 보증 가입"이 아니라, **"보증 가입이 되는 집인지 확인하고 계약"**이 안전한 순서입니다. 보증기관이 거절하는 집은 기관이 보기에도 위험하다는 신호이기 때문입니다. 앞서 특약에 "가입 불가 시 계약 무효" 조항을 넣는 이유이기도 합니다.
+
+> 💡 **핵심**: 대항력(1층) + 우선변제권(2층) 위에 반환보증(3층)까지 올리면 보증금 3중 안전장치가 완성됩니다. 신청 기한은 **계약기간 절반 경과 전**, 잊지 마세요.$aix$,
+  $aix${"type":"stack","title":"보증금 3중 안전장치","layers":[{"label":"3층 · 전세보증금반환보증","sublabel":"기관이 대신 지급 — HUG·HF·SGI","icon":"shield","tone":"primary"},{"label":"2층 · 우선변제권","sublabel":"확정일자 — 경매 배당 순번","icon":"calendar","tone":"accent"},{"label":"1층 · 대항력","sublabel":"입주 + 전입신고 — 새 주인에게 주장","icon":"home","tone":"success"}],"caption":"아래층이 없으면 위층도 못 올립니다 — 전입신고·확정일자는 보증 가입의 전제 조건이기도 합니다."}$aix$::jsonb, null, 5, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ba9747ab-9fd1-bfa9-6082-2a8cebd67121', 'e8a0a5ba-d86a-62ae-b409-45bd8140b5cd', 'real-estate-basics/living-and-renewal', 'living-and-renewal', '살면서 생기는 일: 수리, 관리비, 계약 갱신',
+  $aix$보일러가 고장 나면 누가 고칠까요? 2년 뒤 집주인이 월세를 왕창 올려달라면요? 사는 동안의 규칙을 알아야 손해 보지 않습니다.
+
+## 수리와 관리비
+
+- **큰 수리는 임대인** — 보일러·배관·누수처럼 집의 기본 기능과 구조에 관한 수선 의무는 원칙적으로 임대인에게 있습니다.
+- **작은 관리는 임차인** — 전구 교체, 사용상 부주의로 인한 파손 등.
+- 경계가 애매한 항목은 다툼이 잦으니 **계약 특약으로 미리 정해 두는 것**이 최선입니다. 수리 요청은 문자 등 **기록이 남는 방법**으로 하세요.
+- 관리비는 세부 내역을 요구할 수 있습니다. 항목 없는 뭉뚱그린 관리비는 확인을 요청하세요.
+
+## 2년 뒤: 갱신의 두 갈래
+
+계약이 끝나갈 때 벌어지는 일은 두 가지 중 하나입니다.
+
+- **계약갱신청구권 행사** — 임차인이 만료 **6개월 전부터 2개월 전 사이**에 갱신을 요구하면, 임대인은 실거주 등 법이 정한 사유가 없는 한 거절할 수 없습니다. 1회에 한해 2년 더 살 수 있고, 이때 임대료 인상은 전월세상한제에 따라 5% 이내(지자체 조례로 달리 정할 수 있음)로 제한됩니다. 행사는 문자·내용증명 등 **증거가 남는 방식**으로 명확하게 하세요.
+- **묵시적 갱신** — 양쪽 다 아무 말 없이 기간이 지나면 같은 조건으로 2년 연장된 것으로 봅니다. 이 경우 임차인은 언제든 해지를 통보할 수 있고, 통보 3개월 뒤 계약이 종료됩니다.
+
+주의: 5% 상한은 **갱신 계약에만** 적용됩니다. 새 세입자와 맺는 신규 계약에는 적용되지 않습니다.
+
+## 분쟁이 생기면
+
+임대인과 대화로 안 풀리면 주택임대차분쟁조정위원회 같은 조정 절차가 있습니다. 소송 전에 비용 부담 없이 시도할 수 있으니, 감정싸움 전에 제도를 먼저 찾아보세요. 구체적인 분쟁은 반드시 법률 전문가와 상담하세요.
+
+> 💡 **핵심**: 갱신 의사는 만료 6~2개월 전에, 기록이 남는 방법으로. 이 타이밍을 놓치면 선택지가 줄어듭니다.$aix$,
+  $aix${"type":"compare","title":"갱신의 두 갈래","columns":[{"title":"계약갱신청구권","icon":"file-pen","tone":"primary","items":["만료 6~2개월 전 명시적 요구","1회 한정, +2년 보장","인상은 5% 이내(조례 예외)","문자·내용증명으로 증거 남기기"]},{"title":"묵시적 갱신","icon":"repeat","tone":"accent","items":["양쪽 다 침묵하면 자동 연장","같은 조건으로 2년 간주","임차인은 언제든 해지 통보 가능","통보 후 3개월 뒤 종료"]}],"caption":"어느 쪽이든 임차인에게 유리한 권리가 있습니다 — 몰라서 못 쓰는 경우가 문제일 뿐."}$aix$::jsonb, null, 5, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7e2c6641-0ef9-fc7a-06cd-bb877b0b543f', 'e8a0a5ba-d86a-62ae-b409-45bd8140b5cd', 'real-estate-basics/move-out-deposit', 'move-out-deposit', '계약 종료와 보증금 돌려받기',
+  $aix$집 구하기의 진짜 마지막 관문은 퇴거입니다. 보증금을 **전액, 제때** 돌려받아야 이 여정이 끝납니다.
+
+## 종료 전 타임라인
+
+- **만료 6~2개월 전** — 나갈 계획이면 갱신 거절 의사를 임대인에게 통보합니다(임차인은 2개월 전까지). 늦으면 묵시적 갱신이 되어 일정이 꼬입니다.
+- **통보는 기록으로** — 문자·내용증명 등 날짜가 증명되는 방식으로.
+- **이사 전** — 집 상태를 사진으로 남기고, 공과금·관리비를 정산합니다. 아파트라면 장기수선충당금(장기 수리 적립금 — 원래 소유자 부담분) 환급을 관리사무소에 확인하세요.
+
+## 원칙: 보증금과 열쇠는 맞교환
+
+보증금 반환과 집 인도(열쇠 반납·짐 빼기)는 **동시에 이행**하는 것이 원칙입니다. "일단 이사 나가면 곧 준다"는 말만 믿고 짐을 빼지 마세요.
+
+## 가장 위험한 실수: 보증금 없이 전출
+
+보증금을 못 받은 상태에서 이사 가고 전입신고를 새 집으로 옮기면, 그동안 쌓아 온 **대항력과 우선변제권이 사라집니다**. 방패를 스스로 내려놓는 셈입니다.
+
+부득이 먼저 이사해야 한다면 **임차권등기명령**(법원에 신청해 임차권을 등기부에 올려 두는 제도)을 활용하세요. 등기가 완료된 뒤에는 이사를 가도 대항력과 우선변제권이 유지됩니다. 반드시 **등기 완료를 확인한 후** 전출하세요.
+
+## 그래도 안 주면
+
+- 반환보증에 가입해 뒀다면 보증기관에 이행 청구 — 이 순간을 위해 3중 장치를 만든 겁니다.
+- 임차권등기명령 후 보증금 반환 소송, 지급명령 등 법적 절차로 갑니다. 이 단계부터는 반드시 법률 전문가와 상담하세요. 전세사기 피해가 의심되면 전세사기 피해자 지원 특별법에 따른 피해자 결정 신청과 지원 제도(경·공매 유예, 우선매수권, 공공임대 등)가 있으니 국토교통부 전세사기 피해 지원 창구에서 확인하세요.
+
+> 💡 **핵심**: 보증금 받기 전에는 절대 전출하지 않기, 부득이하면 임차권등기명령 완료 후에. 이 원칙 하나가 마지막 순간의 보증금을 지킵니다.$aix$,
+  $aix${"type":"flow","title":"퇴거와 보증금 회수 플로우","nodes":[{"label":"갱신 거절 통보","sublabel":"만료 2개월 전까지 · 기록 남기기","icon":"send","tone":"primary"},{"label":"정산·기록","sublabel":"집 상태 사진 · 공과금 · 충당금","icon":"clipboard","tone":"accent"},{"label":"보증금 ↔ 집 인도 맞교환","sublabel":"받기 전 전출 금지","icon":"handshake","tone":"success"},{"label":"미반환 시: 임차권등기명령","sublabel":"등기 완료 후에만 이사","icon":"gavel","tone":"warning","edgeLabel":"못 받았다면"},{"label":"보증 이행 청구·법적 절차","sublabel":"반환보증 · 전문가 상담","icon":"shield","tone":"warning"}],"caption":"행복한 결말은 3번에서 끝나는 것 — 4·5번 경로도 알아 두면 당황하지 않습니다."}$aix$::jsonb, null, 6, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 내 집 마련 로드맵: 청약·대출·매매 첫걸음
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '649db038-51bf-9ac3-4e32-d5ac3200ff4c', 'real-estate-first-home', '내 집 마련 로드맵: 청약·대출·매매 첫걸음', $aix$전월세는 살아봤지만 '내 집'은 처음인 분들을 위한 강의입니다. 청약통장을 어떻게 관리해야 하는지, 가점이 낮으면 어떤 전략이 있는지, LTV·DSR 규제 속에서 내 대출 한도는 얼마인지, 계약서에 도장 찍고 등기를 마칠 때까지 무엇을 확인해야 하는지 — 첫 집 마련의 전 과정을 순서대로 익힙니다. 대출·청약 규제는 2025~2026년에도 여러 번 바뀌었기 때문에, 이 강의는 '구조'를 가르치고 최신 수치는 공식 사이트에서 확인하는 습관까지 함께 만듭니다.$aix$,
+  null, 'realestate', 'beginner', array['청약', '주택담보대출', 'DSR', '매매 계약', '내 집 마련']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '928d341e-36e7-5a3f-a8aa-b659765e297f', '649db038-51bf-9ac3-4e32-d5ac3200ff4c', 'cheongyak-mastery', '청약 완전 정복', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'f9f3a6a7-f098-963a-8606-faf355a123b3', '649db038-51bf-9ac3-4e32-d5ac3200ff4c', 'loan-design', '대출 설계', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '2354d587-b546-8f5a-5fd4-bedd656e22fa', '649db038-51bf-9ac3-4e32-d5ac3200ff4c', 'purchase-in-practice', '매매 실전', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3018d3f8-fcfc-5b56-f08c-37ee4b5f4dbf', '928d341e-36e7-5a3f-a8aa-b659765e297f', 'real-estate-first-home/why-cheongyak', 'why-cheongyak', '청약이 뭐길래: 새 아파트를 ''정가''에 사는 법',
+  $aix$같은 아파트를 남들보다 싸게, 그것도 새것으로 사는 합법적인 방법이 있습니다. 바로 청약입니다.
+
+## 청약 = 새 아파트 살 사람을 미리 모집하는 제도
+
+청약은 아직 다 짓지 않은 아파트의 입주자를 미리 뽑는 제도입니다. 당첨되면 **분양가**(건설사가 정한 최초 판매 가격)에 새 아파트를 살 권리, 즉 분양권을 얻습니다.
+
+콘서트 티켓팅에 비유하면 쉽습니다. 인기 공연(좋은 입지의 새 아파트)의 티켓(분양권)을 정가에 사려는 사람이 많아서, 정해진 규칙(가점제·추첨제)으로 살 사람을 뽑는 것이죠.
+
+## 왜 유리한가
+
+- **가격**: 분양가가 주변 시세보다 낮게 책정되는 경우가 많습니다. 당첨만 되면 시작부터 유리합니다.
+- **새 집**: 수리비 걱정 없는 신축을 첫 집으로 가질 수 있습니다.
+- **자금 시간**: 계약금 → 중도금 → 잔금으로 2~3년에 걸쳐 나눠 내므로, 목돈을 모을 시간이 생깁니다.
+
+## 대신 알아둘 것
+
+- 경쟁이 치열하고, 당첨까지 수년이 걸릴 수 있습니다.
+- 당첨돼도 돈 계획이 없으면 포기해야 하고, 포기하면 한동안 재당첨이 제한됩니다.
+- 그래서 이 모듈에서는 **통장 관리 → 내 유형 파악 → 신청 → 당첨 후 자금 계획**까지 순서대로 익힙니다.
+
+> 💡 **핵심**: 청약은 '새 아파트를 분양가에 살 권리'를 뽑는 티켓팅입니다. 규칙을 아는 사람이 유리한 게임이니, 규칙부터 배웁시다.$aix$,
+  $aix${"type":"compare","title":"기존 아파트 매매 vs 청약","columns":[{"title":"기존 아파트 매매","icon":"building","tone":"muted","items":["시세(실거래가) 기준 가격","잔금까지 보통 2~3개월","목돈이 한 번에 필요","집 상태는 직접 확인(임장)"]},{"title":"청약 (신규 분양)","icon":"sparkles","tone":"primary","items":["분양가 — 시세보다 낮은 경우 많음","입주까지 2~3년 (건설 기간)","계약금→중도금→잔금 분납","당첨 확률은 제도가 결정"]}],"caption":"청약의 대가는 '기다림과 경쟁' — 대신 가격과 자금 일정에서 유리합니다."}$aix$::jsonb, null, 4, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1cdc08d5-aeee-3fee-b8d9-9f323c9a59d5', '928d341e-36e7-5a3f-a8aa-b659765e297f', 'real-estate-first-home/subscription-account', 'subscription-account', '주택청약종합저축, 이렇게 관리하면 됩니다',
+  $aix$청약통장은 만들어 두는 것만으로는 부족합니다. **어떻게 넣느냐**가 몇 년 뒤 당첨 확률을 가릅니다.
+
+## 매달 얼마씩 넣어야 하나
+
+- 월 납입 인정액은 **최대 25만 원**입니다(2024년 11월에 10만 원에서 상향). 한 달에 100만 원을 넣어도 25만 원까지만 인정됩니다.
+- 국민주택(공공분양)을 노린다면 **꾸준함이 생명**입니다. 당첨자를 저축 총액(납입 인정 금액)이 많은 순으로 뽑기 때문에, 매달 밀리지 않고 쌓는 사람이 이깁니다.
+- 민영주택만 노린다면 총액보다 **가입 기간**과 지역별 예치금이 중요합니다(다음 레슨에서 자세히).
+
+적금에 비유하면, 국민주택 청약은 '이자'가 아니라 **'납입 기록' 자체가 자산**인 적금입니다.
+
+## 세금 혜택도 챙기세요
+
+- 총급여 7천만 원 이하 무주택 세대주라면 연 납입액 **300만 원 한도의 40%**(최대 120만 원)를 소득공제 받을 수 있습니다. 월 25만 원이면 한도를 딱 채웁니다.
+- 배우자가 납입한 금액도 공제 대상에 포함되는 등 혜택이 계속 조정되니, 연말정산 시점에 홈택스에서 최신 기준을 확인하세요.
+
+## 실전 관리 3원칙
+
+- **자동이체**를 약정 납입일에 걸어두기 — 한두 달 밀리면 인정 회차가 흐트러집니다.
+- 사회초년생·미성년 자녀도 **일찍 가입**할수록 가입 기간 점수가 쌓입니다.
+- 통장은 해지하는 순간 기록이 사라집니다. 급전이 필요해도 **해지는 최후의 수단**으로.
+
+> 💡 **핵심**: 월 25만 원 자동이체 한 줄이 청약 전략의 절반입니다. 총액(국민주택)과 기간(민영주택), 두 마리 토끼를 동시에 잡는 금액이기 때문입니다.$aix$,
+  $aix${"type":"flow","title":"청약통장이 자산이 되는 과정","nodes":[{"label":"가입","sublabel":"누구나 · 1인 1통장","icon":"wallet","tone":"muted"},{"label":"매달 자동이체","sublabel":"월 25만 원까지 납입 인정","icon":"refresh","tone":"primary","edgeLabel":"약정일에 꾸준히"},{"label":"기록이 쌓임","sublabel":"납입 총액 + 가입 기간","icon":"trending-up","tone":"accent"},{"label":"1순위 자격 + 경쟁력","sublabel":"국민주택은 총액, 민영은 기간·예치금","icon":"check","tone":"success","edgeLabel":"몇 년 뒤"}],"caption":"해지하면 기록이 0으로 — 통장의 진짜 가치는 잔액이 아니라 '기록'입니다."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b19b5a22-8c1f-2b44-0f40-3ae8258ef7bd', '928d341e-36e7-5a3f-a8aa-b659765e297f', 'real-estate-first-home/national-vs-private', 'national-vs-private', '국민주택 vs 민영주택, 가점제 vs 추첨제',
+  $aix$청약의 승부 규칙은 하나가 아닙니다. **어떤 아파트냐에 따라 당첨자를 뽑는 방식이 완전히 다릅니다.** 내 강점이 통하는 판을 골라야 합니다.
+
+## 두 개의 리그
+
+- **국민주택**: 국가·지자체·LH 같은 공공이 공급하는 아파트(주로 전용면적 85㎡ 이하). 경쟁이 붙으면 3년 이상 무주택자 중 **납입 인정 금액(또는 회차)이 많은 순**으로 뽑습니다. 통장에 오래, 꾸준히 넣은 사람이 이기는 리그입니다.
+- **민영주택**: 민간 건설사가 짓는 아파트(래미안, 자이 같은 브랜드). 지역·면적별 **예치금**(공고일 기준 통장에 들어 있어야 하는 기준 금액, 예: 서울 전용면적 85㎡ 이하 300만 원)을 채우면 신청할 수 있고, 당첨은 가점제와 추첨제로 나눠 뽑습니다.
+
+## 가점제 84점의 구조
+
+가점은 세 항목의 합입니다. 만점은 84점.
+
+- **무주택 기간** — 최대 32점 (1년마다 2점씩, 15년 이상이면 만점)
+- **부양가족 수** — 최대 35점 (본인만 있어도 5점, 1명 늘 때마다 5점씩)
+- **통장 가입 기간** — 최대 17점 (15년 이상이면 만점)
+
+즉 혼자 사는 30대는 구조적으로 고득점이 어렵습니다. 이건 실력이 아니라 **제도의 설계**입니다.
+
+## 그래서 전략이 갈립니다
+
+- 가점이 높다(부양가족 많고 무주택 오래) → 민영주택 **가점제** 물량 공략
+- 가점이 낮다(1~2인 가구, 젊음) → **추첨제** 물량과 특별공급(다음 레슨) 공략
+- 꾸준히 저축해 왔다 → **국민주택**(공공분양) 공략
+
+가점제·추첨제 비율은 지역과 면적에 따라 다르고 정책에 따라 바뀌므로, 반드시 **해당 단지의 입주자모집공고**에서 확인하세요.
+
+> 💡 **핵심**: 청약은 한 판이 아니라 여러 리그입니다. 내 가점을 먼저 계산해 보고(청약홈 가점 계산기), 이길 수 있는 리그에 시간을 쓰세요.$aix$,
+  $aix${"type":"compare","title":"국민주택 vs 민영주택 — 승부 규칙","columns":[{"title":"국민주택 (공공)","icon":"landmark","tone":"accent","items":["LH 등 공공이 공급","주로 전용 85㎡ 이하","납입 총액·회차 많은 순","꾸준한 저축이 무기"]},{"title":"민영주택 (민간)","icon":"building","tone":"primary","items":["브랜드 아파트","지역·면적별 예치금 필요","가점제 + 추첨제 혼합","가점 낮으면 추첨제 공략"]}],"caption":"가점 84점 = 무주택 32 + 부양가족 35 + 가입기간 17. 내 점수부터 계산해 보세요."}$aix$::jsonb, null, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ee0d3c4c-26e3-57cb-5d83-2f776ad02f86', '928d341e-36e7-5a3f-a8aa-b659765e297f', 'real-estate-first-home/special-supply', 'special-supply', '특별공급 총정리: 나만 쓸 수 있는 전용 출입구',
+  $aix$일반공급 경쟁률이 수백 대 1이어도, 특별공급은 자격자끼리만 경쟁합니다. **내가 어느 문으로 들어갈 수 있는지**부터 확인하세요.
+
+## 특별공급이란
+
+전체 물량의 일부를 정책적으로 배려가 필요한 사람들에게 먼저 배정하는 제도입니다. 놀이공원의 '우선 탑승 레인'과 같습니다 — 자격이 있는 사람끼리만 줄을 서니 훨씬 짧습니다. 단, **당첨은 세대당 평생 1회**가 원칙이므로 신중하게 써야 하는 카드입니다.
+
+## 현행 주요 유형 (2026년 기준)
+
+- **신혼부부**: 혼인 7년 이내 무주택 부부. 출산 가구에 물량을 우선 배정하는 방향으로 계속 개편 중입니다.
+- **생애최초**: 세대 구성원 전원이 평생 한 번도 집을 소유한 적 없는 경우. 추첨 비중이 있어 가점 낮은 실수요자에게 기회입니다.
+- **신생아**: 2세 미만 자녀(임신·입양 포함 기준은 공고 확인)가 있는 가구를 위한 유형·우선공급.
+- **다자녀**: 자녀 2명 이상 가구.
+- **노부모 부양**: 만 65세 이상 직계존속을 3년 이상 계속 부양한 세대주.
+- **기관추천**: 국가유공자, 장애인, 중소기업 장기근속자 등 기관의 추천을 받는 유형.
+- 이 밖에 공공분양(뉴:홈)에는 청년 등 별도 유형이 있습니다.
+
+## 반드시 확인할 것
+
+- 유형마다 **소득·자산 기준**이 있습니다. 맞벌이 여부, 자녀 수에 따라 기준이 달라지고 해마다 조정되니, 공고문과 청약홈에서 신청 시점 기준을 확인하세요.
+- 여러 유형에 해당하면(예: 신혼부부이면서 생애최초) **경쟁률과 물량을 비교해 유리한 쪽 하나**를 고르는 게 전략입니다.
+
+> 💡 **핵심**: 특별공급은 '자격자끼리만 경쟁하는 전용 출입구'입니다. 평생 1회 카드이니, 내 자격을 전부 나열해 보고 가장 이길 만한 문에서 쓰세요.$aix$,
+  $aix${"type":"grid","title":"특별공급 주요 유형 지도","items":[{"label":"신혼부부","sublabel":"혼인 7년 이내","icon":"users","tone":"primary"},{"label":"생애최초","sublabel":"평생 무주택 세대","icon":"key","tone":"primary"},{"label":"신생아","sublabel":"2세 미만 자녀 가구","icon":"sparkles","tone":"accent"},{"label":"다자녀","sublabel":"자녀 2명 이상","icon":"home","tone":"accent"},{"label":"노부모 부양","sublabel":"65세 이상 3년 이상 부양","icon":"user","tone":"muted"},{"label":"기관추천","sublabel":"유공자·장애인·중소기업 등","icon":"landmark","tone":"muted"}],"caption":"당첨은 세대당 평생 1회 — 해당되는 유형을 모두 적어 보고 가장 유리한 문을 고르세요."}$aix$::jsonb, null, 5, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5770fa89-3bc3-0ab8-711d-a2b10788defa', '928d341e-36e7-5a3f-a8aa-b659765e297f', 'real-estate-first-home/applyhome-in-action', 'applyhome-in-action', '실습: 청약홈에서 공고 읽고 신청하기',
+  $aix$청약 신청 자체는 10분이면 끝납니다. 문제는 **입력 실수 하나로 당첨이 취소되는 '부적격'**입니다. 화면 순서대로 따라가며 실수 포인트를 짚어봅니다.
+
+## 1단계: 공고 찾기
+
+- 청약홈(applyhome.co.kr)에 접속해 첫 화면 왼쪽 메뉴에서 **청약일정 및 통계**를 누르면 이번 달 분양 캘린더가 보입니다.
+- 관심 단지를 누르면 **입주자모집공고** PDF가 열립니다. 수십 쪽이지만 볼 곳은 정해져 있습니다:
+  - 공급 대상표 (주택형별 물량, 특별공급/일반공급 배분)
+  - 신청 자격과 가점제·추첨제 비율
+  - 분양가와 **납부 일정**(계약금·중도금·잔금 날짜)
+  - 중도금 대출 가능 여부
+
+## 2단계: 신청 당일
+
+1. 신청일 **09:00~17:30** 사이에 청약홈 로그인 — 공동인증서·금융인증서 또는 네이버 같은 간편인증이 필요하니 **전날 미리 준비**하세요.
+2. 상단 메뉴 **청약신청 → APT** 선택 → 해당 단지 선택.
+3. 주택형(전용면적 타입)을 고릅니다.
+4. **가점 항목을 직접 입력**합니다 — 여기가 최대 고비입니다.
+5. 입력 내용을 확인하고 전자서명하면 완료. **청약신청 내역 조회** 메뉴에서 접수 여부를 꼭 확인하세요.
+
+## 부적격 지뢰 3가지
+
+- **무주택 기간**: 만 30세(또는 혼인신고일) 이후부터 계산합니다. 그냥 나이로 계산하면 틀립니다.
+- **부양가족**: 같은 주민등록등본에 있어야 하고, 직계존속은 3년 이상 계속 등재 등 조건이 붙습니다.
+- **세대원의 주택 소유**: 배우자나 부모의 주택(분양권 포함)도 걸립니다.
+
+부적격 판정을 받으면 당첨이 취소되고 일정 기간 청약이 제한됩니다. 헷갈리면 청약홈의 **청약자격 사전관리(모의 계산)** 기능으로 미리 점검하세요.
+
+> 💡 **핵심**: 신청은 10분, 검증은 하루. 가점 3항목(무주택 기간·부양가족·가입 기간)은 신청 전에 서류(주민등록등본 등)로 확인하고 입력하세요.$aix$,
+  $aix${"type":"steps","title":"청약홈 신청 6단계","steps":[{"label":"공고 읽기","sublabel":"청약일정 및 통계 → 모집공고 PDF","icon":"file-text"},{"label":"인증서 준비","sublabel":"공동·금융·간편인증 (전날까지)","icon":"lock"},{"label":"청약신청 → APT","sublabel":"신청일 09:00~17:30","icon":"monitor"},{"label":"주택형 선택","sublabel":"전용면적 타입 결정","icon":"home"},{"label":"가점 직접 입력","sublabel":"부적격 최다 발생 구간","icon":"alert"},{"label":"전자서명 + 내역 확인","sublabel":"청약신청 내역 조회로 검증","icon":"check"}],"caption":"5단계(가점 입력)의 실수가 부적격의 대부분 — 서류로 확인한 값만 입력하세요."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3a9ca8b9-68be-2403-1ce8-124ad5f1e9e2', '928d341e-36e7-5a3f-a8aa-b659765e297f', 'real-estate-first-home/after-winning', 'after-winning', '당첨 후 절차: 계약금·중도금·잔금의 돈 흐름',
+  $aix$당첨 문자는 끝이 아니라 시작입니다. 이제부터 2~3년에 걸친 **돈의 일정표**가 가동됩니다. 미리 알면 축제, 모르면 비상사태입니다.
+
+## 돈은 세 번에 나눠 냅니다
+
+분양가 5억 원을 **예시로 가정**하면 흐름은 이렇습니다 (비율은 단지마다 다르며 공고문에 명시됩니다):
+
+- **계약금** (통상 분양가의 10~20%) — 당첨 후 정해진 계약 기간에 냅니다. 예시: 10%면 5,000만 원. **이 돈만큼은 당첨 시점에 현금으로 있어야 합니다.** 대출이 어렵습니다.
+- **중도금** (통상 60% 안팎) — 공사 기간 동안 4~6회에 나눠 냅니다. 예시: 3억 원을 6회면 회당 5,000만 원. 대부분 단지는 **중도금 집단대출**(건설사가 은행과 연계해 당첨자들이 함께 받는 대출)로 처리합니다. 공고문에서 대출 가능 여부를 반드시 확인하세요.
+- **잔금** (나머지, 통상 30% 안팎) — 입주 시점에 냅니다. 보통 이때 주택담보대출로 갈아타면서 중도금 대출을 상환합니다. 잔금 대출 한도는 그 시점의 규제(모듈 2)에 따라 달라집니다.
+
+## 당첨 직후 해야 할 일
+
+1. 당첨자 발표일에 청약홈에서 확인 (문자만 믿지 말기)
+2. **서류 제출** — 무주택 확인 서류 등. 여기서 부적격이 최종 판정됩니다.
+3. 지정된 계약 기간에 견본주택 등에서 **공급계약 체결** + 계약금 납부
+
+## 알아둘 위험
+
+- 계약을 포기하면 일정 기간 **재당첨 제한**이 걸립니다. 당첨 후 고민이 아니라, 신청 전에 자금 계획이 서 있어야 하는 이유입니다.
+- 입주 전까지 내가 가진 것은 집이 아니라 분양권입니다. 전매(되팔기) 제한 여부도 공고문에서 확인하세요.
+
+> 💡 **핵심**: 청약 자금 계획의 공식 — "계약금은 현금으로, 중도금은 집단대출로, 잔금은 주택담보대출로". 신청 전에 계약금 10~20%가 준비되는지부터 확인하세요.$aix$,
+  $aix${"type":"flow","title":"당첨 후 2~3년의 돈 흐름 (예시: 분양가 5억 가정)","nodes":[{"label":"당첨 + 서류 검증","sublabel":"부적격 최종 확인","icon":"check","tone":"muted"},{"label":"계약금 납부","sublabel":"약 10~20% · 현금 필요","icon":"banknote","tone":"warning","edgeLabel":"계약 기간 내"},{"label":"중도금 분납","sublabel":"약 60% · 집단대출 활용","icon":"landmark","tone":"primary","edgeLabel":"공사 2~3년간 4~6회"},{"label":"잔금 + 입주","sublabel":"나머지 · 주택담보대출 전환","icon":"home","tone":"success","edgeLabel":"입주 지정 기간"}],"caption":"비율·일정은 단지마다 다릅니다 — 모집공고의 납부 일정표가 원본입니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '49e32a03-8459-9612-5f3c-5d3556cf54a6', 'f9f3a6a7-f098-963a-8606-faf355a123b3', 'real-estate-first-home/mortgage-structure', 'mortgage-structure', '주택담보대출의 구조: 원리금균등·원금균등·거치',
+  $aix$같은 3억 원을 빌려도 **갚는 방식**에 따라 매달 나가는 돈과 평생 내는 이자가 수천만 원 달라집니다. 대출의 첫 선택지부터 봅시다.
+
+## 세 가지 상환 방식
+
+마라톤 페이스 전략에 비유하면 이해가 쉽습니다.
+
+- **원리금균등**: 처음부터 끝까지 같은 페이스. 매달 내는 돈(원금+이자)이 만기까지 동일합니다. 가계부 관리가 쉬워 가장 많이 선택합니다.
+- **원금균등**: 초반에 빨리 달리는 전략. 매달 갚는 원금이 고정이라 초반 상환액이 크지만, 원금이 빨리 줄어 **총이자가 가장 적습니다.**
+- **거치식**: 일정 기간(거치기간) 이자만 내다가 나중에 원금 상환을 시작하는 방식. 초반 부담은 작지만 총이자가 커지고, 최근 규제에서는 거치기간 자체가 제한되는 추세입니다.
+
+## 숫자로 비교 (예시 가정)
+
+**3억 원, 30년 만기, 연 4% 금리**를 가정한 단순 예시입니다 (실제 금리·조건과 다릅니다):
+
+- 원리금균등: 매달 약 **143만 원** 고정, 총이자 약 2.2억 원
+- 원금균등: 첫 달 약 **183만 원** → 매달 조금씩 줄어 마지막 달 약 84만 원, 총이자 약 1.8억 원
+
+원금균등이 이자를 약 4천만 원 아끼지만, **초반 5~10년의 현금흐름을 버틸 수 있는지**가 관건입니다.
+
+## 선택 기준
+
+- 월급이 일정하고 여유가 빠듯하다 → 원리금균등
+- 초반 소득에 여유가 있다, 총이자를 줄이고 싶다 → 원금균등
+- 거치식은 "일단 사고 보자"는 유혹이 되기 쉬우니 신중하게
+
+> 💡 **핵심**: 원리금균등은 '예측 가능성', 원금균등은 '총이자 절약'을 삽니다. 은행 앱의 대출 계산기로 두 방식의 첫 달 상환액을 직접 비교해 보세요.$aix$,
+  $aix${"type":"compare","title":"원리금균등 vs 원금균등 (3억·30년·연 4% 예시 가정)","columns":[{"title":"원리금균등","icon":"gauge","tone":"primary","items":["매달 약 143만 원 고정","가계부 관리 쉬움","총이자 약 2.2억 원","가장 보편적인 선택"]},{"title":"원금균등","icon":"trending-up","tone":"accent","items":["첫 달 약 183만 → 점점 감소","초반 부담 큼","총이자 약 1.8억 원","이자 약 4천만 원 절약"]}],"caption":"예시 가정 수치입니다 — 실제 조건은 은행 대출 계산기로 확인하세요."}$aix$::jsonb, null, 5, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '09bb3320-2f7a-5b76-b429-80dab9e69888', 'f9f3a6a7-f098-963a-8606-faf355a123b3', 'real-estate-first-home/ltv-dsr-limits', 'ltv-dsr-limits', 'LTV·DTI·DSR: 내 대출 한도는 어떻게 정해지나',
+  $aix$"집값의 70%까지 대출된다며?"라는 말만 믿고 계약했다가 낭패 보는 사례가 많습니다. 한도는 **여러 개의 필터를 모두 통과한 최솟값**으로 정해지기 때문입니다.
+
+## 한도를 거르는 3중 필터
+
+공항 검색대를 차례로 통과하듯, 대출 한도는 이렇게 걸러집니다.
+
+1. **LTV** — 집값 기준 필터. 집값의 몇 %까지 빌릴 수 있는지.
+2. **DSR** — 소득 기준 필터. 모든 대출의 연간 원리금이 연소득의 일정 비율(은행권 기준 40%)을 넘지 못합니다. 여기에 **스트레스 DSR**(미래 금리 상승 가능성을 가산금리로 얹어 한도를 더 보수적으로 계산하는 제도)이 2025년 7월부터 전면 시행되어 한도가 더 줄었습니다.
+3. **정책 상한** — 절대 금액 필터. 2025년 6월부터 수도권·규제지역에서는 집을 사기 위한 주택담보대출에 **총액 상한(6억 원 등)**이 생겼고, 같은 해 10월에는 규제지역이 크게 확대되며 규제지역 내 LTV가 강화되고 고가 주택일수록 한도가 더 줄었습니다.
+
+**세 필터 중 가장 작은 값이 내 한도**입니다.
+
+## DSR 감 잡기 (예시 가정)
+
+연소득 5,000만 원, DSR 40%를 가정하면:
+
+- 1년에 갚을 수 있는 원리금 상한 = 2,000만 원 (월 약 166만 원)
+- 이미 신용대출 원리금으로 연 400만 원을 내고 있다면 → 주택담보대출에 쓸 수 있는 건 연 1,600만 원 (월 약 133만 원)뿐
+
+즉 **기존 대출을 정리하는 것**이 한도를 늘리는 가장 빠른 방법입니다.
+
+## 반드시 기억할 것
+
+이 영역은 2025~2026년에만 규제가 여러 번 바뀌었습니다. 규제지역 지정 여부, 상한 금액, 전입 의무 같은 조건은 **계약 전에 은행 2~3곳에서 한도 조회**를 하고, 금융위원회 발표 기준으로 확인하는 것이 정답입니다.
+
+> 💡 **핵심**: 한도 = min(LTV, DSR, 정책 상한). 인터넷에 떠도는 비율이 아니라, 계약 전 은행의 한도 조회 결과만 믿으세요.$aix$,
+  $aix${"type":"stack","title":"대출 한도를 거르는 3중 필터","layers":[{"label":"LTV — 집값 필터","sublabel":"집값의 몇 %까지? (지역·규제 여부로 결정)","icon":"home","tone":"primary"},{"label":"DSR — 소득 필터","sublabel":"모든 빚의 원리금 ≤ 연소득의 40% (은행권)","icon":"percent","tone":"accent"},{"label":"정책 상한 — 절대 금액 필터","sublabel":"수도권·규제지역 주담대 총액 상한 등","icon":"shield","tone":"warning"},{"label":"내 최종 한도","sublabel":"세 필터의 최솟값","icon":"check","tone":"success"}],"caption":"규제는 수시로 바뀝니다 — 계약 전 은행 한도 조회가 유일한 정답지입니다."}$aix$::jsonb, null, 6, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ed566aaf-8a1b-cbda-8ba4-7b2cea145d2e', 'f9f3a6a7-f098-963a-8606-faf355a123b3', 'real-estate-first-home/policy-loans', 'policy-loans', '정책대출 활용: 디딤돌·보금자리론·버팀목',
+  $aix$은행 창구로 직행하면 손해입니다. 요건만 맞으면 **시중 대출보다 금리가 낮은 정책대출**이 먼저이기 때문입니다.
+
+## 세 가지 이름, 세 가지 용도
+
+정부 지원 대출은 이름이 비슷해 헷갈리지만 용도가 다릅니다.
+
+- **디딤돌대출** — 집을 **살 때** 쓰는 주택도시기금 대출. 무주택 서민이 대상이며 소득·주택가격 요건이 있습니다. 신혼·생애최초·다자녀는 요건과 한도가 우대됩니다.
+- **보금자리론** — 역시 집을 **살 때** 쓰는 한국주택금융공사(HF)의 **장기 고정금리** 대출. 디딤돌보다 소득 문턱이 완만한 편이라, 디딤돌이 안 되면 다음으로 검토합니다.
+- **버팀목대출** — 이름은 비슷하지만 **전세 보증금**용입니다. 매매가 아니라 전세로 더 모으며 준비하는 단계라면 이쪽입니다.
+- **신생아 특례 대출** — 최근 2년 내 출산(입양 포함) 가구에 소득 요건을 크게 완화해 주는 우대 트랙. 해당된다면 최우선 검토 대상입니다.
+
+## 확인 순서
+
+1. **주택도시기금 홈페이지(기금e든든)**에서 디딤돌·버팀목 자격 자가진단
+2. 안 되면 **한국주택금융공사(HF)**에서 보금자리론 확인
+3. 그래도 안 되면 시중은행 주택담보대출 비교
+
+소득 한도, 주택가격 상한, 금리는 정책에 따라 **수시로 조정**됩니다. 이 강의에서 숫자를 외우기보다, 신청 시점에 위 두 사이트에서 확인하는 습관이 중요합니다.
+
+## 흔한 오해
+
+- "정책대출은 어차피 안 될 거야" — 신혼·생애최초·출산 가구 우대 트랙은 생각보다 문이 넓습니다. 자가진단은 10분이면 끝납니다.
+- 정책대출도 DSR 등 규제 적용 여부가 상품·시기마다 다르니 상담 시 함께 확인하세요.
+
+> 💡 **핵심**: 대출 검토 순서는 "정책대출 자격 확인 → 시중은행"입니다. 기금e든든 자가진단 10분이 이자 수백만 원을 아낄 수 있습니다.$aix$,
+  $aix${"type":"grid","title":"정책대출 한눈에 보기","items":[{"label":"디딤돌대출","sublabel":"구입자금 · 주택도시기금","icon":"key","tone":"primary"},{"label":"보금자리론","sublabel":"구입자금 · HF 장기 고정금리","icon":"landmark","tone":"primary"},{"label":"버팀목대출","sublabel":"전세 보증금용 (구입 아님)","icon":"building","tone":"muted"},{"label":"신생아 특례","sublabel":"출산 가구 소득요건 대폭 완화","icon":"sparkles","tone":"accent"},{"label":"기금e든든","sublabel":"자격 자가진단 · 신청","icon":"monitor","tone":"success"},{"label":"시중은행 주담대","sublabel":"정책대출 불가 시 비교 선택","icon":"banknote","tone":"warning"}],"caption":"요건·한도·금리는 수시 변경 — 주택도시기금·HF 홈페이지의 현재 기준이 원본입니다."}$aix$::jsonb, null, 5, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '93a200c5-46c8-2c78-0ad1-f3f61f46a9d9', 'f9f3a6a7-f098-963a-8606-faf355a123b3', 'real-estate-first-home/fixed-vs-variable', 'fixed-vs-variable', '고정 vs 변동: 금리 선택과 중도상환의 기술',
+  $aix$30년짜리 계약에서 금리 유형은 "앞으로 30년의 날씨에 어떤 옷을 입을까"를 정하는 일입니다. 정답은 없지만, **후회를 줄이는 기준**은 있습니다.
+
+## 세 가지 금리 유형
+
+- **고정금리**: 만기까지 금리가 안 바뀝니다. 금리가 올라도 내 상환액은 그대로 — 보험료를 조금 더 내고 확실성을 사는 셈입니다.
+- **변동금리**: 시장 금리에 따라 6개월~1년마다 조정됩니다. 금리 하락기에 유리하지만, 상승기엔 상환액이 늘어납니다.
+- **혼합형**: 처음 몇 년(예: 5년)은 고정, 이후 변동으로 전환. 국내 주택담보대출에서 흔한 절충안입니다.
+
+## 선택 기준
+
+- 상환액이 조금만 늘어도 가계가 흔들린다 → 고정(또는 혼합형)
+- 여유가 있고 금리 하락에 베팅하고 싶다 → 변동
+- 정책대출(보금자리론 등)은 장기 고정금리라는 것 자체가 큰 장점입니다.
+
+## 중도상환: 갈아탈 자유
+
+- **중도상환수수료**(만기 전에 미리 갚을 때 내는 수수료)는 2025년 1월 이후 신규 대출부터 크게 인하됐고, 통상 **대출 3년이 지나면 면제**됩니다.
+- 즉 지금 선택이 평생 가지 않습니다. 금리 환경이 바뀌면 **대환대출**(다른 은행의 더 싼 대출로 갈아타기)을 검토하세요. 온라인 갈아타기 서비스로 비교가 쉬워졌습니다.
+- 여윳돈이 생기면 일부 중도상환으로 원금을 줄이는 것도 확실한 '무위험 투자'입니다.
+
+> 💡 **핵심**: 금리 유형은 예측이 아니라 **내 가계의 체력**으로 고르세요. 그리고 3년마다 "지금 갈아타면 이득인가?"를 점검하는 습관이 금리 선택 자체보다 중요합니다.$aix$,
+  $aix${"type":"compare","title":"고정금리 vs 변동금리","columns":[{"title":"고정금리","icon":"shield","tone":"primary","items":["상환액이 만기까지 동일","금리 상승기에 유리","시작 금리는 약간 높은 편","예측 가능성 = 심리적 안정"]},{"title":"변동금리","icon":"chart","tone":"warning","items":["6개월~1년마다 조정","금리 하락기에 유리","상승기엔 상환액 증가 위험","가계 여력 있을 때 선택"]}],"caption":"3년 후 중도상환수수료가 면제되면 갈아타기 자유 — 선택은 바꿀 수 있습니다."}$aix$::jsonb, null, 4, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8f180929-d7da-b14a-4577-9e9558d9f432', 'f9f3a6a7-f098-963a-8606-faf355a123b3', 'real-estate-first-home/loan-execution', 'loan-execution', '대출 실행 절차: 잔금일에 돈이 도착하게 만들기',
+  $aix$대출은 신청 버튼을 누른다고 바로 나오지 않습니다. **잔금일에 정확히 돈이 도착하도록 역산해서 움직이는 일정 관리**가 이 레슨의 전부입니다.
+
+## 전체 절차 5단계
+
+1. **사전 상담·한도 조회** (계약 전!) — 은행 2~3곳과 정책대출 자격을 확인합니다. 이 결과가 나와야 "얼마짜리 집까지 살 수 있는지"가 정해집니다.
+2. **정식 신청** — 매매계약서를 쓰고 나면 계약서를 들고 은행에 신청합니다. **잔금일 최소 3~4주 전**에는 신청하세요.
+3. **심사** — 소득 증빙(원천징수영수증 등), 재직 확인, 집에 대한 감정평가가 진행됩니다.
+4. **자서** (자필서명 — 대출 약정서에 서명하는 절차) — 은행 지점 방문 또는 비대면으로 진행합니다.
+5. **실행** — 실행일을 **잔금일과 같은 날**로 지정하면, 은행이 대출금을 매도인(파는 사람) 계좌로 직접 보내줍니다. 내 통장을 거치지 않는 게 보통입니다.
+
+## 주의점 4가지
+
+- **잔금일을 여유 있게** 잡으세요. 심사 지연은 흔한데 잔금일 변경은 매도인 동의가 필요합니다.
+- 심사 기간에 **다른 대출(신용대출·카드론)을 새로 만들지 마세요.** DSR이 바뀌어 한도가 깎이거나 승인이 취소될 수 있습니다.
+- 이직·퇴사도 심사 중엔 금물입니다. 소득 증빙이 흔들립니다.
+- 대출 실행과 동시에 은행은 집에 근저당권을 설정합니다. 등기부등본에 표시되는 정상 절차이니 놀라지 않아도 됩니다.
+
+## 만약을 대비한 안전장치
+
+매매계약서에 "대출이 불가능해질 경우 계약을 해제하고 계약금을 반환한다"는 특약(계약서에 추가하는 개별 약속 조항)을 넣을 수 있는지 협의해 보세요. 규제가 자주 바뀌는 시기일수록 중요합니다.
+
+> 💡 **핵심**: "계약 전 한도 조회 → 잔금일 3~4주 전 신청 → 실행일 = 잔금일". 이 일정 공식과 '심사 중 다른 대출 금지'만 지켜도 대출 사고의 대부분을 피합니다.$aix$,
+  $aix${"type":"steps","title":"대출 실행 타임라인","steps":[{"label":"사전 한도 조회","sublabel":"계약 전 · 은행 2~3곳 + 정책대출","icon":"search"},{"label":"정식 신청","sublabel":"매매계약서 지참 · 잔금일 3~4주 전","icon":"file-pen"},{"label":"심사","sublabel":"소득·재직·감정평가 (새 대출 금지)","icon":"eye"},{"label":"자서","sublabel":"대출 약정서 자필서명","icon":"handshake"},{"label":"실행 = 잔금일","sublabel":"은행 → 매도인 계좌로 직접 송금","icon":"banknote"}],"caption":"잔금일에서 거꾸로 계산해 일정을 잡는 것이 대출 실행의 기술입니다."}$aix$::jsonb, null, 5, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '78c77e19-3872-6b39-8e41-6a4e30cec024', '2354d587-b546-8f5a-5fd4-bedd656e22fa', 'real-estate-first-home/total-budget', 'total-budget', '예산 세우기: 집값 말고도 돈 들 곳이 많다',
+  $aix$5억짜리 집을 사는 데 5억만 있으면 될까요? 아닙니다. **집값 위에 얹히는 부대비용**을 빼먹으면 잔금일에 돈이 모자라는 사태가 생깁니다.
+
+## 총비용의 구조
+
+집값을 밥값이라고 하면, 부대비용은 세금과 봉사료입니다. 메뉴판 가격만 보고 지갑을 채우면 안 됩니다.
+
+- **취득세** — 가장 큰 부대비용. 1주택 기준 6억 이하 1%, 6~9억 구간 1~3%(금액에 따라 슬라이딩), 9억 초과 3%. 여기에 지방교육세(취득세의 일부)가 붙고, 전용면적 85㎡ 초과면 농어촌특별세가 추가됩니다.
+- **중개보수** — 법정 상한요율 안에서 협의. 매매 기준 2~9억 구간은 상한 0.4% 등 구간별로 다르며, 상한이 '정가'가 아니라 **협의 가능한 최대치**라는 점을 기억하세요.
+- **등기 비용** — 법무사 보수 + 국민주택채권(집을 살 때 의무적으로 매입하는 국가 채권으로, 보통 사자마자 할인 매도해 차액만 부담) + 인지세 등.
+- **이사·수리·가전** — 의외로 큽니다. 도배·장판만 해도 수백만 원.
+- **예비비** — 위 항목들의 오차를 흡수할 여유분.
+
+## 예시로 감 잡기 (예시 가정)
+
+5억 원 아파트, 1주택, 전용 85㎡ 이하 가정:
+
+- 취득세 1% = 500만 원 + 지방교육세 50만 원
+- 중개보수 상한 0.4% = 최대 200만 원 (협의 가능)
+- 등기·채권·법무사 등 수십만~백만 원대
+- 이사·수리까지 합치면 **대략 집값의 2~3%를 부대비용**으로 잡는 게 안전합니다.
+
+## 생애최초라면
+
+생애최초 주택 구입자는 12억 원 이하 주택에 대해 **취득세를 최대 200만 원까지 감면**받을 수 있습니다(실거주 의무 등 요건 있음). 감면 요건과 기한은 개정이 잦으니 계약 전에 위택스나 구청 세무과에서 확인하세요.
+
+> 💡 **핵심**: 내 예산 = 집값 + 집값의 2~3%(부대비용). 이 여유분이 없으면 예산 상한을 낮추는 것이 맞습니다.$aix$,
+  $aix${"type":"stack","title":"내 집 마련 총비용 스택 (5억 예시 가정)","layers":[{"label":"집값 5억","sublabel":"매매가 — 예산의 몸통","icon":"home","tone":"primary"},{"label":"취득세 + 지방교육세 약 550만","sublabel":"1주택 1~3% · 생애최초 감면 확인","icon":"receipt","tone":"warning"},{"label":"중개보수 최대 200만","sublabel":"상한요율 내 협의","icon":"handshake","tone":"accent"},{"label":"등기·채권·법무사 비용","sublabel":"국민주택채권 할인 부담 포함","icon":"file-pen","tone":"muted"},{"label":"이사·수리 + 예비비","sublabel":"합계: 집값의 2~3%를 여유로","icon":"wallet","tone":"muted"}],"caption":"집값 아래 깔린 층들이 부대비용 — 잔금일 전에 전부 현금으로 준비돼야 합니다."}$aix$::jsonb, null, 5, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '07f542c6-fb49-4506-b15d-49efae671de9', '2354d587-b546-8f5a-5fd4-bedd656e22fa', 'real-estate-first-home/house-hunting', 'house-hunting', '집 보러 다니기: 임장 체크리스트',
+  $aix$사진과 앱 정보만 믿고 계약하는 것은 중고차를 시승 없이 사는 것과 같습니다. **발품(임장)에서만 보이는 것들**이 있습니다.
+
+## 가기 전: 데이터 준비
+
+- 국토교통부 **실거래가 공개시스템**(또는 부동산 앱)에서 해당 단지의 최근 거래 가격을 확인합니다. 호가(부르는 값)와 실거래가의 차이가 협상의 근거가 됩니다.
+- 등기부등본을 미리 떼어 소유자와 근저당권 상태를 확인합니다 (입문 강의에서 배운 그대로!).
+
+## 현장에서 볼 것 — 집 안
+
+- **채광**: 같은 집도 시간대에 따라 다릅니다. **낮과 저녁, 최소 2번** 방문하세요.
+- **수압·배수**: 화장실 물을 직접 틀어보고, 세면대 아래 누수 흔적 확인.
+- **곰팡이·결로**: 베란다 구석, 북향 벽, 장롱 뒤가 단골 위치.
+- **소음**: 창문을 닫고 도로·층간 소음을 들어보세요.
+
+## 현장에서 볼 것 — 집 밖
+
+- **출퇴근 실측**: 지도 앱 예상이 아니라 실제로 그 시간대에 이동해 보기.
+- **주차**: 평일 밤 10시의 주차장이 진실을 말해줍니다.
+- **언덕·계단**: 지도에는 안 나오는 체감 경사.
+- **관리 상태**: 게시판의 공지(장기수선충당금, 누수 민원 등)와 복도·엘리베이터 청결도.
+
+## 협상 카드 만들기
+
+체크리스트에서 발견한 하자(수리 필요 사항)는 감점이 아니라 **가격·수리 협상의 카드**입니다. 사진을 찍어 두고 계약 협의 때 활용하세요.
+
+> 💡 **핵심**: 임장의 목표는 '느낌'이 아니라 **증거 수집**입니다. 시간대를 달리해 2번 이상, 체크리스트와 카메라를 들고 가세요.$aix$,
+  $aix${"type":"grid","title":"임장 체크리스트 8","items":[{"label":"실거래가 비교","sublabel":"호가 vs 실제 거래가","icon":"chart","tone":"primary"},{"label":"채광","sublabel":"낮·저녁 2회 방문","icon":"eye","tone":"accent"},{"label":"수압·누수","sublabel":"직접 틀어보기","icon":"alert","tone":"accent"},{"label":"곰팡이·결로","sublabel":"베란다·북향 벽","icon":"search","tone":"accent"},{"label":"소음","sublabel":"창 닫고 확인","icon":"mic","tone":"muted"},{"label":"출퇴근 실측","sublabel":"그 시간대에 직접","icon":"map-pin","tone":"muted"},{"label":"야간 주차","sublabel":"평일 밤 10시","icon":"clock","tone":"muted"},{"label":"관리 상태","sublabel":"게시판·엘리베이터","icon":"clipboard","tone":"muted"}],"caption":"발견한 하자는 사진으로 — 임장 기록이 곧 협상 카드입니다."}$aix$::jsonb, null, 4, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '81cb62f5-604b-79d5-bf5f-15cab0393d41', '2354d587-b546-8f5a-5fd4-bedd656e22fa', 'real-estate-first-home/sales-contract', 'sales-contract', '매매 계약: 가계약금 보내기 전에 읽어야 할 것',
+  $aix$"좋은 물건이라 금방 나가요, 가계약금부터 보내세요"라는 말을 듣는 순간이 첫 집 매매의 최대 고비입니다. **가계약금도 법적 효력이 있습니다.**
+
+## 가계약: 작아 보여도 계약입니다
+
+가계약은 정식 계약 전에 매물을 잡아두려고 소액(수백만 원)을 먼저 보내는 관행입니다. 문제는 조건이 구체적으로 오간 뒤라면 **법적으로 계약이 성립한 것으로 볼 수 있다**는 점입니다. 보내기 전에:
+
+- 매매가, 계약금·중도금·잔금 일정, 계약 예정일을 **문자로 받아 남기세요.**
+- "대출 불가 시 반환" 같은 조건도 문자에 명시하도록 요청하세요.
+- 입금은 반드시 **등기부등본상 소유자 본인 계좌**로.
+
+## 본계약: 확인 3종 세트
+
+계약 당일, 서명 전에 반드시 확인합니다.
+
+1. **등기부등본을 그 자리에서 새로 발급** — 아침에 뗀 것도 낡은 정보일 수 있습니다. 소유자, 근저당권, 가압류를 확인합니다.
+2. **소유자 본인 확인** — 신분증과 등기부등본의 이름·주민번호 대조. 대리인이 나오면 위임장+인감증명서 확인.
+3. **계약금 입금 계좌가 소유자 본인 명의**인지 확인. 계약금은 통상 매매가의 10%입니다.
+
+## 특약: 나를 지키는 문장들
+
+계약서 하단의 특약란은 비워두는 곳이 아닙니다. 상황에 맞게 협의해 넣으세요.
+
+- "매도인은 잔금일까지 근저당권을 말소한다"
+- "매수인의 주택담보대출이 승인되지 않을 경우 본 계약은 해제하며 계약금은 반환한다"
+- "잔금일 전 발견되지 않은 하자(누수 등)는 매도인이 수리한다"
+- 에어컨 등 **포함 옵션 목록**도 특약에 명시
+
+## 해제의 규칙
+
+계약 후 마음이 바뀌면 매수인은 계약금을 포기하고, 매도인은 **계약금의 2배를 물어주고** 해제하는 것이 민법상 원칙입니다(중도금 지급 전까지). 계약금이 '진심의 크기'인 이유입니다.
+
+> 💡 **핵심**: 가계약금 입금 전 조건을 문자로, 본계약 당일 등기부등본을 새로, 특약란에는 대출·근저당 조건을. 이 세 가지가 첫 계약의 안전벨트입니다.$aix$,
+  $aix${"type":"steps","title":"매매 계약 안전 절차","steps":[{"label":"조건 문자로 확정","sublabel":"가격·일정·반환 조건 기록","icon":"message"},{"label":"가계약금 입금","sublabel":"등기부등본상 소유자 계좌로만","icon":"banknote"},{"label":"계약 당일 재검증","sublabel":"등기부등본 새로 발급 + 본인 확인","icon":"search"},{"label":"특약 협의","sublabel":"대출 불가 시 해제 · 근저당 말소","icon":"file-pen"},{"label":"서명 + 계약금 10%","sublabel":"계약서 원본 보관","icon":"handshake"}],"caption":"모든 돈은 소유자 본인 계좌로, 모든 약속은 문서로 — 이 원칙만 지키세요."}$aix$::jsonb, null, 6, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0b05c6ec-8c80-19fe-5764-c0514956b6ae', '2354d587-b546-8f5a-5fd4-bedd656e22fa', 'real-estate-first-home/closing-and-registration', 'closing-and-registration', '잔금일: 돈·서류·등기가 한 번에 움직이는 날',
+  $aix$잔금일은 내 집 마련의 결승선입니다. 이날 하루에 **잔금 송금, 서류 교환, 세금 납부, 등기 접수**가 동시에 일어납니다. 순서를 알면 떨 필요가 없습니다.
+
+## 잔금일 하루의 흐름
+
+보통 중개사무소에서 매도인·매수인·중개사·법무사가 모여 진행합니다.
+
+1. **최종 확인** — 법무사(또는 나)가 등기부등본을 마지막으로 확인합니다. 잔금 직전 새 근저당권이 생기지 않았는지 보는 것입니다.
+2. **잔금 송금** — 대출 실행분은 은행이 매도인 계좌로 직접, 나머지는 내가 송금합니다.
+3. **서류 인수** — 매도인에게서 등기권리증(집문서), 인감증명서, 위임장 등 소유권 이전에 필요한 서류를 받습니다. 법무사가 유효성을 검토합니다.
+4. **취득세 신고·납부** — 취득일로부터 60일 이내가 법정 기한이지만, 등기에 납부 확인서가 필요해 실무에서는 **당일 처리**합니다(위택스 온라인 납부 가능).
+5. **소유권이전등기 접수** — 법무사가 당일 등기소에 접수합니다. 등기 신청 자체도 잔금일로부터 **60일 이내**가 의무입니다(위반 시 과태료). 대출이 있다면 은행의 근저당권 설정 등기가 함께 접수됩니다.
+6. **집 인수** — 열쇠·비밀번호를 받고, 관리비·공과금을 잔금일 기준으로 정산합니다.
+
+셀프 등기도 가능하지만, 대출이 껴 있으면 은행이 법무사 진행을 요구하는 경우가 대부분입니다.
+
+## 입주 후 일주일 체크리스트
+
+- 며칠 뒤 **등기부등본을 새로 발급**해 소유자 칸에 내 이름이 올랐는지 확인 — 이 순간이 진짜 완료입니다.
+- **전입신고**(주민센터 또는 정부24) — 생애최초 취득세 감면 등 실거주 요건과도 연결됩니다.
+- 하자 발견 시 사진과 함께 즉시 매도인·중개사에게 통지 (특약 근거).
+- 계약서·영수증·등기권리증은 한 폴더에 보관하세요. 나중에 팔 때 양도소득세 계산의 증빙이 됩니다.
+
+## 축하합니다
+
+전월세 계약부터 시작해 청약, 대출, 매매까지 — 이제 등기부등본의 '소유자' 칸에 이름이 있는 사람이 됐습니다. 다음 단계(세금 관리, 갈아타기)는 중급 강의에서 다룹니다.
+
+> 💡 **핵심**: 잔금일 공식 — "돈은 확인 후에, 서류는 검토 후에, 등기는 당일에". 그리고 며칠 뒤 등기부등본의 내 이름 확인까지가 진짜 끝입니다.$aix$,
+  $aix${"type":"flow","title":"잔금일 하루의 흐름","nodes":[{"label":"등기부등본 최종 확인","sublabel":"새 근저당권 없는지","icon":"search","tone":"warning"},{"label":"잔금 송금","sublabel":"대출은 은행이 매도인에게 직접","icon":"banknote","tone":"primary","edgeLabel":"이상 없으면"},{"label":"서류 인수 + 취득세 납부","sublabel":"등기권리증·인감 / 위택스","icon":"receipt","tone":"accent"},{"label":"소유권이전등기 접수","sublabel":"법무사 당일 접수 (60일 내 의무)","icon":"file-pen","tone":"accent"},{"label":"열쇠 인수 + 입주","sublabel":"공과금 정산 · 전입신고","icon":"key","tone":"success","edgeLabel":"며칠 뒤 등기부등본 재확인"}],"caption":"등기부등본 소유자 칸에 내 이름이 오르는 순간, 내 집 마련이 완성됩니다."}$aix$::jsonb, null, 6, 14
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 부동산 중급: 시장 읽기와 세금 설계
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'e2e57c2d-f260-9676-e3e6-7942c3c4e921', 'real-estate-market-tax', '부동산 중급: 시장 읽기와 세금 설계', $aix$유튜브 영상 100개를 봐도 시장이 안 보이는 이유는 정보가 부족해서가 아니라 '지도'가 없어서입니다. 이 강의는 흩어진 단편 지식을 세 개의 체계로 정리합니다. 부동산 사이클·금리·공급 데이터로 시장 국면을 스스로 진단하는 눈, 입지의 5요소와 임장으로 개별 물건을 평가하는 틀, 그리고 살 때(취득세)·보유할 때(재산세·종합부동산세)·팔 때(양도소득세)의 3단계 세금 설계까지. 내 집 마련을 마쳤거나 준비 중인 분이 다음 단계로 나아가기 위한 강의입니다. 본 강의는 교육 목적이며 특정 투자를 권유하지 않습니다.$aix$,
+  null, 'realestate', 'intermediate', array['부동산 시장 분석', '입지 분석', '부동산 세금', '양도소득세', '투자 기초']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '2a88ed1d-de05-c8fb-4ec0-f3ef4efafee2', 'e2e57c2d-f260-9676-e3e6-7942c3c4e921', 'reading-the-market', '시장을 읽는 눈', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'efd451da-8613-b87f-ccc8-013346205fc4', 'e2e57c2d-f260-9676-e3e6-7942c3c4e921', 'location-analysis', '입지 분석', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '23f6de3b-b6ab-dc61-05f2-2dafad80a503', 'e2e57c2d-f260-9676-e3e6-7942c3c4e921', 'tax-design', '부동산 세금 설계', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e9ea68bd-a26d-86cd-cb3a-a2402e7d8249', '2a88ed1d-de05-c8fb-4ec0-f3ef4efafee2', 'real-estate-market-tax/market-cycle', 'market-cycle', '부동산 사이클: 상승과 하락은 반복된다',
+  $aix$역사상 부동산 가격이 오르기만 한 시기도, 떨어지기만 한 시기도 없었습니다. 시장은 **몇 년에 걸쳐 국면을 바꿔가며 순환**합니다. 이 사이클을 모르면 과열기의 뉴스에 쫓겨 사고, 침체기의 공포에 밀려 팝니다.
+
+## 사이클의 4국면
+
+- **회복기** — 급매물이 소진되고 거래가 조금씩 살아납니다. 뉴스는 아직 "침체"를 말하는 시기.
+- **상승기** — 가격과 거래량이 함께 오릅니다. 실수요자가 움직이고, 상급지부터 오르기 시작합니다.
+- **과열기** — 오르니까 사고, 사니까 오르는 추격 매수 국면. 정부 규제가 쏟아지는 시기이기도 합니다.
+- **침체기** — 거래가 얼어붙고 미분양(분양했지만 주인을 찾지 못한 새 집)이 쌓입니다. 호가는 버티지만 실거래가는 빠집니다.
+
+계절과 같습니다. 여름이 아무리 뜨거워도 겨울은 오고, 겨울이 아무리 길어도 봄은 옵니다. 다만 부동산의 계절은 **한 국면이 몇 년씩** 갑니다.
+
+## 왜 사이클이 생기는가
+
+핵심 원인은 **수요와 공급의 속도 차이**입니다. 사고 싶은 마음(수요)은 하루아침에 생기지만, 아파트(공급)는 착공부터 입주까지 약 3년이 걸립니다. 가격이 올라 건설사가 일제히 짓기 시작하면, 그 물량은 하필 열기가 식을 때쯤 쏟아집니다. 이 시차가 진폭을 만듭니다.
+
+## 중급자의 자세
+
+"지금 오르는가"보다 **"지금 어느 국면인가"**를 물어야 합니다. 국면 판단의 구체적 도구(금리·공급·지표)를 이어지는 레슨에서 하나씩 익힙니다.
+
+> 💡 **핵심**: 가격은 예측할 수 없지만 국면은 진단할 수 있습니다. 사이클 지도를 갖고 있으면 뉴스에 휘둘리지 않습니다.$aix$,
+  $aix${"type":"cycle","title":"부동산 사이클의 4국면","center":"몇 년 주기로 순환","nodes":[{"label":"회복기","sublabel":"급매 소진 · 거래 회복","icon":"refresh"},{"label":"상승기","sublabel":"가격·거래량 동반 상승","icon":"trending-up"},{"label":"과열기","sublabel":"추격 매수 · 규제 강화","icon":"zap"},{"label":"침체기","sublabel":"거래 절벽 · 미분양 증가","icon":"clock"}],"caption":"한 국면은 몇 년씩 이어집니다 — '오르는가'가 아니라 '어느 국면인가'를 물으세요."}$aix$::jsonb, null, 6, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '21d08b27-c2f9-0592-1bcc-98d775f842b4', '2a88ed1d-de05-c8fb-4ec0-f3ef4efafee2', 'real-estate-market-tax/rates-and-liquidity', 'rates-and-liquidity', '금리와 유동성: 집값을 움직이는 가장 큰 손',
+  $aix$2020~2021년의 급등과 2022~2023년의 급락, 이 극단적인 두 장면 뒤에는 같은 변수가 있었습니다. **금리**입니다. 대부분의 사람이 대출로 집을 사는 이상, 금리는 부동산 수요의 수도꼭지입니다.
+
+## 금리가 집값에 닿는 3개의 경로
+
+1. **이자 부담 경로** — 금리가 오르면 같은 대출액의 월 상환액이 커집니다. DSR 규제 아래에서는 소득 대비 상환액이 한도를 정하므로, 금리 상승은 곧 **대출 가능 금액 축소**입니다. 살 수 있는 사람이 줄어듭니다.
+2. **유동성 경로** — 금리가 낮으면 시중에 돈이 풀리고, 그 돈이 자산 시장으로 흘러듭니다. 반대로 금리가 오르면 예금으로 돈이 회수됩니다.
+3. **전월세 경로** — 전세자금대출 금리가 오르면 전세 수요가 월세로 이동하고, 전세 시세 변화는 갭투자 수요와 매매가에까지 연쇄적으로 영향을 줍니다.
+
+## 숫자보다 방향을 보세요
+
+기준금리(한국은행이 연 8회 결정하는 정책금리로, 모든 시중 금리의 출발점)는 수시로 바뀝니다. 참고로 한국은행은 2024년 말부터 인하 사이클을 거쳐 2026년 상반기 기준 연 2.5%에서 동결 기조를 이어갔습니다 — **최신 수치는 반드시 한국은행 홈페이지에서 확인**하세요. 중요한 것은 절대 수치보다 **인하기인가 인상기인가, 그리고 시장이 그 방향을 얼마나 미리 반영했는가**입니다.
+
+## 함정 하나
+
+금리는 강력하지만 만능 열쇠는 아닙니다. 공급이 부족한 지역은 고금리에도 버티고, 공급이 넘치는 지역은 저금리에도 빠집니다. 금리는 **시장 전체의 물높이**, 공급은 **지역별 지형**입니다.
+
+> 💡 **핵심**: 금리 방향 → 대출 여력과 유동성 → 수요. 이 경로를 이해하면 금리 뉴스가 '내 예산'의 언어로 번역됩니다.$aix$,
+  $aix${"type":"flow","title":"금리가 집값에 닿는 경로","nodes":[{"label":"기준금리 변화","sublabel":"한국은행 금융통화위원회","icon":"landmark","tone":"primary"},{"label":"대출 금리 · 유동성","sublabel":"주담대 이자, 시중 자금","icon":"banknote","tone":"accent","edgeLabel":"수개월 시차로 반영"},{"label":"매수 여력","sublabel":"DSR 한도 · 월 상환액","icon":"wallet","tone":"accent"},{"label":"수요와 가격","sublabel":"거래량 → 가격 순으로 반응","icon":"trending-up","tone":"success"}],"caption":"금리는 시장 전체의 물높이 — 다만 지역별 지형(공급)에 따라 체감은 다릅니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'be7a9c96-4041-2379-e03f-7def309801c2', '2a88ed1d-de05-c8fb-4ec0-f3ef4efafee2', 'real-estate-market-tax/supply-pipeline', 'supply-pipeline', '공급 데이터: 3년 뒤 입주물량은 이미 정해져 있다',
+  $aix$부동산에서 유일하게 '미래를 미리 볼 수 있는' 데이터가 있습니다. 아파트는 하루아침에 지을 수 없으므로, **오늘의 착공 물량이 곧 3년 뒤의 입주물량**입니다. 예언이 아니라 이미 공개된 통계입니다.
+
+## 공급의 컨베이어 벨트
+
+아파트 공급은 단계를 밟아 진행되고, 각 단계가 시장에 주는 신호가 다릅니다.
+
+- **인허가** — 지자체의 사업 승인. "지을 계획"이 공식화된 단계로, 실제 입주까지는 수년이 남았고 무산되기도 합니다.
+- **착공** — 첫 삽. 여기부터는 되돌리기 어렵습니다. **착공 후 약 3년이면 입주**가 일반적 패턴입니다.
+- **분양** — 청약으로 수요를 확인하는 단계. 경쟁률과 완판 여부가 그 지역의 실시간 체온계입니다.
+- **입주(준공)** — 물량이 실제 시장에 풀리는 순간. 입주가 몰리면 전세부터 출렁입니다.
+
+## 어디서 확인하나
+
+- **국토교통 통계누리** — 인허가·착공·준공·미분양의 공식 원천 통계 (매월 발표)
+- **청약홈** — 분양 일정과 청약 경쟁률
+- **아실 · 부동산지인** — 지역별 입주물량을 달력처럼 보여주는 민간 서비스
+
+## 해석의 기술
+
+입주물량이 몰리는 시기에는 **매매가보다 전세가가 먼저** 흔들립니다(입주장). 반대로 착공이 급감한 지역은 2~3년 뒤 공급 부족이 예약된 셈입니다. 지금 시장이 조용해도 파이프라인이 비어 있다면 이야기가 다릅니다.
+
+> 💡 **핵심**: 인허가 → 착공 → 입주의 시차(착공 후 약 3년)를 이용하면, 미래 공급은 '예측'이 아니라 '조회'의 영역이 됩니다.$aix$,
+  $aix${"type":"steps","title":"공급 파이프라인과 시차","steps":[{"label":"인허가","sublabel":"사업 승인 — 무산 가능성 있음","icon":"file-pen"},{"label":"착공","sublabel":"첫 삽 — 약 3년 뒤 입주 확정적","icon":"building"},{"label":"분양","sublabel":"청약 경쟁률 = 실시간 체온계","icon":"users"},{"label":"입주(준공)","sublabel":"물량 방출 — 전세가 먼저 반응","icon":"home"}],"caption":"통계누리·청약홈·아실에서 각 단계를 직접 조회할 수 있습니다."}$aix$::jsonb, null, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6bfae22b-766b-cc26-8d59-e9a04ff2ca8c', '2a88ed1d-de05-c8fb-4ec0-f3ef4efafee2', 'real-estate-market-tax/policy-and-regulation', 'policy-and-regulation', '정부 정책 읽기: 규제지역이라는 신호등',
+  $aix$부동산 시장에서 정부는 심판이자 플레이어입니다. 규제와 완화는 시장을 직접 움직일 뿐 아니라, **정부가 현재 국면을 어떻게 진단하는지 보여주는 공식 신호**이기도 합니다.
+
+## 규제지역 3종 세트
+
+정부가 특정 지역을 지정하면 세금·대출·거래 규칙이 한꺼번에 바뀝니다.
+
+- **조정대상지역** (과열 우려 지역으로 지정되어 세금·청약 규제가 강화되는 곳) — 취득세·양도소득세 중과, 비과세 거주 요건 등 **세금 규제의 방아쇠**입니다. 세금 설계 모듈에서 계속 등장합니다.
+- **투기과열지구** — 대출 한도 축소, 청약 자격·전매 제한 강화 등 **돈줄과 거래를 조이는** 지정입니다.
+- **토지거래허가구역** — 구청의 허가를 받아야 매수할 수 있고 실거주 목적이 원칙이라, 사실상 **갭투자를 차단**하는 가장 강한 규제입니다.
+
+## 사례: 2025년 10·15 대책
+
+2025년 10월, 서울 전역(25개 구)과 과천·분당·하남 등 경기 핵심 12개 지역이 조정대상지역과 투기과열지구로 동시에 지정되고 토지거래허가구역도 확대됐습니다. 이처럼 규제는 낱개가 아니라 **패키지로** 옵니다. 지정과 해제는 수시로 바뀌므로, 거래 전에는 국토교통부 홈페이지와 지자체 공고에서 **현재 지정 현황을 반드시 확인**하세요.
+
+## 정책을 사이클 신호로 읽기
+
+- 규제 강화 = 정부가 과열을 공식 인증한 것
+- 규제 완화 = 정부가 침체를 공식 인증한 것
+
+정책은 시장에 뒤늦게 반응하지만, 그래서 오히려 **국면 전환의 확인 도장**으로 쓸 수 있습니다.
+
+> 💡 **핵심**: 규제지역 지정 여부는 세금·대출·거래 전부를 바꾸는 스위치입니다. 내 물건과 내 다음 물건의 지정 현황부터 확인하세요.$aix$,
+  $aix${"type":"stack","title":"규제지역 3종 — 위로 갈수록 강한 규제","layers":[{"label":"토지거래허가구역","sublabel":"허가받아야 매수 · 실거주 원칙","icon":"gavel","tone":"warning"},{"label":"투기과열지구","sublabel":"대출 · 청약 · 전매 제한 강화","icon":"lock","tone":"accent"},{"label":"조정대상지역","sublabel":"취득세 · 양도소득세 중과의 방아쇠","icon":"receipt","tone":"primary"}],"caption":"2025년 10·15 대책처럼 세 가지가 패키지로 지정되는 경우가 많습니다."}$aix$::jsonb, null, 5, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7e1a07f7-c513-5d58-82c5-13be13c1ff73', '2a88ed1d-de05-c8fb-4ec0-f3ef4efafee2', 'real-estate-market-tax/market-indicators', 'market-indicators', '데이터로 시장 진단: 전세가율·미분양·거래량',
+  $aix$뉴스 헤드라인은 늘 극단적입니다. "폭등"과 "폭락" 사이에서 중심을 잡으려면 **직접 조회할 수 있는 세 가지 숫자**면 충분합니다.
+
+## ① 전세가율 — 사용가치의 척도
+
+전세가율(매매가 대비 전세가의 비율)은 "이 집에 실제로 살려는 수요"가 가격을 얼마나 받쳐주는지 보여줍니다. 전세가율이 높다는 것은 매매가에 낀 기대감(거품)이 상대적으로 작다는 해석이 가능합니다. 다만 전세가율이 높아지면 적은 돈으로 사는 갭투자가 늘어나는데, 이는 전세 시세가 빠지면 보증금을 돌려주기 어려워지는 **역전세 리스크**를 시장 전체에 쌓는 양날의 검입니다. 레버리지는 수익과 손실을 똑같이 증폭시킨다는 점을 잊지 마세요. KB부동산과 한국부동산원 통계에서 지역별로 조회할 수 있습니다.
+
+## ② 미분양 — 공급 소화력의 척도
+
+미분양이 늘면 시장이 새 물량을 소화하지 못한다는 뜻입니다. 특히 **준공 후 미분양**(다 지어졌는데도 안 팔린 집, 이른바 악성 미분양)의 증가는 침체의 강한 신호입니다. 국토교통 통계누리에서 매월 시군구 단위까지 공개됩니다.
+
+## ③ 거래량 — 가격에 선행하는 체온계
+
+가격은 버티다가 꺾이지만 거래량은 먼저 식습니다. 거래량 급감 후의 가격 유지는 "호가만 남은 시장"일 수 있습니다. 국토교통부 실거래가 공개시스템에서 월별 건수를 확인하세요.
+
+## 종합 판단
+
+세 지표가 **같은 방향**을 가리킬 때만 신뢰하세요. 전세가율 상승 + 미분양 감소 + 거래량 증가가 겹치면 회복 신호, 그 반대면 경계 신호입니다.
+
+> 💡 **핵심**: 전세가율(가치) · 미분양(공급 소화력) · 거래량(온도) — 세 숫자가 같은 방향일 때 국면 판단을 내리세요.$aix$,
+  $aix${"type":"grid","title":"시장 진단 3종 지표","items":[{"label":"전세가율","sublabel":"사용가치가 가격을 받치는가","icon":"percent","tone":"primary"},{"label":"미분양","sublabel":"준공 후 미분양 = 악성 신호","icon":"building","tone":"warning"},{"label":"거래량","sublabel":"가격보다 먼저 식는 체온계","icon":"chart","tone":"accent"},{"label":"종합 판단","sublabel":"3개가 같은 방향일 때만 신뢰","icon":"check","tone":"success"}],"caption":"모두 통계누리 · 실거래가 공개시스템 · KB부동산에서 무료로 조회할 수 있습니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'fbbf152a-adc9-5275-3129-99c43046a3b3', 'efd451da-8613-b87f-ccc8-013346205fc4', 'real-estate-market-tax/five-factors', 'five-factors', '입지의 5요소: ''입지가 좋다''를 분해하면',
+  $aix$"부동산은 첫째도 입지, 둘째도 입지"라는 말은 누구나 압니다. 그런데 **입지가 정확히 무엇인지** 설명할 수 있나요? 분해할 수 없는 개념은 비교할 수도 없습니다. 입지는 5가지 요소로 쪼갤 수 있습니다.
+
+## 입지의 5요소
+
+- **직주근접** — 양질의 일자리까지의 거리. 대형 업무지구로의 통근 시간이 수요의 크기를 결정합니다. 입지 요소 중 가장 무겁습니다.
+- **교통** — 지하철역 도보 거리(역세권), 광역 노선, 환승 편의. 직주근접을 '시간'으로 압축해주는 요소입니다.
+- **학군** — 단지에서 초등학교까지 큰길을 건너지 않는지(이른바 초품아), 중학교 학업 성취도, 학원가 접근성. 학령기 자녀 가구의 수요를 붙잡아 **하락기에 가격 방어력**으로 나타납니다.
+- **환경** — 공원·강·숲 같은 자연환경과 대형 상권·병원 같은 생활 인프라. 소득이 높아질수록 가중치가 커지는 요소입니다.
+- **공급** — 주변에 더 지을 땅이 있는가. 아무리 좋은 입지도 옆에 신축이 계속 들어서면 희소성이 희석됩니다. 반대로 더 지을 수 없는 곳의 신축은 희소합니다.
+
+## 가중치는 수요층이 정한다
+
+5요소의 배점은 고정이 아닙니다. 신혼부부 수요가 두터운 곳은 직주근접·교통이, 학령기 가구가 몰리는 곳은 학군이 가격을 끌고 갑니다. **이 동네의 주력 수요층이 누구인지**를 먼저 파악하면 어떤 요소를 무겁게 볼지 정해집니다.
+
+## 실전 사용법
+
+관심 단지 2~3곳을 놓고 요소별로 상·중·하만 매겨보세요. 막연히 "여기가 더 좋은 것 같다"가 "직주근접은 A가 앞서고 학군은 B가 앞선다"로 바뀝니다. 그게 분석입니다.
+
+> 💡 **핵심**: 입지 = 직주근접 · 교통 · 학군 · 환경 · 공급. 분해해서 점수를 매기는 순간, 감이 분석이 됩니다.$aix$,
+  $aix${"type":"grid","title":"입지의 5요소","items":[{"label":"직주근접","sublabel":"일자리까지의 거리 — 가장 무거움","icon":"building","tone":"primary"},{"label":"교통","sublabel":"역세권 · 광역 노선 · 환승","icon":"map-pin","tone":"accent"},{"label":"학군","sublabel":"초품아 · 학원가 — 하락기 방어력","icon":"graduation-cap","tone":"accent"},{"label":"환경","sublabel":"공원 · 상권 · 병원","icon":"sparkles","tone":"success"},{"label":"공급","sublabel":"더 지을 땅이 있는가 (희소성)","icon":"layers","tone":"warning"}],"caption":"배점은 그 동네 주력 수요층이 정합니다 — 누가 사러 오는 동네인지 먼저 파악하세요."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b060add8-0d41-ac65-7d83-6c3e6c29f277', 'efd451da-8613-b87f-ccc8-013346205fc4', 'real-estate-market-tax/transit-development', 'transit-development', '교통 호재 읽는 법: 발표에서 개통까지',
+  $aix$"지하철 들어온다는 말에 샀는데 10년째 착공도 안 했다" — 교통 호재 투자의 흔한 잔혹사입니다. 교통 호재는 강력하지만, **단계를 구분하지 못하면 소문에 사서 뉴스에 물리는** 지름길이 됩니다.
+
+## 노선 하나가 태어나는 단계
+
+1. **구상·계획 발표** — 국가 철도망 계획 등에 이름이 오르는 단계. 아직 예산도 노선도 확정이 아닙니다. 무산·무기한 지연이 가장 많은 구간입니다.
+2. **예비타당성조사 통과·기본계획 확정** — "경제성이 있다"는 정부 판정. 사업이 비로소 실체를 갖습니다.
+3. **착공** — 여기서부터는 개통이 시간문제입니다. 다만 대형 토목은 공기 지연이 잦습니다.
+4. **개통** — 효과가 실생활로 들어오는 순간.
+
+## 가격은 단계마다 '나눠서' 반영된다
+
+시장은 개통일에 한 번에 오르지 않습니다. 발표 때 기대감으로 한 번, 예타 통과·착공 때 확신으로 한 번, 개통 전후 실수요 유입으로 한 번 — **계단식으로 선반영**됩니다. 뒤집어 말하면, 이미 소문이 파다한 호재는 상당 부분 가격에 들어가 있다고 봐야 합니다.
+
+## 확인하는 법
+
+블로그 지도가 아니라 **국토교통부 보도자료와 지자체 고시**로 단계를 확인하세요. "계획 발표"와 "예산 확보"는 전혀 다른 단계입니다. 계획 단계 호재만 믿고 사는 것은 투자가 아니라 복권에 가깝습니다.
+
+> 💡 **핵심**: 교통 호재는 발표 → 예타 통과 → 착공 → 개통의 계단입니다. 지금 몇 번째 계단인지, 가격에 얼마나 반영됐는지를 함께 물으세요.$aix$,
+  $aix${"type":"flow","title":"교통 호재의 4계단과 가격 반영","nodes":[{"label":"구상 · 계획 발표","sublabel":"무산 리스크 최대","icon":"lightbulb","tone":"muted"},{"label":"예타 통과 · 계획 확정","sublabel":"사업 실체 확보","icon":"file-pen","tone":"accent","edgeLabel":"기대감 1차 반영"},{"label":"착공","sublabel":"개통은 시간문제 (지연 잦음)","icon":"building","tone":"primary","edgeLabel":"확신 2차 반영"},{"label":"개통","sublabel":"실수요 유입","icon":"map-pin","tone":"success","edgeLabel":"실사용 가치 3차 반영"}],"caption":"가격은 계단식으로 선반영됩니다 — 소문난 호재일수록 남은 몫이 작습니다."}$aix$::jsonb, null, 5, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4326bf89-c6bb-1d0c-94ad-542b99413392', 'efd451da-8613-b87f-ccc8-013346205fc4', 'real-estate-market-tax/desk-research', 'desk-research', '손품 임장: 지도와 데이터로 하는 사전 조사',
+  $aix$임장은 현장에 도착하기 전에 절반이 끝나 있어야 합니다. 데이터로 확인할 수 있는 것을 현장에서 확인하는 것은 시간 낭비이고, 그 반대는 판단 오류를 만듭니다. 책상에서 하는 조사, 이른바 **손품**의 순서를 정리합니다.
+
+## 손품 4단계
+
+1. **지도부터** — 위성 지도로 지형(언덕·경사), 단지 배치, 주변의 공장·유흥가·고압선 같은 기피 시설을 훑습니다. 로드뷰로 골목 분위기와 상가 상태까지 미리 걸어보세요. 시간대별 과거 로드뷰를 넘겨보면 동네의 변화 방향도 보입니다.
+2. **가격 이력** — 국토교통부 실거래가 공개시스템과 아실 등에서 관심 단지의 **수년치 실거래가 흐름**을 봅니다. 최고점 대비 얼마인지, 최근 거래는 몇 층·몇 건인지. 한두 건의 특수 거래(직거래 등)에 속지 않도록 건수를 함께 봅니다.
+3. **수급 확인** — 모듈 1에서 배운 대로: 해당 시군구의 입주물량 달력과 미분양 추이를 조회합니다. 물건이 좋아도 2년 뒤 옆 동네에 대단지 입주가 예약돼 있다면 시나리오가 달라집니다.
+4. **호가와 실거래의 갭** — 포털 매물의 호가와 최근 실거래가의 차이를 봅니다. 갭이 크게 벌어져 있으면 매도자와 매수자의 눈높이가 다른, 거래가 안 되는 시장입니다.
+
+## 산출물: 질문 리스트
+
+손품의 목표는 결론이 아니라 **현장에서 확인할 질문 리스트**입니다. "로드뷰에서 상가 공실이 많아 보였는데 실제로는?", "실거래가 최근 3건이 모두 저층인데 왜?" — 이 질문들이 다음 레슨의 현장 임장을 밀도 있게 만듭니다.
+
+> 💡 **핵심**: 손품의 순서는 지도 → 가격 이력 → 수급 → 호가 갭. 결론이 아니라 '현장에서 확인할 질문'을 들고 나가는 것이 목표입니다.$aix$,
+  $aix${"type":"steps","title":"손품 임장 4단계","steps":[{"label":"지도 훑기","sublabel":"위성 · 로드뷰 — 지형과 기피 시설","icon":"map-pin"},{"label":"가격 이력","sublabel":"실거래가 수년치 흐름 + 거래 건수","icon":"chart"},{"label":"수급 확인","sublabel":"입주물량 달력 · 미분양 추이","icon":"building"},{"label":"호가 갭 측정","sublabel":"호가 vs 실거래 — 눈높이 차이","icon":"scale"}],"caption":"산출물은 결론이 아니라 '현장에서 확인할 질문 리스트'입니다."}$aix$::jsonb, null, 6, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ca93dbc8-1363-ffcf-a7c1-4acf07e72d15', 'efd451da-8613-b87f-ccc8-013346205fc4', 'real-estate-market-tax/field-checklist', 'field-checklist', '현장 임장 체크리스트: 데이터가 못 보는 것들',
+  $aix$데이터가 아무리 좋아져도 끝내 숫자가 되지 못하는 정보가 있습니다. 언덕의 실제 경사, 밤의 소음, 중개소 사장님의 표정. 현장 임장은 **그것만** 확인하러 가는 것입니다.
+
+## 몸으로 확인할 것
+
+- **출퇴근 동선을 직접** — 역까지 지도상 도보 8분이 실제로는 언덕 15분일 수 있습니다. 가능하면 출근 시간대에 대중교통을 실제로 타보세요.
+- **밤에 한 번 더** — 소음(도로·유흥가), 조명, 골목 분위기는 낮과 밤이 다릅니다. 좋은 물건일수록 시간대를 바꿔 두 번 가세요.
+- **오감 체크** — 인근 시설의 냄새, 대형차 통행, 단지 내 주차 전쟁 흔적(이중 주차)까지.
+
+## 단지와 동네의 관리 상태
+
+- 게시판·엘리베이터 공지: 관리비 분쟁, 누수·하자 공지가 반복되는 단지인지
+- 상가 공실률: 1층 공실이 늘어나는 동네는 유동인구가 빠지고 있다는 신호
+- 초등학교 통학로: 아이가 큰길을 건너는지 직접 걸어보기
+
+## 중개소는 3곳 이상
+
+한 곳의 말은 정보가 아니라 입장입니다. 최소 3곳에서 같은 질문을 던지고 교차 검증하세요. "요즘 매수 문의가 있나요?", "최근에 나간 물건은 왜 나갔대요?", "급매는 얼마부터 급매인가요?" — 급매의 사유(이사·상속·세금)는 시장 상태를 보여주는 진짜 정보입니다.
+
+## 기록이 자산이 된다
+
+단지마다 같은 양식(사진 + 5요소 점수 + 특이사항)으로 기록하세요. 임장 10곳이 쌓이면 비교의 기준선이 생기고, 그때부터 "싸다/비싸다"에 근거가 붙습니다.
+
+> 💡 **핵심**: 현장에서는 데이터가 못 보는 것만 확인합니다 — 동선·밤·관리 상태·중개소 3곳. 같은 양식의 기록이 쌓이면 그것이 나만의 시세 감각이 됩니다.$aix$,
+  $aix${"type":"grid","title":"현장 임장 체크리스트","items":[{"label":"출퇴근 동선","sublabel":"출근 시간대에 직접 이동","icon":"clock","tone":"primary"},{"label":"밤 재방문","sublabel":"소음 · 조명 · 골목 분위기","icon":"eye","tone":"accent"},{"label":"단지 관리 상태","sublabel":"게시판 공지 · 주차 · 하자","icon":"home","tone":"accent"},{"label":"상가 공실","sublabel":"1층 공실 증가 = 유동인구 감소","icon":"building","tone":"warning"},{"label":"통학로","sublabel":"큰길 건너는지 직접 걷기","icon":"graduation-cap","tone":"success"},{"label":"중개소 3곳","sublabel":"같은 질문으로 교차 검증","icon":"handshake","tone":"primary"}],"caption":"기록 양식을 통일하세요 — 임장 10곳이 쌓이면 나만의 기준선이 생깁니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '821fb96d-3a25-8c51-8ef3-7330e52d7419', '23f6de3b-b6ab-dc61-05f2-2dafad80a503', 'real-estate-market-tax/tax-three-stages', 'tax-three-stages', '세금 3단계 지도: 살 때, 보유할 때, 팔 때',
+  $aix$부동산 세금이 어렵게 느껴지는 이유는 종류가 많아서가 아니라 **지도가 없어서**입니다. 사실 구조는 단순합니다. 부동산의 일생을 따라 세 번, 성격이 다른 세금이 붙습니다.
+
+## 3단계 지도
+
+- **살 때 — 취득세** (지방세, 위택스에서 신고·납부). 잔금 치를 때 한 번 내며, 취득가액과 주택 수에 따라 세율이 달라집니다.
+- **보유할 때 — 재산세 + 종합부동산세** (매년 반복). 재산세는 모든 소유자에게, 종합부동산세는 공시가격 합계가 기준을 넘는 사람에게만 추가로 부과됩니다.
+- **팔 때 — 양도소득세** (국세, 홈택스에서 신고). 판 가격이 아니라 **번 차익**에 매기며, 세 단계 중 금액이 가장 크게 갈리는 세금입니다.
+
+## 전 단계를 관통하는 4개의 변수
+
+세 가지 세금은 이름만 다를 뿐, 전부 같은 변수 4개로 움직입니다.
+
+1. **주택 수** — 세대 기준으로 몇 채인가 (많을수록 무거워짐)
+2. **지역** — 조정대상지역인가 (중과의 방아쇠)
+3. **가격** — 취득가액 · 공시가격 · 양도가액
+4. **기간** — 얼마나 보유하고 거주했는가 (길수록 가벼워짐)
+
+이 지도를 머리에 넣으면, 이후 레슨은 각 정거장을 확대해서 보는 일일 뿐입니다.
+
+한 가지 약속: 이 모듈의 모든 계산은 이해를 돕기 위한 **단순화한 예시 가정**이며, 세법은 자주 개정됩니다. 실제 거래 전에는 반드시 홈택스·위택스에서 최신 기준을 확인하고 세무 전문가와 상의하세요.
+
+> 💡 **핵심**: 부동산 세금 = 살 때(취득세) · 보유(재산세·종합부동산세) · 팔 때(양도소득세). 전부 주택 수 × 지역 × 가격 × 기간이라는 같은 변수로 움직입니다.$aix$,
+  $aix${"type":"flow","title":"부동산 세금 3단계 지도","nodes":[{"label":"살 때 — 취득세","sublabel":"잔금 시 한 번 · 위택스","icon":"handshake","tone":"primary"},{"label":"보유 — 재산세 · 종합부동산세","sublabel":"매년 반복","icon":"home","tone":"accent","edgeLabel":"보유하는 동안 매년"},{"label":"팔 때 — 양도소득세","sublabel":"차익에 과세 · 홈택스","icon":"banknote","tone":"warning","edgeLabel":"양도 차익 발생 시"},{"label":"공통 변수 4개","sublabel":"주택 수 · 지역 · 가격 · 기간","icon":"key","tone":"success"}],"caption":"세 가지 세금 모두 같은 변수 4개로 무거워지고 가벼워집니다."}$aix$::jsonb, null, 5, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ee8fb6f8-0a99-65f4-e4e8-b2deca43d104', '23f6de3b-b6ab-dc61-05f2-2dafad80a503', 'real-estate-market-tax/acquisition-tax-deep', 'acquisition-tax-deep', '취득세 심화: 주택 수와 지역이 세율을 정한다',
+  $aix$같은 10억 원짜리 아파트를 사는데 누구는 취득세로 수천만 원을 더 냅니다. 차이는 집이 아니라 **사는 사람의 주택 수와 그 집의 지역**에 있습니다.
+
+## 기본 구조: 1주택자는 가격 구간별 1~3%
+
+1주택이 되는 취득은 취득가액에 따라 6억 원 이하 1%, 6억~9억 원 구간 1~3%(가격에 비례해 점증), 9억 원 초과 3%가 적용됩니다. 여기에 지방교육세 등 부가 세목이 따라붙습니다.
+
+## 중과 구조: 주택 수 × 조정대상지역 매트릭스
+
+다주택 취득에는 별도의 무거운 세율이 적용됩니다. 구조만 기억하세요.
+
+- **2주택째**: 비조정대상지역이면 기본세율(1~3%), **조정대상지역이면 8%**
+- **3주택째**: 비조정 8%, **조정 12%**
+- **4주택 이상·법인**: 12%
+
+즉 조정대상지역 지정 여부가 세율을 한 계단씩 밀어 올립니다. 정확한 세율표와 감면(생애최초 감면 등)은 개정이 잦으니 **위택스에서 최신 기준을 확인**하세요.
+
+## 단순화한 예시 가정
+
+10억 원 주택을 살 때 — 1주택자라면 3%로 약 3,000만 원, 조정대상지역 2주택째라면 8%로 약 8,000만 원 수준입니다(부가 세목 제외, 이해를 돕기 위한 단순화 예시). 세율 몇 %의 차이가 **수천만 원의 현금** 차이입니다.
+
+## 주택 수를 세는 함정
+
+주택 수는 나 혼자가 아니라 **세대 기준**으로 셉니다. 그리고 분양권, 조합원 입주권, 주거용 오피스텔도 주택 수에 포함될 수 있습니다. "나는 1주택인 줄 알았는데 세법상 2주택"인 사례가 흔하니, 계약 전에 세대의 보유 현황부터 정리하세요.
+
+> 💡 **핵심**: 취득세는 [내 세대의 주택 수] × [그 집이 조정대상지역인가]로 결정됩니다. 계약서에 도장 찍기 전에 세법상 주택 수부터 세어 보세요.$aix$,
+  $aix${"type":"compare","title":"같은 집, 다른 취득세","columns":[{"title":"1주택자의 취득","icon":"home","tone":"primary","items":["가격 구간별 1~3%","6억 이하 1% · 9억 초과 3%","생애최초 등 감면 가능","10억 예시: 약 3,000만 원"]},{"title":"다주택 중과 취득","icon":"building","tone":"warning","items":["조정대상지역 2주택째 8%","3주택째 12% (비조정 8%)","분양권 · 입주권도 주택 수 포함","10억 예시: 약 8,000만 원"]}],"caption":"단순화한 예시 가정 (부가 세목 제외) — 정확한 세율과 감면은 위택스에서 확인하세요."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e8532ac4-591f-789b-4414-e33791faad83', '23f6de3b-b6ab-dc61-05f2-2dafad80a503', 'real-estate-market-tax/holding-tax', 'holding-tax', '보유세: 6월 1일 하루가 1년 치 세금을 정한다',
+  $aix$보유세에는 달력에 동그라미 쳐야 할 날짜가 하나 있습니다. **6월 1일**. 이날 등기부상 소유자가 그해 재산세와 종합부동산세를 전부 부담합니다. 6월 2일에 팔아도 그해 세금은 내 몫입니다.
+
+## 재산세: 모든 소유자의 기본 세금
+
+계산 구조는 한 줄입니다: **공시가격 × 공정시장가액비율(세 부담 조절을 위해 공시가격에 곱하는 비율) = 과세표준(세율을 곱하는 기준 금액) × 세율**.
+
+- 주택분은 **7월과 9월에 절반씩** 고지됩니다 (세액 20만 원 이하면 7월에 한 번에).
+- 공시가격이 실거래가보다 낮게 매겨지는 구조라, 체감 세 부담은 시세 대비 완만한 편입니다.
+
+## 종합부동산세: 기준을 넘는 사람만
+
+종합부동산세는 **사람별로(인별) 보유 주택의 공시가격을 합산**해, 기본공제를 넘는 초과분에만 부과됩니다. 현행 기본공제는 9억 원, 1세대 1주택자는 12억 원이며 매년 12월에 고지됩니다. 부부가 각각 명의를 나누면 공제도 각각 적용된다는 점이 명의 설계의 출발점입니다. 공제 기준과 세율은 개편 논의가 이어지고 있으니 **국세청 홈택스에서 최신 기준을 확인**하세요.
+
+## 6월 1일의 실전 활용
+
+잔금일 협상은 곧 보유세 협상입니다.
+
+- **매수자**: 잔금을 6월 1일 **이후**로 미루면 그해 보유세는 매도자 부담
+- **매도자**: 5월 31일 이전에 잔금을 받으면 그해 보유세를 넘길 수 있음
+
+5월 말~6월 초의 잔금일 밀당은 이 때문입니다. 하루 차이로 1년 치 보유세가 오갑니다.
+
+> 💡 **핵심**: 재산세는 공시가격 기반으로 7·9월 반반, 종합부동산세는 인별 합산에서 공제(기본 9억 · 1세대 1주택 12억)를 넘는 초과분만. 그리고 모든 것은 6월 1일 소유자 기준입니다.$aix$,
+  $aix${"type":"flow","title":"보유세 계산의 물줄기","nodes":[{"label":"공시가격","sublabel":"매년 4월 말 공시 (6/1 소유자 기준)","icon":"landmark","tone":"primary"},{"label":"공정시장가액비율 적용","sublabel":"세 부담 조절 장치","icon":"percent","tone":"accent","edgeLabel":"비율을 곱해"},{"label":"과세표준 × 세율","sublabel":"구간별 누진","icon":"scale","tone":"accent"},{"label":"재산세 7·9월 + 종합부동산세 12월","sublabel":"종부세는 공제 초과분만","icon":"receipt","tone":"warning","edgeLabel":"고지서 발송"}],"caption":"6월 1일 하루가 1년 치를 정합니다 — 잔금일 협상이 곧 보유세 협상입니다."}$aix$::jsonb, null, 6, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '39b8a7b4-f420-9b1f-b09e-cb81023c068c', '23f6de3b-b6ab-dc61-05f2-2dafad80a503', 'real-estate-market-tax/capital-gains-tax', 'capital-gains-tax', '양도소득세: 1세대 1주택 비과세라는 최강 카드',
+  $aix$양도소득세는 판 가격이 아니라 **번 차익**에 매기는 세금입니다. 그래서 세 가지 세금 중 설계의 여지가 가장 크고, 잘못 설계했을 때의 대가도 가장 큽니다.
+
+## 계산의 4단계
+
+1. **양도차익 구하기** — 양도가액에서 취득가액과 필요경비(취득세, 중개보수, 새시 교체 같은 자본적 지출)를 뺍니다. 영수증이 곧 돈입니다.
+2. **장기보유특별공제** — 오래 보유·거주할수록 차익의 일부를 공제해주는 제도. 1세대 1주택은 보유·거주 기간에 따라 최대 80%까지 공제됩니다.
+3. **기본공제** — 연 250만 원.
+4. **세율 적용** — 남은 과세표준에 기본세율(6~45% 누진)을 적용합니다.
+
+## 최강 카드: 1세대 1주택 비과세
+
+요건을 채우면 양도가액 **12억 원 이하까지 세금이 0원**입니다 (12억 초과 고가주택은 초과분에 해당하는 차익만 과세).
+
+- **2년 이상 보유**
+- **취득 당시** 조정대상지역이었다면 **2년 이상 거주**도 필요 — 나중에 해제돼도 취득 시점 기준입니다
+
+수억 원의 차익이 통째로 비과세될 수 있는, 개인이 쓸 수 있는 가장 강력한 절세 카드입니다. 거주 요건이 걸리는지가 갈림길이니 취득 시점의 지역 지정 여부를 기록해 두세요.
+
+## 다주택 중과라는 반대편 극단
+
+조정대상지역 주택을 파는 다주택자에게는 기본세율에 2주택 +20%p, 3주택 이상 +30%p를 얹는 중과 제도가 있습니다. 2022년 5월부터 한시 유예되어 오다가 **2026년 5월 9일로 유예가 종료되어 다시 적용되고 있습니다**. 이처럼 양도소득세는 제도 변화가 잦으니, 매도 전 홈택스 모의계산과 세무 전문가 확인은 선택이 아니라 필수입니다.
+
+> 💡 **핵심**: 양도소득세 = (차익 − 필요경비 − 장기보유특별공제) × 세율. 1세대 1주택 비과세(12억, 2년 보유 + 취득 시 조정대상지역이면 2년 거주)가 최강 카드입니다.$aix$,
+  $aix${"type":"steps","title":"양도소득세 계산 4단계","steps":[{"label":"양도차익 계산","sublabel":"양도가액 − 취득가액 − 필요경비","icon":"receipt"},{"label":"장기보유특별공제","sublabel":"보유 · 거주 기간만큼 차익 공제","icon":"calendar"},{"label":"기본공제","sublabel":"연 250만 원","icon":"wallet"},{"label":"세율 적용","sublabel":"기본 6~45% (다주택 중과 시 가산)","icon":"percent"}],"caption":"1세대 1주택 비과세 요건을 채우면 이 계산 자체가 12억까지 필요 없어집니다."}$aix$::jsonb, null, 6, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '247f8681-0bcb-67cd-7fd0-230adbefd4e7', '23f6de3b-b6ab-dc61-05f2-2dafad80a503', 'real-estate-market-tax/temporary-two-houses', 'temporary-two-houses', '일시적 2주택: 갈아타기의 안전장치',
+  $aix$더 나은 집으로 갈아타는 사람은 누구나 잠깐 2주택자가 됩니다. 새집을 사고 헌집을 파는 사이의 공백 — 세법은 이 정상적인 과정을 다주택 규제에서 구해주는 특례를 두고 있습니다. 단, **요건이 숫자로 딱 떨어지는 만큼 실수도 숫자로 갈립니다**.
+
+## 1 · 2 · 3 규칙
+
+일시적 2주택 양도소득세 비과세의 뼈대는 숫자 세 개입니다.
+
+- **1** — 종전주택을 취득하고 **1년 이상 지난 뒤**에 신규주택을 취득할 것
+- **2** — 종전주택이 **2년 보유**(취득 당시 조정대상지역이었다면 2년 거주 포함) 등 1세대 1주택 비과세 요건을 갖출 것
+- **3** — 신규주택 취득일부터 **3년 이내**에 종전주택을 양도할 것
+
+세 가지가 모두 맞으면 2주택 상태에서도 종전주택을 비과세로 팔 수 있습니다.
+
+## 취득세에도 같은 안전장치
+
+신규주택이 조정대상지역이어도, 기한 내 종전주택 처분을 조건으로 8% 중과가 아닌 **기본세율(1~3%)**로 취득할 수 있습니다. 기한을 어기면 차액이 추징됩니다.
+
+## 실수 포인트 두 가지
+
+- **1년 요건 놓치기** — 종전주택 산 지 1년이 안 됐는데 신규주택 잔금을 치르면 특례 자체가 닫힙니다. 갈아타기 계획은 날짜부터 세우세요.
+- **3년 데드라인** — "좋은 값에 팔릴 때까지 기다리다" 기한을 넘기는 사례가 많습니다. 비과세를 놓쳐 잃는 세금이 호가 몇천만 원 버티기보다 큰 경우가 대부분입니다.
+
+기한과 요건은 정책에 따라 조정되어 온 대표적 항목입니다. **갈아타기 계약 전에 반드시 현행 요건을 홈택스·세무 전문가에게 확인**하세요.
+
+> 💡 **핵심**: 갈아타기 특례는 1(1년 지나 취득) · 2(2년 보유·거주) · 3(3년 내 처분). 갈아타기의 성패는 집 고르기 전에 날짜 계산에서 갈립니다.$aix$,
+  $aix${"type":"steps","title":"일시적 2주택 — 1 · 2 · 3 규칙","steps":[{"label":"1년 경과 후 신규 취득","sublabel":"종전주택 취득일부터 1년 이상","icon":"calendar"},{"label":"종전주택 요건 완성","sublabel":"2년 보유 (조정지역 취득 시 2년 거주)","icon":"home"},{"label":"3년 내 종전주택 양도","sublabel":"신규주택 취득일 기준","icon":"clock"},{"label":"비과세 + 취득세 기본세율","sublabel":"기한 어기면 추징","icon":"check"}],"caption":"요건은 개정이 잦습니다 — 계약 전 현행 기준을 반드시 확인하세요."}$aix$::jsonb, null, 5, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'cc98e4d3-d62e-d96d-77a3-09d0ed78f155', '23f6de3b-b6ab-dc61-05f2-2dafad80a503', 'real-estate-market-tax/tax-strategy', 'tax-strategy', '절세의 원칙과 세무사를 만나야 할 순간',
+  $aix$절세는 파는 순간이 아니라 **사는 순간** 시작됩니다. 마지막 레슨에서는 지금까지의 세금 지식을 행동 원칙으로 압축하고, 혼자 판단하면 안 되는 경계선을 긋습니다.
+
+## 절세의 5원칙
+
+1. **사기 전에 팔 때를 계산한다** — 매수 검토 단계에서 홈택스 양도소득세 모의계산까지 돌려보는 습관. 출구 없는 입장은 투자가 아닙니다.
+2. **증빙은 그때그때** — 취득세 납부서, 중개보수, 새시·발코니 확장 같은 자본적 지출 영수증은 필요경비가 되어 수년 뒤 양도소득세를 줄여줍니다. 지금 버린 영수증이 미래의 세금입니다.
+3. **날짜를 설계한다** — 6월 1일(보유세 기준일), 2년(보유·거주), 3년(일시적 2주택 처분 기한). 세법의 숫자는 하루 차이로 수천만 원을 가릅니다.
+4. **세대와 명의를 관리한다** — 주택 수는 세대 기준. 명의 분산은 종합부동산세 공제에 영향을 줍니다. 단, 세대 분리·명의 설계는 요건이 까다로워 반드시 전문가 검토가 필요한 영역입니다.
+5. **제도 변화를 추적한다** — 이 강의의 수치도 언젠가 낡습니다. 홈택스(국세) · 위택스(지방세) · 국토교통부(규제지역)를 원천으로 확인하는 습관이 진짜 실력입니다.
+
+## 주택임대사업자, 만능 카드가 아닙니다
+
+등록하면 세제 혜택이 있지만 현행 제도에서는 **아파트 신규 등록이 막혀 있고**, 의무임대 10년 · 임대료 증액 연 5% 상한 등 의무가 무겁습니다. 중도에 어기면 과태료에 받은 혜택 추징까지 따라오니, 혜택과 구속을 저울에 올려 신중히 판단할 문제입니다.
+
+## 세무사를 만나야 할 순간
+
+경계선은 명확합니다. **계약서에 도장 찍기 전**, 다음에 하나라도 해당하면 상담부터 하세요.
+
+- 세대 합산 2주택 이상 상태에서의 매수·매도
+- 증여·상속이 얽힌 부동산
+- 비과세·특례 요건이 애매한 경우 (거주 기간, 세대 분리, 기한 임박)
+- 12억 초과 고가주택 양도
+
+수십만 원의 상담료로 수천만 원의 세금 오류를 막는 것 — 부동산에서 가장 수익률 높은 지출입니다. 세금은 개인 상황에 따라 결론이 완전히 달라지므로, 이 강의는 지도까지만, 최종 경로는 전문가와 함께 정하세요.
+
+> 💡 **핵심**: 절세 = 사기 전 계산 · 증빙 축적 · 날짜 설계 · 세대 관리 · 제도 추적. 그리고 애매하면 도장 찍기 전에 세무사 — 이것이 중급자의 마지막 원칙입니다.$aix$,
+  $aix${"type":"compare","title":"혼자 해도 되는 일 vs 전문가와 할 일","columns":[{"title":"스스로 챙길 것","icon":"user","tone":"primary","items":["홈택스 모의계산으로 출구 점검","필요경비 영수증 모으기","6/1 · 2년 · 3년 날짜 관리","홈택스 · 위택스로 최신 제도 확인"]},{"title":"세무사와 결정할 것","icon":"handshake","tone":"warning","items":["2주택 이상 상태의 매수 · 매도","증여 · 상속이 얽힌 거래","비과세 · 특례 요건이 애매할 때","고가주택 양도 · 명의 설계"]}],"caption":"상담은 계약 후가 아니라 계약 전에 — 도장을 찍는 순간 대부분의 선택지가 사라집니다."}$aix$::jsonb, null, 6, 14
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 부동산 고급: 경매·재개발·절세 전략
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '399d45e6-0201-a6b9-f08c-69574cb8cf25', 'real-estate-advanced', '부동산 고급: 경매·재개발·절세 전략', $aix$일반 매매 시장 너머에는 경매·공매, 재개발·재건축, 그리고 세금 설계라는 세 개의 심화 영역이 있습니다. 이 강의에서는 법원 경매의 권리분석과 명도, 정비사업의 단계별 리스크와 분담금 계산 원리, 양도·증여·상속을 아우르는 자산 이전 설계까지 — 실수 한 번이 수천만 원으로 이어지는 영역을 안전하게 공부하는 법을 다룹니다. 모든 내용은 교육 목적이며, 실제 실행 전에는 반드시 변호사·세무사 등 전문가 확인이 필요합니다.$aix$,
+  null, 'realestate', 'advanced', array['부동산 경매', '권리분석', '재개발 재건축', '절세 전략', '증여 상속']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'f6fe2435-84d9-63f5-9357-294cad33a038', '399d45e6-0201-a6b9-f08c-69574cb8cf25', 'auction-mastery', '경매·공매 실전', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '85695497-4970-2062-0dda-bff139a8e3ee', '399d45e6-0201-a6b9-f08c-69574cb8cf25', 'urban-renewal', '재개발·재건축 투자', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '707ecfd4-e9d5-64f1-a453-e945bc375643', '399d45e6-0201-a6b9-f08c-69574cb8cf25', 'tax-and-portfolio', '절세와 자산 설계', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5c9414d3-49a1-cab0-52ac-fb2520d5d85c', 'f6fe2435-84d9-63f5-9357-294cad33a038', 'real-estate-advanced/how-auction-works', 'how-auction-works', '경매는 왜, 어떻게 열리는가: 절차 전체 지도',
+  $aix$경매 물건은 하늘에서 떨어지지 않습니다. **누군가 빌린 돈을 갚지 못했을 때, 법원이 그 담보를 강제로 파는 절차** — 그것이 경매의 정체입니다. 이 원리를 알아야 절차의 모든 단계가 이해됩니다.
+
+## 경매의 두 갈래
+
+- **임의경매** — 은행 등이 근저당권 같은 담보권을 실행하는 경우. 대출이 연체되면 별도 재판 없이 바로 신청할 수 있습니다.
+- **강제경매** — 담보 없이 돈을 못 받은 채권자가 판결문 등 집행권원(강제집행을 할 수 있는 법적 자격 문서)을 받아 신청하는 경우.
+
+어느 쪽이든 이후 절차는 거의 같습니다. 채권자의 돈을 회수하기 위한 **국가가 대신 해주는 강제 매각**이라는 본질도 같습니다.
+
+## 절차의 뼈대: 신청부터 배당까지
+
+1. 채권자가 법원에 **경매 신청** → 법원이 경매개시결정을 내리고 등기부등본에 기입합니다.
+2. 법원이 **배당요구종기**(배당받으려는 채권자·임차인이 권리 신고를 마쳐야 하는 마감일)를 정합니다.
+3. 감정평가와 현황조사를 거쳐 **매각기일**이 공고됩니다.
+4. 매각기일에 **기일입찰**(정해진 날 법원에 출석해 입찰표를 내는 방식)로 최고가 입찰자가 정해집니다. 입찰 때는 통상 **최저매각가격의 10%를 입찰보증금**으로 냅니다.
+5. 매각허가결정 → 잔금 납부 → 소유권 취득 → 채권자들에게 **배당**.
+
+입찰자가 없어 **유찰**(매각 불성립)되면 다음 기일에 최저매각가격이 법원별로 정한 비율만큼 낮아진 채 다시 나옵니다. "몇 번 유찰된 물건이 왜 싼가"의 답이 여기 있습니다 — 싸진 데는 이유가 있을 수 있으니, 가격만 보고 달려들면 안 됩니다.
+
+모든 사건 정보는 **대법원 법원경매정보** 사이트에서 무료로 확인할 수 있습니다. 감정평가서·매각물건명세서·현황조사서가 공개되며, 이 세 서류가 다음 레슨부터 배울 권리분석의 재료입니다.
+
+> 💡 **핵심**: 경매 = 채권 회수를 위한 법원의 강제 매각. 절차의 각 단계(배당요구종기·매각기일·배당)는 전부 "누가 얼마를 받아가는가"를 정리하는 과정입니다.$aix$,
+  $aix${"type":"flow","title":"법원 경매 절차 한눈에","nodes":[{"label":"경매 신청","sublabel":"채권자 → 법원 (임의/강제)","icon":"file-pen","tone":"muted"},{"label":"경매개시결정·등기","sublabel":"배당요구종기 지정","icon":"gavel","tone":"primary"},{"label":"매각 준비","sublabel":"감정평가 · 현황조사 · 공고","icon":"search","tone":"accent"},{"label":"매각기일 (기일입찰)","sublabel":"보증금 = 통상 최저가의 10%","icon":"users","tone":"primary"},{"label":"매각허가 → 잔금 납부","sublabel":"소유권 취득","icon":"key","tone":"success"},{"label":"배당","sublabel":"순위대로 채권자에게 분배","icon":"banknote","tone":"success"}],"loopBack":{"from":3,"to":2,"label":"유찰 시 가격 낮춰 재매각"},"caption":"전체 정보는 대법원 법원경매정보에서 확인 — 유찰 횟수보다 '왜 유찰됐는지'가 중요합니다."}$aix$::jsonb, null, 6, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b14a489b-a409-75bc-ea62-ee2a8b1a35a9', 'f6fe2435-84d9-63f5-9357-294cad33a038', 'real-estate-advanced/baseline-rights', 'baseline-rights', '권리분석 1: 말소기준권리 — 지워지는 것과 떠안는 것',
+  $aix$경매의 승부는 입찰장이 아니라 등기부등본 위에서 갈립니다. **낙찰 후 어떤 권리는 자동으로 지워지고, 어떤 권리는 낙찰자가 떠안습니다** — 이 경계선을 긋는 것이 말소기준권리입니다.
+
+## 기준선 하나로 운명이 갈린다
+
+등기부등본의 권리들 중 다음 다섯 가지가 말소기준권리가 될 수 있습니다.
+
+- **(근)저당권** — 실무에서 가장 흔한 기준
+- **압류 / 가압류**
+- **담보가등기** (개인 채권자가 담보로 잡아둔 가등기)
+- **강제경매개시결정등기** (위 권리들이 하나도 없을 때)
+
+이 중 **등기 날짜가 가장 빠른 것 하나**가 기준이 됩니다. 그리고 원칙은 단순합니다.
+
+- 기준보다 **뒤에** 등기된 권리 → 매각과 함께 **말소** (낙찰자와 무관)
+- 기준보다 **앞에** 등기된 권리 → 낙찰자가 **인수** (내 돈으로 해결해야 함)
+
+지우개로 비유하면, 말소기준권리는 지우개가 닿기 시작하는 지점입니다. 그 아래(뒤)는 싹 지워지지만, 그 위(앞)에 적힌 것은 그대로 남아 새 주인을 따라옵니다.
+
+## 실전 확인 순서
+
+1. 등기부등본 을구·갑구의 권리를 **날짜순으로 한 줄에 정렬**합니다.
+2. 다섯 가지 후보 중 가장 빠른 것에 밑줄 — 이것이 기준입니다.
+3. 기준보다 앞선 권리(선순위 전세권, 가처분, 지상권 등)가 있는지 봅니다. 하나라도 있으면 **인수 금액과 리스크를 계산**한 뒤에만 입찰을 검토합니다.
+
+법원이 제공하는 **매각물건명세서**에도 "매각으로 소멸되지 않는 권리"가 기재됩니다. 등기부등본 분석과 매각물건명세서를 반드시 교차 확인하세요. 선순위 권리가 얽힌 물건은 입찰 전 변호사 등 전문가 검토가 필수입니다.
+
+> 💡 **핵심**: 권리분석 1단계 = 말소기준권리 찾기. 기준보다 앞선 권리가 하나도 없는 물건이 초심자가 다룰 수 있는 물건입니다.$aix$,
+  $aix${"type":"stack","title":"말소기준권리: 인수와 말소의 경계선","layers":[{"label":"선순위 권리 (기준보다 먼저 등기)","sublabel":"선순위 임차권·전세권·가처분 등 → 낙찰자 인수","icon":"alert","tone":"warning"},{"label":"말소기준권리","sublabel":"가장 빠른 (근)저당권·압류·가압류·담보가등기 등","icon":"scale","tone":"primary"},{"label":"후순위 권리 (기준보다 나중)","sublabel":"매각과 함께 말소 → 낙찰자와 무관","icon":"check","tone":"success"}],"caption":"기준선 위(앞선 권리)가 비어 있는 물건이 안전한 물건 — 매각물건명세서와 교차 확인하세요."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'af9fc4f2-1012-ea40-ad0a-63ecd188530c', 'f6fe2435-84d9-63f5-9357-294cad33a038', 'real-estate-advanced/tenant-analysis', 'tenant-analysis', '권리분석 2: 임차인 — 보증금을 떠안는 경우',
+  $aix$경매 초심자가 가장 크게 다치는 지점은 딱 하나, **임차인의 보증금을 낙찰자가 대신 물어주게 되는 경우**입니다. 등기부등본에 없는 권리가 사람을 잡습니다 — 임차인의 권리는 등기 없이도 생기기 때문입니다.
+
+## 판단의 첫 질문: 전입이 기준보다 빠른가
+
+임차인의 대항력은 주택 인도 + 전입신고를 마친 **다음 날 0시**에 생깁니다. 그래서 비교할 것은 두 날짜입니다.
+
+- **전입신고 다음 날이 말소기준권리보다 빠르면** → 대항력 있는 **선순위 임차인**
+- **늦으면** → 후순위 임차인. 임차권은 매각으로 소멸하고, 낙찰자가 보증금을 떠안지 않습니다.
+
+## 선순위 임차인: 배당 결과까지 봐야 끝난다
+
+선순위 임차인이 있다고 무조건 위험한 것은 아닙니다. 확정일자까지 갖춘 임차인은 우선변제권으로 배당에 참여할 수 있으니까요. 경우의 수는 세 가지입니다.
+
+- 배당요구종기까지 **배당요구를 했고, 보증금 전액을 배당받으면** → 임차권 소멸. 낙찰자 부담 없음.
+- **배당요구를 했지만 일부만 배당받으면** → **못 받은 잔액을 낙찰자가 인수**합니다.
+- **배당요구를 아예 안 했으면** → 보증금 전액이 낙찰자에게 인수됩니다.
+
+즉 "선순위 임차인 + 배당요구 여부 + 예상 배당액" 세 가지를 조합해야 인수 금액이 나옵니다. 배당요구 여부는 매각물건명세서에서 확인할 수 있습니다.
+
+## 함께 챙길 것
+
+- 소액 보증금 임차인은 일정 금액을 최우선으로 배당받는 제도가 있습니다. 기준 금액은 지역·시기마다 다르므로 주택임대차보호법 시행령의 최신 기준을 확인하세요.
+- 전입은 되어 있는데 계약 관계가 불분명한 점유자, 가족 간 임대차 등 **서류로 판단이 안 서는 물건은 입찰하지 않는 것**이 원칙입니다. 애매하면 변호사 검토가 먼저입니다.
+
+> 💡 **핵심**: 임차인 분석 공식 = "전입 다음 날 vs 말소기준권리 날짜" 비교 → 선순위라면 배당요구·배당액까지 계산. 인수 금액을 숫자로 못 쓰면 입찰 금지.$aix$,
+  $aix${"type":"compare","title":"임차인 권리분석: 소멸 vs 인수","columns":[{"title":"낙찰자 부담 없음","icon":"check","tone":"success","items":["전입이 말소기준권리보다 늦음 (후순위)","선순위지만 배당요구 후 전액 배당","임차권은 매각으로 소멸","명도 협의만 남음"]},{"title":"낙찰자가 보증금 인수","icon":"alert","tone":"warning","items":["선순위 임차인이 배당요구 안 함 → 전액 인수","배당요구 했지만 일부만 배당 → 잔액 인수","인수액만큼 입찰가에서 차감 필요","판단 애매하면 입찰 포기가 원칙"]}],"caption":"매각물건명세서에서 전입일·확정일자·배당요구 여부를 확인 — 이 서류가 임차인 분석의 출발점입니다."}$aix$::jsonb, null, 7, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6b07f323-7628-6526-11c4-7e925e059328', 'f6fe2435-84d9-63f5-9357-294cad33a038', 'real-estate-advanced/bidding-practice', 'bidding-practice', '입찰 실전: 임장에서 기일입찰까지',
+  $aix$권리분석을 통과한 물건이라도, 입찰가를 잘못 쓰면 이기고도 지는 게임이 됩니다. **경매의 목표는 낙찰이 아니라 "남는 낙찰"**입니다.
+
+## 입찰 전 준비 4단계
+
+1. **물건 검색** — 대법원 법원경매정보에서 지역·유형별로 검색하고, 감정평가서·매각물건명세서·현황조사서 3종을 정독합니다.
+2. **임장** — 서류와 현장은 자주 다릅니다. 실제 점유자, 관리 상태, 미납 관리비(경매에서는 공용부분 체납액을 낙찰자가 부담하는 경우가 많습니다), 주변 시세를 눈으로 확인합니다.
+3. **총원가 계산** — 낙찰가 + 인수 권리·보증금 + 취득세 + 미납 관리비 + 명도 비용 + 수리비. 이 합계가 진짜 매입 가격입니다.
+4. **입찰가 산정** — 기준은 감정가가 아니라 **현재 시세**입니다. 감정평가는 수개월 전 시점일 수 있으므로, 실거래가로 시세를 다시 잡고 총원가가 시세보다 충분히 낮을 때만 씁니다.
+
+## 기일입찰 당일 체크리스트
+
+- 신분증, 도장, **입찰보증금(통상 최저매각가격의 10%)** — 수표로 준비합니다.
+- 입찰표의 **금액 칸은 수정 불가**입니다. 0을 하나 더 쓰는 사고가 실제로 일어나는데, 낙찰 후 잔금을 포기하면 보증금을 돌려받지 못합니다. 두 번, 세 번 확인하세요.
+- 패찰하면 보증금은 그 자리에서 바로 반환됩니다. **패찰은 실패가 아니라 원칙을 지킨 결과**일 수 있습니다.
+
+## 입찰가의 심리학
+
+경쟁자가 많아 보이면 가격을 올리고 싶어집니다. 이때를 위해 **입찰 전에 상한선을 적어 가고, 현장에서는 절대 바꾸지 않는다**는 규칙이 필요합니다. 상한선 없이 입찰장에 들어가는 것은 카드 없이 도박장에 들어가는 것과 같습니다.
+
+> 💡 **핵심**: 입찰가 = 시세 − (인수액 + 세금 + 명도·수리비 + 목표 안전마진). 이 식을 채울 수 없으면 아직 입찰할 때가 아닙니다.$aix$,
+  $aix${"type":"steps","title":"입찰까지의 실전 절차","steps":[{"label":"물건 검색·서류 3종 정독","sublabel":"감정평가서 · 매각물건명세서 · 현황조사서","icon":"search"},{"label":"임장","sublabel":"점유자 · 관리비 체납 · 실제 시세 확인","icon":"map-pin"},{"label":"총원가 계산","sublabel":"낙찰가 + 인수액 + 세금 + 명도·수리비","icon":"receipt"},{"label":"입찰가 상한선 확정","sublabel":"시세 기준, 현장에서 변경 금지","icon":"target"},{"label":"기일입찰","sublabel":"보증금 10% · 금액 칸 재확인","icon":"gavel"}],"caption":"각 단계에서 하나라도 답이 안 나오면 다음 물건으로 — 경매는 물건이 계속 나옵니다."}$aix$::jsonb, null, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bee1b051-bcd1-ed4d-855f-08d3c7988dea', 'f6fe2435-84d9-63f5-9357-294cad33a038', 'real-estate-advanced/eviction-and-order', 'eviction-and-order', '명도와 인도명령: 낙찰 후가 진짜 시작',
+  $aix$잔금을 냈다고 열쇠가 손에 들어오는 것은 아닙니다. 집 안에는 아직 사람이 살고 있습니다. **명도**(점유자를 내보내고 부동산을 넘겨받는 일)는 경매의 마지막이자 가장 사람 냄새 나는 단계입니다.
+
+## 낙찰자의 무기: 인도명령
+
+**인도명령**(경매 낙찰자가 법원에 "점유자가 집을 넘겨주게 해달라"고 신청하는 간이 절차)은 경매에만 있는 특권입니다.
+
+- **잔금 납부 후 6개월 이내**에만 신청할 수 있습니다. 이 기한을 넘기면 정식 소송으로 가야 하므로, 잔금 납부와 동시에 신청하는 것이 실무 관행입니다.
+- 서류 심사 위주로 진행되어 통상 **몇 주 내에 결정**이 나옵니다. 결정 후에도 점유자가 버티면 강제집행을 신청할 수 있습니다.
+- 단, **대항력 있는 선순위 임차인처럼 점유할 권리가 있는 사람에게는 쓸 수 없습니다.** 이 경우 명도소송(정식 재판)으로 가야 하고, 6개월에서 1년 이상 걸릴 수 있습니다. 권리분석 단계에서 점유자의 지위를 확인해야 하는 이유가 하나 더 늘었습니다.
+
+## 실무의 정답은 대부분 '협의'
+
+법적 절차는 최후의 카드이고, 대부분의 명도는 **이사비 협의**로 끝납니다.
+
+- 강제집행에도 집행 비용과 수개월의 시간이 듭니다. 적정한 이사비가 오히려 싸게 먹히는 경우가 많습니다.
+- 협의 내용은 반드시 **이사 날짜·비용·관리비 정산을 적은 명도합의서**로 남기세요.
+- 점유자를 자극하는 방문·통보는 분쟁을 키웁니다. 감정이 아니라 절차로 말해야 합니다. 상황이 험악해질 물건이라면 처음부터 변호사와 함께 움직이세요.
+
+명도 비용과 기간은 입찰 전 총원가 계산에 이미 들어가 있어야 합니다. "낙찰받고 생각하지"는 고급 과정에서 금지어입니다.
+
+> 💡 **핵심**: 잔금과 동시에 인도명령 신청(6개월 기한), 실제 해결은 협의로. 명도 난이도는 입찰 전에 가격으로 환산해 두는 것입니다.$aix$,
+  $aix${"type":"compare","title":"인도명령 vs 명도소송","columns":[{"title":"인도명령 (경매 전용)","icon":"zap","tone":"primary","items":["잔금 납부 후 6개월 이내 신청","서류 심사 위주 · 통상 몇 주 내 결정","비용 부담 작음","권리 없는 점유자에게만 가능"]},{"title":"명도소송 (정식 재판)","icon":"scale","tone":"warning","items":["대항력 있는 점유자 등에는 이 길뿐","6개월~1년 이상 소요 가능","변호사 비용 등 부담 큼","경매 외 임대차 분쟁에도 사용"]}],"caption":"두 절차 모두 최후의 카드 — 실무의 대부분은 이사비 협의와 명도합의서로 끝납니다."}$aix$::jsonb, null, 5, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '84739f76-b361-7bdf-9dbe-0a4db450f569', 'f6fe2435-84d9-63f5-9357-294cad33a038', 'real-estate-advanced/onbid-public-sale', 'onbid-public-sale', '공매와 온비드: 경매의 쌍둥이, 다른 규칙',
+  $aix$법원에 가지 않고 안방에서 입찰하는 강제 매각도 있습니다. 세금 체납 재산 등을 파는 **공매** — 경매와 닮았지만, 규칙이 다른 부분에서 초심자가 넘어집니다.
+
+## 공매는 누가, 어디서 진행하나
+
+- 국세·지방세 체납으로 압류된 재산 등을 **한국자산관리공사(캠코)**가 매각합니다.
+- 입찰은 전부 **온비드(OnBid)** 라는 전자입찰 사이트에서 이뤄집니다. 공고 열람, 입찰서 제출, 보증금 납부까지 온라인으로 끝나 직장인도 참여하기 쉽습니다.
+- 압류재산 외에 국가·공공기관의 자산 매각도 온비드에 올라옵니다. 물건의 성격(압류재산인지, 국유재산 매각인지)에 따라 규칙이 다르니 공고문을 기준으로 확인하세요.
+
+## 경매와의 결정적 차이 3가지
+
+1. **인도명령이 없습니다.** 점유자가 버티면 명도소송으로 가야 합니다. 같은 조건이라면 공매가 명도 부담이 더 큰 이유이고, 점유자 있는 공매 물건은 그만큼 보수적으로 접근해야 합니다.
+2. **입찰 방식** — 법원 출석 없이 온라인 기간입찰. 편리하지만, 현장 분위기로 경쟁 강도를 가늠할 수 없어 입찰가 원칙이 더 중요해집니다.
+3. **절차 규정이 다릅니다** — 잔금 납부 기한, 소유권 이전 방식 등 세부 규칙이 경매와 다르게 정해져 있습니다. 물건별 공고문과 온비드 안내에서 반드시 확인하세요.
+
+권리분석의 원리(말소기준권리·임차인 분석)는 공매에서도 동일하게 적용됩니다. 같은 물건이 경매와 공매로 **동시에 진행**되다가 한쪽이 먼저 매각되면 다른 쪽이 취소되는 경우도 있으니, 사건 진행 상태를 양쪽에서 확인하는 습관이 필요합니다.
+
+> 💡 **핵심**: 공매 = 캠코 + 온비드 + 전자입찰. 편리함의 대가는 '인도명령 없음' — 명도 리스크를 경매보다 무겁게 계산하세요.$aix$,
+  $aix${"type":"compare","title":"법원 경매 vs 공매(온비드)","columns":[{"title":"법원 경매","icon":"gavel","tone":"primary","items":["법원이 진행 (민사집행)","매각기일에 법원 출석 입찰","인도명령 제도 있음","대법원 법원경매정보에서 검색"]},{"title":"공매 (온비드)","icon":"monitor","tone":"accent","items":["캠코가 진행 (세금 체납 압류재산 등)","온비드 전자입찰 — 출석 불필요","인도명령 없음 → 명도 부담 큼","세부 규칙은 물건별 공고문 확인"]}],"caption":"권리분석 원리는 동일 — 절차 규칙과 명도 수단이 다를 뿐입니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f6128f7b-123d-fe59-2a94-ad5f5eae099a', '85695497-4970-2062-0dda-bff139a8e3ee', 'real-estate-advanced/redevelopment-vs-reconstruction', 'redevelopment-vs-reconstruction', '재개발 vs 재건축: 같은 새 아파트, 다른 게임',
+  $aix$결과물은 둘 다 새 아파트지만, 규칙은 서로 다른 스포츠에 가깝습니다. **어떤 사업인지에 따라 조합원이 되는 조건도, 붙는 규제도 달라집니다.**
+
+## 무엇을 고치는 사업인가
+
+- **재개발** — 도로·상하수도 같은 기반시설까지 열악한 노후 지역 **전체를 갈아엎는** 사업. 단독·다세대 밀집 지역이 주 무대이고, 공익적 성격이 강해 국가의 개입도 큽니다.
+- **재건축** — 기반시설은 멀쩡한데 **건물(주로 아파트)만 낡아서** 다시 짓는 사업.
+
+동네 전체의 수술이 재개발, 건물 한 채(단지)의 성형이 재건축이라고 기억하면 쉽습니다.
+
+## 투자자 관점의 차이 4가지
+
+1. **조합원이 되는 방식** — 재개발은 구역 내 토지나 건축물 소유자가 원칙적으로 조합원이 되는 구조지만, 재건축은 **사업에 동의한 소유자만** 조합원이 됩니다. 동의하지 않으면 청산 대상이 됩니다.
+2. **재건축진단** — 재건축에만 있는 관문입니다. 과거의 '안전진단'이 2025년 6월 제도 개편으로 **재건축진단**으로 바뀌면서, 진단을 통과하기 전에도 사업에 착수할 수 있게 되어 초기 속도가 빨라졌습니다.
+3. **재건축초과이익환수제** — 재건축에만 적용됩니다(다음 레슨들에서 다룸).
+4. **조합원 지위 양도 제한 시점** — 투기과열지구 기준으로 재건축은 조합설립인가 후, 재개발은 관리처분계획인가 후부터 제한됩니다. 같은 '조합 물건'이라도 살 수 있는 시기가 다릅니다.
+
+물건 광고에 "재개발 호재"라고 쓰여 있어도 실제로는 재건축이거나, 정비구역 지정조차 안 된 곳일 수 있습니다. **사업 유형과 단계를 공식 문서(지자체 고시, 정비사업 정보 공개 시스템)로 확인**하는 것이 첫 검증입니다.
+
+> 💡 **핵심**: 재개발 = 동네 전체(기반시설 포함), 재건축 = 건물만. 조합원 자격·규제·양도 제한이 전부 다르므로 "어느 사업인가"부터 확정하세요.$aix$,
+  $aix${"type":"compare","title":"재개발 vs 재건축","columns":[{"title":"재개발","icon":"map-pin","tone":"primary","items":["기반시설 열악한 지역 전체 정비","토지·건축물 소유자가 원칙적 조합원","공익 성격 강함","지위 양도 제한: 관리처분인가 후 (투기과열지구)"]},{"title":"재건축","icon":"building","tone":"accent","items":["기반시설 양호, 노후 건물만 신축","동의한 소유자만 조합원","재건축진단 · 초과이익환수제 적용","지위 양도 제한: 조합설립인가 후 (투기과열지구)"]}],"caption":"같은 '새 아파트'라도 규칙이 다른 두 게임 — 사업 유형 확인이 분석의 출발점입니다."}$aix$::jsonb, null, 5, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6d6ef54c-ce6f-d577-fd63-2f27856e7aec', '85695497-4970-2062-0dda-bff139a8e3ee', 'real-estate-advanced/stages-and-timing', 'stages-and-timing', '사업 단계 지도: 언제 사고, 무엇을 조심하나',
+  $aix$정비사업 투자의 본질은 부동산이 아니라 **시간을 사는 것**입니다. 어느 단계에 들어가느냐가 수익률과 리스크를 동시에 결정합니다.
+
+## 사업의 큰 단계
+
+1. **정비구역 지정** — 지자체가 "여기를 정비하겠다"고 공식화. 아직 될지 안 될지 모르는 단계.
+2. **조합설립** — 소유자들이 사업 주체를 만듭니다. 재건축은 이때부터 투기과열지구 지위 양도 제한이 시작됩니다.
+3. **사업시행인가** — 설계·규모가 공적으로 승인됨. 사업의 윤곽이 확정되는 분기점.
+4. **관리처분계획인가** — 누가 어떤 집을 받고 분담금을 얼마 내는지 확정. 재개발 지위 양도 제한이 시작되는 시점.
+5. **이주·철거·착공 → 준공·입주**
+
+단계가 오를수록 불확실성은 줄고 가격은 오릅니다. 초기 매수는 싸지만 **10년 넘게 멈출 수도** 있고, 후기 매수는 확실하지만 프리미엄을 다 주고 사는 셈입니다. "싼 초기 물건"은 할인된 게 아니라 **리스크만큼 깎여 있는 것**입니다.
+
+## 단계별 대표 리스크
+
+- **초기(구역 지정 전후)**: 사업 무산·장기 표류. 주민 갈등, 사업성 부족이 주원인입니다.
+- **중기(조합설립~사업시행인가)**: 소송·시공사 갈등으로 인한 지연, 공사비 급등으로 인한 사업성 악화.
+- **후기(관리처분 이후)**: 추가 분담금, 이주·전세 시장 충격.
+
+## 제도가 속도를 바꾼다
+
+- 2025년 6월부터 시행된 정비사업 패스트트랙으로 재건축진단 부담이 줄고, 정비구역 지정과 조합설립을 병행할 수 있게 되어 **초기 단계 소요 기간이 단축**되는 흐름입니다.
+- 1기 신도시 등은 **노후계획도시 특별법**으로 별도 트랙을 탑니다. 다만 같은 제도 아래서도 분당은 특별정비구역 지정이 빠르게 진행된 반면 일산은 사업성(낮은 기준 용적률) 문제로 더딘 것처럼, **제도가 같아도 사업성이 속도를 가릅니다.**
+
+진행 단계와 고시 문서는 지자체 공고와 정비사업 정보 공개 시스템에서 확인할 수 있습니다. "곧 조합설립"이라는 말은 확인 전까지 없는 것으로 치세요.
+
+> 💡 **핵심**: 단계가 곧 가격이고 리스크입니다. 내가 어느 단계 리스크를 감당할 수 있는지 먼저 정하고, 그 단계의 물건만 보세요.$aix$,
+  $aix${"type":"flow","title":"정비사업 단계와 리스크","nodes":[{"label":"정비구역 지정","sublabel":"무산·장기 표류 리스크 최대","icon":"map-pin","tone":"muted"},{"label":"조합설립","sublabel":"재건축 지위 양도 제한 시작(투기과열지구)","icon":"users","tone":"accent","edgeLabel":"수년~십수 년"},{"label":"사업시행인가","sublabel":"설계·규모 확정","icon":"file-pen","tone":"primary"},{"label":"관리처분계획인가","sublabel":"분담금 확정 · 재개발 양도 제한 시작","icon":"scale","tone":"primary"},{"label":"이주·철거·착공","sublabel":"추가 분담금 · 이주 리스크","icon":"wrench","tone":"warning"},{"label":"준공·입주","sublabel":"불확실성 최소 · 가격 최대","icon":"home","tone":"success"}],"caption":"위로 갈수록 싸고 불확실, 아래로 갈수록 비싸고 확실 — 시간을 사는 투자입니다."}$aix$::jsonb, null, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3f3a657b-9320-2fcf-c5bb-052cf630646f', '85695497-4970-2062-0dda-bff139a8e3ee', 'real-estate-advanced/member-status-transfer', 'member-status-transfer', '조합원 자격과 지위 양도 제한: 사도 조합원이 못 되는 경우',
+  $aix$정비구역 물건을 샀는데 새 아파트를 못 받는다면? 농담이 아니라 실제로 벌어지는 일입니다. **투기과열지구에서는 일정 단계 이후 매수자가 조합원이 될 수 없기 때문**입니다.
+
+## 제한의 구조
+
+투기과열지구로 지정된 곳에서는:
+
+- **재건축** — 조합설립인가 **후**에 산 사람은 조합원이 될 수 없습니다.
+- **재개발** — 관리처분계획인가 **후**에 산 사람은 조합원이 될 수 없습니다.
+
+조합원이 못 되면 어떻게 될까요? **현금청산**(새 아파트 대신 감정평가액 기준의 현금을 받고 사업에서 빠지는 것) 대상이 됩니다. 새 아파트 프리미엄을 기대하고 웃돈을 줬는데 감정가 수준의 현금만 받고 끝난다면, 그 차액이 고스란히 손실입니다.
+
+특히 2025년 10·15 대책으로 **서울 전역과 경기 12개 지역이 규제지역으로 지정**되는 등 규제지역은 수시로 바뀝니다. "작년엔 괜찮았다"는 정보는 무효 — **계약 직전에 현재 지정 현황을 다시 확인**해야 합니다.
+
+## 예외는 있다, 그러나 좁다
+
+법이 정한 예외 사유에 해당하면 지위 양도가 가능합니다. 대표적으로:
+
+- 상속·이혼에 의한 이전
+- **10년 이상 소유 + 5년 이상 거주**한 1세대 1주택자가 파는 경우
+- 사업이 **장기간 지연**된 경우(예: 사업시행인가 후 3년 내 미착공 등 법정 요건 충족 시)
+
+예외 요건은 세부 조건이 까다롭고 해석 다툼도 많습니다. 매도인이 "예외라서 괜찮다"고 말해도 그대로 믿지 말고, **계약 전에 조합 사무실에 승계 가능 여부를 서면으로 확인하고 정비사업 전문 변호사의 검토**를 받는 것이 안전합니다.
+
+## 매수 전 체크 3줄
+
+1. 이 구역은 투기과열지구인가? (지정 현황 최신 확인)
+2. 사업은 지금 어느 단계인가? (조합설립/관리처분 전후)
+3. 이 매물은 예외 사유에 해당하는가? (조합 확인 + 전문가 검토)
+
+> 💡 **핵심**: "정비구역 물건 매수 = 조합원 지위 승계"가 아닙니다. 규제지역 여부 → 사업 단계 → 예외 사유, 세 관문을 서면으로 통과한 뒤에 계약하세요.$aix$,
+  $aix${"type":"grid","title":"조합원 지위 양도: 확인해야 할 것들","items":[{"label":"규제지역 확인","sublabel":"투기과열지구 지정 현황은 수시 변동","icon":"map-pin","tone":"primary"},{"label":"재건축 제한 시점","sublabel":"조합설립인가 후 매수 금지","icon":"building","tone":"warning"},{"label":"재개발 제한 시점","sublabel":"관리처분인가 후 매수 금지","icon":"scale","tone":"warning"},{"label":"예외: 장기 보유 1주택","sublabel":"10년 소유 + 5년 거주 매물 등","icon":"key","tone":"success"},{"label":"예외: 사업 장기 지연","sublabel":"법정 요건 충족 시 양도 가능","icon":"clock","tone":"success"},{"label":"위반 시: 현금청산","sublabel":"새 아파트 대신 감정가 현금 정산","icon":"alert","tone":"warning"}],"caption":"조합 서면 확인 + 전문가 검토 없이 '예외'라는 말만 믿고 계약하지 마세요."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bdca878f-a1cf-e586-623f-84bd671b7713', '85695497-4970-2062-0dda-bff139a8e3ee', 'real-estate-advanced/proportional-rate', 'proportional-rate', '감정평가·비례율·분담금: 내 몫 계산의 원리',
+  $aix$정비사업 조합원의 손익은 딱 세 개의 숫자로 정리됩니다. **감정평가액, 비례율, 조합원 분양가.** 이 셋의 관계를 모르면 "감정가 잘 나왔대"라는 말에 휘둘리게 됩니다.
+
+## 계산 사슬 4단계
+
+1. **종전자산 감정평가** — 지금 내가 가진 부동산의 가치를 평가합니다.
+2. **비례율**(사업의 수익성 지표) — 공식은 다음과 같습니다: (종후자산 총액 − 총사업비) ÷ 종전자산 총액 × 100. 새로 지어 팔 가치에서 공사비 등 비용을 뺀 것이, 원래 있던 자산 대비 얼마인지를 나타냅니다.
+3. **권리가액** = 내 감정평가액 × 비례율. 새 아파트를 받을 때 인정되는 '내 지분의 실제 가치'입니다.
+4. **분담금** = 조합원 분양가 − 권리가액. 새 집을 받기 위해 추가로 내야 하는 돈입니다.
+
+**단순화한 예시 가정**으로 계산해 봅시다(실제 사업은 훨씬 복잡합니다). 내 빌라의 감정평가액 3억 원, 비례율 100%, 조합원 분양가 6억 원이라면 — 권리가액 3억 원, 분담금 3억 원입니다. 만약 공사비 급등으로 비례율이 90%로 떨어지면 권리가액은 2억 7천만 원이 되고, 분담금은 3억 3천만 원으로 **3천만 원 늘어납니다.**
+
+## 흔한 착각 두 가지
+
+- **"감정가가 높게 나오면 무조건 이득"?** — 전체 조합원의 감정가가 같이 오르면 비례율이 낮아져 상쇄됩니다. 중요한 것은 절대 금액이 아니라 **구역 내 상대 평가**입니다.
+- **"비례율 100%니까 안전"?** — 비례율은 사업이 끝날 때까지 **추정치**입니다. 공사비 상승, 분양 부진, 소송 지연은 모두 비례율을 깎고, 그 결과가 **추가 분담금**으로 청구됩니다. 관리처분 때의 분담금은 확정이 아니라 '그 시점의 계산서'라고 생각하세요.
+
+재건축이라면 **재건축초과이익환수제**도 변수입니다. 조합원 1인당 초과이익이 기준(현행 8천만 원)을 넘으면 초과분의 10~50%가 부담금으로 부과됩니다. 감면·유예 요건과 제도 존폐 논의가 계속 바뀌는 영역이므로, 최신 내용은 국토교통부 발표와 세무 전문가를 통해 확인하세요.
+
+> 💡 **핵심**: 분담금 = 조합원 분양가 − (감정가 × 비례율). 비례율은 끝까지 변하는 추정치이므로, 분담금이 늘어도 감당 가능한지가 진짜 투자 판단 기준입니다.$aix$,
+  $aix${"type":"steps","title":"내 분담금이 계산되는 순서","steps":[{"label":"종전자산 감정평가","sublabel":"예시: 내 빌라 3억 원 (단순화 가정)","icon":"search"},{"label":"비례율 산정","sublabel":"(종후자산 − 총사업비) ÷ 종전자산 × 100","icon":"percent"},{"label":"권리가액 계산","sublabel":"감정가 × 비례율 = 3억 × 100% = 3억","icon":"wallet"},{"label":"분담금 확정","sublabel":"분양가 6억 − 권리가액 3억 = 3억","icon":"receipt"},{"label":"변동 체크","sublabel":"공사비 상승 → 비례율 하락 → 추가 분담금","icon":"alert"}],"caption":"숫자는 단순화한 예시 — 비례율은 준공 때까지 움직이는 추정치입니다."}$aix$::jsonb, null, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '683daa96-736a-95b4-f9bd-c119b6baf43a', '707ecfd4-e9d5-64f1-a453-e945bc375643', 'real-estate-advanced/disposal-strategy', 'disposal-strategy', '양도 설계: 무엇을, 언제, 어떤 순서로 팔 것인가',
+  $aix$같은 집을 같은 값에 팔아도 세금이 수천만 원 달라질 수 있습니다. 변수는 딱 세 개 — **순서, 시점, 명의**입니다. 다주택 처분은 '파는 기술'이 아니라 '설계'의 영역입니다.
+
+## 원리 1: 순서가 세금을 바꾼다
+
+- 조정대상지역 주택에는 다주택자 양도소득세 중과가 붙습니다(2주택 +20%p, 3주택 이상 +30%p). 수년간 유예되던 이 중과는 **2026년 5월 10일부터 부활**했습니다(계약 시점 등에 따른 경과 규정이 있으니 개별 확인 필요).
+- 그래서 처분 설계의 기본형은 이렇습니다: **양도차익이 작거나 중과 대상이 아닌 주택부터 팔아 주택 수를 줄이고**, 차익이 큰 핵심 주택은 낮은 세율 구간(예: 1세대 1주택 비과세 요건)을 만들어 마지막에 파는 것.
+
+## 원리 2: 시점을 분산하라
+
+양도소득세는 **같은 해에 판 자산의 이익을 합산해 누진세율**로 매깁니다. 두 채를 한 해에 팔면 이익이 합쳐져 더 높은 구간을 적용받을 수 있으므로, 급하지 않다면 **연도를 나눠 파는 것**이 기본기입니다. 보유·거주 기간에 따라 장기보유특별공제 등이 달라지므로, 몇 달 차이로 요건이 갈리는지도 함께 봐야 합니다.
+
+## 원리 3: 규칙은 계속 바뀐다
+
+2025년 10·15 대책처럼 조정대상지역 지정이 하루아침에 확대되기도 합니다. 규제지역 지정·해제는 곧 중과 여부의 변화입니다. 처분 계획은 한 번 세우고 끝이 아니라, **대책이 나올 때마다 다시 계산**해야 합니다.
+
+## 실행 순서
+
+1. 보유 자산 목록화 — 주택 수, 소재지의 규제지역 여부, 취득가·예상 양도가.
+2. 주택별 예상 세액 시뮬레이션 — 홈택스 모의 계산과 세무사 상담을 병행.
+3. 매도 순서와 연도 배치 결정.
+4. **계약 전 세무사 최종 확인** — 특례·경과 규정은 개인 상황에 따라 완전히 달라집니다.
+
+> 💡 **핵심**: 처분 설계 = 순서(주택 수 줄이기) × 시점(연도 분산·요건 충족) × 최신 규제 확인. 매물 내놓기 전에 세액 계산서가 먼저 있어야 합니다.$aix$,
+  $aix${"type":"steps","title":"다주택 처분 설계 절차","steps":[{"label":"자산 목록화","sublabel":"주택 수 · 규제지역 여부 · 예상 차익","icon":"clipboard"},{"label":"세액 시뮬레이션","sublabel":"홈택스 모의계산 + 세무사 상담","icon":"chart"},{"label":"순서 결정","sublabel":"차익 작은 것 먼저 → 핵심 주택은 마지막","icon":"filter"},{"label":"연도 분산","sublabel":"같은 해 매도 시 이익 합산 누진 주의","icon":"calendar"},{"label":"계약 전 최종 확인","sublabel":"중과 부활·규제지역 변동 반영","icon":"check"}],"caption":"2026년 5월 다주택 중과 부활 등 규칙은 계속 바뀝니다 — 계획은 살아있는 문서로."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e0dfc725-8277-7910-260d-961c8cd11993', '707ecfd4-e9d5-64f1-a453-e945bc375643', 'real-estate-advanced/gift-basics', 'gift-basics', '증여의 기초: 10년 단위로 설계하는 자산 이전',
+  $aix$자산 이전에서 가장 강력한 도구는 상품이 아니라 **시간**입니다. 증여세 공제가 10년마다 다시 차오르기 때문에, 일찍 시작한 사람과 몰아서 하는 사람의 세금은 크게 벌어집니다.
+
+## 공제의 구조: 관계별 × 10년
+
+증여받는 사람 기준으로, 같은 그룹에게서 받은 증여는 **10년간 합산**되고, 그 합계에서 관계별 공제가 적용됩니다(2026년 현재 기준 — 홈택스에서 최신 확인).
+
+- 배우자에게서: **6억 원**
+- 직계존속(부모·조부모)에게서 성인 자녀가: **5천만 원** (미성년은 2천만 원)
+- 기타 친족에게서: **1천만 원**
+- **혼인·출산 공제**: 혼인신고 전후 2년 등 요건을 갖추면 직계존속 증여에 **1억 원 추가** 공제(2024년 도입)
+
+공제를 넘는 금액에는 10%에서 50%까지의 누진세율이 적용됩니다.
+
+## 10년 합산의 의미
+
+10년은 '리셋 주기'입니다. 성인 자녀에게 올해 5천만 원을 증여하면, 다음 5천만 원 비과세 기회는 10년 뒤에 옵니다. 그래서 증여 설계의 기본형은 — **일찍 시작해서, 10년 주기로, 여러 수증자에게 나눠서**. 자녀·며느리·사위·손주는 각각 별도의 수증자이므로 공제도 각각 적용됩니다.
+
+부동산 증여라면 두 가지를 더 기억하세요.
+
+- 증여받는 쪽은 **취득세**를 별도로 부담합니다.
+- 대출이나 전세 보증금이 낀 집을 넘기는 **부담부증여**는 채무 부분이 양도로 취급되어 양도소득세가 발생합니다. 절세가 되는 경우도, 오히려 세금이 커지는 경우도 있어 반드시 사전 계산이 필요합니다.
+
+## 하지 말아야 할 것
+
+시세보다 훨씬 싸게 파는 '가족 간 저가 거래', 차용증 없는 부모 자금 — 국세청은 자금 흐름을 추적하며, 증여로 추정되면 가산세까지 붙습니다. **모든 가족 간 자산 이동은 세무사와 설계한 뒤 기록을 남기며** 실행하세요.
+
+> 💡 **핵심**: 증여 설계 = 관계별 공제 × 10년 리셋 × 수증자 분산. 오늘 시작하는 10년이 가장 싼 10년입니다.$aix$,
+  $aix${"type":"grid","title":"증여재산 공제 한도 (10년 합산 기준)","items":[{"label":"배우자","sublabel":"6억 원","icon":"handshake","tone":"primary"},{"label":"성인 자녀","sublabel":"5천만 원 (직계존속 증여)","icon":"user","tone":"primary"},{"label":"미성년 자녀","sublabel":"2천만 원","icon":"users","tone":"accent"},{"label":"기타 친족","sublabel":"1천만 원","icon":"home","tone":"muted"},{"label":"혼인·출산 공제","sublabel":"+1억 원 (요건 충족 시)","icon":"sparkles","tone":"success"},{"label":"10년마다 리셋","sublabel":"같은 그룹 증여는 10년 합산","icon":"refresh","tone":"warning"}],"caption":"2026년 기준 — 세법은 개정이 잦으니 실행 전 홈택스·세무사에서 최신 확인 필수."}$aix$::jsonb, null, 6, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b92cb2fe-5916-c834-90fc-2d487c9e39fa', '707ecfd4-e9d5-64f1-a453-e945bc375643', 'real-estate-advanced/inheritance-prep', 'inheritance-prep', '상속 대비의 기초: 미리 아는 사람만 준비할 수 있다',
+  $aix$상속은 준비할 수 없는 사건처럼 보이지만, 세금은 정반대입니다. **상속세야말로 10년 전부터 준비한 사람과 닥쳐서 처리한 사람의 차이가 가장 큰 세금**입니다.
+
+## 현행 구조: 유산 전체에 매긴다
+
+한국의 상속세는 현재 **유산세 방식** — 돌아가신 분(피상속인)이 남긴 재산 전체를 기준으로 세금을 계산한 뒤 상속인들이 나눠 부담합니다. 계산의 뼈대는 이렇습니다.
+
+1. 상속재산 집계 (부동산·금융자산 + 사망 전 10년 내 상속인에게 증여한 재산도 합산)
+2. 공제 적용 — **일괄공제 5억 원**, 배우자가 있으면 **배우자 상속공제 최소 5억 원**(실제 상속액에 따라 최대 30억 원 한도) 등
+3. 과세표준에 **10~50% 누진세율** 적용
+
+그래서 배우자가 있는 경우 **10억 원 정도까지는 상속세가 나오지 않는 사례가 많습니다.** 뒤집어 말하면, 서울 아파트 한 채 가격이 이 선을 넘는 시대에는 평범한 가정도 상속세 대상이 될 수 있다는 뜻입니다.
+
+참고로 정부는 상속인별로 받은 몫에 과세하는 **유산취득세 방식으로의 개편을 추진해 왔으나, 확정·시행 전**입니다(2025년 말 기준 중장기 과제로 연기). 제도 전환 여부에 따라 유불리가 달라지므로 큰 자산 이전 결정 전에는 최신 상황을 확인하세요.
+
+## 왜 '10년 전'인가
+
+- 사망 전 10년 이내에 상속인에게 증여한 재산은 상속재산에 **다시 합산**됩니다. 즉 임박한 증여는 절세 효과가 사라집니다. 앞 레슨의 10년 주기 증여가 상속 대비이기도 한 이유입니다.
+- 상속세는 원칙적으로 **현금 납부**입니다. 재산이 부동산에 몰려 있으면 세금 낼 현금이 없어 급매로 자산을 헐값에 파는 일이 생깁니다. 납부 재원(금융자산·보험 등) 계획이 필요합니다.
+
+## 지금 할 수 있는 준비 3가지
+
+1. **자산·부채 목록 정리** — 가족이 모르는 계좌·보험·채무가 분쟁의 씨앗입니다.
+2. **분배 의사의 문서화** — 유언장(자필 요건 주의) 또는 가족 간 사전 합의.
+3. **세무사와 시뮬레이션** — 예상 세액, 사전 증여 플랜, 납부 재원까지 한 번에.
+
+> 💡 **핵심**: 상속 대비 = 10년 단위 사전 증여 + 납부 재원 + 문서화. 가장 나쁜 계획은 "그때 가서 생각하기"입니다.$aix$,
+  $aix${"type":"stack","title":"상속세 계산의 구조 (현행 유산세 방식)","layers":[{"label":"상속재산 집계","sublabel":"전 재산 + 사망 전 10년 내 상속인 증여분 합산","icon":"layers","tone":"muted"},{"label":"공제 적용","sublabel":"일괄공제 5억 · 배우자공제 5억~30억 등","icon":"shield","tone":"primary"},{"label":"과세표준 × 세율","sublabel":"10~50% 누진","icon":"percent","tone":"accent"},{"label":"납부","sublabel":"원칙은 현금 — 납부 재원 계획 필수","icon":"banknote","tone":"warning"}],"caption":"유산취득세 개편 논의 진행 중(미확정) — 실행 전 홈택스·세무사에서 최신 확인."}$aix$::jsonb, null, 6, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e7a9eb84-108a-eece-b642-06d90989ca79', '707ecfd4-e9d5-64f1-a453-e945bc375643', 'real-estate-advanced/corporate-and-indirect', 'corporate-and-indirect', '투자 그릇 비교: 개인, 법인, 그리고 리츠',
+  $aix$같은 부동산이라도 **어떤 그릇에 담느냐**에 따라 세금과 리스크가 완전히 달라집니다. 개인 명의, 법인 명의, 그리고 직접 소유하지 않는 간접투자 — 세 그릇의 성격을 비교해 봅시다.
+
+## 법인: 주택 투자에는 무거운 그릇
+
+"법인으로 사면 절세된다"는 말은 **주택에 관한 한 대체로 옛말**입니다. 현행 세제는 법인의 주택 보유에 무겁게 설계되어 있습니다.
+
+- **취득**: 법인의 주택 취득세는 **12% 중과**가 기본입니다.
+- **보유**: 법인 보유 주택의 종합부동산세는 **기본공제 없이 최고세율**이 적용됩니다.
+- **양도**: 법인세에 더해 주택 양도차익에 **추가 20%p의 법인세**가 붙고, 남은 이익을 개인이 가져올 때 배당소득세를 또 냅니다.
+
+그래서 법인의 실익은 주로 **상가·토지·지식산업센터 등 주택 외 자산**, 소득 분산, 경비 처리, 장기 사업화 관점에서 검토됩니다. 법인 설립·유지 비용과 성실신고 부담도 있으므로, 설립 전에 세무사와 "법인이어야만 하는 이유"를 숫자로 확인하세요.
+
+## 리츠·부동산 펀드: 소유하지 않고 투자하기
+
+리츠는 여러 투자자의 돈으로 오피스·물류센터 등을 사서 임대 수익을 나누는 구조입니다.
+
+- **배당가능이익의 90% 이상을 의무 배당**하는 구조라 배당 중심의 투자입니다.
+- 커피 한 잔 값 단위로 상업용 부동산에 분산 투자할 수 있고, 상장리츠는 주식처럼 사고팔 수 있어 유동성이 좋습니다.
+- 대신 **주가 변동 리스크**가 있고, 리츠마다 담긴 자산·부채 구조가 천차만별입니다. 배당수익률 숫자만 보고 고르는 것은 위험합니다 — 국토교통부 리츠정보시스템과 한국리츠협회 공시에서 편입 자산·공실률·차입 구조를 확인하세요.
+
+## 선택의 기준
+
+부동산을 '몸으로 운영'할 시간과 역량이 있는가(개인·법인 직접 투자), 아니면 '지분으로 보유'할 것인가(간접투자). 정답은 없고, **본인의 규모·시간·세금 상황에 따른 조합**이 있을 뿐입니다. 특정 상품의 수익을 보장하는 이야기는 이 강의 어디에도 없다는 점을 기억하세요.
+
+> 💡 **핵심**: 법인 = 주택엔 무겁고 주택 외엔 검토 가치, 리츠 = 소액·분산·유동성 대신 시장 변동. 그릇 선택은 상품이 아니라 내 상황에서 출발합니다.$aix$,
+  $aix${"type":"compare","title":"투자 그릇 3종 비교","columns":[{"title":"개인 명의","icon":"user","tone":"muted","items":["1주택 비과세 등 개인 특례","다주택 시 중과 부담","직접 운영·명도 부담"]},{"title":"법인 명의","icon":"building","tone":"warning","items":["주택 취득세 12% 중과","종부세 공제 없음 · 양도 시 추가 과세","주택 외 자산·소득 분산엔 검토 여지"]},{"title":"리츠·펀드 (간접)","icon":"chart","tone":"primary","items":["소액 · 분산 · 높은 유동성","배당가능이익 90%+ 의무 배당","주가 변동 · 자산 구조 확인 필수"]}],"caption":"세제 수치는 2026년 기준 — 실행 전 세무사 확인. 어떤 그릇도 수익을 보장하지 않습니다."}$aix$::jsonb, null, 6, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '14a1348c-967b-f1a7-5607-238aa9eefce8', '707ecfd4-e9d5-64f1-a453-e945bc375643', 'real-estate-advanced/your-principles', 'your-principles', '총정리: 나만의 투자 원칙 세우기',
+  $aix$고급 과정의 마지막 레슨에서 다루는 것은 기법이 아니라 **원칙**입니다. 경매·정비사업·세금까지 온 당신에게 이제 필요한 것은 더 많은 정보가 아니라, 정보를 거르는 나만의 기준입니다.
+
+## 이 강의를 세 문장으로 압축하면
+
+- **경매**: 수익은 낙찰가가 아니라 권리분석에서 나온다. 인수 금액을 숫자로 못 쓰면 입찰하지 않는다.
+- **정비사업**: 부동산이 아니라 시간을 사는 것이다. 내가 견딜 수 있는 단계의 리스크만 산다.
+- **세금**: 벌고 나서 계산하는 것이 아니라, 사기 전에 설계하는 것이다.
+
+## 원칙을 만드는 루프
+
+투자 원칙은 한 번 쓰고 끝나는 게 아니라, 운동처럼 반복하며 다듬는 것입니다.
+
+1. **공부·검증** — 들은 정보는 공식 소스(대법원 법원경매정보, 온비드, 지자체 고시, 홈택스)로 반드시 재확인.
+2. **소액·저위험 실행** — 감당 가능한 규모로만. 레버리지는 최악의 시나리오(금리 상승·공실·지연)에서도 버틸 수준으로.
+3. **복기** — 성공이든 실패든 판단 근거를 기록. "왜 그렇게 판단했나"가 다음 판단의 재료입니다.
+4. **원칙 갱신** — 제도는 계속 바뀝니다(중과 부활, 규제지역 확대, 정비 제도 개편…). 원칙도 버전 업이 필요합니다.
+
+## 마지막 당부
+
+이 강의의 모든 내용은 **교육 목적의 원리 설명**입니다. 실제 입찰서 한 장, 계약서 한 장, 증여 한 건 앞에서는 반드시 **변호사·세무사·감정평가사 등 전문가의 확인**을 거치세요. 전문가 비용은 지출이 아니라 가장 확실한 보험입니다. 그리고 어떤 경우에도 — **잃지 않는 것이 버는 것보다 먼저**입니다.
+
+> 💡 **핵심**: 고급 투자자의 정의 = 더 많이 아는 사람이 아니라, 검증 → 소액 실행 → 복기 → 갱신의 루프를 멈추지 않는 사람입니다.$aix$,
+  $aix${"type":"cycle","title":"투자 원칙을 다듬는 루프","center":"잃지 않는 것이 먼저","nodes":[{"label":"공부·검증","sublabel":"공식 소스로 재확인","icon":"book"},{"label":"소액 실행","sublabel":"감당 가능한 리스크만","icon":"target"},{"label":"복기","sublabel":"판단 근거 기록","icon":"file-text"},{"label":"원칙 갱신","sublabel":"제도 변화 반영","icon":"refresh"}],"caption":"제도는 계속 바뀝니다 — 원칙도 버전 업하는 투자자가 오래 살아남습니다."}$aix$::jsonb, null, 5, 14
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
 commit;

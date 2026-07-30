@@ -60,6 +60,18 @@ import {
   Play,
   Smartphone,
   Monitor,
+  House,
+  Building2,
+  Landmark,
+  Scale,
+  Banknote,
+  Gavel,
+  MapPin,
+  Percent,
+  Wallet,
+  Handshake,
+  FilePen,
+  Receipt,
   type LucideIcon,
 } from "lucide-react";
 import type { IconKey } from "@/content/types";
@@ -126,6 +138,18 @@ export const ICON_MAP: Record<IconKey, LucideIcon> = {
   play: Play,
   smartphone: Smartphone,
   monitor: Monitor,
+  home: House,
+  building: Building2,
+  landmark: Landmark,
+  scale: Scale,
+  banknote: Banknote,
+  gavel: Gavel,
+  "map-pin": MapPin,
+  percent: Percent,
+  wallet: Wallet,
+  handshake: Handshake,
+  "file-pen": FilePen,
+  receipt: Receipt,
 };
 
 export function ContentIcon({
