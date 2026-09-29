@@ -22,6 +22,8 @@
 - 마크다운에서 `**"따옴표 포함 볼드"**한글` 패턴은 CommonMark 규칙상 볼드가 풀리지만, 렌더러(`lesson-markdown.tsx`의 `fixBoldQuotes`)가 자동 보정하므로 콘텐츠는 자연스럽게 쓰면 된다. 단, 이 전처리를 제거하지 말 것.
 - `IconKey`는 `src/content/types.ts`에 정의된 값만 사용. lucide 아이콘을 임의로 추가하려면 `icon-map.tsx`에 먼저 등록.
 - 강의 추가 절차: ① `courses/새강의.ts` 작성 → ② `src/content/index.ts` COURSES에 등록 → ③ `npm run seed:generate` → ④ 빌드 확인.
+- **카테고리 추가 시 갱신할 곳(6곳)**: ① `types.ts`의 `Category` 유니온 + `CATEGORY_META` ② `course-explorer.tsx` TABS ③ `navbar.tsx` ④ `footer.tsx` ⑤ **`app/(site)/page.tsx`의 `CATEGORIES` 배열(홈 섹션 — 빠뜨리면 홈에 노출되지 않음, 부동산 카테고리가 실제로 누락됐던 사례)** ⑥ `supabase/migrations/`에 category check 제약을 넓히는 새 마이그레이션 추가(0002 참고).
+- **용어사전 추가 시**: 한글 키는 부분 문자열로도 매칭되므로(영문만 단어 경계 검사) "태그"·"볼륨"·"차트"·"이미지"·"에이전트"처럼 다른 도메인에서 다른 뜻으로 쓰이는 일반 명사는 단독 등록하지 말고 "이미지 태그"·"Docker 볼륨"·"Helm 차트"·"Datadog Agent"처럼 한정어를 붙여 등록하고, 콘텐츠도 그 표기로 쓴다. 동음이의어가 불가피하면 기존 정의에 병합(노드·오케스트레이션·트레이스 사례).
 - **데모 작성 시**: 액션의 target은 반드시 앱 요소 id와 일치해야 한다 (오타는 타입체크로 못 잡고 데모가 조용히 깨짐) — 작성 후 `npm run content:check`로 검증 필수. 스타일 기준은 loop-engineering.ts의 demo 2곳 (caption ①②③ 단계 안내, 액션 15~25개, type 텍스트 40자 이내).
 - **초보자 눈높이**: 긴 문장은 쪼개고, 핵심 개념엔 일상 비유 1개, 실습은 버튼 위치까지 구체적으로 + "여기서 막힌다면" 안내. `src/content/glossary.ts`에 등재된 용어는 자동 툴팁이 뜨므로 본문에서 재설명하지 말 것. 등재 안 된 어려운 용어는 첫 등장에 괄호 한 줄 풀이. **본문 표기와 용어사전 표기를 일치**시켜야 툴팁이 걸린다 (예: '환각' 대신 '할루시네이션').
 

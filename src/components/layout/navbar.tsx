@@ -24,6 +24,7 @@ import { getSupabaseBrowser } from "@/lib/supabase/client";
 const NAV_LINKS = [
   { href: "/courses", label: "강의 탐색" },
   { href: "/courses?category=dev", label: "AI 개발" },
+  { href: "/courses?category=devops", label: "인프라·DevOps" },
   { href: "/courses?category=creative", label: "크리에이티브" },
   { href: "/courses?category=business", label: "비즈니스·커리어" },
   { href: "/courses?category=realestate", label: "부동산" },

@@ -6,7 +6,7 @@ import { CATEGORY_META, countLessons, totalMinutes, type Category } from "@/cont
 import { CourseCard } from "@/components/course/course-card";
 import { IllustrationView } from "@/components/illustrations/illustration";
 
-const CATEGORIES: Category[] = ["dev", "creative", "business"];
+const CATEGORIES: Category[] = ["dev", "devops", "creative", "business", "realestate"];
 
 export default function HomePage() {
   const totalLessons = COURSES.reduce((n, c) => n + countLessons(c), 0);

@@ -13,7 +13,7 @@ import type { DemoScene } from "./demo-types";
 
 export type * from "./demo-types";
 
-export type Category = "dev" | "creative" | "business" | "realestate";
+export type Category = "dev" | "devops" | "creative" | "business" | "realestate";
 
 export type Level = "beginner" | "intermediate" | "advanced";
 
@@ -91,7 +91,20 @@ export type IconKey =
   | "wallet"
   | "handshake"
   | "file-pen"
-  | "receipt";
+  | "receipt"
+  | "package"
+  | "boxes"
+  | "container"
+  | "ship"
+  | "activity"
+  | "bell"
+  | "network"
+  | "hard-drive"
+  | "scaling"
+  | "siren"
+  | "bug"
+  | "route"
+  | "timer";
 
 /** 노드/레이어/컬럼의 시각적 강조 톤 */
 export type Tone = "primary" | "accent" | "success" | "warning" | "muted";
@@ -250,6 +263,10 @@ export const CATEGORY_META: Record<
   dev: {
     label: "AI 개발",
     description: "하네스, 루프 엔지니어링, RAG, AI 코딩 툴",
+  },
+  devops: {
+    label: "인프라 & DevOps",
+    description: "Docker 컨테이너, Kubernetes 오케스트레이션, Datadog 모니터링 — 서비스를 배포하고 운영하는 기술",
   },
   creative: {
     label: "크리에이티브",

@@ -2244,6 +2244,3388 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
   illustration = excluded.illustration, demo = excluded.demo,
   minutes = excluded.minutes, order_index = excluded.order_index;
 
+-- 강의: Docker 입문: 컨테이너로 어디서나 똑같이 실행하기
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '9922c998-cbbd-b573-5530-3b429ddb5ae4', 'docker-basics', 'Docker 입문: 컨테이너로 어디서나 똑같이 실행하기', $aix$개발자의 첫 배포는 대부분 '내 컴퓨터에서는 되는데 서버에서는 안 되는' 경험으로 시작합니다. Docker는 프로그램과 실행 환경을 통째로 상자에 담아 어디서나 똑같이 실행하게 해 주는 도구입니다. 이 강의는 리눅스 지식이 없어도 따라올 수 있게, 컨테이너 개념 → Docker Desktop 설치 → 이미지와 컨테이너 다루기 → Dockerfile로 나만의 이미지 만들기 → Docker Compose로 앱+DB 함께 띄우기 → 레지스트리에 공유하기까지를 실제 명령어와 화면 데모로 안내합니다. 마지막에는 초보자가 반드시 만나는 에러 8개의 해결법을 사전처럼 정리했습니다.$aix$,
+  null, 'devops', 'beginner', array['Docker', '컨테이너', 'Dockerfile', 'Docker Compose', 'DevOps 입문']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '676d915e-7eb6-8e8b-bb9b-f1ab38836871', '9922c998-cbbd-b573-5530-3b429ddb5ae4', 'container-concepts', '컨테이너와 첫 만남', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '166410ed-b52d-366d-816d-f4a9b5e51dfd', '9922c998-cbbd-b573-5530-3b429ddb5ae4', 'images-and-containers', '이미지와 컨테이너 다루기', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '0b3a30ed-937b-d6c5-f7f4-b7be38b2fab7', '9922c998-cbbd-b573-5530-3b429ddb5ae4', 'build-your-image', '나만의 이미지 만들기', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '858e0847-88ae-1a6c-4985-c36f8e79e551', '9922c998-cbbd-b573-5530-3b429ddb5ae4', 'compose-and-share', '여러 컨테이너와 공유', 3
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c829d9a8-2c56-e208-0756-78b52cd193c6', '676d915e-7eb6-8e8b-bb9b-f1ab38836871', 'docker-basics/why-containers', 'why-containers', '왜 컨테이너인가: "제 컴퓨터에선 되는데요"의 종말',
+  $aix$개발자가 가장 많이 하는 변명이자 가장 많이 듣는 말이 있습니다. **"제 컴퓨터에서는 되는데요."** 컨테이너는 이 문장을 역사 속으로 보내기 위해 태어났습니다.
+
+## 왜 내 컴퓨터에서만 될까
+
+프로그램은 혼자 돌지 않습니다. 언어 런타임 버전, 라이브러리, 운영체제 설정, 환경변수가 모두 맞아야 합니다.
+
+- 내 노트북에는 Node 24가, 서버에는 Node 18이 깔려 있습니다.
+- 팀원은 Windows, 나는 macOS, 서버는 리눅스입니다.
+- 신입이 들어오면 개발 환경 세팅에만 하루가 갑니다.
+
+이 차이 하나하나가 "내 컴퓨터에서만 되는" 이유입니다.
+
+## 컨테이너: 프로그램을 실행 환경째로 포장한다
+
+해상 운송의 **해상 컨테이너**를 떠올려 보세요. 안에 무엇이 들었든 규격이 같아서, 어느 배·트럭·항구에서도 같은 방식으로 다룰 수 있습니다.
+
+소프트웨어의 컨테이너도 같습니다. 프로그램 + 라이브러리 + 설정을 **컨테이너 이미지**라는 규격 상자에 담습니다. 그 상자는 노트북, 팀원 컴퓨터, 클라우드 서버 어디서든 **똑같이** 실행됩니다. Docker는 이 상자를 만들고 실행하는 가장 널리 쓰이는 도구입니다.
+
+## 이 강의의 로드맵
+
+1. **컨테이너와 첫 만남** — 개념, 구조, 설치 (모듈 1)
+2. **이미지와 컨테이너 다루기** — run·ps·logs·exec, 포트·환경변수·Docker 볼륨 (모듈 2)
+3. **나만의 이미지 만들기** — Dockerfile, 빌드, 이미지 태그, 캐시 (모듈 3)
+4. **여러 컨테이너와 공유** — Docker Compose, 레지스트리, 에러 사전 (모듈 4)
+
+리눅스를 몰라도 괜찮습니다. 명령어는 매번 한 줄씩 해부해 드립니다.
+
+> 💡 **핵심**: 컨테이너는 "프로그램"이 아니라 **"프로그램 + 실행 환경"**을 포장합니다. 그래서 어디서나 똑같이 돕니다.$aix$,
+  $aix${"type":"compare","title":"환경 차이: 컨테이너 전과 후","columns":[{"title":"컨테이너 이전","icon":"alert","tone":"warning","items":["컴퓨터마다 런타임 버전이 다름","\"설치 가이드\" 문서를 사람이 따라감","신입 온보딩에 하루 소요","서버 배포 때마다 새로운 에러"]},{"title":"컨테이너 이후","icon":"container","tone":"primary","items":["이미지 하나에 환경이 통째로 들어감","docker run 한 줄로 실행","노트북·팀원·서버가 같은 결과","\"내 컴퓨터에선 되는데\"가 사라짐"]}],"caption":"차이를 없애는 방법은 환경을 맞추는 게 아니라 환경을 함께 포장하는 것입니다."}$aix$::jsonb, null, 4, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6fed26d4-c214-3820-a9c4-c6014b06c7f4', '676d915e-7eb6-8e8b-bb9b-f1ab38836871', 'docker-basics/container-vs-vm', 'container-vs-vm', '컨테이너 vs 가상머신: 무엇이 다른가',
+  $aix$"격리된 환경"이라면 가상머신도 있지 않나요? 맞습니다. 그런데 컨테이너는 가상머신보다 **수십 배 가볍고 몇 초 만에 켜집니다.** 그 차이는 무엇을 공유하느냐에서 나옵니다.
+
+## 가상머신: 컴퓨터 안의 완전한 컴퓨터
+
+가상머신은 운영체제를 **통째로** 하나 더 올립니다. 그래서 무겁습니다.
+
+- 이미지 크기가 수 GB, 부팅에 수십 초~수 분
+- 가상머신마다 운영체제 커널이 따로 돌아 메모리를 많이 씀
+- 대신 격리가 아주 강함 (다른 운영체제도 올릴 수 있음)
+
+## 컨테이너: 커널은 공유, 나머지만 격리
+
+컨테이너는 호스트 운영체제의 **커널을 함께 쓰고**, 프로그램과 라이브러리 층만 따로 갖습니다.
+
+- 이미지 크기가 수십~수백 MB, 시작이 보통 1초 안팎
+- 한 컴퓨터에 수십 개를 띄워도 부담이 적음
+- 격리는 가상머신보다 약하지만 대부분의 앱 배포에는 충분
+
+**아파트 단지**를 떠올리면 쉽습니다. 가상머신은 각자 땅을 파고 기초·배관·전기까지 다 놓은 단독주택입니다. 컨테이너는 한 건물의 구조(커널)를 공유하면서 세대별로 벽과 현관문(격리)만 따로 갖는 아파트입니다. 짓기 빠르고, 같은 땅에 훨씬 많이 들어갑니다.
+
+## 그래서 둘은 경쟁자가 아니라 동료
+
+실제 클라우드 서버는 대부분 가상머신 위에서 컨테이너를 돌립니다. macOS·Windows용 Docker Desktop도 내부에 작은 리눅스 가상머신을 두고, 그 안에서 컨테이너를 실행합니다. 컨테이너는 리눅스 커널이 필요하기 때문입니다.
+
+> 💡 **핵심**: 가상머신은 **운영체제를 통째로** 격리하고, 컨테이너는 **커널을 공유하며 프로그램만** 격리합니다. 그래서 가볍고 빠릅니다.$aix$,
+  $aix${"type":"stack","title":"컨테이너가 서 있는 층","layers":[{"label":"컨테이너 A · B · C","sublabel":"각자 프로그램 + 라이브러리만 따로","icon":"container","tone":"primary"},{"label":"Docker (컨테이너 런타임)","sublabel":"컨테이너를 만들고 격리하고 실행","icon":"settings","tone":"accent"},{"label":"호스트 운영체제 커널","sublabel":"모든 컨테이너가 공유 — 가상머신은 이 층을 각자 가짐","icon":"cpu","tone":"muted"},{"label":"하드웨어","sublabel":"CPU · 메모리 · 디스크","icon":"server","tone":"muted"}],"caption":"커널 층을 공유하기 때문에 컨테이너는 가상머신보다 수십 배 가볍습니다."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8a177eeb-761e-ebd3-b610-025dbdff7c19', '676d915e-7eb6-8e8b-bb9b-f1ab38836871', 'docker-basics/docker-architecture', 'docker-architecture', 'Docker의 구조: 클라이언트·데몬·레지스트리',
+  $aix$`docker run`을 입력하면 뒤에서 무슨 일이 벌어질까요? 세 명의 등장인물만 알면 Docker의 모든 명령이 읽힙니다.
+
+## 세 등장인물
+
+- **Docker 클라이언트(`docker` CLI)** — 터미널에 치는 명령어. 직접 컨테이너를 만들지 않고 데몬에게 **요청**만 보냅니다.
+- **Docker 데몬(`dockerd`)** — 항상 켜져 있는 일꾼. 이미지 내려받기, 컨테이너 생성·실행·삭제를 **실제로 수행**합니다.
+- **레지스트리** — 이미지를 보관하는 창고. 기본은 Docker Hub, GHCR 등도 있습니다.
+
+클라이언트와 데몬은 REST API로 대화합니다. 같은 컴퓨터에서는 `/var/run/docker.sock`이라는 유닉스 소켓(파일처럼 보이는 통신 통로)을 씁니다. 나중에 만나는 "permission denied ... docker.sock" 에러가 이 통로의 권한 문제입니다.
+
+**식당으로 보면** 손님(클라이언트)이 주문(명령)을 넣으면 주방(데몬)이 요리(컨테이너)를 만듭니다. 재료(이미지)가 없으면 식자재 창고(레지스트리)에서 가져옵니다.
+
+## `docker run hello-world` 한 줄의 여정
+
+1. 클라이언트가 데몬에게 "hello-world 이미지로 컨테이너 실행" 요청
+2. 로컬에 이미지가 없으면 데몬이 Docker Hub에서 내려받음(pull)
+3. 데몬이 컨테이너를 만들고(create) 실행(start)
+4. 출력이 데몬 → 클라이언트 → 터미널로 흘러옴
+
+## Docker Desktop은 무엇인가
+
+macOS·Windows에는 리눅스 커널이 없으므로, Docker Desktop이 작은 리눅스 가상머신 안에서 데몬을 돌립니다. CLI·Docker Compose·빌드 도구·Dashboard를 한 묶음으로 제공합니다. 리눅스 서버는 Docker Engine(데몬 + CLI)만 설치해도 됩니다.
+
+> 💡 **핵심**: `docker` 명령은 **요청**, 데몬은 **실행**, 레지스트리는 **보관**. 에러가 나면 셋 중 어디서 막혔는지부터 보세요.$aix$,
+  $aix${"type":"flow","title":"docker run 한 줄이 지나가는 길","nodes":[{"label":"docker CLI (클라이언트)","sublabel":"터미널에서 명령 입력","icon":"terminal","tone":"primary"},{"label":"dockerd (데몬)","sublabel":"REST API로 요청 수신 · 실제 작업 수행","icon":"settings","tone":"accent","edgeLabel":"/var/run/docker.sock"},{"label":"레지스트리 (Docker Hub · GHCR)","sublabel":"로컬에 이미지가 없으면 pull","icon":"cloud","tone":"muted","edgeLabel":"이미지 없을 때만"},{"label":"컨테이너 실행","sublabel":"출력은 데몬 → CLI → 터미널","icon":"container","tone":"success"}],"caption":"명령을 치는 곳과 컨테이너가 실제로 도는 곳은 다릅니다 — 그래서 원격 서버도 같은 명령으로 다룰 수 있습니다."}$aix$::jsonb, null, 5, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f1073043-16e2-bc18-96c4-907204d51298', '676d915e-7eb6-8e8b-bb9b-f1ab38836871', 'docker-basics/install-docker', 'install-docker', '설치하기: Docker Desktop과 라이선스 확인',
+  $aix$이제 손을 움직일 시간입니다. 설치는 10분이면 끝나지만, 회사에서 쓸 거라면 **라이선스 조건**부터 확인하세요.
+
+## 라이선스: 나는 무료인가?
+
+Docker Desktop이 무료(Docker Personal)인 경우:
+
+- 개인 사용, 교육, 비영리 오픈소스 프로젝트
+- **직원 250명 미만 그리고 연매출 1천만 달러 미만**인 소기업
+
+**하나라도 넘는 회사**의 업무용은 유료(Pro/Team/Business)입니다. 정부기관은 무료 조건이 없습니다. 리눅스용 **Docker Engine은 오픈소스라 누구나 무료**.
+
+## 설치 절차
+
+- **macOS**: 칩(Apple silicon / Intel)에 맞는 Docker.dmg 다운로드 → Docker 아이콘을 Applications로 드래그 → 실행.
+- **Windows**: Docker Desktop Installer.exe 실행 → **WSL 2** 백엔드(기본값) → 시작 메뉴에서 실행. Windows 10/11 64비트·BIOS 가상화 활성화 필요.
+- **리눅스**: 공식 문서대로 Docker의 apt/dnf 저장소를 등록해 Docker Engine 설치(배포판 기본 패키지는 오래됨).
+
+첫 실행 때 **Subscription Service Agreement(구독 서비스 약관)** 동의가 필수, 로그인은 선택입니다.
+
+## 설치 확인 두 줄
+
+```bash
+docker version          # Client와 Server 두 블록이 모두 나오면 성공
+docker run hello-world  # "Hello from Docker!"가 보이면 끝
+```
+
+Server 블록이 없으면 데몬이 아직 안 켜진 것이니 고래 아이콘이 안정될 때까지 기다리세요.
+
+**여기서 막힌다면**
+
+- **`Cannot connect to the Docker daemon ... Is the docker daemon running?`** → Docker Desktop이 꺼져 있음. 켜고 재시도.
+- **Windows에서 WSL 관련 오류** → 관리자 PowerShell에서 `wsl --update` 후 재부팅.
+- **리눅스에서 `permission denied ... docker.sock`** → `sudo usermod -aG docker $USER` 후 재로그인.
+
+> 💡 **핵심**: 회사에서 쓰면 **250명·1천만 달러** 두 기준을 먼저 확인하세요. 설치 검증은 `docker version` + `docker run hello-world` 두 줄입니다.$aix$,
+  $aix${"type":"steps","title":"설치부터 첫 실행까지","steps":[{"label":"라이선스 확인","sublabel":"개인·교육·소기업(250명·$10M 미만) 무료","icon":"clipboard"},{"label":"설치 파일 내려받기","sublabel":"macOS 칩 종류 / Windows WSL 2","icon":"download"},{"label":"첫 실행과 약관 동의","sublabel":"Subscription Service Agreement","icon":"check"},{"label":"docker version","sublabel":"Client + Server 블록 확인","icon":"terminal"},{"label":"docker run hello-world","sublabel":"\"Hello from Docker!\"","icon":"rocket"}],"caption":"Server 블록이 보이는 순간부터 여러분의 컴퓨터는 컨테이너를 돌릴 준비가 된 것입니다."}$aix$::jsonb, $aix${"title":"터미널에서 설치 확인 따라하기","app":{"kind":"code-editor","windowTitle":"터미널 — Docker 설치 확인","files":[{"id":"f-check","name":"설치-체크리스트.md","active":true},{"id":"f-notes","name":"메모.md"}],"code":[{"id":"c-title","text":"# Docker 설치 체크리스트"},{"id":"c-1","text":"- [x] 라이선스 확인 (개인 학습용 → 무료)"},{"id":"c-2","text":"- [x] Docker Desktop 설치 후 약관 동의"},{"id":"c-3","text":"- [ ] docker version 으로 Client·Server 확인","tone":"comment"},{"id":"c-4","text":"- [ ] docker run hello-world 로 첫 컨테이너 실행","tone":"comment"},{"id":"c-5","text":"- [x] docker version 으로 Client·Server 확인","tone":"add","hidden":true},{"id":"c-6","text":"- [x] docker run hello-world 로 첫 컨테이너 실행","tone":"add","hidden":true}],"terminal":[{"id":"t-1","text":"docker version","tone":"cmd","hidden":true},{"id":"t-2","text":"Client:","tone":"out","hidden":true},{"id":"t-3","text":" Version:           29.8.0   OS/Arch: darwin/arm64","tone":"out","hidden":true},{"id":"t-5","text":"Server: Docker Desktop","tone":"out","hidden":true},{"id":"t-7","text":" Engine:  Version: 29.8.0","tone":"ok","hidden":true},{"id":"t-8","text":"docker run hello-world","tone":"cmd","hidden":true},{"id":"t-9","text":"Unable to find image 'hello-world:latest' locally","tone":"out","hidden":true},{"id":"t-11","text":"Status: Downloaded newer image for hello-world:latest","tone":"out","hidden":true},{"id":"t-12","text":"Hello from Docker!","tone":"ok","hidden":true},{"id":"t-13","text":"This message shows that your installation appears to be working correctly.","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 먼저 클라이언트와 데몬이 모두 살아 있는지 확인합니다"},{"t":"type","target":"t-1","text":"docker version"},{"t":"reveal","target":"t-2"},{"t":"reveal","target":"t-3"},{"t":"caption","text":"② Server 블록이 보이면 데몬이 켜진 것입니다"},{"t":"reveal","target":"t-5"},{"t":"reveal","target":"t-7"},{"t":"move","target":"t-7"},{"t":"caption","text":"③ 첫 컨테이너 — 이미지가 없으면 자동으로 내려받습니다"},{"t":"type","target":"t-8","text":"docker run hello-world"},{"t":"reveal","target":"t-9"},{"t":"reveal","target":"t-11"},{"t":"caption","text":"④ 컨테이너가 실행되어 인사말을 출력합니다"},{"t":"reveal","target":"t-12"},{"t":"reveal","target":"t-13"},{"t":"move","target":"t-12"},{"t":"caption","text":"⑤ 체크리스트를 완료 표시합니다"},{"t":"move","target":"c-3"},{"t":"click"},{"t":"hide","target":"c-3"},{"t":"hide","target":"c-4"},{"t":"type","target":"c-5","text":"- [x] docker version 으로 Client·Server 확인"},{"t":"type","target":"c-6","text":"- [x] docker run hello-world 로 첫 컨테이너 실행"},{"t":"caption","text":"✅ 설치 완료 — 이제 컨테이너를 띄울 준비가 되었습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8c515f98-d5d4-fb2d-20e0-edabd10a911e', '166410ed-b52d-366d-816d-f4a9b5e51dfd', 'docker-basics/first-run', 'first-run', '첫 컨테이너 실행: docker run 한 줄 해부',
+  $aix$앞으로 여러분이 가장 많이 칠 명령은 `docker run`입니다. 이 한 줄을 **주문서** 읽듯 해부하면 Docker의 절반은 끝납니다.
+
+## 명령의 뼈대
+
+```bash
+docker run [옵션] 이미지[:태그] [컨테이너 안에서 실행할 명령]
+```
+
+`docker run`은 사실 세 가지 일을 한 번에 합니다. 이미지가 없으면 **내려받고(pull)**, 컨테이너를 **만들고(create)**, **시작(start)**합니다.
+
+## 자주 쓰는 옵션 7개
+
+- `-d` — 백그라운드로 실행(detach). 터미널을 점유하지 않습니다. 웹 서버·DB는 거의 항상 `-d`.
+- `-p 8080:80` — 포트 매핑. **내 컴퓨터 8080 → 컨테이너 80**. 순서를 기억하세요: 바깥:안.
+- `-e KEY=value` — 환경변수 주입. 비밀번호·모드 설정 등.
+- `-v 이름:/경로` — Docker 볼륨 연결. 데이터를 컨테이너 밖에 보존.
+- `--name web` — 컨테이너에 이름 붙이기. 안 붙이면 `sleepy_einstein` 같은 랜덤 이름이 붙습니다.
+- `--rm` — 컨테이너가 멈추면 자동 삭제. 일회성 실험에 유용.
+- `-it` — 대화형 터미널(`-i` 입력 유지 + `-t` 터미널 할당). 컨테이너 안에 "들어가서" 셸을 쓸 때.
+
+## 직접 해 보기
+
+```bash
+docker run --rm -it alpine sh    # 초경량 리눅스에 들어가 봅니다
+cat /etc/os-release              # 컨테이너 안: Alpine Linux가 보임
+exit                             # 나오면 --rm 덕분에 컨테이너가 사라짐
+```
+
+`alpine`은 몇 MB짜리 초경량 이미지입니다. 첫 실행만 내려받느라 몇 초 걸립니다.
+
+**여기서 막힌다면**
+
+- **명령이 끝났는데 컨테이너가 계속 목록에 남는다** → `--rm`을 안 붙였습니다. `docker ps -a`로 확인하고 `docker rm 이름`으로 지우세요.
+- **`-p 80:80`이 `permission denied` 또는 이미 사용 중이라 실패** → 1024 미만 포트는 권한이 필요하거나 이미 쓰는 중일 수 있습니다. `-p 8080:80`처럼 높은 번호로.
+
+> 💡 **핵심**: `docker run` = pull + create + start. 옵션은 **`-d -p -e -v --name --rm -it`** 7개만 알면 입문 단계 명령의 90%를 읽을 수 있습니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"docker run — 첫 컨테이너","lines":[{"text":"docker run --rm -it alpine sh","tone":"cmd"},{"text":"Unable to find image 'alpine:latest' locally","tone":"dim"},{"text":"latest: Pulling from library/alpine","tone":"dim"},{"text":"Status: Downloaded newer image for alpine:latest","tone":"out"},{"text":"/ # cat /etc/os-release","tone":"cmd"},{"text":"NAME=\"Alpine Linux\"","tone":"ok"},{"text":"ID=alpine","tone":"out"},{"text":"/ # exit","tone":"cmd"},{"text":"# --rm 덕분에 컨테이너는 자동 삭제됨","tone":"comment"},{"text":"docker ps -a","tone":"cmd"},{"text":"CONTAINER ID   IMAGE   COMMAND   CREATED   STATUS   PORTS   NAMES","tone":"dim"}],"caption":"프롬프트가 '/ #'로 바뀌는 순간, 여러분은 내 컴퓨터가 아닌 컨테이너 안에 있습니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6f718504-90e4-977a-e940-69400cf597ea', '166410ed-b52d-366d-816d-f4a9b5e51dfd', 'docker-basics/images-and-layers', 'images-and-layers', '이미지와 레이어: 왜 두 번째 pull은 빠른가',
+  $aix$1GB짜리 이미지를 내려받았는데, 비슷한 다른 이미지는 몇 초 만에 끝납니다. 비밀은 이미지가 **한 덩어리가 아니라 층(레이어)으로 쌓여 있다**는 데 있습니다.
+
+## 이미지와 컨테이너의 관계
+
+- **이미지**: 읽기 전용 설계도. 한 번 만들면 바뀌지 않습니다.
+- **컨테이너**: 그 설계도로 찍어낸 **실행 중인 인스턴스**. 하나의 이미지로 컨테이너를 100개 만들 수 있습니다.
+
+클래스와 객체, 붕어빵 틀과 붕어빵 — 어느 비유든 좋습니다.
+
+## 이미지는 층으로 쌓인다
+
+이미지 레이어는 **투명 OHP 필름**을 겹쳐 놓은 것과 같습니다. 맨 아래 필름에 운영체제 파일, 그 위 필름에 Node 런타임, 그 위에 내 앱 코드. 위에서 내려다보면 하나의 그림(파일 시스템)으로 보입니다.
+
+- 각 층은 읽기 전용이고, 내용의 해시값으로 식별됩니다.
+- **같은 층은 한 번만 저장**합니다. `node:24-alpine`을 쓰는 이미지가 10개라도 Node 층은 디스크에 하나뿐입니다.
+- 그래서 `docker pull` 출력에 `Already exists`(이미 있음)와 `Pull complete`(새로 받음)가 섞여 나옵니다.
+
+## 컨테이너가 쓰는 마지막 한 장
+
+컨테이너를 시작하면 Docker가 이미지 위에 **쓰기 가능한 얇은 층**을 한 장 더 올립니다. 컨테이너 안에서 파일을 만들거나 고치면 이 층에만 기록됩니다. 그래서 컨테이너를 지우면 그 변경은 사라지고, 이미지는 그대로입니다. 데이터를 남기려면 다음 다음 레슨의 Docker 볼륨이 필요합니다.
+
+**직접 확인해 보기**
+
+```bash
+docker image ls                  # REPOSITORY  TAG  IMAGE ID  CREATED  SIZE
+docker image history alpine      # 층이 어떤 명령으로 만들어졌는지
+```
+
+> 💡 **핵심**: 이미지 = 읽기 전용 층들의 겹침, 컨테이너 = 그 위에 올린 **쓰기용 한 장**. 같은 층은 한 번만 받으니 두 번째 pull이 빠릅니다.$aix$,
+  $aix${"type":"stack","title":"이미지 레이어와 컨테이너 층","layers":[{"label":"컨테이너 쓰기 층 (읽기·쓰기)","sublabel":"실행 중 생긴 변경 — 컨테이너 삭제 시 사라짐","icon":"file-pen","tone":"warning"},{"label":"내 앱 코드 층","sublabel":"COPY . .  — 자주 바뀜","icon":"code","tone":"primary"},{"label":"의존성 층","sublabel":"RUN npm install — 가끔 바뀜","icon":"package","tone":"accent"},{"label":"베이스 이미지 층","sublabel":"node:24-alpine — 거의 안 바뀜, 여러 이미지가 공유","icon":"layers","tone":"muted"}],"caption":"아래 층은 공유되고 위 층만 바뀝니다 — 그래서 저장 공간도, 내려받는 시간도 아낍니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '32ae2ae1-408a-19b1-96f0-198f65598ee1', '166410ed-b52d-366d-816d-f4a9b5e51dfd', 'docker-basics/container-lifecycle', 'container-lifecycle', '컨테이너 생명주기: ps·stop·rm·logs·exec',
+  $aix$컨테이너는 켜고 끄고 지우는 물건입니다. 카페처럼 **개점 → 영업 → 마감 → 폐점** 흐름이 있고, 단계마다 명령이 붙습니다.
+
+## 상태와 명령
+
+- **Created** — `docker create`로 만들었지만 아직 시작 안 함(`run`은 자동 통과)
+- **Up(Running)** — `docker run` / `docker start`로 실행 중
+- **Exited** — `docker stop`으로 멈춤. 파일·설정은 남아 `docker start 이름`으로 되살림
+- **삭제** — `docker rm 이름`. 쓰기 층도 함께 사라짐
+
+`docker stop`은 정리 신호(SIGTERM)를 보내고 **10초** 안에 안 끝나면 강제 종료(SIGKILL)합니다. 실행 중인 컨테이너는 `rm`이 거부되니 `stop` 후 `rm`, 급하면 `docker rm -f`.
+
+## 들여다보는 명령 세 가지
+
+- `docker ps` — 실행 중 목록. `-a`는 멈춘 것까지. 컬럼은 CONTAINER ID · IMAGE · COMMAND · CREATED · STATUS · PORTS · NAMES.
+- `docker logs web` — 표준 출력. `-f`로 실시간, `--tail 50`으로 마지막 50줄.
+- `docker exec -it web sh` — 컨테이너 **안에서** 셸 실행. 안을 직접 확인할 때.
+
+## 따라 하기
+
+```bash
+docker run -d -p 8080:80 --name web nginx   # 웹 서버 개점
+docker ps                                   # STATUS: Up ...
+docker logs --tail 5 web                    # 시작 로그 확인
+docker exec -it web sh                      # 안으로 들어가기 → exit로 나옴
+docker stop web && docker rm web            # 마감 후 폐점
+```
+
+`http://localhost:8080`을 열면 "Welcome to nginx!"가 보입니다.
+
+**여기서 막힌다면**
+
+- **`Conflict. The container name "/web" is already in use`** → 같은 이름이 이미 있습니다. `docker rm -f web` 또는 다른 이름.
+- **`docker exec`에서 `bash`가 없다고 나옴** → Alpine 계열은 bash가 없습니다. `sh`를 쓰세요.
+
+> 💡 **핵심**: 컨테이너 문제의 첫 진단 세트는 `ps`(살아 있나) → `logs`(뭐라고 말하나) → `exec`(안에 들어가 보기) 순서입니다.$aix$,
+  $aix${"type":"cycle","title":"컨테이너 생명주기","center":"docker ps 로 현재 상태 확인","nodes":[{"label":"Created","sublabel":"docker create / run","icon":"package"},{"label":"Up (실행 중)","sublabel":"docker start · logs · exec","icon":"play"},{"label":"Exited (멈춤)","sublabel":"docker stop (SIGTERM → 10초 → SIGKILL)","icon":"clock"},{"label":"삭제됨","sublabel":"docker rm (쓰기 층 소멸)","icon":"x"}],"caption":"Exited에서 start로 되살릴 수 있지만, rm 이후에는 이미지에서 새로 만드는 것뿐입니다."}$aix$::jsonb, $aix${"title":"터미널에서 nginx 컨테이너 생명주기 따라하기","app":{"kind":"code-editor","windowTitle":"터미널 — nginx 컨테이너 다루기","files":[{"id":"f-cheat","name":"명령어-치트시트.md","active":true},{"id":"f-notes","name":"메모.md"}],"code":[{"id":"c-title","text":"# 컨테이너 생명주기 치트시트"},{"id":"c-1","text":"run -d   → 백그라운드 실행 (개점)"},{"id":"c-2","text":"ps       → 실행 중 목록 확인"},{"id":"c-3","text":"logs     → 컨테이너가 남긴 출력 보기"},{"id":"c-4","text":"exec -it → 안에 들어가 셸 실행"},{"id":"c-5","text":"stop     → SIGTERM 후 10초 뒤 SIGKILL (마감)"},{"id":"c-6","text":"rm       → 컨테이너 삭제 (폐점)"}],"terminal":[{"id":"t-1","text":"docker run -dp 8080:80 --name web nginx","tone":"cmd","hidden":true},{"id":"t-2","text":"3f9c1a7e2b4d5c6f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f","tone":"out","hidden":true},{"id":"t-3","text":"docker ps","tone":"cmd","hidden":true},{"id":"t-4","text":"CONTAINER ID   IMAGE   COMMAND                  STATUS         PORTS                  NAMES","tone":"out","hidden":true},{"id":"t-5","text":"3f9c1a7e2b4d   nginx   \"/docker-entrypoint.…\"   Up 5 seconds   0.0.0.0:8080->80/tcp   web","tone":"ok","hidden":true},{"id":"t-6","text":"docker logs --tail 1 web","tone":"cmd","hidden":true},{"id":"t-7","text":"/docker-entrypoint.sh: Configuration complete; ready for start up","tone":"out","hidden":true},{"id":"t-9","text":"docker exec -it web sh","tone":"cmd","hidden":true},{"id":"t-10","text":"# ls /usr/share/nginx/html","tone":"cmd","hidden":true},{"id":"t-11","text":"50x.html  index.html","tone":"out","hidden":true},{"id":"t-12","text":"# exit","tone":"cmd","hidden":true},{"id":"t-13","text":"docker stop web","tone":"cmd","hidden":true},{"id":"t-14","text":"web","tone":"out","hidden":true},{"id":"t-15","text":"docker rm web","tone":"cmd","hidden":true},{"id":"t-16","text":"web","tone":"out","hidden":true},{"id":"t-17","text":"docker ps -a","tone":"cmd","hidden":true},{"id":"t-18","text":"CONTAINER ID   IMAGE   COMMAND   CREATED   STATUS   PORTS   NAMES","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 웹 서버를 백그라운드로 띄우고 8080 포트를 연결합니다 (-dp = -d -p)"},{"t":"type","target":"t-1","text":"docker run -dp 8080:80 --name web nginx"},{"t":"reveal","target":"t-2"},{"t":"caption","text":"② ps로 STATUS가 Up인지, 포트가 연결됐는지 확인합니다"},{"t":"type","target":"t-3","text":"docker ps"},{"t":"reveal","target":"t-4"},{"t":"reveal","target":"t-5"},{"t":"caption","text":"③ logs로 컨테이너가 남긴 마지막 출력을 봅니다"},{"t":"type","target":"t-6","text":"docker logs --tail 1 web"},{"t":"reveal","target":"t-7"},{"t":"caption","text":"④ exec로 컨테이너 안에 들어가 파일을 직접 확인합니다"},{"t":"type","target":"t-9","text":"docker exec -it web sh"},{"t":"type","target":"t-10","text":"# ls /usr/share/nginx/html"},{"t":"reveal","target":"t-11"},{"t":"type","target":"t-12","text":"# exit"},{"t":"caption","text":"⑤ stop → rm 순서로 정리합니다"},{"t":"type","target":"t-13","text":"docker stop web"},{"t":"reveal","target":"t-14"},{"t":"type","target":"t-15","text":"docker rm web"},{"t":"reveal","target":"t-16"},{"t":"type","target":"t-17","text":"docker ps -a"},{"t":"reveal","target":"t-18"},{"t":"move","target":"t-18"},{"t":"caption","text":"✅ 개점부터 폐점까지 — 컨테이너 생명주기 한 바퀴 완료"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '88b72157-9403-1c66-1d4f-c6684a51ddac', '166410ed-b52d-366d-816d-f4a9b5e51dfd', 'docker-basics/ports-and-env', 'ports-and-env', '포트 매핑과 환경변수: 바깥 세상과 연결하기',
+  $aix$컨테이너는 기본적으로 **닫힌 방**입니다. 안에서 웹 서버가 돌아도 밖에서는 안 보입니다. 문을 내는 것이 포트 매핑, 쪽지를 넣는 것이 환경변수입니다.
+
+## 포트 매핑: 대표번호와 내선번호
+
+회사 대표번호(내 컴퓨터 포트)로 걸면 내선번호(컨테이너 포트)로 연결되는 것과 같습니다.
+
+```bash
+docker run -d -p 8080:80 nginx      # 내 컴퓨터 8080 → 컨테이너 80
+docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=secret postgres:17
+```
+
+- 순서는 **항상 바깥:안**. `-p 8080:80` = 내 8080번 문을 컨테이너 80번 문에 연결.
+- 안쪽 포트는 프로그램이 정하고(nginx 80, PostgreSQL 5432), 바깥 포트는 자유롭게.
+- 같은 이미지 두 개는 바깥 포트만 다르게: `-p 8080:80`, `-p 8081:80`.
+- `docker ps`의 PORTS 컬럼 `0.0.0.0:8080->80/tcp`가 연결 상태입니다.
+
+Dockerfile의 `EXPOSE 80`은 **안내문일 뿐**, 문은 `-p`가 엽니다.
+
+## 환경변수: 방 안에 넣는 쪽지
+
+같은 이미지를 개발·운영에서 다르게 동작시키려면 설정값을 밖에서 넣습니다.
+
+- `-e POSTGRES_PASSWORD=secret` — postgres 이미지는 이 값이 **없으면 시작을 거부**합니다.
+- `-e NODE_ENV=production` — 앱이 운영 모드로 동작.
+- 여러 개면 `-e` 반복, 많으면 `--env-file .env`.
+
+`docker exec web env`로 실제 값을 확인합니다.
+
+**여기서 막힌다면**
+
+- **`Bind for 0.0.0.0:8080 failed: port is already allocated`** → 8080이 사용 중입니다. `docker ps`로 찾아 멈추거나 `-p 8081:80`으로.
+- **localhost:80으로 열었는데 안 나옴** → `-p 8080:80`이면 주소는 `localhost:8080`입니다.
+- **postgres 컨테이너가 바로 죽음** → `docker logs`에 "Database is uninitialized and superuser password is not specified"가 있으면 `-e POSTGRES_PASSWORD` 누락.
+
+> 💡 **핵심**: `-p 바깥:안`으로 문을 열고, `-e KEY=값`으로 설정을 넣습니다. `EXPOSE`는 문을 열지 않는다는 점을 기억하세요.$aix$,
+  $aix${"type":"flow","title":"브라우저 요청이 컨테이너에 닿는 길","nodes":[{"label":"브라우저","sublabel":"http://localhost:8080","icon":"globe","tone":"primary"},{"label":"내 컴퓨터의 8080 포트","sublabel":"-p 8080:80 의 '바깥' 쪽","icon":"monitor","tone":"accent","edgeLabel":"요청"},{"label":"컨테이너의 80 포트","sublabel":"-p 8080:80 의 '안' 쪽","icon":"container","tone":"accent","edgeLabel":"포트 매핑"},{"label":"nginx 프로세스","sublabel":"환경변수(-e)로 동작 방식 결정","icon":"server","tone":"success","edgeLabel":"EXPOSE 80 은 안내문일 뿐"}],"caption":"바깥 포트는 내가 정하고, 안쪽 포트는 프로그램이 정합니다 — 둘을 잇는 것이 -p 입니다."}$aix$::jsonb, null, 5, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8cd55070-c02b-9a77-bb87-88cdfb5df5c6', '166410ed-b52d-366d-816d-f4a9b5e51dfd', 'docker-basics/volumes', 'volumes', 'Docker 볼륨: 컨테이너가 사라져도 데이터는 남기기',
+  $aix$데이터베이스 컨테이너를 `rm`하고 다시 띄웠는데 **데이터가 몽땅 사라졌다** — 입문자가 가장 크게 놀라는 순간입니다. 쓰기 층은 컨테이너와 함께 사라지기 때문입니다.
+
+## 호텔 방과 보관소
+
+컨테이너는 **호텔 방**입니다. 체크아웃(rm)하면 방은 원래대로 정리됩니다. 짐을 남기려면 방 밖의 **보관소**에 맡겨야 하죠. Docker 볼륨이 그 보관소입니다. Docker가 호스트에 만들어 관리하고, 컨테이너를 지워도 남습니다.
+
+## 볼륨 쓰는 법
+
+```bash
+docker volume create pgdata
+docker run -d --name db -e POSTGRES_PASSWORD=secret \
+  -v pgdata:/var/lib/postgresql/data postgres:17
+docker rm -f db          # 컨테이너를 지워도…
+docker run -d --name db -e POSTGRES_PASSWORD=secret \
+  -v pgdata:/var/lib/postgresql/data postgres:17   # 데이터가 그대로!
+```
+
+- `-v 볼륨이름:/컨테이너/경로` — 이름 있는 볼륨을 컨테이너 안 경로에 연결. 없으면 자동 생성.
+- 붙일 경로는 이미지 문서가 알려 줍니다. postgres 17 이하는 `/var/lib/postgresql/data`, 18 이상은 `/var/lib/postgresql`로 바뀌었으니 Docker Hub 설명을 확인하세요.
+- `docker volume ls` / `inspect` / `rm`, 안 쓰는 것 일괄 정리는 `docker volume prune`.
+
+## 바인드 마운트와의 차이
+
+`-v /Users/me/site:/usr/share/nginx/html`처럼 **내 컴퓨터의 실제 폴더**를 연결하는 것은 바인드 마운트입니다. 코드 수정이 즉시 반영돼 개발에 편합니다. Docker 볼륨은 Docker가 위치를 관리해 이식성이 좋고 DB 파일에 적합합니다. **개발 중 소스 코드 → 바인드 마운트, 잃으면 안 되는 데이터 → Docker 볼륨**.
+
+**여기서 막힌다면**
+
+- **볼륨을 붙였는데도 데이터가 사라짐** → 이미지가 기대하는 경로와 다릅니다. `docker inspect db`의 Mounts 항목을 이미지 문서와 비교.
+- **`docker rm -v db`를 쳤더니 DB가 비었다** → 여기서 `-v`는 볼륨까지 삭제하는 옵션입니다. 데이터를 남기려면 `-v` 없이.
+
+> 💡 **핵심**: 컨테이너는 **일회용**, 데이터는 **Docker 볼륨**에. 첫 등장 시 반드시 "어느 경로에 붙이는가"를 이미지 문서에서 확인하세요.$aix$,
+  $aix${"type":"compare","title":"볼륨 없이 vs Docker 볼륨과 함께","columns":[{"title":"볼륨 없이","icon":"alert","tone":"warning","items":["데이터가 컨테이너 쓰기 층에만 존재","docker rm → 데이터 소멸","이미지 업데이트마다 초기화","실험용·일회성 작업에만 적합"]},{"title":"Docker 볼륨 (-v pgdata:/경로)","icon":"hard-drive","tone":"primary","items":["데이터가 Docker 관리 영역에 별도 저장","docker rm 후에도 볼륨은 유지","새 컨테이너가 같은 볼륨을 이어받음","데이터베이스·업로드 파일에 적합"]},{"title":"바인드 마운트 (-v ./폴더:/경로)","icon":"link","tone":"accent","items":["내 컴퓨터의 실제 폴더를 그대로 연결","코드 수정이 즉시 반영","위치가 컴퓨터마다 달라 이식성 낮음","개발 중 소스 코드에 적합"]}],"caption":"컨테이너는 바꿔 끼우는 부품, 볼륨은 남아야 하는 기억입니다."}$aix$::jsonb, null, 5, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '35184317-285c-d8f1-f418-2389918b3aeb', '0b3a30ed-937b-d6c5-f7f4-b7be38b2fab7', 'docker-basics/dockerfile-basics', 'dockerfile-basics', 'Dockerfile 첫걸음: FROM·COPY·RUN·CMD',
+  $aix$지금까지는 남이 만든 이미지를 썼습니다. 이제 **내 앱을 이미지로** 만들 차례입니다. 필요한 것은 Dockerfile 텍스트 파일 하나.
+
+## 가구 조립 설명서처럼
+
+Dockerfile은 위에서 아래로 읽는 **조립 설명서**입니다. "이 부품(베이스 이미지)에서 시작해, 파일을 넣고, 명령을 실행하고, 이렇게 켜라." 명령 하나가 레이어 하나입니다.
+
+```dockerfile
+FROM node:24-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+- `FROM` — 베이스 이미지. 반드시 첫 줄. 태그(`:24-alpine`)를 꼭 적으세요.
+- `WORKDIR` — 이후 명령이 실행될 폴더. 없으면 자동 생성.
+- `COPY 원본 대상` — 빌드 컨텍스트의 파일을 이미지 안으로 복사.
+- `RUN` — 이미지를 **만드는 동안** 실행할 명령. 결과가 층으로 저장됨.
+- `CMD` — 컨테이너가 **시작될 때** 실행할 명령. 하나만.
+
+`CMD`는 `["node", "server.js"]`처럼 **대괄호 배열(exec 형식)**이 권장입니다. 셸을 거치지 않아 종료 신호(SIGTERM)가 바로 전달됩니다.
+
+## 빌드하고 실행하기
+
+```bash
+docker build -t hello-web:1.0 .        # 마지막 '.'이 빌드 컨텍스트(현재 폴더)
+docker run --rm -p 3000:3000 hello-web:1.0
+```
+
+`-t`는 이름:태그를 붙이는 옵션입니다. 출력 마지막에 `naming to docker.io/library/hello-web:1.0`이 보이면 성공입니다.
+
+**여기서 막힌다면**
+
+- **`failed to solve: ... "/package.json": not found`** → Dockerfile 폴더가 아닌 곳에서 빌드했거나 마지막 `.`을 빠뜨림.
+- **`docker run` 직후 컨테이너가 바로 종료됨** → `CMD`의 프로그램이 곧바로 끝난 것. `docker logs`로 확인.
+- **`COPY ../상위폴더`가 `"/파일명": not found`** → 컨텍스트(`.`) 바깥 파일은 데몬에 전달되지 않습니다. 파일을 안으로 옮기거나 상위 폴더에서 `docker build -f 하위폴더/Dockerfile .`로 빌드.
+
+> 💡 **핵심**: `RUN`은 **만들 때**, `CMD`는 **켤 때**. 이 둘의 차이만 정확히 알면 Dockerfile의 절반은 읽을 수 있습니다.$aix$,
+  $aix${"type":"steps","title":"Dockerfile 명령이 실행되는 순서","steps":[{"label":"FROM node:24-alpine","sublabel":"베이스 이미지에서 출발","icon":"layers"},{"label":"WORKDIR /app","sublabel":"작업 폴더 지정(자동 생성)","icon":"file-text"},{"label":"COPY + RUN npm install","sublabel":"의존성 설치 — 빌드 때 한 번","icon":"package"},{"label":"COPY . .","sublabel":"내 소스 코드 복사","icon":"code"},{"label":"CMD [\"node\", \"server.js\"]","sublabel":"컨테이너가 켜질 때 실행","icon":"play"}],"caption":"위 네 단계는 빌드 시 한 번, 마지막 CMD만 컨테이너를 켤 때마다 실행됩니다."}$aix$::jsonb, $aix${"title":"Dockerfile 작성 → 빌드 → 실행 따라하기","app":{"kind":"code-editor","windowTitle":"Dockerfile — hello-web","files":[{"id":"f-docker","name":"Dockerfile","active":true},{"id":"f-server","name":"server.js"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"c-1","text":"# 베이스 이미지: Node 24 LTS (Alpine)","tone":"comment"},{"id":"c-2","text":"FROM node:24-alpine","tone":"add","hidden":true},{"id":"c-3","text":"WORKDIR /app","tone":"add","hidden":true},{"id":"c-4","text":"COPY package*.json ./","tone":"add","hidden":true},{"id":"c-5","text":"RUN npm install","tone":"add","hidden":true},{"id":"c-6","text":"COPY . .","tone":"add","hidden":true},{"id":"c-7","text":"EXPOSE 3000","tone":"add","hidden":true},{"id":"c-8","text":"CMD [\"node\", \"server.js\"]","tone":"add","hidden":true}],"terminal":[{"id":"t-1","text":"docker build -t hello-web:1.0 .","tone":"cmd","hidden":true},{"id":"t-2","text":"[+] Building 14.2s (10/10) FINISHED","tone":"out","hidden":true},{"id":"t-3","text":" => [1/5] FROM docker.io/library/node:24-alpine","tone":"out","hidden":true},{"id":"t-5","text":" => [5/5] COPY . .","tone":"out","hidden":true},{"id":"t-6","text":" => => naming to docker.io/library/hello-web:1.0","tone":"ok","hidden":true},{"id":"t-7","text":"docker run -dp 3000:3000 hello-web:1.0","tone":"cmd","hidden":true},{"id":"t-8","text":"a1b2c3d4e5f60718293a4b5c6d7e8f9012345678abcdef0123456789abcdef01","tone":"out","hidden":true},{"id":"t-9","text":"curl localhost:3000","tone":"cmd","hidden":true},{"id":"t-10","text":"Hello from my first image!","tone":"ok","hidden":true},{"id":"t-11","text":"docker stop a1b2c3d4e5f6","tone":"cmd","hidden":true},{"id":"t-12","text":"a1b2c3d4e5f6","tone":"out","hidden":true}]},"actions":[{"t":"caption","text":"① 베이스 이미지와 작업 폴더를 정합니다"},{"t":"type","target":"c-2","text":"FROM node:24-alpine"},{"t":"type","target":"c-3","text":"WORKDIR /app"},{"t":"caption","text":"② 의존성 파일을 먼저 복사하고 설치합니다 (캐시에 유리)"},{"t":"type","target":"c-4","text":"COPY package*.json ./"},{"t":"type","target":"c-5","text":"RUN npm install"},{"t":"caption","text":"③ 소스를 복사하고, 켤 때 실행할 명령을 exec 형식으로 적습니다"},{"t":"type","target":"c-6","text":"COPY . ."},{"t":"type","target":"c-7","text":"EXPOSE 3000"},{"t":"type","target":"c-8","text":"CMD [\"node\", \"server.js\"]"},{"t":"caption","text":"④ 빌드 — 마지막 '.'은 현재 폴더를 컨텍스트로 보낸다는 뜻"},{"t":"type","target":"t-1","text":"docker build -t hello-web:1.0 ."},{"t":"reveal","target":"t-2"},{"t":"reveal","target":"t-3"},{"t":"reveal","target":"t-5"},{"t":"reveal","target":"t-6"},{"t":"caption","text":"⑤ 방금 만든 이미지로 컨테이너를 띄우고 응답을 확인합니다 (ID 앞 12자리로 제어)"},{"t":"type","target":"t-7","text":"docker run -dp 3000:3000 hello-web:1.0"},{"t":"reveal","target":"t-8"},{"t":"type","target":"t-9","text":"curl localhost:3000"},{"t":"reveal","target":"t-10"},{"t":"move","target":"t-10"},{"t":"type","target":"t-11","text":"docker stop a1b2c3d4e5f6"},{"t":"reveal","target":"t-12"},{"t":"caption","text":"✅ 내 앱이 이미지가 되어 어디서든 같은 방식으로 실행됩니다"}]}$aix$::jsonb, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3db84fd4-1242-903b-9d7d-16a770f321b1', '0b3a30ed-937b-d6c5-f7f4-b7be38b2fab7', 'docker-basics/build-and-tag', 'build-and-tag', '빌드와 태그: 이미지 이름 규칙과 latest의 함정',
+  $aix$`nginx`, `node:24-alpine`, `ghcr.io/my-org/api:2.1.0` — 모두 이미지 이름이지만 길이가 제각각입니다. 규칙 하나를 알면 전부 같은 구조로 읽힙니다.
+
+## 이미지 이름의 네 부분
+
+```text
+[레지스트리주소[:포트]/]네임스페이스/저장소[:태그]
+ghcr.io/my-org/api:2.1.0
+docker.io/library/nginx:latest   ← 'nginx' 를 풀어 쓴 것
+```
+
+- **레지스트리 주소** — 생략하면 `docker.io`(Docker Hub).
+- **네임스페이스** — 사용자·조직 이름. Docker Hub에서 생략하면 `library`(공식 이미지 공간).
+- **저장소(repository)** — 이미지 이름. 필수.
+- **이미지 태그** — 콜론 뒤 버전 표시. 생략하면 `latest`.
+
+그래서 `nginx`는 `docker.io/library/nginx:latest`의 약자입니다. 책으로 비유하면 태그는 **판(edition)**입니다. 같은 제목이라도 1판과 3판은 내용이 다릅니다.
+
+## 태그 붙이기와 바꾸기
+
+```bash
+docker build -t hello-web:1.0 .                  # 빌드하면서 이름:태그
+docker tag hello-web:1.0 hello-web:latest        # 같은 이미지에 별명 추가
+docker tag hello-web:1.0 ghcr.io/me/hello-web:1.0  # 올릴 레지스트리 주소 포함
+```
+
+`docker tag`는 복사가 아니라 **같은 이미지 ID에 이름표를 하나 더** 붙이는 것입니다. `docker image ls`에서 IMAGE ID가 같습니다.
+
+## latest의 함정
+
+- `latest`는 "가장 최신"이 아니라 **태그 이름이 그냥 latest**인 것입니다. 아무도 갱신하지 않으면 3년 전 이미지가 latest일 수 있습니다.
+- 내용이 바뀌는 태그는 어제 되던 빌드를 오늘 깨뜨립니다. 운영에서는 `node:24-alpine`처럼 **버전이 드러나는 태그**를 쓰세요.
+- 완전히 고정하려면 `nginx@sha256:...` 다이제스트(내용 해시)를 씁니다. 대신 보안 패치도 자동으로 안 들어오니 의식적으로 갱신하세요.
+
+**여기서 막힌다면**
+
+- **`docker image ls`에 `<none>`이 잔뜩 보임** → 같은 태그로 다시 빌드하면 이전 이미지가 이름표를 잃고 `<none>`(dangling)이 됩니다. `docker image prune`으로 정리.
+- **`invalid reference format: repository name must be lowercase`** → 이름에 대문자가 있습니다. 전부 소문자로.
+
+> 💡 **핵심**: 이름은 **레지스트리/네임스페이스/저장소:태그**. `latest`는 "최신"이 아니라 그냥 기본 이름표이니, 운영에서는 버전 태그를 쓰세요.$aix$,
+  $aix${"type":"grid","title":"이미지 이름을 이루는 네 조각","items":[{"label":"레지스트리 주소","sublabel":"ghcr.io · 생략 시 docker.io","icon":"cloud","tone":"muted"},{"label":"네임스페이스","sublabel":"my-org · 생략 시 library","icon":"users","tone":"accent"},{"label":"저장소","sublabel":"api · 필수, 소문자","icon":"package","tone":"primary"},{"label":"이미지 태그","sublabel":":2.1.0 · 생략 시 latest","icon":"git-branch","tone":"warning"},{"label":"다이제스트","sublabel":"@sha256:… · 내용 고정","icon":"lock","tone":"success"},{"label":"docker tag","sublabel":"같은 ID에 이름표 추가","icon":"link","tone":"accent"}],"caption":"nginx 한 단어도 사실은 네 조각 중 세 조각이 기본값으로 채워진 이름입니다."}$aix$::jsonb, null, 5, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0ef0ba6a-9863-ef69-1236-095b63e73a48', '0b3a30ed-937b-d6c5-f7f4-b7be38b2fab7', 'docker-basics/dockerignore-and-cache', 'dockerignore-and-cache', '.dockerignore와 빌드 캐시: 빠르고 가벼운 빌드',
+  $aix$코드 한 줄 고쳤는데 빌드가 3분씩 걸리고, 이미지에 `node_modules`가 두 벌 들어 있다면 — 빌드 컨텍스트와 캐시를 놓친 것입니다.
+
+## .dockerignore: 짐 싸기 전 "안 가져갈 목록"
+
+`docker build .`의 마지막 `.`은 **현재 폴더 전체를 데몬에게 보낸다**는 뜻입니다(출력의 `transferring context: 13.16MB`가 그 크기). 이사 짐을 싸기 전 "안 가져갈 목록"을 적듯, 프로젝트 루트에 `.dockerignore`를 만듭니다.
+
+```text
+node_modules
+.git
+*.log
+.env
+```
+
+- 문법은 `.gitignore`와 비슷합니다. `#` 주석, `!` 예외, `**` 하위 폴더 전체.
+- `node_modules`를 빼면 `COPY . .`가 내 컴퓨터의(다른 OS용일 수 있는) 모듈을 덮어쓰는 사고를 막습니다.
+- `.env`를 빼면 비밀번호가 이미지에 구워지지 않습니다.
+
+## 빌드 캐시: 바뀌지 않은 층은 재사용
+
+Docker는 각 명령의 결과를 층으로 저장하고 **입력이 같으면 재사용**합니다. `CACHED [4/5] RUN npm install`이 그 표시입니다.
+
+규칙은 하나. **한 층이 바뀌면 그 뒤 층은 모두 다시 만들어집니다.** 그래서 순서가 중요합니다.
+
+- 나쁜 순서: `COPY . .` → `RUN npm install` — 코드 한 줄 고치면 매번 npm install.
+- 좋은 순서: `COPY package*.json ./` → `RUN npm install` → `COPY . .` — package.json이 그대로면 설치는 캐시.
+
+앞 레슨의 Dockerfile이 이 순서였던 이유입니다. 자주 바뀌는 것은 **가능한 한 아래로**. 캐시를 무시하려면 `docker build --no-cache`.
+
+**여기서 막힌다면**
+
+- **빌드가 여전히 느리고 컨텍스트가 수백 MB** → `.dockerignore`가 컨텍스트 루트에 있는지, 파일명 앞에 점이 있는지 확인.
+- **`RUN apt-get install`이 오래된 패키지를 설치** → 캐시가 예전 결과를 재사용 중. `--no-cache`로 새로 빌드.
+
+> 💡 **핵심**: `.dockerignore`로 **보내는 짐을 줄이고**, Dockerfile은 **덜 바뀌는 것부터 위에** 적어 캐시를 살리세요.$aix$,
+  $aix${"type":"terminal","windowTitle":"docker build — 두 번째 빌드","lines":[{"text":"# server.js 한 줄 수정 후 재빌드","tone":"comment"},{"text":"docker build -t hello-web:1.1 .","tone":"cmd"},{"text":"[+] Building 1.8s (10/10) FINISHED","tone":"out"},{"text":" => [internal] load build context","tone":"dim"},{"text":" => => transferring context: 2.1kB","tone":"dim"},{"text":" => CACHED [1/5] FROM docker.io/library/node:24-alpine","tone":"ok"},{"text":" => CACHED [2/5] WORKDIR /app","tone":"ok"},{"text":" => CACHED [3/5] COPY package*.json ./","tone":"ok"},{"text":" => CACHED [4/5] RUN npm install","tone":"ok"},{"text":" => [5/5] COPY . .","tone":"out"},{"text":" => => naming to docker.io/library/hello-web:1.1","tone":"out"}],"caption":"14초짜리 빌드가 2초로 — 바뀐 층 하나만 다시 만들었기 때문입니다."}$aix$::jsonb, null, 5, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bf1ed124-ce2e-86a3-8af6-5a0b52a07eff', '858e0847-88ae-1a6c-4985-c36f8e79e551', 'docker-basics/compose-basics', 'compose-basics', 'Docker Compose: 앱+DB를 파일 하나로',
+  $aix$앱 컨테이너 하나, DB 하나. 매번 `docker run` 두 번에 옵션 열 개를 친다면 — Docker Compose가 파일 하나로 대신합니다.
+
+## 여행 패키지 상품처럼
+
+항공권·호텔·렌터카를 따로 예약하는 대신 **패키지 상품** 하나를 사는 것과 같습니다. `compose.yaml` 하나로 `up`이면 전부 켜지고 `down`이면 전부 정리됩니다.
+
+```yaml
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
+```
+
+- `services` 아래 이름 하나가 컨테이너 하나. `web`은 Dockerfile로 빌드, `db`는 이미지 그대로.
+- `ports`·`environment`·`volumes`는 `-p`·`-e`·`-v`에 대응. 이름 있는 Docker 볼륨은 **맨 아래 `volumes:`에 선언 필수**.
+- `depends_on`은 시작 순서만 정합니다(준비 완료를 기다리진 않음).
+- 옛 예제의 `version: "3"`은 **지금은 필요 없고 경고만 출력**됩니다. 적지 마세요.
+
+## 같은 네트워크, 이름이 곧 주소
+
+Compose는 서비스들을 전용 네트워크에 넣고 **서비스 이름을 호스트 이름으로** 씁니다. web 안에서 DB 주소는 `localhost`가 아니라 **`db:5432`** 입니다.
+
+**명령 다섯 개**(모두 `docker compose` 뒤에): `up -d` · `ps` · `logs -f web` · `exec db psql -U postgres` · `down`(`-v`는 볼륨까지 삭제). 파일명은 `compose.yaml`이 표준, 옛 `docker-compose.yml`도 인식.
+
+**여기서 막힌다면**
+
+- **web에서 DB 연결 실패(`ECONNREFUSED 127.0.0.1:5432`)** → `localhost` 대신 서비스 이름 `db`로.
+- **`the attribute version is obsolete, it will be ignored` 경고** → 첫 줄 `version:`을 지우세요.
+- **`docker-compose`(하이픈) 명령이 없음** → 현재 표준은 `docker compose`(공백).
+
+> 💡 **핵심**: Compose는 `docker run` 옵션들을 YAML로 옮긴 것입니다. 컨테이너끼리는 **서비스 이름으로 통신**하고, `version:` 키는 쓰지 않습니다.$aix$,
+  $aix${"type":"flow","title":"compose.yaml 한 파일이 만드는 것","nodes":[{"label":"compose.yaml","sublabel":"services · volumes 선언","icon":"file-text","tone":"primary"},{"label":"docker compose up -d","sublabel":"빌드 → 네트워크 · 볼륨 생성 → 컨테이너 시작","icon":"terminal","tone":"accent"},{"label":"web 컨테이너 (:3000)","sublabel":"Dockerfile로 빌드 · DB 주소는 db:5432","icon":"globe","tone":"success","edgeLabel":"depends_on: db"},{"label":"db 컨테이너 + db-data 볼륨","sublabel":"postgres:17 · 데이터는 볼륨에 보존","icon":"database","tone":"success","edgeLabel":"같은 전용 네트워크"}],"caption":"컨테이너 둘, 네트워크 하나, 볼륨 하나 — 명령은 한 번입니다."}$aix$::jsonb, null, 6, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7399d343-f3ea-2a60-30ff-eb4b3de3afe6', '858e0847-88ae-1a6c-4985-c36f8e79e551', 'docker-basics/registry-and-limits', 'registry-and-limits', '레지스트리에 올리기: Docker Hub·GHCR과 pull 한도',
+  $aix$만든 이미지를 팀원과 서버가 쓰려면 어딘가에 **올려** 두어야 합니다. 그곳이 레지스트리, 이미지의 앱스토어입니다.
+
+## 대표 레지스트리 둘
+
+- **Docker Hub** — 기본 레지스트리. 공식 이미지가 있고 공개 저장소는 무료.
+- **GHCR** — GitHub 계정만 있으면 바로 사용. 주소 `ghcr.io/사용자명/이미지명`.
+
+## 세 단계로 올리기
+
+```bash
+docker login ghcr.io -u 깃허브아이디          # 비밀번호 대신 PAT 입력
+docker tag hello-web:1.0 ghcr.io/깃허브아이디/hello-web:1.0
+docker push ghcr.io/깃허브아이디/hello-web:1.0
+```
+
+- **로그인**: GHCR은 **개인 액세스 토큰(PAT)** 이 필요합니다. GitHub Settings → Developer settings → Personal access tokens → **Tokens (classic)** 에서 `write:packages` 권한으로 발급. fine-grained 토큰은 불가.
+- **태그**: 레지스트리 주소와 네임스페이스를 앞에 붙임.
+- **푸시**: 레이어 단위 업로드. 이미 있는 층은 `Layer already exists`로 건너뜀.
+
+처음 푸시한 GHCR 패키지는 **기본 비공개**입니다(패키지 설정에서 공개 전환).
+
+## Docker Hub pull 한도
+
+2026년 9월 기준 Docker Hub 내려받기 한도:
+
+- **로그인 안 함**: 6시간당 **100회**
+- **무료 Personal 계정 로그인**: 6시간당 **200회**
+- **유료(Pro/Team/Business)**: 무제한
+
+함정은 IP 기준입니다. 사무실·CI처럼 한 IP를 여럿이 쓰면 내가 안 받아도 한도가 찹니다. 초과하면 `toomanyrequests: You have reached your pull rate limit` 에러. 해결은 `docker login` 또는 GHCR 등에 미러링.
+
+**여기서 막힌다면**
+
+- **`denied: requested access to the resource is denied`** → 미로그인, 또는 태그의 네임스페이스가 내 계정명과 다름.
+- **`unauthorized: authentication required`(GHCR)** → PAT 권한(`write:packages`) 부족 또는 만료.
+
+> 💡 **핵심**: **login → tag → push** 세 단계. Docker Hub는 미인증 IP당 6시간 100회 한도가 있으니, 팀·CI에서는 로그인을 습관화하세요.$aix$,
+  $aix${"type":"steps","title":"내 이미지를 레지스트리로 보내는 길","steps":[{"label":"docker build -t hello-web:1.0 .","sublabel":"로컬에 이미지 생성","icon":"package"},{"label":"docker login ghcr.io","sublabel":"GitHub PAT(write:packages)로 인증","icon":"key"},{"label":"docker tag … ghcr.io/me/hello-web:1.0","sublabel":"레지스트리 주소 + 네임스페이스 붙이기","icon":"git-branch"},{"label":"docker push ghcr.io/me/hello-web:1.0","sublabel":"레이어 단위 업로드","icon":"upload"},{"label":"서버에서 docker pull","sublabel":"미인증 Docker Hub는 6시간 100회 한도","icon":"download"}],"caption":"레지스트리 주소가 포함된 태그가 있어야 push가 어디로 갈지 알 수 있습니다."}$aix$::jsonb, null, 5, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b9547831-52e6-d114-6529-3c100a3d8dff', '858e0847-88ae-1a6c-4985-c36f8e79e551', 'docker-basics/troubleshooting-and-next', 'troubleshooting-and-next', '막혔을 때 보는 에러 사전 + 다음 단계',
+  $aix$입문자가 만나는 Docker 에러는 대체로 같은 8개입니다. 응급실이 증상별로 환자를 분류하듯, **메시지로 막힌 곳을 찾으면** 해결은 한 줄입니다.
+
+## 증상별 처방 8가지
+
+**데몬·권한**
+
+- **`Cannot connect to the Docker daemon ... Is the docker daemon running?`** → 데몬 꺼짐. Docker Desktop을 켜세요.
+- **`permission denied ... docker.sock`**(리눅스) → `sudo usermod -aG docker $USER` 후 재로그인.
+
+**포트·이름 충돌**
+
+- **`Bind for 0.0.0.0:8080 failed: port is already allocated`** → `docker ps`로 점유자를 찾아 `stop`, 또는 바깥 포트를 `8081`로.
+- **`Conflict. The container name "/web" is already in use`** → 이름 중복. `docker rm -f web` 후 재실행.
+
+**이미지·디스크·CPU**
+
+- **`pull access denied ... may require 'docker login'`** → 이름 오타 또는 비공개 저장소. 확인 후 `docker login`.
+- **`toomanyrequests: You have reached your pull rate limit`** → Docker Hub 한도 초과. `docker login` 후 재시도.
+- **`no space left on device`** → `docker system df`로 확인 후 `docker system prune -a`(`--volumes` 없으면 Docker 볼륨은 안전).
+- **`exec format error`** → CPU 아키텍처 불일치(arm64 Mac 이미지 → amd64 서버). `docker build --platform linux/amd64`로 재빌드.
+
+## 다음 단계
+
+- **"Docker 실전: 작고 안전한 이미지와 운영"** — 멀티스테이지 빌드, 취약점 스캔, 비루트 실행, CI/CD.
+- 그 다음은 **"Kubernetes 입문: 컨테이너 오케스트레이션 첫걸음"** — 컨테이너가 수십 개일 때.
+
+> 💡 **핵심**: 에러 메시지는 **어느 층(데몬·포트·이미지·디스크·CPU)** 이 막혔는지 알려 주는 안내판입니다. 메시지를 그대로 검색하는 습관이 가장 빠른 해결책입니다.$aix$,
+  $aix${"type":"chat","title":"에러 사전 — 증상과 처방","messages":[{"role":"user","text":"Bind for 0.0.0.0:8080 failed: port is already allocated 이라고 나와요."},{"role":"ai","text":"8080 포트를 누가 이미 쓰고 있습니다. docker ps로 찾아 stop 하거나, -p 8081:80 처럼 바깥 포트를 바꾸세요."},{"role":"user","text":"리눅스 서버에서 permission denied ... docker.sock 에러가 나요."},{"role":"ai","text":"계정이 docker 그룹에 없어서입니다. sudo usermod -aG docker $USER 후 로그아웃·로그인하세요."},{"role":"user","text":"Mac에서 만든 이미지를 서버에 올렸는데 exec format error가 떠요."},{"role":"ai","text":"arm64 이미지를 amd64 서버에서 돌린 것입니다. docker build --platform linux/amd64 로 다시 빌드하세요."},{"role":"system","text":"다음 강의: Docker 실전: 작고 안전한 이미지와 운영"}],"caption":"메시지의 핵심 단어(port · permission · exec format)만 잡아도 처방은 거의 정해져 있습니다."}$aix$::jsonb, null, 6, 14
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: Docker 실전: 작고 안전한 이미지와 운영
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'fcc9190c-72bb-7419-40d7-7fff02f66a36', 'docker-production', 'Docker 실전: 작고 안전한 이미지와 운영', $aix$docker run이 되는 것과 서비스가 몇 달째 안 죽고 도는 것은 전혀 다른 문제입니다. 이 강의는 Docker 입문을 마친 분을 위해 '운영용 Docker'의 기준을 하나씩 세웁니다. 멀티스테이지 빌드와 베이스 이미지 선택으로 이미지를 작게 만들고, BuildKit 캐시와 멀티 아키텍처 빌드로 빠르게 만들며, 사용자 정의 네트워크·Docker 볼륨·Compose 헬스체크로 여러 컨테이너를 안정적으로 묶습니다. 마지막으로 비루트 실행, 시크릿 분리, 취약점 스캔, 리소스 제한, GitHub Actions 자동 빌드까지 — 실무 체크리스트 순서 그대로 따라갑니다.$aix$,
+  null, 'devops', 'intermediate', array['Docker', '멀티스테이지 빌드', '컨테이너 보안', 'Docker Compose', 'GitHub Actions', '이미지 최적화']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '628664f1-57f4-47ea-3f56-59ae2571ed75', 'fcc9190c-72bb-7419-40d7-7fff02f66a36', 'image-optimization', '이미지 최적화', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '23f0912d-1e97-4b5c-59f6-5f7db3c00310', 'fcc9190c-72bb-7419-40d7-7fff02f66a36', 'network-and-storage', '네트워크와 스토리지', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'eb4408ca-2aae-fafe-447b-fc583fa6a22a', 'fcc9190c-72bb-7419-40d7-7fff02f66a36', 'security-and-delivery', '보안과 전달', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'fb1fee36-e346-23a1-58ac-c4280586316d', '628664f1-57f4-47ea-3f56-59ae2571ed75', 'docker-production/why-production-docker', 'why-production-docker', '개발용 Docker와 운영용 Docker는 다르다',
+  $aix$내 노트북에서 `docker run`이 잘 되는 것과, 그 컨테이너가 서버에서 몇 달째 죽지 않고 도는 것은 **전혀 다른 문제**입니다. 이 강의는 그 간극을 메웁니다.
+
+## 목표가 다르면 만드는 법도 다르다
+
+- **개발용**: 빨리 띄우고, 코드를 고치면 바로 반영되면 충분합니다. 바인드 마운트, `latest` 이미지 태그, root 실행이 흔합니다.
+- **운영용**: 수백 번 내려받고, 공격을 견디고, 새벽에도 혼자 복구돼야 합니다. 그래서 **작고, 안전하고, 예측 가능해야** 합니다.
+
+출장 짐 싸기에 비유하면, 개발용은 이사 트럭(집에 있던 걸 다 싣기)이고 운영용은 기내용 캐리어(필요한 것만, 검색대 통과 가능하게)입니다.
+
+## 운영용 이미지의 4가지 기준
+
+1. **크기** — 작을수록 전송·저장 비용이 줄고 배포가 빨라집니다.
+2. **보안** — 셸·컴파일러·root 권한처럼 공격자가 쓸 도구가 없어야 합니다.
+3. **재현성** — 같은 Dockerfile이면 언제 빌드해도 같은 결과가 나와야 합니다.
+4. **운영성** — 헬스체크, 로그, 리소스 제한이 있어야 문제를 스스로 드러냅니다.
+
+## 이 강의 로드맵
+
+- **모듈 1 이미지 최적화** — 멀티스테이지 빌드, 베이스 이미지 선택, 레이어 캐시, BuildKit과 멀티 아키텍처
+- **모듈 2 네트워크와 스토리지** — 사용자 정의 네트워크, Docker 볼륨 vs 바인드 마운트, Compose 실전
+- **모듈 3 보안과 전달** — 비루트·시크릿, 취약점 스캔, 리소스 제한·로그, GitHub Actions 자동 빌드
+
+선수 강의는 "Docker 입문: 컨테이너로 어디서나 똑같이 실행하기"입니다. `docker build`와 `docker compose up`을 한 번이라도 해 봤다면 충분합니다.
+
+> 💡 **핵심**: 운영용 Docker의 기준은 **작게·안전하게·예측 가능하게**. 이 강의의 모든 레슨은 이 세 단어 중 하나를 위한 것입니다.$aix$,
+  $aix${"type":"compare","title":"개발용 컨테이너 vs 운영용 컨테이너","columns":[{"title":"개발용 (빨리 띄우기)","icon":"terminal","tone":"muted","items":["바인드 마운트로 코드 즉시 반영","latest 이미지 태그, 전체(full) 베이스 이미지","root로 실행, 시크릿은 .env에","리소스 제한·헬스체크 없음"]},{"title":"운영용 (오래 살아남기)","icon":"shield","tone":"primary","items":["멀티스테이지 빌드로 결과물만 포장","고정 이미지 태그, slim/Distroless","비루트 실행, 시크릿은 마운트로 주입","--memory/--cpus, 헬스체크, 로그 로테이션"]}],"caption":"왼쪽이 틀린 것이 아닙니다 — 목적이 다를 뿐이고, 이 강의는 오른쪽으로 옮겨 가는 법을 다룹니다."}$aix$::jsonb, null, 4, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2a5df967-86b4-93e6-0eb7-aa07a3e9981d', '628664f1-57f4-47ea-3f56-59ae2571ed75', 'docker-production/multi-stage-builds', 'multi-stage-builds', '멀티스테이지 빌드: 1GB 이미지를 100MB로',
+  $aix$빌드 도구(컴파일러, 개발용 패키지)와 실행에 필요한 것(결과물, 런타임)은 다릅니다. 그런데 Dockerfile 하나로 빌드하면 **둘 다 최종 이미지에 남습니다**. 멀티스테이지 빌드는 단계를 나눠 이 문제를 풉니다.
+
+## 두 개의 FROM, 하나의 결과
+
+- 첫 번째 `FROM ... AS build`는 **빌드 단계**입니다. 무거워도 괜찮습니다.
+- 두 번째 `FROM`이 **실행 단계**이자 최종 이미지입니다. `COPY --from=build`로 **결과물만** 가져옵니다.
+- 앞 단계의 컴파일러·소스·개발용 패키지는 최종 이미지에 **한 바이트도 남지 않습니다**.
+
+도시락 공장에 비유하면, 조리 시설(빌드 단계)은 공장에 두고 손님에게는 도시락(실행 단계)만 배달하는 것입니다.
+
+## Node.js와 Go 예시
+
+```dockerfile
+FROM node:24 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:24-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY --from=build /app/dist ./dist
+USER node
+CMD ["node", "dist/server.js"]
+```
+
+단일 스테이지 `node:24` 이미지는 1GB를 넘기 쉽지만, 나누면 **200MB 안팎**까지 줄어듭니다(의존성에 따라 다름). Go처럼 정적 바이너리라면 더 극적입니다.
+
+```dockerfile
+FROM golang:1.26 AS build
+WORKDIR /src
+COPY . .
+RUN CGO_ENABLED=0 go build -o /bin/app .
+
+FROM gcr.io/distroless/static-debian13:nonroot
+COPY --from=build /bin/app /app
+ENTRYPOINT ["/app"]
+```
+
+`golang` 이미지는 800MB가 넘지만 최종 이미지는 **바이너리 + 약 2MB**로 보통 수십 MB 이하입니다. 특정 단계까지만 빌드하려면 `docker build --target build .`.
+
+## 여기서 막힌다면
+
+- `failed to compute cache key: "/app/dist": not found` → 빌드 단계의 결과물 경로와 `COPY --from`의 원본 경로가 다릅니다. 빌드 단계에 `RUN ls /app`을 잠시 넣어 확인하세요.
+- Alpine 최종 이미지에서 `Error loading shared library ld-linux-x86-64.so.2`나 `... not found` 오류 → glibc용 네이티브 모듈을 musl 기반 Alpine에서 실행한 것입니다. `node:24-slim`으로 바꿔 보세요(다음 레슨).
+
+> 💡 **핵심**: 멀티스테이지 빌드의 규칙은 하나 — **빌드는 무겁게, 실행은 결과물만.** `COPY --from=build` 한 줄이 이미지 크기를 결정합니다.$aix$,
+  $aix${"type":"flow","title":"멀티스테이지 빌드의 데이터 흐름","nodes":[{"label":"빌드 단계 (FROM node:24 AS build)","sublabel":"컴파일러·devDependencies·소스 전부 포함, 1GB+","icon":"wrench","tone":"muted"},{"label":"COPY --from=build","sublabel":"결과물(dist/)만 골라 복사","icon":"filter","tone":"accent","edgeLabel":"필요한 파일만 통과"},{"label":"실행 단계 (FROM node:24-alpine)","sublabel":"런타임 + 결과물 + 운영 의존성","icon":"package","tone":"primary"},{"label":"최종 이미지","sublabel":"200MB 안팎 — 빌드 도구 흔적 없음","icon":"check","tone":"success"}],"caption":"빌드 단계의 무게는 최종 이미지에 전혀 전해지지 않습니다 — 복사한 파일만 남습니다."}$aix$::jsonb, $aix${"title":"단일 스테이지를 멀티스테이지로 바꾸고 크기 비교하기","app":{"kind":"code-editor","windowTitle":"Dockerfile — api","files":[{"id":"f-docker","name":"Dockerfile","active":true},{"id":"f-single","name":"Dockerfile.1"},{"id":"f-pkg","name":"package.json"}],"code":[{"id":"c1","text":"# 1단계: 빌드 (컴파일러·devDependencies 포함)","tone":"comment"},{"id":"c2","text":"FROM node:24 AS build"},{"id":"c3","text":"WORKDIR /app"},{"id":"c4","text":"COPY package*.json ./"},{"id":"c5","text":"RUN npm ci"},{"id":"c6","text":"COPY . ."},{"id":"c7","text":"RUN npm run build"},{"id":"c8","text":"# 2단계: 실행 (결과물만 복사)","tone":"comment","hidden":true},{"id":"c9","text":"FROM node:24-alpine","tone":"add","hidden":true},{"id":"c10","text":"WORKDIR /app","tone":"add","hidden":true},{"id":"c11","text":"COPY package*.json ./","tone":"add","hidden":true},{"id":"c12","text":"RUN npm ci --omit=dev","tone":"add","hidden":true},{"id":"c13","text":"COPY --from=build /app/dist ./dist","tone":"add","hidden":true},{"id":"c14","text":"USER node","tone":"add","hidden":true},{"id":"c15","text":"CMD [\"node\", \"dist/server.js\"]","tone":"add","hidden":true}],"terminal":[{"id":"t1","text":"docker build -f Dockerfile.1 -t api:v1 .","tone":"cmd","hidden":true},{"id":"t2","text":"[+] Building 96.2s (11/11) FINISHED","tone":"out","hidden":true},{"id":"t3","text":"docker build -t api:v2 .","tone":"cmd","hidden":true},{"id":"t4","text":"[+] Building 41.7s (17/17) FINISHED","tone":"out","hidden":true},{"id":"t5","text":"docker image ls api","tone":"cmd","hidden":true},{"id":"t6","text":"REPOSITORY   TAG   IMAGE ID       SIZE","tone":"out","hidden":true},{"id":"t7","text":"api          v1    3f1c9a7b2e10   1.12GB","tone":"err","hidden":true},{"id":"t8","text":"api          v2    9ab27c4d5f31   203MB","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 비교용으로 단일 스테이지(Dockerfile.1) 이미지를 먼저 빌드합니다"},{"t":"type","target":"t1","text":"docker build -f Dockerfile.1 -t api:v1 ."},{"t":"reveal","target":"t2"},{"t":"caption","text":"② 빌드 단계는 그대로 두고, 그 아래에 실행 단계를 추가합니다"},{"t":"move","target":"c7"},{"t":"type","target":"c8","text":"# 2단계: 실행 (결과물만 복사)"},{"t":"type","target":"c9","text":"FROM node:24-alpine"},{"t":"type","target":"c10","text":"WORKDIR /app"},{"t":"type","target":"c11","text":"COPY package*.json ./"},{"t":"type","target":"c12","text":"RUN npm ci --omit=dev"},{"t":"caption","text":"③ COPY --from=build로 빌드 결과물만 가져옵니다"},{"t":"type","target":"c13","text":"COPY --from=build /app/dist ./dist"},{"t":"caption","text":"④ 비루트 사용자로 전환하고 실행 명령을 적습니다"},{"t":"type","target":"c14","text":"USER node"},{"t":"type","target":"c15","text":"CMD [\"node\", \"dist/server.js\"]"},{"t":"caption","text":"⑤ 멀티스테이지 이미지를 빌드합니다"},{"t":"type","target":"t3","text":"docker build -t api:v2 ."},{"t":"reveal","target":"t4"},{"t":"caption","text":"⑥ 두 이미지의 크기를 나란히 비교합니다"},{"t":"type","target":"t5","text":"docker image ls api"},{"t":"reveal","target":"t6"},{"t":"reveal","target":"t7"},{"t":"reveal","target":"t8"},{"t":"caption","text":"✅ 1.12GB → 203MB — 빌드 도구가 최종 이미지에서 사라졌습니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3ca660ac-f2c2-2716-a7ab-4dfa1487213e', '628664f1-57f4-47ea-3f56-59ae2571ed75', 'docker-production/base-image-choice', 'base-image-choice', '베이스 이미지 선택: Debian slim·Alpine·Distroless·Docker Hardened Images',
+  $aix$`FROM` 한 줄이 이미지 크기의 절반과 취약점 대부분을 결정합니다. 선택지는 네 갈래입니다.
+
+## 네 가지 선택지
+
+- **Debian 전체(full)** — `node:24`처럼 접미사 없는 이미지. 컴파일러·git·curl까지 들어 1GB에 가깝습니다. **빌드 단계에만** 쓰세요.
+- **Debian slim** — `node:24-slim`. 런타임 최소 패키지만 남긴 Debian. glibc라 호환 문제가 거의 없어 **운영의 기본 선택**입니다.
+- **Alpine** — `node:24-alpine`. 약 5MB로 가장 작지만, musl libc 때문에 네이티브 모듈 호환 문제가 납니다.
+- **Distroless** — `gcr.io/distroless/nodejs24-debian13`, `static-debian13`(정적용, 약 2MB). 셸·패키지 관리자가 없어 공격 표면이 가장 작지만 `docker exec` 디버깅이 안 됩니다(`:debug` 이미지 태그는 셸 포함).
+
+숙소로 치면 풀옵션 호텔(full), 비즈니스호텔(slim), 캡슐호텔(Alpine), 금고(Distroless)입니다.
+
+## Docker Hardened Images: 새 기본값
+
+2025년 12월부터 **무료·Apache 2.0**으로 1,000개 이상 공개됐습니다. 비루트가 기본이고 SBOM과 SLSA Build L3 출처 증명이 붙어 있습니다.
+
+```bash
+docker login dhi.io                 # Docker 계정으로 로그인 (무료)
+docker pull dhi.io/node:24-dev      # 빌드용: 셸·npm 포함
+docker pull dhi.io/node:24          # 실행용: 최소 구성, 비루트
+```
+
+Distroless처럼 `-dev` 변형으로 빌드하고, 실행용 변형(셸 없음, 비루트 UID 65532)에 `COPY --from`으로 결과물만 옮깁니다.
+
+## 고르는 순서
+
+- 정적 바이너리(Go, Rust) → `distroless/static` 또는 Docker Hardened Images
+- Node·Python·Java → **slim** 또는 Docker Hardened Images. Alpine은 네이티브 의존성이 없을 때만.
+
+> 💡 **핵심**: 운영 기본값은 **slim 또는 Docker Hardened Images**. Alpine은 "작다"는 이유만으로 고르지 말고, Distroless는 디버깅 방법을 정한 뒤 고르세요.$aix$,
+  $aix${"type":"grid","title":"베이스 이미지 4종 비교","items":[{"label":"Debian 전체(full)","sublabel":"node:24 · 1GB 안팎 · 빌드 단계 전용","icon":"boxes","tone":"muted"},{"label":"Debian slim","sublabel":"node:24-slim · 수백 MB · 운영 기본값","icon":"package","tone":"primary"},{"label":"Alpine","sublabel":"node:24-alpine · 가장 작음 · musl 호환 주의","icon":"zap","tone":"warning"},{"label":"Distroless","sublabel":"gcr.io/distroless/* · 셸 없음 · 공격 표면 최소","icon":"lock","tone":"success"},{"label":"Docker Hardened Images","sublabel":"dhi.io/* · 비루트 기본 · SBOM·SLSA 포함","icon":"shield","tone":"success"},{"label":"공통 규칙","sublabel":"latest 금지 · 메이저.마이너 이미지 태그 고정","icon":"check","tone":"accent"}],"caption":"아래로 갈수록 작고 안전하지만 디버깅이 어려워집니다 — 팀의 운영 역량에 맞춰 고르세요."}$aix$::jsonb, null, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '580ee82a-fca6-fd53-05ce-15566d2a45aa', '628664f1-57f4-47ea-3f56-59ae2571ed75', 'docker-production/layer-caching-strategy', 'layer-caching-strategy', '레이어 캐시 전략: 의존성 먼저, 소스는 나중에',
+  $aix$코드 한 줄 고쳤는데 `npm install`이 다시 3분 도는 경험, 있으시죠. Dockerfile의 **줄 순서**만 바꿔도 대부분 해결됩니다.
+
+## 캐시가 깨지는 규칙
+
+- Dockerfile의 명령 하나가 이미지 레이어 하나를 만들고, Docker는 위에서부터 **바뀌지 않은 레이어는 재사용**합니다.
+- 그런데 어떤 레이어가 바뀌면 **그 아래의 모든 레이어는 무조건 다시 빌드**됩니다.
+- `COPY . .`은 파일 하나만 달라져도 바뀐 것으로 칩니다. 이 줄이 위에 있으면 그 아래 `RUN npm ci`가 매번 다시 돕니다.
+
+케이크 층에 비유하면, 3층 케이크의 1층을 바꾸려면 2·3층도 다시 올려야 합니다. 그러니 **자주 바뀌는 층을 맨 위에** 두어야 합니다.
+
+## 잘 바뀌지 않는 것부터 위에
+
+```dockerfile
+FROM node:24-slim
+WORKDIR /app
+# 1) 의존성 명세만 먼저 복사 → 이 파일이 안 바뀌면 아래 RUN은 캐시
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+# 2) 소스는 마지막에 → 소스가 바뀌어도 위 레이어는 그대로
+COPY . .
+CMD ["node", "server.js"]
+```
+
+Python이면 `requirements.txt`, Go면 `go.mod`·`go.sum`을 먼저 복사하고 `go mod download`를 하는 식으로 같은 원리를 적용합니다.
+
+## 함께 지키면 좋은 세 가지
+
+- **`.dockerignore`** — `node_modules`, `.git`, `dist`, `.env`를 제외하세요. 빌드 컨텍스트가 작아지고, 캐시가 불필요하게 깨지는 일도 줄어듭니다.
+- **`apt-get update`와 `install`은 한 `RUN`에** — 따로 쓰면 `update`만 캐시돼 오래된 패키지 목록으로 설치하는 사고가 납니다. `--no-install-recommends`도 함께.
+- **`npm ci`** — `npm install` 대신 lock 파일 그대로 설치해 재현성을 지킵니다.
+
+> 💡 **핵심**: 레이어 캐시 전략은 한 문장입니다 — **"자주 바뀌는 것일수록 Dockerfile의 아래쪽에."**$aix$,
+  $aix${"type":"stack","title":"레이어 순서와 캐시 재사용 (위 = 자주 바뀜)","layers":[{"label":"COPY . . → 소스 코드","sublabel":"매 커밋마다 바뀜 · 여기서만 다시 빌드","icon":"code","tone":"warning"},{"label":"RUN npm ci --omit=dev","sublabel":"lock 파일이 그대로면 캐시 재사용","icon":"download","tone":"accent"},{"label":"COPY package.json package-lock.json","sublabel":"의존성 바뀔 때만 변경","icon":"file-text","tone":"accent"},{"label":"FROM node:24-slim + WORKDIR","sublabel":"거의 안 바뀜 · 항상 캐시","icon":"layers","tone":"muted"}],"caption":"바뀐 층 아래는 전부 다시 굽습니다 — 그래서 소스는 맨 위, 베이스 이미지는 맨 아래입니다."}$aix$::jsonb, null, 5, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'dee0a3a3-8bde-d207-4e54-64a00046bfad', '628664f1-57f4-47ea-3f56-59ae2571ed75', 'docker-production/buildkit-and-buildx', 'buildkit-and-buildx', 'BuildKit과 buildx: 캐시 마운트와 멀티 아키텍처(amd64/arm64)',
+  $aix$레이어 순서를 잘 잡아도 의존성이 바뀌면 다운로드는 처음부터입니다. M 시리즈 맥에서 만든 이미지가 amd64 서버에서 안 도는 문제도 있죠. 둘 다 BuildKit이 풉니다.
+
+## 캐시 마운트: 패키지 캐시 유지
+
+`RUN --mount=type=cache`는 빌드 중에만 붙는 캐시 폴더입니다. 레이어에는 남지 않고 다음 빌드에서 **같은 폴더가 다시 붙습니다**.
+
+```dockerfile
+# syntax=docker/dockerfile:1
+FROM node:24-slim
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev
+COPY . .
+```
+
+- npm은 `/root/.npm`, Go는 `/go/pkg/mod`·`/root/.cache/go-build`. apt처럼 동시 접근에 약한 도구는 `sharing=locked`를 붙입니다.
+- 공사장 공구함과 같습니다. 공구(패키지)는 건물(이미지)에 넣지 않고 공구함에 두었다가 다음 공사에 다시 씁니다.
+
+## buildx: 한 번에 amd64 + arm64
+
+멀티 아키텍처 이미지는 CPU 종류별 이미지를 이미지 태그 하나로 묶은 매니페스트 리스트입니다.
+
+```bash
+docker buildx create --name multi --driver docker-container --use
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/acme/api:1.2.0 --push .
+```
+
+- 결과는 **`--push`**로 바로 올리는 것이 표준입니다. `--load`는 containerd 이미지 스토어(Engine 29 계열·Docker Desktop 기본값)에서만 매니페스트 리스트를 받습니다.
+- 다른 아키텍처는 QEMU 에뮬레이션이라 느립니다. 리눅스 서버는 `docker run --privileged --rm tonistiigi/binfmt --install all`로 먼저 등록하세요(Docker Desktop은 내장).
+
+## 여기서 막힌다면
+
+- `docker exporter does not currently support exporting manifest lists` → 기존(classic) 이미지 스토어에서 `--load`로 받은 것입니다. `--push`를 쓰거나 `--platform linux/arm64 --load`처럼 하나만 지정하세요.
+- `exec format error` → CPU와 다른 아키텍처 이미지입니다. `docker image inspect --format '{{.Architecture}}' 이미지`로 확인하세요.
+
+> 💡 **핵심**: 캐시 마운트는 "다운로드를 다시 안 하게", buildx `--platform`은 "어느 CPU에서든 돌게". 둘 다 BuildKit 기본 기능입니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"buildx — 멀티 아키텍처 빌드","lines":[{"text":"docker buildx create --name multi --driver docker-container --use","tone":"cmd"},{"text":"multi","tone":"out"},{"text":"docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/acme/api:1.2.0 --push .","tone":"cmd"},{"text":"[+] Building 84.3s (28/28) FINISHED","tone":"out"},{"text":" => [linux/amd64 build 4/6] RUN --mount=type=cache,target=/root/.npm npm ci","tone":"dim"},{"text":" => [linux/arm64 build 4/6] RUN --mount=type=cache,target=/root/.npm npm ci","tone":"dim"},{"text":" => CACHED (npm 캐시 마운트 재사용)","tone":"ok"},{"text":" => exporting manifest list sha256:7d2f0c…","tone":"out"},{"text":" => pushing manifest for ghcr.io/acme/api:1.2.0","tone":"ok"},{"text":"# amd64·arm64 두 이미지가 이미지 태그 하나로 묶여 올라갔습니다","tone":"comment"}],"caption":"두 플랫폼이 같은 npm 캐시 마운트를 재사용하고, 결과는 매니페스트 리스트 하나로 푸시됩니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'adae8de8-605e-409a-0416-ff03eb44adc1', '23f0912d-1e97-4b5c-59f6-5f7db3c00310', 'docker-production/docker-networks', 'docker-networks', '네트워크 이해: bridge·host·사용자 정의 네트워크와 컨테이너 이름 DNS',
+  $aix$앱 컨테이너가 DB 컨테이너에 접속하려면 주소가 필요합니다. IP는 컨테이너를 다시 만들 때마다 바뀌니 **이름으로 불러야** 합니다. 조건이 딱 하나 있습니다.
+
+## 드라이버는 둘만 기억
+
+- **bridge(기본)** — 컨테이너마다 가상 네트워크 카드를 주고 호스트 안 스위치로 묶습니다. 밖에 노출하려면 포트 매핑이 필요합니다.
+- **host** — 격리 없이 호스트 네트워크를 그대로 씁니다. 포트 매핑이 무시되고(`-p`를 쓰면 경고), Docker Desktop에서는 Settings > Resources > Network에서 켜야 합니다.
+- 그 외 none·overlay(여러 호스트)·macvlan·ipvlan은 단일 서버 운영에서 드뭅니다.
+
+## 기본 bridge와 사용자 정의 bridge는 다르다
+
+`docker run`에 아무것도 안 붙이면 **기본 bridge**에 붙는데, 여기서는 **컨테이너 이름으로 서로를 못 찾습니다**. 직접 만든 네트워크에서만 내장 DNS 서버가 이름을 풀어 줍니다.
+
+```bash
+docker network create app-net
+docker run -d --name db --network app-net postgres:17
+docker run -d --name api --network app-net -p 8080:8080 api:1.2.0
+# api 컨테이너 안에서는 db:5432 로 바로 접속
+docker network inspect app-net   # 연결된 컨테이너와 IP 확인
+```
+
+아파트 내선 전화와 같습니다. 같은 단지(사용자 정의 네트워크) 안에서는 "101동 관리실"(컨테이너 이름)로 걸고, 다른 단지와는 대표번호(포트 매핑)로만 통합니다.
+
+Docker Compose는 이를 자동으로 합니다. 프로젝트마다 사용자 정의 네트워크를 만들어 모든 서비스를 붙이므로 서비스 이름 `db`가 곧 호스트 이름입니다. 앱의 DB 주소는 `localhost`가 아니라 `db`여야 합니다.
+
+## 여기서 막힌다면
+
+- `getaddrinfo ENOTFOUND db` → 두 컨테이너가 같은 사용자 정의 네트워크에 없습니다. `docker network inspect`로 확인하세요.
+- `ECONNREFUSED 127.0.0.1:5432` → 컨테이너 안의 `localhost`는 그 컨테이너 자신입니다. 주소를 서비스 이름으로 바꾸세요.
+
+> 💡 **핵심**: 컨테이너끼리는 **사용자 정의 네트워크 + 컨테이너 이름**으로, 바깥과는 포트 매핑으로만 통합니다. 기본 bridge에는 이름 DNS가 없습니다.$aix$,
+  $aix${"type":"steps","title":"컨테이너 이름으로 통신하기까지","steps":[{"label":"사용자 정의 네트워크 만들기","sublabel":"docker network create app-net","icon":"network"},{"label":"컨테이너를 같은 네트워크에 연결","sublabel":"--network app-net --name db / api","icon":"link"},{"label":"이름으로 호출","sublabel":"api → db:5432 (내장 DNS가 IP로 변환)","icon":"route"},{"label":"바깥에는 포트 매핑만","sublabel":"-p 8080:8080 — db는 외부에 노출 안 함","icon":"shield"}],"caption":"이름 DNS는 사용자 정의 네트워크에서만 켜집니다 — Compose는 이 4단계를 자동으로 해 줍니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '276e0e76-a097-b915-a543-52fbe7551c4f', '23f0912d-1e97-4b5c-59f6-5f7db3c00310', 'docker-production/volumes-vs-bind-mounts', 'volumes-vs-bind-mounts', 'Docker 볼륨 vs 바인드 마운트: 개발과 운영에서 다르게',
+  $aix$컨테이너 안에 쓴 파일은 컨테이너를 지우면 사라집니다. 남겨야 할 데이터는 밖에 두어야 하는데, 방법이 둘이고 **개발과 운영에서 답이 다릅니다**.
+
+## 두 방식의 차이
+
+- **바인드 마운트** — 내 컴퓨터의 폴더를 컨테이너 경로에 그대로 연결합니다. 저장 즉시 보이므로 **개발 중 소스 반영**에 씁니다. 호스트 경로·UID 권한에 묶이는 것이 단점입니다.
+- **Docker 볼륨** — Docker가 자기 저장 영역에 만들어 관리합니다. 호스트 경로를 몰라도 되고, `docker volume` 명령으로 목록·백업·삭제가 됩니다. 공식 문서도 **데이터 영속화의 기본 수단**으로 권장합니다.
+
+비유하면 바인드 마운트는 내 책상 서랍을 동료에게 열어 주는 것, Docker 볼륨은 회사 문서 창고에 맡기는 것입니다.
+
+```bash
+# 운영: 이름 있는 Docker 볼륨 (권장, --mount가 -v보다 명시적)
+docker run -d --name db \
+  --mount type=volume,src=pgdata,dst=/var/lib/postgresql/data postgres:17
+# 개발: 소스 폴더 바인드 마운트, 설정은 읽기 전용(ro)으로
+docker run -d --mount type=bind,src=$(pwd)/src,dst=/app/src api:dev
+docker run -d -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro nginx
+docker volume ls && docker volume inspect pgdata
+```
+
+## 운영에서 꼭 지킬 것
+
+- **DB 데이터는 반드시 Docker 볼륨에.** 컨테이너를 새 이미지로 교체해도 데이터는 남습니다.
+- **설정 파일은 읽기 전용(`:ro`)으로** 마운트해 컨테이너가 고치지 못하게 합니다.
+- **백업은 볼륨 단위로.** 예: `docker run --rm -v pgdata:/data -v $(pwd):/backup alpine tar czf /backup/pgdata.tgz -C /data .`
+- Compose에서는 최상위 `volumes:`에 이름을 선언하고 서비스에서 `pgdata:/var/lib/postgresql/data`처럼 씁니다(다음 레슨).
+
+## 여기서 막힌다면
+
+- `permission denied`(바인드 마운트) → 컨테이너 안 사용자 UID와 호스트 폴더 소유자가 다릅니다. `--user $(id -u):$(id -g)`로 맞추거나 Docker 볼륨으로 바꾸세요.
+- 데이터가 사라졌다 → `docker compose down -v`의 `-v`는 볼륨까지 지웁니다. 운영에서는 습관적으로 붙이지 마세요.
+
+> 💡 **핵심**: **개발은 바인드 마운트, 운영은 Docker 볼륨.** 그리고 운영 데이터가 든 볼륨을 지우는 명령은 손이 기억하지 않게 하세요.$aix$,
+  $aix${"type":"compare","title":"바인드 마운트 vs Docker 볼륨","columns":[{"title":"바인드 마운트 (개발)","icon":"code","tone":"accent","items":["호스트 폴더 → 컨테이너 경로 직접 연결","코드 저장 즉시 반영","호스트 경로·UID 권한에 의존","설정 파일은 :ro 로 읽기 전용"]},{"title":"Docker 볼륨 (운영)","icon":"hard-drive","tone":"primary","items":["Docker가 관리하는 저장 영역","docker volume ls/inspect/prune 로 관리","컨테이너 교체·재생성에도 데이터 유지","백업·공유가 쉬움 — DB 데이터의 자리"]}],"caption":"같은 '밖에 두기'지만, 관리 주체가 나(호스트 경로)냐 Docker냐가 갈림길입니다."}$aix$::jsonb, null, 5, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6546e640-0b19-dced-3c7f-35c1f3d2ff05', '23f0912d-1e97-4b5c-59f6-5f7db3c00310', 'docker-production/compose-production', 'compose-production', 'Compose 실전: healthcheck·depends_on(condition)·env_file·profiles',
+  $aix$`docker compose up`을 했더니 앱이 "DB 연결 실패"로 죽고, 30초 뒤 다시 올리면 됩니다. DB 컨테이너가 **시작됐지만 아직 준비되지 않았기** 때문입니다. 운영용 Compose는 이 "준비됨"을 명시합니다.
+
+## 헬스체크로 "준비됨"을 정의한다
+
+```yaml
+services:
+  db:
+    image: postgres:17
+    env_file: .env.db
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+volumes:
+  pgdata:
+```
+
+`test`가 종료 코드 0이면 healthy. `start_period` 동안의 실패는 세지 않습니다.
+
+## 준비된 뒤에 시작하게 한다
+
+```yaml
+  api:
+    build: .
+    env_file: [.env.db, .env.api]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  adminer:
+    image: adminer
+    profiles: ["debug"]
+```
+
+- `depends_on` 짧은 문법(이름만 나열)은 **시작 순서만** 보장합니다. `condition: service_healthy`라야 헬스체크 통과까지 기다립니다.
+- `env_file`은 파일의 값을 **컨테이너 환경변수**로 넣습니다. 프로젝트 루트의 `.env`는 `compose.yaml`의 `${VAR}` 치환에만 쓰이고 컨테이너에 주입되지 않습니다.
+- `profiles`가 붙은 서비스는 `docker compose --profile debug up -d`로 켤 때만 뜹니다.
+
+식당으로 치면 주방(DB)이 "첫 주문 받을 수 있다"고 신호한 뒤 홀(앱) 문을 여는 것입니다. `docker compose up -d --wait`는 모두 running/healthy가 될 때까지 기다립니다. `docker compose ps`의 STATUS 열에 `(healthy)`가 보이면 성공입니다.
+
+## 여기서 막힌다면
+
+- `dependency failed to start: container shop-db-1 is unhealthy` → 헬스체크 명령이 틀렸거나(`docker compose logs db`), 사용자·DB 이름이 `.env.db`와 다릅니다.
+- `the attribute 'version' is obsolete` 경고 → `version:` 줄을 지우세요.
+- `env file .env.db not found` → 경로는 `compose.yaml`이 있는 폴더 기준입니다.
+
+> 💡 **핵심**: 운영용 Compose의 세 줄 — **healthcheck로 준비를 정의하고, condition: service_healthy로 기다리고, profiles로 운영 기본 기동을 가볍게.**$aix$,
+  $aix${"type":"flow","title":"condition: service_healthy 가 만드는 기동 순서","nodes":[{"label":"db 컨테이너 시작","sublabel":"postgres 프로세스 기동 중 — 아직 연결 불가","icon":"database","tone":"muted"},{"label":"헬스체크 반복","sublabel":"pg_isready · 10초 간격 · start_period 20초","icon":"activity","tone":"accent","edgeLabel":"종료 코드 0이 나올 때까지"},{"label":"db: healthy","sublabel":"docker compose ps → Up 31s (healthy)","icon":"check","tone":"success"},{"label":"api 컨테이너 시작","sublabel":"depends_on db condition: service_healthy","icon":"rocket","tone":"primary","edgeLabel":"이때 비로소 시작"}],"caption":"'시작됨'과 '준비됨' 사이의 30초가 재시작 루프의 원인 — 헬스체크가 그 간극을 메웁니다."}$aix$::jsonb, $aix${"title":"compose.yaml에 헬스체크를 넣고 healthy 확인하기","app":{"kind":"code-editor","windowTitle":"compose.yaml — shop","files":[{"id":"f-compose","name":"compose.yaml","active":true},{"id":"f-envdb","name":".env.db"},{"id":"f-docker","name":"Dockerfile"}],"code":[{"id":"c1","text":"services:"},{"id":"c2","text":"db:","indent":1},{"id":"c3","text":"image: postgres:17","indent":2},{"id":"c4","text":"env_file: .env.db","indent":2},{"id":"c5","text":"volumes: [\"pgdata:/var/lib/postgresql/data\"]","indent":2},{"id":"c6","text":"healthcheck:","indent":2,"tone":"add","hidden":true},{"id":"c7","text":"test: [\"CMD-SHELL\", \"pg_isready -U app\"]","indent":3,"tone":"add","hidden":true},{"id":"c8","text":"interval: 10s","indent":3,"tone":"add","hidden":true},{"id":"c9","text":"retries: 5","indent":3,"tone":"add","hidden":true},{"id":"c10","text":"start_period: 20s","indent":3,"tone":"add","hidden":true},{"id":"c11","text":"api:","indent":1},{"id":"c12","text":"build: .","indent":2},{"id":"c13","text":"depends_on:","indent":2,"tone":"add","hidden":true},{"id":"c14","text":"db:","indent":3,"tone":"add","hidden":true},{"id":"c15","text":"condition: service_healthy","indent":4,"tone":"add","hidden":true},{"id":"c16","text":"adminer:","indent":1},{"id":"c17","text":"image: adminer","indent":2},{"id":"c18","text":"profiles: [\"debug\"]","indent":2,"tone":"add","hidden":true},{"id":"c19","text":"volumes:"},{"id":"c20","text":"pgdata:","indent":1}],"terminal":[{"id":"t1","text":"docker compose up -d --wait","tone":"cmd","hidden":true},{"id":"t2","text":"✔ Container shop-db-1   Healthy","tone":"ok","hidden":true},{"id":"t3","text":"✔ Container shop-api-1  Started","tone":"ok","hidden":true},{"id":"t4","text":"docker compose ps","tone":"cmd","hidden":true},{"id":"t5","text":"NAME         SERVICE   STATUS","tone":"out","hidden":true},{"id":"t6","text":"shop-db-1    db        Up 31 seconds (healthy)","tone":"ok","hidden":true},{"id":"t7","text":"shop-api-1   api       Up 12 seconds","tone":"ok","hidden":true},{"id":"t8","text":"docker compose --profile debug up -d","tone":"cmd","hidden":true},{"id":"t9","text":"✔ Container shop-adminer-1  Started","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① db 서비스에 헬스체크를 추가합니다"},{"t":"type","target":"c6","text":"healthcheck:"},{"t":"type","target":"c7","text":"test: [\"CMD-SHELL\", \"pg_isready -U app\"]"},{"t":"type","target":"c8","text":"interval: 10s"},{"t":"type","target":"c9","text":"retries: 5"},{"t":"type","target":"c10","text":"start_period: 20s"},{"t":"caption","text":"② api는 db가 healthy가 된 뒤에만 시작하도록 합니다"},{"t":"type","target":"c13","text":"depends_on:"},{"t":"type","target":"c14","text":"db:"},{"t":"type","target":"c15","text":"condition: service_healthy"},{"t":"caption","text":"③ 관리 도구 adminer는 debug 프로필에서만 뜨게 합니다"},{"t":"type","target":"c18","text":"profiles: [\"debug\"]"},{"t":"caption","text":"④ --wait 로 모두 준비될 때까지 기다리며 실행합니다"},{"t":"type","target":"t1","text":"docker compose up -d --wait"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"caption","text":"⑤ STATUS 열에서 (healthy)를 확인합니다"},{"t":"type","target":"t4","text":"docker compose ps"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"reveal","target":"t7"},{"t":"caption","text":"⑥ 프로필을 켜면 adminer도 추가로 올라옵니다"},{"t":"type","target":"t8","text":"docker compose --profile debug up -d"},{"t":"reveal","target":"t9"},{"t":"caption","text":"✅ db healthy → api 시작 — 재시작 루프 없는 기동 순서 완성"}]}$aix$::jsonb, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '67cd06c7-0445-d49d-b950-4bee5917baea', 'eb4408ca-2aae-fafe-447b-fc583fa6a22a', 'docker-production/non-root-and-secrets', 'non-root-and-secrets', '비루트 실행과 시크릿: 이미지에 비밀번호를 굽지 않기',
+  $aix$컨테이너는 기본적으로 **root로 실행**되고, Dockerfile에 적은 값은 **누구나 볼 수 있습니다**. 보안은 이 두 기본값을 뒤집는 데서 시작합니다.
+
+## 비루트: USER 한 줄
+
+- 공식 `node` 이미지에는 UID 1000의 `node` 사용자가 있어 `USER node`면 끝입니다.
+- 없으면 만듭니다. Debian `RUN groupadd -r app && useradd -r -g app app`, Alpine `RUN addgroup -S app && adduser -S app -G app`.
+- 앱 파일 소유자도 맞춥니다: `COPY --chown=app:app . .`
+- 비루트는 1024 미만 포트를 못 엽니다. Docker(Engine 20.10 이후)는 컨테이너 안에서 풀어 주지만 host 네트워크·Kubernetes에서는 막힐 수 있으니, 앱은 8080처럼 높은 포트로 열고 `-p 80:8080`으로 연결하세요.
+
+출입카드로 치면 root는 모든 층이 열리는 관리자 카드입니다. 앱에는 자기 층만 찍히는 직원 카드(비루트)만 줍니다.
+
+## 시크릿: 빌드와 실행을 나눠서
+
+**ARG·ENV로 비밀값을 넘기지 마세요.** `docker history`에 남습니다. 대신 BuildKit 시크릿 마운트를 씁니다.
+
+```dockerfile
+# 빌드 중에만 /run/secrets/npmrc 로 보이고, 레이어에는 남지 않음
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci --omit=dev
+```
+
+```bash
+docker build --secret id=npmrc,src=$HOME/.npmrc -t api:1.2.0 .
+```
+
+실행 시점 비밀값은 Compose의 `secrets`로 넣습니다. `/run/secrets/<이름>`에 읽기 전용 파일로 나타나고, 공식 이미지 다수가 `POSTGRES_PASSWORD_FILE`처럼 `_FILE` 변수로 이를 받습니다.
+
+## 여기서 막힌다면
+
+- `EACCES: permission denied, open '/app/logs/app.log'` → `USER` 전환 전에 `RUN mkdir -p /app/logs && chown app:app /app/logs`를 넣으세요.
+- `secret npmrc: not found` → `--secret id=`와 Dockerfile의 `id`가 다릅니다.
+
+> 💡 **핵심**: **USER로 권한을 내리고, 비밀값은 레이어가 아니라 마운트로.** 이미지는 "누구나 열어 보는 상자"입니다.$aix$,
+  $aix${"type":"stack","title":"컨테이너 방어층 (위 = 앱에 가까움)","layers":[{"label":"앱 프로세스 — USER app (비루트)","sublabel":"뚫려도 root가 아님 · 8080 같은 높은 포트 사용","icon":"user","tone":"primary"},{"label":"시크릿 마운트","sublabel":"빌드: --mount=type=secret · 실행: /run/secrets/<이름>","icon":"key","tone":"accent"},{"label":"파일시스템 — --read-only + --tmpfs /tmp","sublabel":"악성 파일 쓰기 차단","icon":"lock","tone":"accent"},{"label":"커널 권한 — --cap-drop ALL, no-new-privileges","sublabel":"권한 상승 경로 제거","icon":"shield","tone":"muted"}],"caption":"한 층이 뚫려도 다음 층이 막습니다 — 비루트는 그중 가장 싸고 효과 큰 층입니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '60960467-6a4f-a07c-c682-16417f9199d4', 'eb4408ca-2aae-fafe-447b-fc583fa6a22a', 'docker-production/image-scanning', 'image-scanning', '취약점 스캔: Docker Scout·Trivy로 CVE 찾고 고치기',
+  $aix$내 코드에 버그가 없어도 베이스 이미지의 OpenSSL·zlib에 알려진 결함이 있으면 취약한 이미지입니다. 취약점 스캔은 SBOM을 CVE 데이터베이스와 대조하는 일입니다.
+
+## Docker Scout와 Trivy
+
+Docker Scout는 Docker Desktop에 내장돼 있습니다.
+
+```bash
+docker scout quickview api:1.0          # 심각도별 개수 + 베이스 이미지 교체 제안
+docker scout cves --only-severity critical,high api:1.0
+docker scout recommendations api:1.0    # 더 안전한 베이스 이미지 태그 추천
+```
+
+`0C 2H 5M 20L`은 Critical/High/Medium/Low 개수입니다. **Updated base image** 행은 베이스 이미지 태그만 바꿔도 사라지는 CVE입니다.
+
+Trivy는 오픈소스 표준 스캐너입니다.
+
+```bash
+trivy image --severity HIGH,CRITICAL --ignore-unfixed api:1.0
+trivy image --exit-code 1 --severity CRITICAL api:1.0   # CI 차단용
+```
+
+끝의 `Total: 12 (UNKNOWN: 0, LOW: 6, MEDIUM: 4, HIGH: 2, CRITICAL: 0)` 요약을 보세요. `--ignore-unfixed`는 수정 버전 없는 항목을 숨겨 **지금 고칠 수 있는 것**만 남깁니다.
+
+식품 리콜 대조와 같습니다. 재료 목록(SBOM)을 리콜 공고(CVE 데이터베이스)와 맞춰 보고, 대체 재료(수정 버전)가 있는 것부터 바꿉니다.
+
+## 고치는 순서
+
+1. **베이스 이미지 교체** — CVE 대부분은 OS 패키지에서 옵니다. 최신 패치 이미지 태그로 재빌드하거나 full → slim → Distroless/Docker Hardened Images로 옮기세요.
+2. **앱 의존성 올리기** — `npm audit fix`, `pip-audit` 등으로 라이브러리 버전을 올립니다.
+3. **정기 재빌드** — 코드가 안 바뀌어도 매주 다시 빌드·스캔하세요. CVE는 매일 새로 공개됩니다.
+
+## 여기서 막힌다면
+
+- `docker: 'scout' is not a docker command` → 리눅스 Engine에는 플러그인이 없습니다. docs.docker.com/scout/install의 스크립트(`docker/scout-cli`)로 설치하세요.
+- `docker scout`가 로그인을 요구 → Docker Hub 계정으로 `docker login` 후 다시 실행합니다.
+
+> 💡 **핵심**: 숫자에 압도되지 마세요. **High/Critical + 수정 버전 있음**만 먼저 고치고, 가장 효과 큰 조치는 거의 항상 **베이스 이미지 교체**입니다.$aix$,
+  $aix${"type":"cycle","title":"취약점 대응 사이클","center":"매주 반복","nodes":[{"label":"스캔","sublabel":"docker scout cves / trivy image","icon":"search"},{"label":"선별","sublabel":"High·Critical + 수정 버전 있음","icon":"filter"},{"label":"수정","sublabel":"베이스 이미지 태그 교체·의존성 업데이트","icon":"wrench"},{"label":"재빌드·재스캔","sublabel":"0C 0H 확인 후 푸시","icon":"refresh"}],"caption":"CVE는 계속 새로 공개되므로 '한 번 통과'가 아니라 주기적인 사이클로 운영합니다."}$aix$::jsonb, $aix${"title":"스캔 → 베이스 이미지 교체 → 재스캔 따라하기","app":{"kind":"code-editor","windowTitle":"Dockerfile — api (취약점 스캔)","files":[{"id":"f-docker","name":"Dockerfile","active":true},{"id":"f-pkg","name":"package.json"},{"id":"f-ignore","name":".dockerignore"}],"code":[{"id":"c1","text":"FROM node:24","tone":"del"},{"id":"c2","text":"FROM node:24-slim","tone":"add","hidden":true},{"id":"c3","text":"WORKDIR /app"},{"id":"c4","text":"COPY package*.json ./"},{"id":"c5","text":"RUN npm ci --omit=dev"},{"id":"c6","text":"COPY . ."},{"id":"c7","text":"USER node"},{"id":"c8","text":"CMD [\"node\", \"server.js\"]"}],"terminal":[{"id":"t1","text":"docker scout quickview api:1.0","tone":"cmd","hidden":true},{"id":"t2","text":"Target              api:1.0        1C   4H  12M  38L","tone":"err","hidden":true},{"id":"t3","text":"Base image          node:24        1C   4H  12M  38L","tone":"out","hidden":true},{"id":"t4","text":"Updated base image  node:24-slim   0C   0H   2M   9L","tone":"ok","hidden":true},{"id":"t5","text":"docker build -t api:1.1 .","tone":"cmd","hidden":true},{"id":"t6","text":"[+] Building 38.4s (12/12) FINISHED","tone":"out","hidden":true},{"id":"t7","text":"docker scout cves api:1.1","tone":"cmd","hidden":true},{"id":"t8","text":"✓ Image stored for indexing","tone":"ok","hidden":true},{"id":"t9","text":"✓ Indexed 212 packages","tone":"ok","hidden":true},{"id":"t10","text":"✗ Detected 2 vulnerable packages with a total of 11 vulnerabilities","tone":"out","hidden":true},{"id":"t11","text":"  0C   0H   2M   9L   (critical/high 0건)","tone":"ok","hidden":true},{"id":"t12","text":"trivy image -s HIGH,CRITICAL api:1.1","tone":"cmd","hidden":true},{"id":"t13","text":"Total: 0 (HIGH: 0, CRITICAL: 0)","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 현재 이미지를 quickview로 훑어봅니다"},{"t":"type","target":"t1","text":"docker scout quickview api:1.0"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"reveal","target":"t4"},{"t":"caption","text":"② CVE 대부분이 베이스 이미지에서 옵니다 — 제안된 slim으로 교체"},{"t":"move","target":"c1"},{"t":"dblclick","target":"c1"},{"t":"type","target":"c2","text":"FROM node:24-slim"},{"t":"caption","text":"③ 새 이미지 태그로 다시 빌드합니다"},{"t":"type","target":"t5","text":"docker build -t api:1.1 ."},{"t":"reveal","target":"t6"},{"t":"caption","text":"④ Docker Scout로 재스캔합니다"},{"t":"type","target":"t7","text":"docker scout cves api:1.1"},{"t":"reveal","target":"t8"},{"t":"reveal","target":"t9"},{"t":"reveal","target":"t10"},{"t":"reveal","target":"t11"},{"t":"caption","text":"⑤ Trivy로 High/Critical만 교차 확인합니다"},{"t":"type","target":"t12","text":"trivy image -s HIGH,CRITICAL api:1.1"},{"t":"reveal","target":"t13"},{"t":"move","target":"t13"},{"t":"caption","text":"✅ 1C 4H → 0C 0H — FROM 한 줄 교체로 배포 차단 기준 통과"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e384bb89-34d6-d0a9-66d6-a41f347c53a1', 'eb4408ca-2aae-fafe-447b-fc583fa6a22a', 'docker-production/resource-limits-and-logs', 'resource-limits-and-logs', '리소스 제한과 로그 관리: 컨테이너 하나가 서버를 삼키지 않게',
+  $aix$제한 없는 컨테이너는 메모리를 서버 전체까지 씁니다. 커널이 아무 프로세스나 죽이고, 로그는 디스크가 찰 때까지 자랍니다. 둘 다 **기본값이 "무제한"**이라서 생기는 사고입니다.
+
+## 메모리와 CPU 제한
+
+```bash
+docker run -d --name api \
+  --memory=512m --memory-swap=512m \
+  --cpus=1.5 --pids-limit=200 \
+  api:1.2.0
+docker stats --no-stream        # MEM USAGE / LIMIT 열로 적용 확인
+```
+
+- `--memory`를 넘으면 OOM으로 죽습니다. `docker inspect --format '{{.State.OOMKilled}}' api`가 `true`, 종료 코드 137이면 이 경우입니다.
+- `--memory-swap`을 `--memory`와 같게 두면 스왑 없이 "바로 죽고 재시작"으로 예측 가능해집니다. `--cpus=1.5`는 넘어도 느려질 뿐입니다.
+- Compose에서는 `deploy.resources.limits`에 `cpus: "1.5"`, `memory: 512M`로 적습니다. Swarm 없이 `docker compose up`에서도 적용됩니다.
+
+공유 냉장고에 칸을 나누지 않으면 한 사람의 김치통이 전체를 차지합니다. 제한은 "네 칸은 여기까지"라는 표시입니다.
+
+## 로그 로테이션
+
+기본 로그 드라이버 `json-file`은 `max-size`가 **기본 무제한**입니다. `/etc/docker/daemon.json`에 서버 기본값을 적고 데몬을 재시작하세요.
+
+```json
+{
+  "log-driver": "json-file",
+  "log-opts": { "max-size": "10m", "max-file": "3" }
+}
+```
+
+- 값은 숫자도 **문자열(따옴표)**로. 컨테이너당 10MB × 3개 = 30MB로 묶이고, 기존 컨테이너에는 적용되지 않으니 다시 만드세요.
+- `local` 드라이버는 기본값(20MB × 5개)으로 로테이션이 켜져 있습니다. 개별 컨테이너는 `--log-opt max-size=10m`, Compose는 `logging.options`에 같은 키를.
+- 앱 로그는 파일이 아니라 **표준 출력**으로. 그래야 `docker logs`와 로그 수집기가 받아갑니다.
+
+## 죽으면 다시 살리기
+
+`--restart unless-stopped`(Compose: `restart: unless-stopped`)는 OOM·크래시 후 자동 재시작합니다. 재시작 루프를 숨길 수 있으니 헬스체크와 함께.
+
+> 💡 **핵심**: **--memory와 max-size, 두 기본값을 반드시 바꾸세요.** 이 둘을 안 건드린 서버는 언젠가 새벽에 전화를 걸어옵니다.$aix$,
+  $aix${"type":"grid","title":"컨테이너 하나가 서버를 삼키는 4가지 경로와 차단 옵션","items":[{"label":"메모리 폭주","sublabel":"--memory=512m --memory-swap=512m → OOM 후 재시작","icon":"cpu","tone":"warning"},{"label":"CPU 독점","sublabel":"--cpus=1.5 → 초과 시 느려질 뿐 다른 컨테이너 보호","icon":"gauge","tone":"accent"},{"label":"프로세스 폭주","sublabel":"--pids-limit=200 → fork 폭탄 차단","icon":"alert","tone":"accent"},{"label":"로그로 디스크 가득","sublabel":"max-size=10m, max-file=3 → 컨테이너당 30MB","icon":"hard-drive","tone":"warning"},{"label":"확인","sublabel":"docker stats · inspect .State.OOMKilled","icon":"eye","tone":"muted"},{"label":"복구","sublabel":"restart: unless-stopped + 헬스체크","icon":"refresh","tone":"success"}],"caption":"네 경로 모두 기본값이 '무제한'입니다 — 서버를 만들 때 daemon.json과 실행 옵션으로 한 번에 닫으세요."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7867ed17-79e9-3e76-533c-14fbc5341d50', 'eb4408ca-2aae-fafe-447b-fc583fa6a22a', 'docker-production/ci-build-and-next', 'ci-build-and-next', 'GitHub Actions로 빌드·푸시 자동화 + 다음 단계',
+  $aix$지금까지 배운 것을 매번 손으로 하면 결국 누군가 빠뜨립니다. 코드를 올리면 **빌드 → 스캔 → 레지스트리 푸시**가 자동으로 도는 파이프라인을 만듭니다.
+
+## GHCR로 푸시하는 워크플로
+
+저장소에 `.github/workflows/docker.yml`을 만듭니다. GHCR은 별도 시크릿 없이 워크플로의 `GITHUB_TOKEN`으로 로그인됩니다.
+
+```yaml
+on: { push: { branches: [main] } }
+permissions:
+  contents: read
+  packages: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+```
+
+```yaml
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+```
+
+- `permissions.packages: write`가 없으면 푸시가 거부됩니다. `type=gha`는 레이어 캐시를 GitHub Actions에 저장해 다음 실행을 빠르게 합니다.
+- 이미지 태그에 커밋 SHA를 넣으면 **어떤 코드로 만든 이미지인지** 추적됩니다. 이미지 이름은 소문자여야 하니 저장소에 대문자가 있으면 `docker/metadata-action@v6`으로 이미지 태그를 만드세요.
+- 빌드와 푸시 사이에 `trivy image --exit-code 1 --severity CRITICAL` 스텝을 넣으면 **취약한 이미지는 레지스트리에 올라가지 않습니다**.
+
+택배 분류 센터처럼, 컨베이어(파이프라인)가 검수(스캔)와 목적지 라벨(이미지 태그)을 붙여 창고(레지스트리)로 보냅니다.
+
+## 여기서 막힌다면
+
+- `denied: permission_denied: write_package` → `permissions.packages: write` 누락이거나, 같은 이름의 패키지가 다른 저장소에 연결돼 있습니다.
+- `docker exporter does not currently support exporting manifest lists` → 멀티 플랫폼인데 `push: true`가 빠진 것입니다.
+
+## 다음 단계
+
+서버 한 대를 Compose로 운영하는 단계는 여기까지입니다. 컨테이너 수십 개, 서버 여러 대가 되면 "죽으면 다시 살리기"와 "늘리고 줄이기"를 사람이 못 따라갑니다. 다음 강의 **"Kubernetes 입문: 컨테이너 오케스트레이션 첫걸음"**이 그 문제를 다룹니다. 여기서 만든 작고 안전한 이미지가 그대로 Kubernetes의 재료입니다.
+
+> 💡 **핵심**: 좋은 이미지는 사람이 아니라 **파이프라인이 만듭니다.** 자동화한 순간 체크리스트는 "기억할 것"에서 "지켜지는 것"으로 바뀝니다.$aix$,
+  $aix${"type":"steps","title":"push 한 번에 일어나는 일","steps":[{"label":"코드 push (main)","sublabel":"GitHub Actions 워크플로 트리거","icon":"git-branch"},{"label":"buildx 빌드","sublabel":"amd64 + arm64 · type=gha 캐시 재사용","icon":"package"},{"label":"취약점 스캔","sublabel":"Critical/High 있으면 여기서 실패","icon":"bug"},{"label":"GHCR 푸시","sublabel":"ghcr.io/owner/repo:<커밋 SHA>","icon":"upload"}],"caption":"3단계에서 멈추는 것이 이 파이프라인의 진짜 가치입니다 — 취약한 이미지는 레지스트리에 도달하지 못합니다."}$aix$::jsonb, null, 6, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: Kubernetes 입문: 컨테이너 오케스트레이션 첫걸음
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '0430af38-f665-3894-8210-236a2b61ed1f', 'kubernetes-basics', 'Kubernetes 입문: 컨테이너 오케스트레이션 첫걸음', $aix$Docker로 컨테이너 하나를 띄울 줄 알게 됐다면, 다음 질문은 '그게 100개가 되면?'입니다. 이 강의는 쿠버네티스(Kubernetes)가 그 질문에 어떻게 답하는지를 내 노트북 위의 로컬 클러스터에서 직접 확인합니다. 클러스터 구조와 선언형 모델을 이해한 뒤, 파드·디플로이먼트·Service·ConfigMap 같은 핵심 오브젝트를 YAML로 만들고, 롤링 업데이트와 롤백, Gateway API로 외부 노출, Helm 차트 설치까지 실습합니다. 마지막에는 파드가 안 뜰 때 원인을 찾는 진단 순서를 손에 익혀, 운영 강의로 넘어갈 준비를 마칩니다.$aix$,
+  null, 'devops', 'intermediate', array['Kubernetes', 'K8s', 'kubectl', '컨테이너 오케스트레이션', 'Helm', 'Gateway API']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'f82ea6d2-9022-5540-1744-0c0fc2912443', '0430af38-f665-3894-8210-236a2b61ed1f', 'why-kubernetes', '왜 Kubernetes인가', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'cb23264f-c322-2198-4c4b-a0be4969a960', '0430af38-f665-3894-8210-236a2b61ed1f', 'core-objects', '핵심 오브젝트', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'd30f6666-a713-a60f-0d09-1cbbf7c7e62d', '0430af38-f665-3894-8210-236a2b61ed1f', 'expose-and-package', '외부 노출과 패키징', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a241ecf9-1d47-babe-8429-f85b8b412961', 'f82ea6d2-9022-5540-1744-0c0fc2912443', 'kubernetes-basics/containers-at-scale', 'containers-at-scale', '컨테이너가 100개가 되면 생기는 일',
+  $aix$`docker run` 한 줄로 컨테이너를 띄우는 건 이제 익숙하죠. 그런데 서비스가 커져서 컨테이너가 100개, 서버가 10대가 되면 그 한 줄이 갑자기 100줄, 1,000줄이 됩니다. 쿠버네티스는 바로 이 지점에서 등장합니다.
+
+## 서버 여러 대에 컨테이너를 흩어 놓으면
+
+- **어느 서버에 띄울까?** 메모리가 남는 서버를 사람이 매번 골라야 합니다.
+- **죽으면 누가 다시 띄우나?** 새벽 3시에 누군가 SSH로 들어가야 합니다.
+- **새 버전은 어떻게 바꾸나?** 한 번에 내리면 서비스가 멈추고, 하나씩 바꾸면 반나절이 걸립니다.
+- **주소는 어떻게 찾나?** 컨테이너가 다시 뜨면 IP가 바뀝니다.
+
+Docker 하나로는 답이 없습니다. 결국 스크립트를 짜게 되고, 그 스크립트가 곧 '내가 만든 조악한 오케스트레이터'가 됩니다.
+
+## 물류센터의 관제 시스템
+
+택배 상자(컨테이너) 몇 개는 사람이 직접 옮기면 됩니다. 하지만 하루 10만 개가 되면 **어느 벨트로 보낼지, 고장 난 벨트는 어떻게 우회할지**를 관제 시스템이 결정합니다. Kubernetes는 컨테이너의 관제 시스템입니다. 여러 노드 위에 컨테이너를 배치하고, 죽으면 되살리고, 새 버전으로 순차 교체하고, 바뀌지 않는 주소를 붙여 줍니다.
+
+## 이 강의의 로드맵
+
+1. **왜·구조·선언형** — Kubernetes가 일하는 방식을 이해하고 내 노트북에 클러스터를 만듭니다 (모듈 1)
+2. **핵심 오브젝트** — 파드, 디플로이먼트, Service, ConfigMap, 네임스페이스를 YAML로 다룹니다 (모듈 2)
+3. **노출과 패키징** — 외부 접속, 무중단 배포와 롤백, Helm, 파드가 안 뜰 때의 진단법 (모듈 3)
+
+선수 지식은 "Docker 입문" 수준(이미지·컨테이너·포트 매핑·환경변수)이면 충분합니다.
+
+> 💡 **핵심**: Kubernetes는 "컨테이너를 띄우는 도구"가 아니라 **"컨테이너 수백 개의 배치·복구·교체를 대신 결정하는 시스템"**입니다.$aix$,
+  $aix${"type":"compare","title":"Docker 단독 vs Kubernetes","columns":[{"title":"Docker 단독 (서버 1대)","icon":"container","tone":"muted","items":["docker run으로 직접 실행","죽으면 사람이 다시 띄움","새 버전은 내리고 다시 올림","IP가 바뀌면 설정도 수정"]},{"title":"Kubernetes (서버 N대)","icon":"ship","tone":"primary","items":["어느 노드에 둘지 자동 배치","죽으면 자동 재생성","순차 교체(롤링 업데이트)","고정 주소(Service)로 연결"]}],"caption":"오른쪽 열의 네 가지가 이 강의에서 손으로 확인할 것들입니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b64da522-68a5-bf35-0f49-26f4e0b7b219', 'f82ea6d2-9022-5540-1744-0c0fc2912443', 'kubernetes-basics/cluster-architecture', 'cluster-architecture', '클러스터 구조: 컨트롤 플레인과 노드',
+  $aix$Kubernetes를 처음 보면 부품 이름이 너무 많아 겁부터 납니다. 하지만 큰 그림은 단순합니다. **결정하는 쪽**과 **일하는 쪽**, 두 부류만 구분하면 됩니다.
+
+## 컨트롤 플레인: 결정하는 쪽
+
+회사로 비유하면 본사입니다. 본사에는 부서가 넷 있습니다.
+
+- **kube-apiserver** — 접수 창구. kubectl이든 다른 컴포넌트든 **모든 요청은 여기로만** 들어옵니다.
+- **etcd** — 장부. 클러스터의 모든 상태를 기록하는 키-값 저장소입니다. 이 장부를 잃으면 클러스터를 잃습니다.
+- **kube-scheduler** — 배치 담당. 자리를 못 잡은 파드에 "이 노드로 가라"고 정해 줍니다. 남은 CPU·메모리, 배치 제약을 따집니다.
+- **kube-controller-manager** — 관리자들의 묶음. "3개여야 하는데 2개뿐이네" 같은 차이를 발견하고 메우는 컨트롤러들이 돕니다.
+
+## 노드: 일하는 쪽
+
+노드는 컨테이너가 실제로 실행되는 서버(물리 서버든 가상머신이든)입니다. 노드마다 두세 가지 프로그램이 상주합니다.
+
+- **kubelet** — 현장 반장. API 서버가 "이 파드를 실행하라"고 하면 컨테이너 런타임에 지시하고, 상태를 계속 보고합니다.
+- **컨테이너 런타임** — 컨테이너를 실제로 띄우는 소프트웨어. containerd, CRI-O 등.
+- **kube-proxy** — 노드의 네트워크 규칙을 관리해 Service 트래픽이 파드에 도달하게 합니다. 일부 네트워크 플러그인이 이 역할을 대신하므로 선택 사항입니다.
+
+## 왜 이 구조가 중요한가
+
+kubectl로 무언가를 만들면 여러분은 **API 서버에 "이렇게 되어야 해"를 적어 넣는 것**뿐입니다. 스케줄러가 자리를 정하고, kubelet이 실행하고, 컨트롤러가 개수를 맞춥니다. 이 분업을 알면 다음 레슨의 선언형 모델이 자연스럽게 읽힙니다.
+
+> 💡 **핵심**: 컨트롤 플레인은 **결정**하고 노드는 **실행**합니다. 모든 결정은 API 서버를 거쳐 etcd에 기록됩니다.$aix$,
+  $aix${"type":"stack","title":"클러스터의 층 구조","layers":[{"label":"kubectl · CI/CD · 대시보드","sublabel":"사용자와 도구 — API 서버에 요청을 보냄","icon":"terminal","tone":"muted"},{"label":"컨트롤 플레인","sublabel":"kube-apiserver · etcd · kube-scheduler · kube-controller-manager","icon":"cpu","tone":"primary"},{"label":"노드 (여러 대)","sublabel":"kubelet · kube-proxy · 컨테이너 런타임","icon":"server","tone":"accent"},{"label":"파드 안의 컨테이너","sublabel":"여러분의 앱이 실제로 실행되는 곳","icon":"boxes","tone":"success"}],"caption":"위에서 내린 결정이 아래로 흐르고, 아래의 상태 보고가 다시 위로 올라갑니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6eea1e18-c187-2c31-53c5-7b28de368cfe', 'f82ea6d2-9022-5540-1744-0c0fc2912443', 'kubernetes-basics/declarative-model', 'declarative-model', '선언형 모델: "이렇게 되어 있어야 해"라고 말하기',
+  $aix$Docker를 쓸 때 우리는 "컨테이너를 실행해"라고 **명령**했습니다. Kubernetes에게는 "컨테이너 3개가 떠 있어야 해"라고 **선언**합니다. 이 차이가 Kubernetes의 거의 모든 동작을 설명합니다.
+
+## 명령형 vs 선언형
+
+- **명령형**: "A를 실행하고, 그다음 B를 실행하고, 죽으면 C를 실행해." 순서와 예외 처리를 전부 내가 책임집니다.
+- **선언형**: "최종 상태는 이것이다." 어떻게 도달할지, 중간에 무엇이 깨졌는지는 시스템이 알아서 처리합니다.
+
+자동 온도조절기가 좋은 비유입니다. 여러분은 "24도"라고 설정만 합니다. 창문이 열려 실내 온도가 떨어지면 온도조절기가 알아서 난방을 켭니다. 여러분이 매번 "지금 22도니까 난방 켜"라고 명령하지 않아도 됩니다.
+
+## 조정 루프(Reconciliation Loop)
+
+Kubernetes 안의 컨트롤러들은 아주 단순한 반복을 멈추지 않고 돕니다.
+
+1. **원하는 상태**를 읽습니다 — 매니페스트에 적힌 `spec` (예: 레플리카 3)
+2. **현재 상태**를 관찰합니다 — 실제로 떠 있는 파드 2개
+3. **차이를 메웁니다** — 파드 1개를 새로 만듭니다
+4. 다시 1번으로
+
+파드가 죽어도 사람이 개입하지 않는 이유가 바로 이것입니다. 죽은 순간 "원하는 3 ≠ 현재 2"라는 차이가 생기고, 컨트롤러가 그 차이를 메웁니다.
+
+## 실무에서 이것이 의미하는 것
+
+- 매니페스트(YAML)는 **원하는 상태를 적은 문서**입니다. 그래서 Git에 넣고 리뷰할 수 있습니다.
+- 같은 파일을 `kubectl apply`로 몇 번 적용해도 결과는 같습니다. 이미 그 상태면 아무 일도 하지 않습니다.
+- 클러스터를 고치고 싶으면 서버에 들어가 손대는 대신 **문서를 고치고 다시 apply**합니다.
+
+> 💡 **핵심**: Kubernetes에게는 "하라"가 아니라 **"이래야 한다"**를 말합니다. 그 상태를 지키는 일은 조정 루프가 24시간 맡습니다.$aix$,
+  $aix${"type":"chat","title":"선언과 조정 — 컨트롤러와의 대화","messages":[{"role":"user","text":"web 파드가 항상 3개 떠 있어야 해. (replicas: 3)"},{"role":"ai","text":"현재 0개 → 3개 생성했습니다."},{"role":"system","text":"[새벽 3시] 노드 장애로 web 파드 1개 종료"},{"role":"ai","text":"원하는 3 ≠ 현재 2. 파드 1개를 다른 노드에 새로 만들었습니다."},{"role":"user","text":"(같은 파일을 다시 apply)"},{"role":"ai","text":"이미 원하는 상태입니다. 변경 없음."}],"caption":"사람은 원하는 상태를 한 번 말하고, 컨트롤러가 차이를 계속 메웁니다."}$aix$::jsonb, null, 5, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1ee785cc-bff1-37aa-b80d-373c54cb1818', 'f82ea6d2-9022-5540-1744-0c0fc2912443', 'kubernetes-basics/local-cluster-setup', 'local-cluster-setup', '로컬 클러스터 만들기: kind·Docker Desktop·minikube',
+  $aix$클라우드 계정도, 서버도 필요 없습니다. Docker가 돌아가는 노트북이면 5분 안에 Kubernetes 클러스터가 생깁니다. 이 강의의 모든 실습은 이 위에서 합니다.
+
+## 세 가지 선택지
+
+- **kind** — Docker 컨테이너를 노드로 삼습니다. 가볍고 빠르며 다중 노드 연습도 됩니다. **이 강의의 기본 경로**.
+- **Docker Desktop 내장 Kubernetes** — 4.51 이상은 대시보드 왼쪽 **Kubernetes** 메뉴 > **Create cluster**에서 프로비저닝 방식(Kubeadm 또는 kind)을 고르고 **Create**. 그 이전 버전은 **Settings > Kubernetes**에서 **Enable Kubernetes**를 켜고 **Apply**. 컨텍스트 이름은 `docker-desktop`.
+- **minikube** — 대시보드와 애드온이 풍부한 공식 학습 도구. `minikube start` 한 줄이면 됩니다.
+
+## kind로 따라 하기 (macOS 기준)
+
+```bash
+brew install kind kubectl        # Windows/Linux는 공식 문서의 설치법 참고
+kind create cluster --name learn # 노드 이미지 내려받기 포함 1~2분
+kubectl get nodes                # STATUS가 Ready면 성공
+kubectl cluster-info --context kind-learn
+```
+
+kind는 클러스터를 만들면서 kubectl 컨텍스트를 `kind-learn`으로 자동 전환합니다. 다중 노드를 연습하려면 아래 설정 파일을 `--config`로 넘깁니다.
+
+```yaml
+# kind-config.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+```
+
+다 쓴 클러스터는 `kind delete cluster --name learn`으로 지웁니다. 다시 만드는 데 1~2분이면 됩니다.
+
+## 여기서 막힌다면
+
+- `Cannot connect to the Docker daemon` — Docker Desktop이 꺼져 있습니다. 먼저 실행하세요.
+- `kubectl get nodes`가 다른 클러스터를 가리킴 — `kubectl config get-contexts`로 확인하고 `kubectl config use-context kind-learn`으로 바꿉니다.
+- 노드가 오래 `NotReady` — Docker Desktop 메모리 부족일 수 있습니다. Settings > Resources에서 4GB 이상으로 올려 보세요.
+
+> 💡 **핵심**: 로컬 클러스터는 **부숴도 되는 연습장**입니다. 망가지면 지우고 다시 만드세요 — 그 편이 고치는 것보다 빠릅니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"zsh — kind create cluster","lines":[{"text":"kind create cluster --name learn","tone":"cmd"},{"text":"Creating cluster \"learn\" ...","tone":"out"},{"text":" ✓ Ensuring node image (kindest/node:v1.37.0) 🖼","tone":"ok"},{"text":" ✓ Preparing nodes 📦","tone":"ok"},{"text":" ✓ Writing configuration 📜","tone":"ok"},{"text":" ✓ Starting control-plane 🕹️","tone":"ok"},{"text":" ✓ Installing CNI 🔌","tone":"ok"},{"text":" ✓ Installing StorageClass 💾","tone":"ok"},{"text":"Set kubectl context to \"kind-learn\"","tone":"dim"},{"text":"kubectl get nodes","tone":"cmd"},{"text":"NAME                  STATUS   ROLES           AGE   VERSION","tone":"dim"},{"text":"learn-control-plane   Ready    control-plane   45s   v1.37.0","tone":"out"}],"caption":"노드 하나가 Ready — 컨트롤 플레인과 노드가 한 컨테이너에 들어 있는 최소 클러스터입니다."}$aix$::jsonb, $aix${"title":"kind로 2노드 클러스터 만들고 확인하기","app":{"kind":"code-editor","windowTitle":"kind-config.yaml — 로컬 클러스터","files":[{"id":"f-kind","name":"kind-config.yaml","active":true},{"id":"f-readme","name":"README.md"}],"code":[{"id":"c1","text":"kind: Cluster"},{"id":"c2","text":"apiVersion: kind.x-k8s.io/v1alpha4"},{"id":"c3","text":"nodes:"},{"id":"c4","text":"- role: control-plane","indent":1},{"id":"c5","text":"- role: worker","indent":1,"tone":"add","hidden":true}],"terminal":[{"id":"t1","text":"kind create cluster --name learn \\","tone":"cmd","hidden":true},{"id":"t1b","text":"  --config kind-config.yaml","tone":"cmd","hidden":true},{"id":"t2","text":"Creating cluster \"learn\" ...","tone":"out","hidden":true},{"id":"t3","text":" ✓ Ensuring node image (kindest/node:v1.37.0) 🖼","tone":"ok","hidden":true},{"id":"t4","text":" ✓ Preparing nodes 📦 📦","tone":"ok","hidden":true},{"id":"t5","text":" ✓ Starting control-plane 🕹️","tone":"ok","hidden":true},{"id":"t6","text":" ✓ Joining worker nodes 🚜","tone":"ok","hidden":true},{"id":"t7","text":"Set kubectl context to \"kind-learn\"","tone":"out","hidden":true},{"id":"t8","text":"kubectl get nodes","tone":"cmd","hidden":true},{"id":"t9","text":"NAME                  STATUS   ROLES           AGE   VERSION","tone":"out","hidden":true},{"id":"t10","text":"learn-control-plane   Ready    control-plane   60s   v1.37.0","tone":"ok","hidden":true},{"id":"t11","text":"learn-worker          Ready    <none>          40s   v1.37.0","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 설정 파일에 워커 노드 하나를 추가합니다"},{"t":"move","target":"c4"},{"t":"click"},{"t":"type","target":"c5","text":"- role: worker"},{"t":"wait","ms":500},{"t":"caption","text":"② 설정 파일을 넘겨 클러스터를 만듭니다"},{"t":"type","target":"t1","text":"kind create cluster --name learn \\"},{"t":"type","target":"t1b","text":"  --config kind-config.yaml"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"wait","ms":500},{"t":"reveal","target":"t4"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"caption","text":"③ kubectl 컨텍스트가 kind-learn으로 자동 전환됩니다"},{"t":"reveal","target":"t7"},{"t":"wait","ms":600},{"t":"caption","text":"④ 노드 목록으로 클러스터가 살아 있는지 확인합니다"},{"t":"type","target":"t8","text":"kubectl get nodes"},{"t":"reveal","target":"t9"},{"t":"reveal","target":"t10"},{"t":"reveal","target":"t11"},{"t":"move","target":"t11"},{"t":"caption","text":"✅ 컨트롤 플레인 1 + 워커 1, 두 노드가 Ready입니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'aa82cfeb-485e-98bf-de1f-053a6f4fac60', 'cb23264f-c322-2198-4c4b-a0be4969a960', 'kubernetes-basics/pods', 'pods', '파드: 가장 작은 배포 단위',
+  $aix$Docker에서는 컨테이너가 최소 단위였습니다. Kubernetes는 컨테이너를 직접 다루지 않고, 컨테이너를 감싼 **파드**를 최소 단위로 씁니다. 왜 한 겹을 더 씌웠을까요?
+
+## 파드 = 컨테이너를 담는 도시락 통
+
+도시락 통은 보통 한 칸이지만 필요하면 여러 칸을 둡니다. 파드도 같습니다.
+
+- 대부분의 파드는 **컨테이너 1개**를 담습니다.
+- 꼭 함께 움직여야 하는 컨테이너(앱 + 로그 수집기)는 한 파드에 담습니다.
+- 한 파드의 컨테이너들은 **같은 IP·네트워크**를 공유해 `localhost`로 통신하고 볼륨도 함께 씁니다.
+- 파드는 **통째로** 한 노드에 배치되고, 통째로 죽고, 통째로 다시 만들어집니다.
+
+그리고 파드는 소모품입니다. 죽으면 **같은 파드가 살아나는 게 아니라 새 파드가 만들어지고**, IP도 바뀝니다. 실무에서는 디플로이먼트(다음다음 레슨)로 만듭니다. 단독 파드는 구조를 익히는 연습입니다.
+
+## 최소 매니페스트
+
+매니페스트는 네 부분으로 시작합니다: 어떤 API 버전(`apiVersion`)의 어떤 종류(`kind`)를, 어떤 이름(`metadata`)으로, 어떤 내용(`spec`)으로.
+
+```yaml
+# pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+  labels:
+    app: hello
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+```
+
+`kubectl apply -f pod.yaml`로 만들고 `kubectl get pods`로 확인합니다. STATUS가 `ContainerCreating` → `Running`이면 성공. 삭제는 `kubectl delete -f pod.yaml`.
+
+## 여기서 막힌다면
+
+- `error: error parsing pod.yaml` 또는 `mapping values are not allowed` — YAML 들여쓰기가 어긋났습니다. 탭 대신 공백 2칸인지 확인하세요.
+- STATUS가 `ImagePullBackOff` — 이미지 이름이나 이미지 태그 오타입니다. `kubectl describe pod hello`의 Events 맨 아래 줄에 이유가 나옵니다.
+
+> 💡 **핵심**: 파드는 Kubernetes가 배치하고 죽이고 되살리는 **최소 단위이자 소모품**입니다. IP를 믿지 마세요 — 그래서 Service가 필요합니다.$aix$,
+  $aix${"type":"grid","title":"파드의 네 가지 성질","items":[{"label":"컨테이너 1개 이상","sublabel":"보통은 1개, 꼭 붙어야 하면 여러 개","icon":"container","tone":"primary"},{"label":"IP·네트워크 공유","sublabel":"파드 안에서는 localhost로 통신","icon":"network","tone":"accent"},{"label":"볼륨 공유","sublabel":"같은 파드의 컨테이너가 파일을 나눔","icon":"hard-drive","tone":"accent"},{"label":"통째로 배치·소멸","sublabel":"한 노드에 함께, 죽으면 새로 생성","icon":"refresh","tone":"warning"}],"caption":"파드는 '함께 살고 함께 죽는' 컨테이너 묶음의 최소 단위입니다."}$aix$::jsonb, null, 5, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '318bc21d-e57b-6aa0-d2f4-bcb792bdced8', 'cb23264f-c322-2198-4c4b-a0be4969a960', 'kubernetes-basics/kubectl-essentials', 'kubectl-essentials', 'kubectl 기본기: get·describe·logs·exec·apply·delete',
+  $aix$Kubernetes와 대화하는 창구는 API 서버이고, 거기에 말을 걸어 주는 도구가 kubectl입니다. 명령은 수십 개지만 입문 단계의 90%는 여섯 개로 해결됩니다.
+
+기본 꼴은 `kubectl <동사> <리소스 종류> <이름> [옵션]`. 리소스 종류는 `pods`·`pod`·`po`처럼 복수·단수·약어가 모두 통합니다.
+
+## 조사하는 명령 (읽기 전용, 마음껏 쳐도 됨)
+
+- `kubectl get pods` — 목록과 상태. `-o wide`면 노드와 IP까지.
+- `kubectl describe pod hello` — 한 파드의 상세와 **Events**. 안 뜨는 파드는 여기부터.
+- `kubectl logs hello` — 컨테이너의 표준 출력. `-f`로 실시간 추적, `--previous`로 죽기 직전 로그.
+- `kubectl exec -it hello -- sh` — 컨테이너 안에 셸을 띄웁니다. `--` 뒤가 컨테이너 안에서 실행할 명령.
+
+자동차 정비와 순서가 같습니다. 계기판(get) → 정비 기록(describe) → 블랙박스(logs) → 보닛 열기(exec).
+
+## 바꾸는 명령
+
+- `kubectl apply -f 파일.yaml` — 파일에 적힌 상태로 만들거나 갱신. 디렉터리를 주면 안의 YAML 전부.
+- `kubectl delete -f 파일.yaml` 또는 `kubectl delete pod hello` — 삭제.
+
+```bash
+kubectl get pods -o wide
+kubectl describe pod hello | tail -20      # Events는 맨 아래에 있음
+kubectl logs -f hello
+kubectl exec -it hello -- sh               # 나올 때는 exit
+kubectl port-forward pod/hello 8080:80     # http://localhost:8080 으로 확인
+```
+
+`port-forward`는 내 컴퓨터 포트를 파드로 터널링합니다. Service 없이 "파드가 응답하나"를 확인하는 가장 빠른 방법입니다.
+
+## 여기서 막힌다면
+
+- `error: unable to upgrade connection: container not found` — 파드가 아직 Running이 아닙니다. `get pods`로 먼저 확인하세요.
+- `exec`에서 `sh: not found` — Distroless처럼 셸이 없는 이미지입니다. `kubectl debug`로 임시 컨테이너를 붙이는 법은 마지막 레슨에서.
+
+> 💡 **핵심**: 문제가 생기면 순서는 항상 **get → describe(Events) → logs → exec**입니다. 이 네 단계를 손이 기억하게 하세요.$aix$,
+  $aix${"type":"steps","title":"파드를 조사하는 네 단계","steps":[{"label":"kubectl get pods","sublabel":"상태·재시작 횟수 한눈에","icon":"eye"},{"label":"kubectl describe pod","sublabel":"Events에서 무슨 일이 있었나","icon":"search"},{"label":"kubectl logs","sublabel":"-f 실시간 · --previous 직전 로그","icon":"file-text"},{"label":"kubectl exec -it … -- sh","sublabel":"컨테이너 안에서 직접 확인","icon":"terminal"}],"caption":"위에서 아래로 갈수록 깊이 들어갑니다 — 앞 단계에서 답이 나오면 멈춰도 됩니다."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '741a5b03-187a-5f9e-9541-4d8f4a966b5d', 'cb23264f-c322-2198-4c4b-a0be4969a960', 'kubernetes-basics/deployments', 'deployments', '디플로이먼트: 원하는 개수만큼, 죽으면 다시',
+  $aix$단독 파드는 죽으면 끝입니다. 아무도 되살려 주지 않습니다. 실무에서 앱을 배포하는 기본 단위는 파드가 아니라 **디플로이먼트**입니다 — 파드를 몇 개 유지할지 선언하면 그 개수를 지켜 주는 관리자입니다.
+
+편의점 매대에 "삼각김밥은 항상 3개 진열"이라는 규칙이 있다고 합시다. 하나가 팔리면 직원이 창고에서 하나를 꺼내 채웁니다. 디플로이먼트가 그 직원입니다. `replicas: 3`이라고 적으면 파드가 죽든 노드가 사라지든 **항상 3개**를 맞춥니다.
+
+## 세 겹 구조
+
+디플로이먼트 → ReplicaSet → 파드. 디플로이먼트는 직접 파드를 만들지 않고 ReplicaSet에게 "이 템플릿으로 3개 유지해"라고 맡깁니다. 새 버전을 배포하면 **새 ReplicaSet**을 만들어 옮겨 갑니다 — 이 구조 덕분에 롤백이 가능합니다(모듈 3에서 실습).
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels: {app: web}     # 어떤 파드를 관리할지
+  template:
+    metadata:
+      labels: {app: web}        # 만들 파드에 붙일 레이블
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+```
+
+`{app: web}`은 `app: web`을 한 줄로 줄여 쓴 것입니다. 가장 많이 틀리는 곳은 `selector.matchLabels`와 `template.metadata.labels`입니다. **두 값은 반드시 같아야** 합니다. 셀렉터가 "app=web인 파드를 관리하겠다"고 하는데 템플릿이 그 레이블을 안 붙이면 apply 자체가 거부됩니다.
+
+## 직접 확인하기
+
+```bash
+kubectl apply -f deployment.yaml     # 위 내용을 deployment.yaml로 저장
+kubectl get pods -l app=web          # 3개, 이름 뒤에 무작위 접미사
+kubectl delete pod <파드 이름 하나>   # 일부러 하나 죽이기
+kubectl get pods -l app=web          # 몇 초 뒤 다시 3개
+kubectl scale deployment/web --replicas=5
+```
+
+파드를 지운 직후 다시 `get`하면 새 이름의 파드가 `ContainerCreating`으로 올라옵니다. 이것이 조정 루프가 눈앞에서 도는 순간입니다.
+
+## 여기서 막힌다면
+
+- `selector does not match template labels` — 위에서 말한 두 레이블이 다릅니다. 철자와 들여쓰기를 대조하세요.
+- 파드가 계속 `Pending` — 로컬 클러스터의 자원이 부족할 수 있습니다. replicas를 2로 줄여 보세요.
+
+> 💡 **핵심**: 앱은 파드가 아니라 **디플로이먼트로** 배포합니다. `replicas` 한 줄이 "죽으면 다시"를 자동화합니다.$aix$,
+  $aix${"type":"flow","title":"디플로이먼트가 파드 개수를 지키는 흐름","nodes":[{"label":"디플로이먼트","sublabel":"replicas: 3, 파드 템플릿","icon":"clipboard","tone":"primary"},{"label":"ReplicaSet","sublabel":"app=web 파드가 3개인지 감시","icon":"eye","tone":"accent","edgeLabel":"템플릿 전달"},{"label":"파드 × 3","sublabel":"web-7d9f…, web-b41c…, web-e02a…","icon":"boxes","tone":"success","edgeLabel":"부족하면 생성"},{"label":"파드 1개 종료","sublabel":"노드 장애 · 수동 삭제 · 크래시","icon":"x","tone":"warning"}],"loopBack":{"from":3,"to":1,"label":"3 ≠ 2 감지 → 새 파드 생성"},"caption":"사람이 하는 일은 replicas 숫자를 정하는 것까지 — 나머지는 루프가 맡습니다."}$aix$::jsonb, $aix${"title":"디플로이먼트 만들고 파드를 죽여 보기","app":{"kind":"code-editor","windowTitle":"deployment.yaml — 자동 복구 실습","files":[{"id":"f-deploy","name":"deployment.yaml","active":true},{"id":"f-pod","name":"pod.yaml"}],"code":[{"id":"c1","text":"apiVersion: apps/v1"},{"id":"c2","text":"kind: Deployment"},{"id":"c3","text":"metadata:"},{"id":"c4","text":"name: web","indent":1},{"id":"c5","text":"spec:"},{"id":"c6","text":"replicas: 3","indent":1,"tone":"add","hidden":true},{"id":"c7","text":"selector:","indent":1},{"id":"c8","text":"matchLabels:","indent":2},{"id":"c9","text":"app: web","indent":3},{"id":"c10","text":"template:","indent":1},{"id":"c11","text":"metadata:","indent":2},{"id":"c12","text":"labels:","indent":3},{"id":"c13","text":"app: web","indent":4},{"id":"c14","text":"spec:","indent":2},{"id":"c15","text":"containers:","indent":3},{"id":"c16","text":"- name: web","indent":4},{"id":"c17","text":"image: nginx:1.27","indent":5}],"terminal":[{"id":"t1","text":"kubectl apply -f deployment.yaml","tone":"cmd","hidden":true},{"id":"t2","text":"deployment.apps/web created","tone":"ok","hidden":true},{"id":"t3","text":"kubectl get pods -l app=web","tone":"cmd","hidden":true},{"id":"t4","text":"NAME                   READY   STATUS    RESTARTS   AGE","tone":"out","hidden":true},{"id":"t5","text":"web-7d9f6c8b5-2xk9p    1/1     Running   0          12s","tone":"ok","hidden":true},{"id":"t6","text":"web-7d9f6c8b5-b41cq    1/1     Running   0          12s","tone":"ok","hidden":true},{"id":"t7","text":"web-7d9f6c8b5-e02az    1/1     Running   0          12s","tone":"ok","hidden":true},{"id":"t8","text":"kubectl delete pod web-7d9f6c8b5-2xk9p","tone":"cmd","hidden":true},{"id":"t9","text":"pod \"web-7d9f6c8b5-2xk9p\" deleted","tone":"out","hidden":true},{"id":"t10","text":"kubectl get pods -l app=web","tone":"cmd","hidden":true},{"id":"t11","text":"web-7d9f6c8b5-b41cq    1/1     Running             0          40s","tone":"ok","hidden":true},{"id":"t12","text":"web-7d9f6c8b5-e02az    1/1     Running             0          40s","tone":"ok","hidden":true},{"id":"t13","text":"web-7d9f6c8b5-m8s3v    0/1     ContainerCreating   0          2s","tone":"out","hidden":true}]},"actions":[{"t":"caption","text":"① 원하는 파드 개수를 선언합니다 (replicas: 3)"},{"t":"move","target":"c5"},{"t":"click"},{"t":"type","target":"c6","text":"replicas: 3"},{"t":"caption","text":"② selector와 template의 레이블이 같은지 확인하고 apply"},{"t":"type","target":"t1","text":"kubectl apply -f deployment.yaml"},{"t":"reveal","target":"t2"},{"t":"caption","text":"③ 파드 3개가 무작위 접미사 이름으로 떠 있습니다"},{"t":"type","target":"t3","text":"kubectl get pods -l app=web"},{"t":"reveal","target":"t4"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"reveal","target":"t7"},{"t":"wait","ms":500},{"t":"caption","text":"④ 일부러 파드 하나를 삭제합니다"},{"t":"type","target":"t8","text":"kubectl delete pod web-7d9f6c8b5-2xk9p"},{"t":"reveal","target":"t9"},{"t":"caption","text":"⑤ 다시 조회 — 새 이름의 파드가 만들어지고 있습니다"},{"t":"type","target":"t10","text":"kubectl get pods -l app=web"},{"t":"reveal","target":"t11"},{"t":"reveal","target":"t12"},{"t":"reveal","target":"t13"},{"t":"move","target":"t13"},{"t":"caption","text":"✅ 3 ≠ 2를 감지해 자동 복구 — 조정 루프가 동작했습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '851ff413-d492-90fd-29f4-4f72374f5575', 'cb23264f-c322-2198-4c4b-a0be4969a960', 'kubernetes-basics/services', 'services', 'Service(서비스): 파드가 바뀌어도 주소는 그대로',
+  $aix$파드는 죽고 새로 생길 때마다 IP가 바뀝니다. 앞단 앱이나 사용자는 어디로 요청을 보내야 할까요? 이 문제를 푸는 것이 **Service**입니다.
+
+## 회사 대표번호
+
+담당 직원이 바뀌어도 회사 대표번호는 그대로입니다. 전화하면 근무 중인 누군가가 받습니다. Service는 파드 묶음의 대표번호입니다. **레이블 셀렉터**로 "app=web인 파드 전부"를 골라 고정 이름·IP를 주고, 요청을 살아 있는 파드 중 하나로 넘깁니다.
+
+```yaml
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  type: ClusterIP
+  selector:
+    app: web
+  ports:
+    - port: 80          # Service가 받는 포트
+      targetPort: 80    # 파드 컨테이너의 포트
+```
+
+`selector` 값은 디플로이먼트 템플릿의 레이블과 같아야 합니다. 어긋나면 뒤에 파드가 없는 "빈 대표번호"가 됩니다.
+
+apply 후 `kubectl get svc web`으로 CLUSTER-IP를, `kubectl get endpointslices -l kubernetes.io/service-name=web`으로 뒤에 붙은 파드 IP를 봅니다. 브라우저 확인은 `kubectl port-forward svc/web 8080:80`.
+
+## 세 가지 타입
+
+- **ClusterIP** (기본값) — 클러스터 **안에서만** 닿는 IP. 같은 네임스페이스에서는 `http://web`처럼 이름만으로 접속. 앱 사이 통신의 표준.
+- **NodePort** — 모든 노드의 특정 포트(기본 30000~32767)를 열어 `<노드IP>:<포트>`로 접속. 테스트용.
+- **LoadBalancer** — 클라우드 로드밸런서를 만들어 외부 IP를 붙입니다. 로컬 kind에서는 EXTERNAL-IP가 `<pending>`(별도 도구 필요).
+
+실무 정석은 앱 사이는 ClusterIP, HTTP 외부 노출은 다음 모듈의 Gateway API입니다. LoadBalancer는 Gateway 하나에만 붙입니다.
+
+## 여기서 막힌다면
+
+- 접속은 되는데 응답이 없음 — `targetPort`가 컨테이너 포트와 다르거나 셀렉터 레이블이 파드와 다릅니다. endpointslices가 비면 후자.
+- `LoadBalancer`가 `<pending>` — 로컬에서는 정상. port-forward나 NodePort로 확인하세요.
+
+> 💡 **핵심**: Service는 **레이블로 고른 파드들의 고정 주소**입니다. 파드는 바뀌어도 이름 `web`은 바뀌지 않습니다.$aix$,
+  $aix${"type":"compare","title":"Service 타입 3종 — 누가 접속할 수 있나","columns":[{"title":"ClusterIP (기본)","icon":"network","tone":"primary","items":["클러스터 안에서만","이름으로 접속: http://web","앱 ↔ 앱 통신의 표준","외부 노출 없음"]},{"title":"NodePort","icon":"server","tone":"accent","items":["모든 노드의 같은 포트 개방","30000~32767 범위","<노드IP>:<포트>로 접속","테스트·임시 용도"]},{"title":"LoadBalancer","icon":"cloud","tone":"warning","items":["클라우드 로드밸런서 자동 생성","외부 IP 부여","로컬 kind에서는 <pending>","Gateway 앞에 하나만"]}],"caption":"위 세 타입은 모두 같은 원리(셀렉터로 파드 고르기) 위에 '어디까지 열 것인가'만 다릅니다."}$aix$::jsonb, null, 6, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e182d081-cdbc-f710-e95b-d25da598e6b9', 'cb23264f-c322-2198-4c4b-a0be4969a960', 'kubernetes-basics/configmaps-and-secrets', 'configmaps-and-secrets', 'ConfigMap과 Secret: 설정을 이미지에서 분리',
+  $aix$Docker 입문에서 배운 원칙 하나 — 설정값은 이미지에 굽지 말고 환경변수로 넣는다. Kubernetes에는 그 상자가 둘 있습니다. 비밀이 아닌 것은 **ConfigMap**, 비밀인 것은 **Secret**.
+
+## 냉장고 메모와 금고
+
+ConfigMap은 냉장고에 붙인 메모입니다 — 누가 봐도 되는 값(로그 레벨, 기능 스위치, 외부 API 주소). Secret은 금고입니다 — 비밀번호, API 키, 인증서. 둘 다 파드 바깥에 두므로 **같은 이미지를 개발·스테이징·프로덕션에서 설정만 바꿔** 쓸 수 있습니다.
+
+```bash
+kubectl create configmap app-config \
+  --from-literal=LOG_LEVEL=info --from-literal=FEATURE_X=on
+kubectl create secret generic db-secret \
+  --from-literal=DB_PASSWORD='s3cret!'
+kubectl get secret db-secret -o yaml    # data 값이 base64로 보임
+```
+
+단, Secret은 암호화가 아닙니다. `czNjcmV0IQ==`는 **base64 인코딩**일 뿐이라 `echo czNjcmV0IQ== | base64 -d`로 누구나 되돌립니다. 기본 설정에서는 etcd에도 이 상태로 저장됩니다. Secret의 가치는 "숨김"이 아니라 **분리와 권한 제어**입니다 — 저장 시 암호화와 RBAC는 운영 강의에서 다룹니다.
+
+## 파드에 주입하는 두 방법
+
+```yaml
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+          envFrom:                      # ConfigMap의 모든 키를 환경변수로
+            - configMapRef:
+                name: app-config
+          env:                          # Secret에서 키 하나만 골라서
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
+```
+
+또 하나는 **볼륨 마운트**입니다. `spec.volumes`에 `configMap: {name: app-config}`를 두고 `volumeMounts`로 `/etc/config`에 붙이면 키마다 파일이 생깁니다. 설정 파일을 통째로 넣을 때 씁니다. 차이 하나 — **볼륨은 ConfigMap을 고치면 잠시 후 자동 갱신**되지만, 환경변수는 파드를 다시 만들어야 반영됩니다.
+
+## 여기서 막힌다면
+
+- `CreateContainerConfigError` — 참조한 ConfigMap이나 Secret이 없거나 키 이름이 다릅니다. `kubectl get configmap,secret`으로 존재와 이름을 확인하세요.
+- 값을 바꿨는데 앱이 옛 값을 씀 — 환경변수 방식입니다. `kubectl rollout restart deployment/web`으로 파드를 새로 만드세요.
+
+> 💡 **핵심**: 설정은 ConfigMap, 비밀은 Secret — 그리고 **Secret은 인코딩일 뿐 암호화가 아니라는 사실**을 잊지 마세요.$aix$,
+  $aix${"type":"compare","title":"ConfigMap vs Secret","columns":[{"title":"ConfigMap","icon":"file-text","tone":"primary","items":["로그 레벨·기능 스위치·URL","평문으로 저장·조회","Git에 넣어도 무방","envFrom 또는 볼륨으로 주입"]},{"title":"Secret","icon":"lock","tone":"warning","items":["비밀번호·API 키·인증서","base64 인코딩 (암호화 아님)","Git에 넣으면 안 됨","secretKeyRef 또는 볼륨으로 주입"]}],"caption":"주입 방법은 같고, 다른 것은 '누가 볼 수 있어야 하는가'입니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '9e3675a6-d0f8-122c-def3-5a8cac19bc35', 'cb23264f-c322-2198-4c4b-a0be4969a960', 'kubernetes-basics/namespaces-and-labels', 'namespaces-and-labels', '네임스페이스와 레이블: 정리 정돈의 기술',
+  $aix$리소스가 수십 개만 되어도 `kubectl get pods` 결과가 한 화면을 넘칩니다. Kubernetes의 정리 도구는 둘 — 큰 칸막이 **네임스페이스**와 작은 꼬리표 **레이블**.
+
+## 아파트 단지로 보기
+
+네임스페이스는 아파트의 **동**입니다. 101동과 102동에 같은 호수(같은 이름의 리소스)가 있어도 충돌하지 않습니다. 팀별·환경별(dev/staging/prod)로 나누고 동마다 자원 한도·권한을 따로 둡니다. 레이블은 현관문의 **스티커**입니다. "app=web", "env=prod"처럼 여러 장을 붙이고 스티커 기준으로 골라 냅니다.
+
+## 네임스페이스 다루기
+
+`default`(별도 지정 없을 때), `kube-system`(Kubernetes 자체 구성요소), `kube-public`, `kube-node-lease` 네 개는 처음부터 있습니다. 지금까지 만든 것은 모두 `default`에 있습니다.
+
+```bash
+kubectl create namespace shop
+kubectl apply -f deployment.yaml -n shop      # 특정 네임스페이스에 생성
+kubectl get pods -n shop                       # 그 네임스페이스만 조회
+kubectl get pods -A                            # 모든 네임스페이스 (--all-namespaces)
+kubectl config set-context --current --namespace=shop   # 기본 네임스페이스 변경
+kubectl delete namespace shop                  # 안의 리소스가 통째로 삭제됨!
+```
+
+`-n`을 빼먹은 "방금 만든 파드가 안 보여요"는 입문자 질문 1위입니다. 다른 네임스페이스의 Service는 `web.shop.svc.cluster.local`처럼 `<Service 이름>.<네임스페이스>`로 접속합니다. 노드나 네임스페이스처럼 **어느 동에도 속하지 않는** 전역 리소스도 있습니다(`kubectl api-resources --namespaced=false`).
+
+## 레이블 다루기
+
+디플로이먼트와 Service의 셀렉터가 레이블 기준이었죠. 조회에도 씁니다.
+
+- `kubectl get pods -l app=web` — 조건 하나
+- `kubectl get pods -l 'app=web,env!=prod'` — 여러 조건
+- `kubectl label pod hello tier=frontend` — 나중에 추가
+- `kubectl get pods --show-labels` — 레이블 전부 보기
+
+`app.kubernetes.io/name` 같은 공식 권장 키를 쓰면 Helm 차트나 모니터링 도구가 자동으로 인식합니다.
+
+> 💡 **핵심**: 네임스페이스로 **격리**하고 레이블로 **선택**합니다. 명령이 예상과 다르면 먼저 `-n`과 `-l`을 의심하세요.$aix$,
+  $aix${"type":"terminal","windowTitle":"zsh — 네임스페이스와 레이블로 골라 보기","lines":[{"text":"kubectl get pods","tone":"cmd"},{"text":"No resources found in default namespace.","tone":"err"},{"text":"# -n을 빼먹었다 — shop 네임스페이스에 만들었지","tone":"comment"},{"text":"kubectl get pods -n shop -l app=web --show-labels","tone":"cmd"},{"text":"NAME                  READY   STATUS    LABELS","tone":"dim"},{"text":"web-7d9f6c8b5-b41cq   1/1     Running   app=web,pod-template-hash=7d9f6c8b5","tone":"out"},{"text":"web-7d9f6c8b5-e02az   1/1     Running   app=web,pod-template-hash=7d9f6c8b5","tone":"out"},{"text":"kubectl get namespaces","tone":"cmd"},{"text":"NAME              STATUS   AGE","tone":"dim"},{"text":"default           Active   2h","tone":"out"},{"text":"kube-system       Active   2h","tone":"out"},{"text":"shop              Active   5m","tone":"ok"}],"caption":"'No resources found'의 원인 대부분은 리소스가 없는 게 아니라 다른 네임스페이스를 보고 있는 것입니다."}$aix$::jsonb, null, 5, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'fdb6c5ad-bbdd-9fbc-9f2f-0fb2ed0e3579', 'd30f6666-a713-a60f-0d09-1cbbf7c7e62d', 'kubernetes-basics/ingress-to-gateway-api', 'ingress-to-gateway-api', '외부에서 접속하기: Ingress에서 Gateway API로',
+  $aix$Service의 ClusterIP는 클러스터 안에서만 통합니다. 브라우저가 `https://shop.example.com`으로 들어오면 누가 받아 어느 Service로 넘길까요? 이 '입구'가 지금 세대교체 중입니다.
+
+## 백화점 안내데스크
+
+정문 안내데스크는 "화장품은 1층, 식당은 6층"으로 안내합니다. Kubernetes에서 이 역할을 오래 맡아 온 것이 **Ingress**입니다 — 도메인·경로 규칙으로 HTTP 요청을 Service로 보냅니다. 단, 규칙일 뿐이라 트래픽을 받는 Ingress 컨트롤러는 따로 설치해야 했습니다.
+
+## ingress-nginx는 은퇴했습니다
+
+가장 널리 쓰이던 **ingress-nginx가 2026년 3월에 은퇴**했습니다. 저장소는 읽기 전용, 새 CVE 패치도 없습니다(계기: CVE-2025-1974). 공식 권고는 둘입니다.
+
+- **Gateway API로 이전** — Ingress의 공식 후속 표준. `ingress2gateway` 도구가 기존 Ingress를 변환해 줍니다.
+- 당장 어렵다면 **유지되는 다른 컨트롤러**(Traefik, HAProxy, Envoy Gateway 등)로 교체.
+
+Ingress API는 남지만 기능이 동결되어, 새 프로젝트가 쓸 이유는 없습니다.
+
+## Gateway API의 세 리소스와 설치
+
+**GatewayClass**(어떤 구현체 — 인프라팀), **Gateway**(어느 포트의 입구 — 운영팀), **HTTPRoute**(어떤 경로를 어느 Service로 — 개발팀).
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web
+spec:
+  parentRefs:
+    - name: my-gateway          # 붙일 Gateway 이름
+  hostnames:
+    - "shop.example.com"
+  rules:
+    - backendRefs:
+        - name: web             # Service 이름
+          port: 80
+```
+
+Gateway API는 **내장되지 않은 애드온**이라 설치는 두 단계입니다. ① 공식 릴리스의 `standard-install.yaml`을 `kubectl apply --server-side -f <URL>`로 적용해 CRD를 설치하고, ② 구현체(Envoy Gateway, Traefik, Cilium, Istio 등)를 설치해야 HTTPRoute가 동작합니다. 구현체 대부분은 CRD도 함께 설치합니다.
+
+> 💡 **핵심**: 외부 노출의 표준은 **Gateway API**입니다. 개발자 몫은 HTTPRoute 하나, 입구(Gateway)와 구현체는 팀이 한 번만 준비합니다.$aix$,
+  $aix${"type":"stack","title":"Gateway API의 역할 계층","layers":[{"label":"HTTPRoute","sublabel":"개발팀 — 이 도메인·경로는 web Service로","icon":"route","tone":"primary"},{"label":"Gateway","sublabel":"클러스터 운영팀 — 80/443 포트로 들어오는 입구","icon":"globe","tone":"accent"},{"label":"GatewayClass","sublabel":"인프라팀 — 어떤 구현체(Envoy Gateway·Traefik 등)를 쓸지","icon":"settings","tone":"muted"},{"label":"구현체(컨트롤러) + CRD","sublabel":"별도 설치 — Kubernetes 내장 아님","icon":"package","tone":"warning"}],"caption":"층마다 담당자가 달라서, 개발자는 맨 위 한 층만 알아도 배포할 수 있습니다."}$aix$::jsonb, null, 7, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8233c432-71b0-6a7d-fffc-c52ea56868f1', 'd30f6666-a713-a60f-0d09-1cbbf7c7e62d', 'kubernetes-basics/rolling-update-and-rollback', 'rolling-update-and-rollback', '롤링 업데이트와 롤백: 무중단 배포 첫 경험',
+  $aix$새 버전을 배포하는데 서비스가 1초도 끊기지 않고, 문제가 생기면 한 줄로 되돌린다 — 디플로이먼트를 쓰는 진짜 이유입니다.
+
+야간 교대 때 근무자 3명이 동시에 퇴근하면 창구가 빕니다. 새 근무자가 앉은 뒤에야 이전 근무자가 나갑니다. 디플로이먼트의 **롤링 업데이트**가 이 방식입니다. 새 ReplicaSet에 파드를 하나 만들고, 준비되면 옛 ReplicaSet의 파드를 하나 줄입니다. 기본값은 25%까지 더 만들고(`maxSurge`), 25%까지 부족해도 허용(`maxUnavailable`).
+
+## 업데이트 실행과 관찰
+
+```bash
+kubectl set image deployment/web web=nginx:1.28
+kubectl rollout status deployment/web         # 교대 진행 상황을 끝까지 출력
+kubectl get replicasets -l app=web            # 옛 RS는 0개, 새 RS는 3개
+kubectl rollout history deployment/web
+```
+
+`set image`의 `web=`은 컨테이너 이름입니다(이미지 이름이 아님). 실무 정석은 YAML의 `image:`를 고쳐 apply하는 것(이력이 Git에 남음). 이력에 설명을 남기려면 배포 전에 `kubectl annotate deployment/web kubernetes.io/change-cause="nginx 1.28로 업데이트"`를 적습니다(`--record` 옵션은 폐기).
+
+## 잘못된 배포 되돌리기
+
+일부러 없는 이미지 태그로 배포하면 새 파드가 `ImagePullBackOff`에 빠지고 `rollout status`가 멈춥니다. 그런데 **옛 파드들은 그대로 살아 있어** 서비스는 계속됩니다.
+
+```bash
+kubectl set image deployment/web web=nginx:1.28-typo   # 일부러 없는 태그
+kubectl rollout undo deployment/web               # 직전 리비전으로
+kubectl rollout undo deployment/web --to-revision=1  # 특정 리비전으로
+kubectl rollout status deployment/web
+```
+
+롤백이 되는 이유는 옛 ReplicaSet을 보관하기 때문입니다(기본 10개, `revisionHistoryLimit`).
+
+## 여기서 막힌다면
+
+- `rollout status`가 `Waiting for deployment "web" rollout to finish: 1 out of 3 new replicas have been updated...`에서 안 넘어감 — 새 파드가 안 뜨는 것입니다. `get pods`로 STATUS를 보고, 필요하면 `undo`.
+- `undo`했는데 파드가 그대로 — 이미 롤백된 상태이거나 리비전이 하나뿐입니다. `rollout history`로 확인하세요.
+
+> 💡 **핵심**: 배포는 `set image`(또는 apply), 관찰은 `rollout status`, 후회는 `rollout undo`. 준비 안 된 파드로는 교대하지 않으므로 잘못된 배포에도 서비스는 살아 있습니다.$aix$,
+  $aix${"type":"steps","title":"배포 → 관찰 → 롤백의 한 사이클","steps":[{"label":"새 이미지로 교체 지시","sublabel":"kubectl set image deployment/web web=nginx:1.28","icon":"upload"},{"label":"교대 진행 관찰","sublabel":"kubectl rollout status — 새 파드 준비 후 옛 파드 종료","icon":"activity"},{"label":"문제 감지","sublabel":"새 파드 ImagePullBackOff · 옛 파드는 계속 서비스","icon":"alert"},{"label":"직전 리비전으로 되돌리기","sublabel":"kubectl rollout undo deployment/web","icon":"refresh"}],"caption":"3단계에서 서비스가 끊기지 않는 것이 롤링 업데이트의 안전장치입니다."}$aix$::jsonb, $aix${"title":"잘못된 이미지 배포 → 즉시 롤백","app":{"kind":"code-editor","windowTitle":"터미널 — 롤링 업데이트와 롤백","files":[{"id":"f-deploy","name":"deployment.yaml","active":true},{"id":"f-svc","name":"service.yaml"}],"code":[{"id":"c1","text":"# deployment.yaml (현재 클러스터 상태)","tone":"comment"},{"id":"c2","text":"spec:"},{"id":"c3","text":"replicas: 3","indent":1},{"id":"c4","text":"template:","indent":1},{"id":"c5","text":"spec:","indent":2},{"id":"c6","text":"containers:","indent":3},{"id":"c7","text":"- name: web","indent":4},{"id":"c8","text":"image: nginx:1.27","indent":5}],"terminal":[{"id":"t1","text":"kubectl set image deployment/web \\","tone":"cmd","hidden":true},{"id":"t1b","text":"  web=nginx:1.28","tone":"cmd","hidden":true},{"id":"t2","text":"deployment.apps/web image updated","tone":"ok","hidden":true},{"id":"t3","text":"kubectl rollout status deployment/web","tone":"cmd","hidden":true},{"id":"t4","text":"Waiting for deployment \"web\" rollout to finish: 1 of 3 updated replicas are available...","tone":"out","hidden":true},{"id":"t5","text":"deployment \"web\" successfully rolled out","tone":"ok","hidden":true},{"id":"t6","text":"kubectl set image deployment/web \\","tone":"cmd","hidden":true},{"id":"t6b","text":"  web=nginx:1.28-typo","tone":"cmd","hidden":true},{"id":"t7","text":"kubectl get pods -l app=web","tone":"cmd","hidden":true},{"id":"t8","text":"web-5c8d7f9b4-q2w7x   0/1   ImagePullBackOff   0   30s","tone":"err","hidden":true},{"id":"t9","text":"web-6b9c4d7f8-b41cq   1/1   Running            0   5m","tone":"out","hidden":true},{"id":"t10","text":"web-6b9c4d7f8-e02az   1/1   Running            0   5m","tone":"out","hidden":true},{"id":"t11","text":"kubectl rollout undo deployment/web","tone":"cmd","hidden":true},{"id":"t12","text":"deployment.apps/web rolled back","tone":"ok","hidden":true},{"id":"t13","text":"kubectl rollout history deployment/web","tone":"cmd","hidden":true},{"id":"t14","text":"REVISION  CHANGE-CAUSE","tone":"out","hidden":true},{"id":"t15","text":"3         <none>    ← 1.28-typo (실패)","tone":"out","hidden":true},{"id":"t16","text":"4         <none>    ← 1.28 (롤백으로 복귀)","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 현재 이미지는 nginx:1.27 — 1.28로 올립니다"},{"t":"type","target":"t1","text":"kubectl set image deployment/web \\"},{"t":"type","target":"t1b","text":"  web=nginx:1.28"},{"t":"reveal","target":"t2"},{"t":"caption","text":"② rollout status로 교대가 끝날 때까지 지켜봅니다"},{"t":"type","target":"t3","text":"kubectl rollout status deployment/web"},{"t":"reveal","target":"t4"},{"t":"reveal","target":"t5"},{"t":"caption","text":"③ 이번엔 오타 난 이미지 태그로 배포해 봅니다"},{"t":"type","target":"t6","text":"kubectl set image deployment/web \\"},{"t":"type","target":"t6b","text":"  web=nginx:1.28-typo"},{"t":"type","target":"t7","text":"kubectl get pods -l app=web"},{"t":"reveal","target":"t8"},{"t":"reveal","target":"t9"},{"t":"reveal","target":"t10"},{"t":"caption","text":"④ 새 파드는 실패했지만 옛 파드 2개가 서비스를 지킵니다"},{"t":"caption","text":"⑤ 한 줄로 직전 리비전으로 되돌립니다"},{"t":"type","target":"t11","text":"kubectl rollout undo deployment/web"},{"t":"reveal","target":"t12"},{"t":"type","target":"t13","text":"kubectl rollout history deployment/web"},{"t":"reveal","target":"t14"},{"t":"reveal","target":"t15"},{"t":"reveal","target":"t16"},{"t":"caption","text":"✅ 롤백 완료 — 서비스는 한 번도 끊기지 않았습니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4124cf43-b77b-8ae7-6677-d7310edd645f', 'd30f6666-a713-a60f-0d09-1cbbf7c7e62d', 'kubernetes-basics/helm-intro', 'helm-intro', 'Helm 입문: 남이 만든 Helm 차트 설치하기',
+  $aix$모니터링 도구 하나에 매니페스트가 30개라면? 하나하나 apply하고 환경마다 값을 바꾸는 일은 사람이 할 일이 아닙니다. **Helm**은 Kubernetes의 패키지 관리자입니다 — 매니페스트 묶음의 `brew`·`npm`입니다.
+
+**Helm 차트**는 밀키트입니다. 재료(매니페스트 템플릿)와 기본 레시피(`values.yaml`)가 한 상자에 있고, "매운맛으로, 2인분"처럼 **값만 바꿔** 조리합니다. 설치 결과물 하나가 **릴리스**(release)이며, 한 Helm 차트로 여럿 만들 수 있습니다.
+
+## 생명주기 다섯 명령
+
+```bash
+brew install helm                                    # macOS
+helm repo add podinfo https://stefanprodan.github.io/podinfo
+helm repo update
+helm search repo podinfo                             # 어떤 Helm 차트가 있나
+helm show values podinfo/podinfo                     # 바꿀 수 있는 값 목록
+helm install demo podinfo/podinfo -n demo --create-namespace \
+  --set replicaCount=2
+helm list -n demo                                    # 릴리스 확인
+kubectl get pods -n demo                             # 파드 확인
+```
+
+`install demo podinfo/podinfo`는 "podinfo 저장소의 podinfo Helm 차트를 `demo` 릴리스로 설치", `-n demo --create-namespace`는 "네임스페이스를 만들어 그 안에 넣기"입니다.
+
+값이 여럿이면 `--set` 대신 `my-values.yaml`(예: `replicaCount: 3`)을 `-f`로 넘기고 Git에서 관리합니다.
+
+```bash
+helm upgrade demo podinfo/podinfo -n demo -f my-values.yaml   # 값·버전 변경
+helm history demo -n demo                                     # 릴리스 리비전
+helm rollback demo 1 -n demo                                  # 리비전 1로
+helm uninstall demo -n demo                                   # 리소스 통째로 삭제
+```
+
+## Helm 4의 변화
+
+2025년 11월에 나온 Helm 4도 위 명령 문법은 같습니다. 바뀐 건 안쪽입니다 — 새 릴리스는 **server-side apply**가 기본이고 `--wait`가 상태를 더 정확히 판정합니다. 바뀐 플래그는 둘: `--atomic` → `--rollback-on-failure`, `--force` → `--force-replace`(옛 이름도 경고 후 동작). Helm 3용 Helm 차트는 그대로 설치됩니다. Helm 3는 2026년 9월 최종 릴리스, 보안 패치는 2027년 초 종료 — 새로 시작한다면 Helm 4를 쓰세요.
+
+## 여기서 막힌다면
+
+- `Error: INSTALLATION FAILED: cannot re-use a name that is still in use` — 같은 이름의 릴리스가 이미 있습니다. `helm list -A`로 찾아 `upgrade`하거나 이름을 바꾸세요.
+- 설치는 됐는데 파드가 안 뜸 — 파드의 문제입니다. 다음 레슨의 진단 순서를 적용하세요.
+
+> 💡 **핵심**: Helm 차트 = 매니페스트 묶음 + 기본값. `install`로 시작해 `upgrade`로 값을 바꾸고 `uninstall`로 흔적 없이 지웁니다.$aix$,
+  $aix${"type":"cycle","title":"Helm 릴리스의 생명주기","center":"릴리스 하나 = 리비전 이력","nodes":[{"label":"repo add · search","sublabel":"Helm 차트 찾기","icon":"search"},{"label":"show values","sublabel":"바꿀 값 확인","icon":"eye"},{"label":"install -n --set/-f","sublabel":"릴리스 생성","icon":"download"},{"label":"upgrade -f","sublabel":"값·버전 변경","icon":"refresh"},{"label":"rollback · uninstall","sublabel":"되돌리거나 정리","icon":"x"}],"caption":"값 파일을 고치고 upgrade하는 3→4 구간을 가장 자주 돌게 됩니다."}$aix$::jsonb, null, 6, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c6e34f2d-b133-8b06-b650-a2ca7b630ca2', 'd30f6666-a713-a60f-0d09-1cbbf7c7e62d', 'kubernetes-basics/pod-troubleshooting-and-next', 'pod-troubleshooting-and-next', '파드가 안 뜰 때: Pending·CrashLoopBackOff·ImagePullBackOff',
+  $aix$`kubectl get pods`의 STATUS 열은 첫 진단서입니다. 상태 이름만 읽어도 원인의 절반은 찾은 것입니다.
+
+## 병원 트리아지처럼
+
+응급실은 환자를 보자마자 증상으로 분류해 처치실을 정합니다. 파드도 STATUS로 **배치 실패(Pending), 이미지 실패(ImagePull…), 시작 후 크래시(CrashLoop…)** 셋 중 어디인지 먼저 가르고, 맞는 명령을 씁니다.
+
+## 상태별 원인과 첫 명령
+
+- **Pending** — 스케줄러가 노드를 못 찾았습니다. `describe`의 Events에 `Insufficient memory`처럼 이유가 적힙니다. 원인은 CPU·메모리 부족, PVC 미바인딩, 테인트 불일치.
+- **ImagePullBackOff / ErrImagePull** — 이미지 이름·이미지 태그 오타, 비공개 레지스트리 인증 누락, pull 한도 초과. Events의 `Failed to pull image` 뒤에 이유가 나옵니다.
+- **CrashLoopBackOff** — 시작 직후 죽기를 반복합니다. `kubectl logs <파드> --previous`로 **죽기 직전 로그**를 봅니다. 원인은 설정 누락, DB 연결 실패, 잘못된 시작 명령이 대부분.
+- **OOMKilled** — `describe`에 `Reason: OOMKilled`, `Exit Code: 137`로 드러납니다. 메모리 한도를 올립니다.
+
+```bash
+kubectl get pods -o wide                         # STATUS · RESTARTS · 노드
+kubectl describe pod web-5c8d7f9b4-q2w7x | tail -25   # Events는 맨 아래
+kubectl logs web-5c8d7f9b4-q2w7x --previous      # 직전 컨테이너의 마지막 로그
+kubectl events --for pod/web-5c8d7f9b4-q2w7x     # 이벤트만 시간순으로
+kubectl debug -it web-5c8d7f9b4-q2w7x --image=busybox --target=web   # 셸 없는 이미지에 임시 컨테이너
+```
+
+## 다음 단계
+
+프로덕션은 질문이 다릅니다 — 리소스 한도, 프로브, 노드 장애 생존, 권한 분리.
+
+- **"Kubernetes 운영: 프로덕션 클러스터 설계와 관리"** — requests/limits·프로브·오토스케일링·RBAC·GitOps.
+- **"Datadog 입문: 서비스 모니터링 시작하기"** — 클러스터와 앱이 지금 정상인지 밖에서 보는 눈.
+
+> 💡 **핵심**: STATUS로 분류하고, **Pending은 describe, ImagePull은 Events, CrashLoop은 logs --previous**. 이 세 갈래면 입문 단계 고장은 거의 다 잡습니다.$aix$,
+  $aix${"type":"flow","title":"파드 진단 트리아지","nodes":[{"label":"kubectl get pods","sublabel":"STATUS · RESTARTS 확인","icon":"eye","tone":"primary"},{"label":"Pending → describe Events","sublabel":"Insufficient cpu/memory · PVC 미바인딩 · 테인트","icon":"clock","tone":"warning","edgeLabel":"배치가 안 됨"},{"label":"ImagePullBackOff → Events","sublabel":"이미지 이름·이미지 태그 오타 · 인증 · pull 한도","icon":"download","tone":"warning","edgeLabel":"이미지를 못 받음"},{"label":"CrashLoopBackOff → logs --previous","sublabel":"설정 누락 · DB 연결 실패 · OOMKilled(137)","icon":"bug","tone":"warning","edgeLabel":"시작 후 죽음"},{"label":"원인 수정 → apply","sublabel":"매니페스트를 고치고 다시 선언","icon":"check","tone":"success"}],"loopBack":{"from":4,"to":0,"label":"다시 get pods로 확인"},"caption":"세 갈래 중 어디인지만 가르면, 다음에 칠 명령은 자동으로 정해집니다."}$aix$::jsonb, null, 7, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: Datadog 입문: 서비스 모니터링 시작하기
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '57bed271-4d93-dcd9-84fe-dc3294b5a1c1', 'datadog-basics', 'Datadog 입문: 서비스 모니터링 시작하기', $aix$배포는 했는데 서비스가 지금 멀쩡한지는 어떻게 알까요? 사용자가 트위터에 올리기 전에 내가 먼저 알아야 합니다. 이 강의는 Docker를 조금 다뤄 본 사람이 Datadog으로 모니터링을 처음 시작하는 과정을 순서대로 따라갑니다. 계정 만들기와 Datadog Agent 설치, 호스트·컨테이너·Kubernetes 통합, 로그 수집과 검색, 대시보드와 알림, 그리고 청구서를 폭탄으로 만들지 않는 비용 관리까지 — 명령어와 버튼 위치까지 구체적으로 안내합니다.$aix$,
+  null, 'devops', 'intermediate', array['Datadog', '관측가능성', '모니터링', '로그 관리', '대시보드', '알림']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '9e31f303-6e70-bacd-e39c-beb4bdfcf74c', '57bed271-4d93-dcd9-84fe-dc3294b5a1c1', 'observability-and-datadog', '관측가능성과 Datadog', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'edbfe86b-a127-11c6-a910-882a08a25542', '57bed271-4d93-dcd9-84fe-dc3294b5a1c1', 'infrastructure-and-logs', '인프라와 로그', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'dc6b2461-ba49-7ba2-caac-869c50a13452', '57bed271-4d93-dcd9-84fe-dc3294b5a1c1', 'dashboards-and-alerts', '대시보드와 알림', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f8a73342-5eba-5933-8074-efba51f3f456', '9e31f303-6e70-bacd-e39c-beb4bdfcf74c', 'datadog-basics/monitoring-vs-observability', 'monitoring-vs-observability', '모니터링 vs 관측가능성: 3가지 신호(메트릭·로그·트레이스)',
+  $aix$"서버는 살아 있는데 왜 결제가 안 되죠?" — 이 질문에 답하지 못하는 순간, 모니터링만으로는 부족하다는 걸 깨닫게 됩니다.
+
+## 모니터링과 관측가능성은 무엇이 다른가
+
+- **모니터링**: 미리 정한 질문에 답합니다. "CPU가 90%를 넘었나?", "서버가 응답하나?" — **아는 문제**를 감시합니다.
+- **관측가능성**: 처음 보는 문제도 추적할 수 있습니다. "어제 배포 후 특정 사용자만 느려진 이유가 뭐지?" — **모르는 문제**를 파고듭니다.
+
+자동차에 비유하면, 모니터링은 계기판의 경고등이고 관측가능성은 정비소의 진단 스캐너입니다. 경고등은 "뭔가 이상하다"까지만 알려 주지만, 스캐너를 꽂으면 어느 부품이 언제부터 어떻게 이상했는지 나옵니다.
+
+## 3가지 신호
+
+관측가능성은 시스템이 바깥으로 내보내는 세 종류의 신호 위에 서 있습니다.
+
+- **메트릭** — 숫자의 시간 흐름. 값이 싸고 가벼워 **"지금 이상한가"**를 가장 빨리 알려 줍니다.
+- **로그** — 사건의 기록. **"무슨 일이 있었나"**를 문장으로 말해 줍니다.
+- **트레이스** — 요청 하나의 여행 경로. 여러 서비스를 거치는 요청이 **"어디서 시간을 썼나"**를 스팬 단위로 보여 줍니다.
+
+셋을 같은 태그로 묶어 넘나들 수 있을 때 비로소 관측가능성이 생깁니다. 이것이 Datadog이 잘하는 일입니다.
+
+## 이 강의의 로드맵
+
+1. **모듈 1** — Datadog이 무엇이고 얼마인지, 계정 만들고 Datadog Agent 설치, 태깅 규칙
+2. **모듈 2** — 호스트·Docker·Kubernetes를 붙이고, 로그를 모아 검색하기
+3. **모듈 3** — 대시보드와 Datadog 모니터를 만들고 Slack으로 알림 받기, 비용 관리
+
+이 강의는 메트릭과 로그에 집중합니다. 트레이스(APM)는 다음 강의 "Datadog 심화: APM·SLO·인시던트 운영"에서 다룹니다.
+
+> 💡 **핵심**: 모니터링은 "아는 문제"를 감시하고, 관측가능성은 "모르는 문제"를 추적합니다. 그 재료가 메트릭·로그·트레이스 세 신호입니다.$aix$,
+  $aix${"type":"compare","title":"모니터링 vs 관측가능성","columns":[{"title":"모니터링 (계기판 경고등)","icon":"alert","tone":"muted","items":["미리 정한 질문에만 답함","CPU 90% 초과? 서버 응답?","이상하다는 사실까지만","대시보드 + 임계값 알림"]},{"title":"관측가능성 (진단 스캐너)","icon":"search","tone":"primary","items":["처음 보는 질문도 추적","왜 특정 사용자만 느린가?","어디서·언제부터·왜까지","메트릭·로그·트레이스 연결"]}],"caption":"관측가능성은 도구가 아니라 '세 신호를 같은 태그로 넘나들 수 있는 상태'입니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '688121d2-8915-b8ef-afa3-0f10f524c0f7', '9e31f303-6e70-bacd-e39c-beb4bdfcf74c', 'datadog-basics/datadog-at-a-glance', 'datadog-at-a-glance', 'Datadog 한눈에: 제품군·요금 구조·무료 플랜',
+  $aix$Datadog 요금 페이지에는 제품이 스무 개쯤 나열돼 있어 어디서 시작할지 막막합니다. 구조만 알면 필요한 것만 골라 쓸 수 있습니다.
+
+## 제품군: 한 플랫폼, 여러 조각
+
+Datadog은 한 계정 안에서 제품을 조각처럼 골라 켭니다. 핵심 조각은 이렇습니다.
+
+- **Infrastructure** — 호스트·컨테이너 메트릭. 이 강의의 토대.
+- **Log Management** — 로그 수집·검색·보관.
+- **APM** — 트레이스와 코드 수준 성능 분석 (다음 강의).
+- **RUM · Synthetics** — 실사용자와 로봇 관점 감시 (다음 강의).
+- **Cloud Security · Cloud SIEM · On-Call · Incident Response** — 보안·장애 대응.
+
+## 요금 구조: 기본료 + 종량제
+
+휴대폰 요금제처럼 제품마다 **기준 단위**가 다르고, 그 단위로 과금됩니다.
+
+- Infrastructure와 APM은 **호스트 수** 기준
+- 로그는 **인제스트 용량(GB)** 과 **로그 인덱스 건수**로 따로 과금
+- 커스텀 메트릭은 호스트당 일정 개수 포함, 초과분 별도(마지막 레슨)
+
+2026년 9월 기준 Infrastructure Pro 호스트당 월 15달러부터(연간 결제), APM 호스트당 월 31달러부터(연간, Infrastructure 필요), 로그 인제스트 GB당 0.10달러 + 인덱스 백만 건당 1.70달러(15일 보존). 요금은 자주 바뀌니 **공식 요금 페이지에서 반드시 확인**하세요.
+
+## 무료 플랜과 체험
+
+- **Free 플랜**: 호스트 **5대**, 메트릭 보존 **1일**, 핵심 대시보드·통합 제공. 로그·APM·RUM·Synthetics·보안은 미포함.
+- 가입 직후 전 제품 **2주 무료 체험**. 이 강의의 로그 실습은 그 안에 끝내면 무료입니다.
+
+> 💡 **핵심**: Datadog은 "제품 조각 × 각자의 과금 단위"입니다. Infrastructure(호스트)부터 시작하고, 로그는 인제스트와 인덱스가 따로 과금된다는 것만 기억하세요.$aix$,
+  $aix${"type":"grid","title":"Datadog 제품 지도와 과금 단위","items":[{"label":"Infrastructure","sublabel":"호스트당 · 이 강의의 토대","icon":"server","tone":"primary"},{"label":"Log Management","sublabel":"인제스트 GB + 인덱스 건수","icon":"file-text","tone":"primary"},{"label":"APM","sublabel":"호스트당 · 다음 강의","icon":"activity","tone":"accent"},{"label":"RUM · Synthetics","sublabel":"세션·테스트 횟수 · 다음 강의","icon":"globe","tone":"accent"},{"label":"Security · SIEM","sublabel":"호스트·로그 용량","icon":"shield","tone":"muted"},{"label":"On-Call · Incident","sublabel":"사용자 좌석","icon":"siren","tone":"muted"}],"caption":"제품마다 과금 단위가 다릅니다 — 청구서를 읽으려면 단위부터 알아야 합니다."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'd3fdb9d8-2011-d09b-7770-5a5222786224', '9e31f303-6e70-bacd-e39c-beb4bdfcf74c', 'datadog-basics/signup-and-agent-install', 'signup-and-agent-install', '계정 만들기와 Datadog Agent 설치',
+  $aix$서버에는 **수거원**이 필요합니다. 집배원이 우체통을 정해진 시간에 비우듯, Datadog Agent가 메트릭과 로그를 모아 Datadog으로 보냅니다.
+
+## 1단계: 가입과 사이트 선택
+
+1. datadoghq.com **Get Started Free**로 가입하며 **사이트(리전)** 를 고릅니다 — US1(datadoghq.com), US3, US5, EU1(datadoghq.eu), AP1(ap1.datadoghq.com) 등. **나중에 바꿀 수 없고** 사이트끼리 데이터를 공유하지 않습니다.
+2. UI 주소가 곧 내 사이트(US1이면 app.datadoghq.com)이며, 설치 명령의 `DD_SITE`와 일치해야 합니다.
+
+## 2단계: API 키 발급
+
+왼쪽 아래 조직 메뉴 **Organization Settings > API Keys**에서 **New Key**를 누릅니다.
+
+- **API 키** — Datadog Agent가 데이터를 **보낼 때** 쓰는 열쇠.
+- **앱 키(Application Key)** — 스크립트·Terraform이 API를 **읽고 조작할 때** 쓰는 열쇠(**Organization Settings > Application Keys**). 지금은 불필요.
+
+## 3단계: 리눅스 서버에 한 줄 설치
+
+```bash
+DD_API_KEY=<발급한 키> DD_SITE="datadoghq.com" \
+  bash -c "$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)"
+```
+
+`sudo datadog-agent status`의 **Running Checks**에 cpu·disk·memory·network가 보이면 성공입니다. 설정 파일은 `/etc/datadog-agent/datadog.yaml`입니다. 몇 분 뒤 **Infrastructure > Hosts**에 서버가 뜹니다.
+
+**여기서 막힌다면**
+
+- Forwarder에 `API Key invalid`면 키 오타입니다. datadog.yaml의 `api_key`를 확인하세요.
+- UI에 호스트가 없다면 **사이트 불일치**입니다. EU 계정인데 `DD_SITE`를 비우면 US1로 갑니다.
+- `Permission denied`는 `sudo` 없이 실행한 것입니다.
+
+> 💡 **핵심**: 사이트 선택 → API 키 → 한 줄 설치 → `datadog-agent status`. 문제의 8할은 사이트 불일치와 키 오타입니다.$aix$,
+  $aix${"type":"steps","title":"첫 데이터가 들어오기까지 5단계","steps":[{"label":"가입 + 사이트 선택","sublabel":"US1·EU1·AP1 — 나중에 변경 불가","icon":"globe"},{"label":"API 키 발급","sublabel":"Organization Settings > API Keys","icon":"key"},{"label":"한 줄 설치","sublabel":"DD_API_KEY + DD_SITE + install_script","icon":"terminal"},{"label":"상태 확인","sublabel":"sudo datadog-agent status","icon":"check"},{"label":"UI에서 확인","sublabel":"Infrastructure > Hosts","icon":"server"}],"caption":"설치 명령의 DD_SITE와 가입 시 고른 사이트가 어긋나면 데이터는 다른 나라로 갑니다."}$aix$::jsonb, $aix${"title":"터미널에서 Datadog Agent 설치하고 상태 확인하기","app":{"kind":"code-editor","windowTitle":"datadog.yaml — web-01 서버","files":[{"id":"f-yaml","name":"/etc/datadog-agent/datadog.yaml","active":true},{"id":"f-confd","name":"conf.d/"}],"code":[{"id":"c1","text":"# Datadog Agent 7 메인 설정 (설치 스크립트가 생성)","tone":"comment"},{"id":"c2","text":"api_key: ****************************a1b2","hidden":true},{"id":"c3","text":"site: datadoghq.com","hidden":true},{"id":"c4","text":"# logs_enabled: true   ← 로그 수집은 모듈 2에서","tone":"comment","hidden":true}],"terminal":[{"id":"t1","text":"export DD_API_KEY=<발급한 API 키>","tone":"cmd","hidden":true},{"id":"t2","text":"export DD_SITE=datadoghq.com","tone":"cmd","hidden":true},{"id":"t3","text":"bash -c \"$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)\"","tone":"cmd","hidden":true},{"id":"t4","text":"* Installing the Datadog Agent package (agent 7)","tone":"out","hidden":true},{"id":"t5","text":"* Adding your API key to the Agent configuration: /etc/datadog-agent/datadog.yaml","tone":"out","hidden":true},{"id":"t6","text":"Your Agent is running and functioning properly.","tone":"ok","hidden":true},{"id":"t7","text":"sudo datadog-agent status","tone":"cmd","hidden":true},{"id":"t8","text":"Agent (v7.x) — Hostname: web-01 — Status date: 2026-09-30","tone":"out","hidden":true},{"id":"t9","text":"Running Checks: cpu · disk · memory · network · uptime","tone":"ok","hidden":true},{"id":"t10","text":"Forwarder: Transactions Success 42, API Key valid","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 가입 시 사이트(US1)를 고르고 Organization Settings > API Keys에서 키를 복사합니다"},{"t":"caption","text":"② 서버 터미널에서 API 키와 사이트를 환경변수로 넣습니다"},{"t":"type","target":"t1","text":"export DD_API_KEY=<발급한 API 키>"},{"t":"type","target":"t2","text":"export DD_SITE=datadoghq.com"},{"t":"caption","text":"③ 공식 설치 스크립트 한 줄을 실행합니다"},{"t":"reveal","target":"t3"},{"t":"wait","ms":500},{"t":"reveal","target":"t4"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"caption","text":"④ 설치 스크립트가 만든 설정 파일을 확인합니다"},{"t":"move","target":"f-yaml"},{"t":"click"},{"t":"reveal","target":"c2"},{"t":"reveal","target":"c3"},{"t":"reveal","target":"c4"},{"t":"move","target":"c3"},{"t":"caption","text":"⑤ 상태 명령으로 Running Checks와 API 키 유효성을 확인합니다"},{"t":"type","target":"t7","text":"sudo datadog-agent status"},{"t":"reveal","target":"t8"},{"t":"reveal","target":"t9"},{"t":"reveal","target":"t10"},{"t":"move","target":"t10"},{"t":"caption","text":"✅ 몇 분 뒤 Infrastructure > Hosts에 web-01이 나타납니다"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '332fe927-7712-00d6-42b8-78fb7766413c', '9e31f303-6e70-bacd-e39c-beb4bdfcf74c', 'datadog-basics/unified-service-tagging', 'unified-service-tagging', '통합 서비스 태깅: env·service·version 세 태그의 힘',
+  $aix$Datadog Agent를 열 대에 깔았는데 어느 그래프가 어느 서비스의 것인지 알 수 없다면, 데이터는 많아도 정보는 없는 상태입니다. 처음부터 **태그 규칙**을 잡아야 합니다.
+
+## 태그란 무엇인가
+
+태그는 데이터에 붙이는 `키:값` 꼬리표입니다. `env:prod`, `service:checkout`, `region:ap-northeast-2`처럼요. 도서관의 청구기호를 떠올리면 됩니다. 어느 서가에 있든 청구기호만 같으면 같은 책으로 묶어 찾을 수 있듯, 태그가 같으면 메트릭·로그·트레이스를 **한 필터로 함께** 조회할 수 있습니다.
+
+## 통합 서비스 태깅: 예약된 세 태그
+
+Datadog은 세 태그를 특별 취급합니다. 이 세 개만 통일하면 화면 사이를 넘나들 때 필터가 자동으로 따라옵니다.
+
+- **env** — 환경. `prod`, `staging`, `dev`
+- **service** — 서비스 이름. `checkout`, `web`, `payment-api`
+- **version** — 배포 버전. `1.4.2` 또는 커밋 해시. **배포 직후 에러가 늘었는지**를 버전별로 갈라 보는 열쇠입니다.
+
+## 어떻게 붙이나
+
+앱 코드를 고칠 필요는 없습니다. 실행 환경에 **환경변수** 세 개를 넣거나 레이블을 붙이면 Datadog Agent와 라이브러리가 자동으로 읽어 갑니다.
+
+```bash
+# Docker: 환경변수로
+docker run -d --name checkout \
+  -e DD_ENV=prod -e DD_SERVICE=checkout -e DD_VERSION=1.4.2 \
+  myorg/checkout:1.4.2
+```
+
+```yaml
+# Kubernetes: 파드 템플릿 레이블로 (디플로이먼트 spec.template.metadata.labels)
+labels:
+  tags.datadoghq.com/env: "prod"
+  tags.datadoghq.com/service: "checkout"
+  tags.datadoghq.com/version: "1.4.2"
+```
+
+세 값은 **소문자·하이픈** 위주로 짓고, 팀 전체가 같은 이름을 쓰도록 문서로 고정하세요. `Checkout`과 `checkout`은 Datadog에서 다른 서비스입니다.
+
+> 💡 **핵심**: env·service·version 세 태그를 모든 것에 똑같이 붙이세요. 이 규칙 하나가 이후 모든 화면의 필터를 자동으로 연결합니다.$aix$,
+  $aix${"type":"flow","title":"세 태그가 세 신호를 연결하는 과정","nodes":[{"label":"실행 환경에 세 값 설정","sublabel":"DD_ENV · DD_SERVICE · DD_VERSION","icon":"settings","tone":"primary"},{"label":"Datadog Agent가 자동 부착","sublabel":"메트릭·로그·트레이스 모두에 같은 태그","icon":"activity","tone":"accent","edgeLabel":"코드 수정 없음"},{"label":"어느 화면이든 같은 필터","sublabel":"env:prod service:checkout","icon":"filter","tone":"accent"},{"label":"배포 전후 비교","sublabel":"version:1.4.1 vs version:1.4.2","icon":"git-branch","tone":"success","edgeLabel":"한 클릭 이동"}],"caption":"태그는 나중에 붙이기가 가장 어렵습니다 — Datadog Agent를 깔기 전에 이름 규칙부터 정하세요."}$aix$::jsonb, null, 5, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1e057e09-c13e-8939-ea13-fe35689fc158', 'edbfe86b-a127-11c6-a910-882a08a25542', 'datadog-basics/infrastructure-monitoring', 'infrastructure-monitoring', '호스트·컨테이너 보기: Infrastructure List와 Host Map',
+  $aix$Datadog Agent가 데이터를 보내기 시작했습니다. 이제 "서버 50대 중 지금 힘든 놈이 누구인가"를 3초 안에 찾는 화면을 익힙니다.
+
+## Infrastructure List: 명단
+
+**Infrastructure > Hosts**에 Datadog Agent나 클라우드 통합으로 보고 중인 모든 호스트가 나열됩니다.
+
+- 기본으로 **최근 15분 안에 활동한 호스트**만 보입니다. 죽은 서버는 조용히 사라집니다 — 나중에 만들 Host 모니터가 그걸 잡아 줍니다.
+- 컬럼은 CPU·IOWait·Load 같은 메트릭, 태그, 설치 소프트웨어, 통합 등으로 바꿀 수 있습니다.
+- 검색창에 `env:prod` 같은 태그로 거르고, 호스트를 클릭하면 오른쪽에 **상세 패널**이 열립니다. 별칭·태그·컨테이너·로그·Datadog Agent 설정(JSON)이 여기 있습니다.
+
+## Host Map: 지도
+
+**Infrastructure > Host Map**은 같은 호스트들을 **육각형 타일**로 그립니다. 아파트 관리사무소의 세대별 전력 현황판처럼, 어느 집이 과열됐는지 색으로 보입니다.
+
+- 색은 기본으로 **CPU 사용률**. 초록(여유)에서 주황·빨강(포화)으로.
+- **Fill by**로 색의 기준 메트릭을, **Size by**로 타일 크기의 기준을 바꿉니다.
+- **Group by**에 `availability-zone`, `service` 같은 태그를 넣으면 그룹별로 모입니다. 한 존만 붉다면 원인은 그 존에 있습니다.
+
+## Containers: 살아 있는 컨테이너 목록
+
+**Infrastructure > Containers**는 컨테이너 단위 실시간 목록입니다. CPU·메모리·RSS·네트워크가 **2초 해상도**로 갱신되고, 제한(limit)이 있으면 그 대비 비율로 표시됩니다. 클릭하면 로그 Live Tail도 열립니다.
+
+> 💡 **핵심**: 명단(Hosts)으로 찾고, 지도(Host Map)로 패턴을 보고, Containers로 파고듭니다. Group by 태그 하나가 "어디가 문제인가"를 색으로 답합니다.$aix$,
+  $aix${"type":"compare","title":"Infrastructure List vs Host Map","columns":[{"title":"Hosts (명단)","icon":"clipboard","tone":"accent","items":["표 형태, 컬럼 자유 구성","최근 15분 활동 호스트","태그·메트릭 값으로 필터","클릭 → 상세 패널"]},{"title":"Host Map (지도)","icon":"layers","tone":"primary","items":["육각형 타일, 색 = CPU 기본","Fill by · Size by 로 기준 변경","Group by 태그로 묶어 보기","한 그룹만 붉으면 원인 위치 확정"]},{"title":"Containers (실시간)","icon":"container","tone":"muted","items":["컨테이너 단위 2초 갱신","limit 대비 CPU·메모리 비율","Kubernetes 태그 자동 부착","클릭 → 로그 Live Tail"]}],"caption":"같은 데이터, 세 가지 시선 — 질문이 '누가'면 명단, '어디가'면 지도입니다."}$aix$::jsonb, null, 5, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b2a42aae-5c1f-848e-7451-0eb60f304b51', 'edbfe86b-a127-11c6-a910-882a08a25542', 'datadog-basics/docker-monitoring', 'docker-monitoring', 'Docker 컨테이너 모니터링: Agent 컨테이너 실행과 오토디스커버리',
+  $aix$Docker를 쓰는 서버라면 Datadog Agent 자체를 **컨테이너로** 띄우는 것이 표준입니다.
+
+## Datadog Agent 컨테이너 실행
+
+```bash
+docker run -d --cgroupns host --pid host --name dd-agent \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -v /proc/:/host/proc/:ro \
+  -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+  -e DD_SITE=datadoghq.com \
+  -e DD_API_KEY=<발급한 키> \
+  gcr.io/datadoghq/agent:7
+```
+
+바인드 마운트 세 개가 핵심입니다. `docker.sock`으로 **어떤 컨테이너가 뜨고 지는지**를 데몬에게 직접 묻고, `/proc`와 `/sys/fs/cgroup`으로 호스트와 컨테이너의 CPU·메모리를 읽습니다. 모두 읽기 전용(`:ro`)입니다. 상태 확인은 `docker exec -it dd-agent agent status`입니다.
+
+## 오토디스커버리: 새 손님을 자동으로 알아보기
+
+호텔 프런트는 손님이 체크인하면 묻지 않아도 방을 배정하고 룸서비스를 연결합니다. 오토디스커버리도 같습니다. 컨테이너가 새로 뜨면 Datadog Agent가 docker.sock으로 알아채고, 컨테이너의 **라벨**을 읽어 알맞은 수집 설정을 스스로 적용합니다. 컨테이너가 사라지면 설정도 함께 사라집니다.
+
+Redis 컨테이너에 라벨을 붙이는 현재 문법(Datadog Agent 7.36 이상)입니다.
+
+```yaml
+# compose.yaml 의 서비스 정의 일부
+services:
+  cache:
+    image: redis:7
+    labels:
+      com.datadoghq.ad.checks: '{"redisdb": {"instances": [{"host": "%%host%%", "port": "6379"}]}}'
+      com.datadoghq.ad.logs: '[{"source": "redis", "service": "cache"}]'
+```
+
+- `com.datadoghq.ad.checks` — 어떤 통합(redisdb)을 어떤 설정으로 켤지. `%%host%%`는 그 컨테이너의 IP로 치환되는 템플릿 변수입니다.
+- `com.datadoghq.ad.logs` — 이 컨테이너 로그의 `source`(파서 선택)와 `service`(태그).
+
+Kubernetes에서는 같은 내용을 파드 어노테이션 `ad.datadoghq.com/<컨테이너 이름>.checks`로 씁니다.
+
+**여기서 막힌다면**
+
+- `agent status`의 Autodiscovery 항목에 컨테이너가 없다면 docker.sock 마운트를 빠뜨렸거나 `:ro` 권한 문제입니다.
+- 라벨은 넣었는데 통합이 안 켜지면 대부분 JSON 따옴표 오류입니다. 라벨 값은 **작은따옴표로 감싼 JSON**이어야 합니다.
+
+> 💡 **핵심**: Datadog Agent 컨테이너는 docker.sock으로 세상을 봅니다. 라벨 두 줄만 붙이면 컨테이너가 뜰 때마다 수집 설정이 따라옵니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"docker — Datadog Agent 컨테이너","lines":[{"text":"docker run -d --cgroupns host --pid host --name dd-agent \\","tone":"cmd"},{"text":"  -v /var/run/docker.sock:/var/run/docker.sock:ro ... gcr.io/datadoghq/agent:7","tone":"cmd"},{"text":"3f9c1e7a2b...  (컨테이너 ID)","tone":"dim"},{"text":"docker compose up -d cache","tone":"cmd"},{"text":"✔ Container shop-cache-1  Started","tone":"ok"},{"text":"docker exec -it dd-agent agent status","tone":"cmd"},{"text":"# Autodiscovery 가 라벨을 읽어 redisdb 체크를 자동 등록","tone":"comment"},{"text":"Running Checks","tone":"out"},{"text":"  redisdb (5.x)  Instance ID: redisdb:cache  [OK]","tone":"ok"},{"text":"  docker (4.x)   containers running: 2  [OK]","tone":"ok"}],"caption":"컨테이너를 띄우기만 했는데 redisdb 체크가 생겼습니다 — 라벨이 설정 파일을 대신합니다."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '775fe619-de1f-2615-df0e-1c8159ac2dcf', 'edbfe86b-a127-11c6-a910-882a08a25542', 'datadog-basics/kubernetes-monitoring', 'kubernetes-monitoring', 'Kubernetes 통합: Datadog Operator로 Agent 배포',
+  $aix$Kubernetes 클러스터는 노드가 수십 대이고 파드는 수시로 바뀝니다. 노드마다 명령어를 치는 대신, **Datadog Operator**에게 "이런 Datadog Agent를 유지해 줘"라고 선언합니다.
+
+## 무엇이 배포되나
+
+학교로 비유하면, 노드마다 있는 **Datadog Agent**(DaemonSet)는 각 교실의 담임처럼 그 노드의 파드와 컨테이너를 챙깁니다. 클러스터당 하나 있는 **Cluster Agent**는 교무실처럼 API 서버와 한 번만 대화해 클러스터 수준 정보를 모아 담임들에게 나눠 줍니다. Operator는 이 둘을 만들고 관리하는 교장입니다. Operator로 설치하면 Cluster Agent가 **기본으로 켜집니다**.
+
+## 설치 4단계
+
+```bash
+helm repo add datadog https://helm.datadoghq.com
+helm install datadog-operator datadog/datadog-operator -n datadog --create-namespace
+kubectl create secret generic datadog-secret -n datadog \
+  --from-literal api-key=<발급한 키>
+```
+
+Helm으로 Operator를 설치하고, API 키는 Secret에 넣습니다. 그다음 **DatadogAgent** CRD 리소스 하나를 작성합니다.
+
+```yaml
+# datadog-agent.yaml
+apiVersion: datadoghq.com/v2alpha1
+kind: DatadogAgent
+metadata:
+  name: datadog
+  namespace: datadog
+spec:
+  global:
+    site: datadoghq.com
+    clusterName: shop-prod
+    credentials:
+      apiSecret:
+        secretName: datadog-secret
+        keyName: api-key
+  features:
+    logCollection:
+      enabled: true
+      containerCollectAll: true
+```
+
+`kubectl apply -f datadog-agent.yaml` 후 `kubectl get pods -n datadog`을 치면 노드 수만큼의 `datadog-agent-…` 파드와 `datadog-cluster-agent-…` 파드가 Running이 됩니다. `kubectl get datadogagent -n datadog`으로 전체 상태도 봅니다. 설정 변경은 YAML을 고쳐 다시 apply합니다.
+
+**여기서 막힌다면**
+
+- Datadog Agent 파드가 `CreateContainerConfigError`면 Secret 이름·키 이름(`api-key`)이 YAML과 다릅니다.
+- 파드는 떴는데 UI에 클러스터가 없다면 `site`가 가입 사이트와 다릅니다.
+- `no matches for kind "DatadogAgent"`는 Operator(CRD)가 아직 없는 상태입니다. Helm 설치를 먼저 확인하세요.
+
+> 💡 **핵심**: Kubernetes에서는 명령 대신 선언입니다. DatadogAgent YAML 하나가 노드 Agent·Cluster Agent·로그 수집 설정을 모두 담고, Operator가 그 상태를 유지합니다.$aix$,
+  $aix${"type":"stack","title":"Datadog Operator가 만드는 계층","layers":[{"label":"Datadog (SaaS)","sublabel":"site: datadoghq.com 으로 전송","icon":"cloud","tone":"muted"},{"label":"Datadog Operator","sublabel":"DatadogAgent CR을 읽어 아래 둘을 생성·유지","icon":"settings","tone":"primary"},{"label":"Cluster Agent (Deployment, 1개)","sublabel":"API 서버와 대화 · 클러스터 수준 메타데이터","icon":"network","tone":"accent"},{"label":"Datadog Agent (DaemonSet, 노드마다 1개)","sublabel":"파드·컨테이너 메트릭·로그 수집","icon":"activity","tone":"accent"},{"label":"내 애플리케이션 파드들","sublabel":"어노테이션으로 오토디스커버리","icon":"boxes","tone":"muted"}],"caption":"노드 Agent는 담임, Cluster Agent는 교무실, Operator는 교장 — 역할이 다르니 셋이 함께 갑니다."}$aix$::jsonb, $aix${"title":"DatadogAgent 리소스로 Kubernetes에 Agent 배포하기","app":{"kind":"code-editor","windowTitle":"datadog-agent.yaml — shop-prod 클러스터","files":[{"id":"f-cr","name":"datadog-agent.yaml","active":true},{"id":"f-readme","name":"README.md"}],"code":[{"id":"c1","text":"apiVersion: datadoghq.com/v2alpha1"},{"id":"c2","text":"kind: DatadogAgent"},{"id":"c3","text":"metadata:"},{"id":"c4","text":"name: datadog","indent":1},{"id":"c5","text":"namespace: datadog","indent":1},{"id":"c6","text":"spec:"},{"id":"c7","text":"global:","indent":1},{"id":"c8","text":"site: datadoghq.com","indent":2,"tone":"add","hidden":true},{"id":"c9","text":"clusterName: shop-prod","indent":2,"tone":"add","hidden":true},{"id":"c10","text":"credentials:","indent":2},{"id":"c11","text":"apiSecret:","indent":3},{"id":"c12","text":"secretName: datadog-secret","indent":4},{"id":"c13","text":"keyName: api-key","indent":4},{"id":"c14","text":"features:","indent":1,"tone":"add","hidden":true},{"id":"c15","text":"logCollection:","indent":2,"tone":"add","hidden":true},{"id":"c16","text":"enabled: true","indent":3,"tone":"add","hidden":true},{"id":"c17","text":"containerCollectAll: true","indent":3,"tone":"add","hidden":true}],"terminal":[{"id":"t1","text":"helm repo add datadog https://helm.datadoghq.com","tone":"cmd","hidden":true},{"id":"t2","text":"helm install datadog-operator datadog/datadog-operator -n datadog --create-namespace","tone":"cmd","hidden":true},{"id":"t3","text":"STATUS: deployed","tone":"ok","hidden":true},{"id":"t4","text":"kubectl create secret generic datadog-secret -n datadog --from-literal api-key=<발급한 키>","tone":"cmd","hidden":true},{"id":"t5","text":"secret/datadog-secret created","tone":"ok","hidden":true},{"id":"t6","text":"kubectl apply -f datadog-agent.yaml","tone":"cmd","hidden":true},{"id":"t7","text":"datadogagent.datadoghq.com/datadog created","tone":"ok","hidden":true},{"id":"t8","text":"kubectl get pods -n datadog","tone":"cmd","hidden":true},{"id":"t9","text":"datadog-agent-7xk2p           3/3  Running   (노드마다 1개)","tone":"out","hidden":true},{"id":"t11","text":"datadog-cluster-agent-5c8f-tr2  1/1  Running","tone":"out","hidden":true},{"id":"t12","text":"datadog-operator-6d9b-hk7   1/1  Running","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① Helm으로 Datadog Operator를 datadog 네임스페이스에 설치합니다"},{"t":"reveal","target":"t1"},{"t":"reveal","target":"t2"},{"t":"reveal","target":"t3"},{"t":"caption","text":"② API 키를 Secret에 넣습니다 (YAML에 키를 직접 쓰지 않습니다)"},{"t":"reveal","target":"t4"},{"t":"reveal","target":"t5"},{"t":"caption","text":"③ DatadogAgent 리소스에 사이트와 클러스터 이름을 채웁니다"},{"t":"move","target":"c7"},{"t":"type","target":"c8","text":"site: datadoghq.com"},{"t":"type","target":"c9","text":"clusterName: shop-prod"},{"t":"caption","text":"④ 로그 수집 기능을 선언합니다 — 모든 컨테이너 로그를 모읍니다"},{"t":"reveal","target":"c14"},{"t":"reveal","target":"c15"},{"t":"type","target":"c16","text":"enabled: true"},{"t":"type","target":"c17","text":"containerCollectAll: true"},{"t":"caption","text":"⑤ apply 하면 Operator가 노드 Datadog Agent와 Cluster Agent를 만듭니다"},{"t":"type","target":"t6","text":"kubectl apply -f datadog-agent.yaml"},{"t":"reveal","target":"t7"},{"t":"type","target":"t8","text":"kubectl get pods -n datadog"},{"t":"reveal","target":"t9"},{"t":"reveal","target":"t11"},{"t":"reveal","target":"t12"},{"t":"caption","text":"✅ 노드마다 datadog-agent, 클러스터에 하나 cluster-agent — Infrastructure > Kubernetes에서 확인"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4204e7a0-6c7f-e63d-4c94-d914ec270305', 'edbfe86b-a127-11c6-a910-882a08a25542', 'datadog-basics/log-collection', 'log-collection', '로그 수집: 인제스트와 로그 인덱스는 다르다',
+  $aix$로그는 Datadog에서 **가장 비싸지기 쉬운 데이터**입니다. 관문을 알아야 청구서를 지킵니다.
+
+## 두 관문: 인제스트와 로그 인덱스
+
+CCTV 영상을 **수신**하는 것과 **녹화해 보관**하는 것은 다른 일입니다. Datadog 로그도 같습니다.
+
+1. **인제스트** — 도착한 로그를 파이프라인에서 파싱·가공하는 단계. 용량(GB) 과금.
+2. **로그 인덱스** — 검색·알림·대시보드용 저장 단계. **건수** 과금, 보존 기간(3·7·15·30일 등, 계약별 상이) 선택.
+
+인덱스되지 않은 로그도 **Live Tail**·메트릭 생성·아카이브(S3 등)는 가능합니다.
+
+## 수집 켜기
+
+호스트의 Datadog Agent는 두 파일을 고칩니다.
+
+```yaml
+# /etc/datadog-agent/datadog.yaml
+logs_enabled: true
+
+# /etc/datadog-agent/conf.d/nginx.d/conf.yaml
+logs:
+  - type: file
+    path: /var/log/nginx/access.log
+    service: web
+    source: nginx
+```
+
+`source`는 파서 선택, `service`는 통합 서비스 태깅의 그 값입니다. 재시작 후 `datadog-agent status`의 Logs Agent 항목에 파일이 보이면 됩니다.
+
+Docker로 띄운 Datadog Agent는 `-e DD_LOGS_ENABLED=true -e DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true`와 `/var/lib/docker/containers` 읽기 전용 마운트를 더합니다.
+
+**여기서 막힌다면**
+
+- Logs Agent 항목이 비어 있다면 재시작을 빠뜨린 것입니다(`sudo systemctl restart datadog-agent`).
+- `permission denied`는 실행 계정 `dd-agent`에 로그 파일 읽기 권한이 없는 것입니다.
+
+## 인덱스 관문 지키기
+
+**Logs > Configuration > Indexes**에서 인덱스마다 **Exclusion Filter**를 둡니다. 예: `status:debug` 100% 제외, 헬스체크(`@http.url_details.path:/healthz`) 95% 샘플링 제외. 제외분은 인덱스 요금이 없습니다. **Daily Quota**로 하루 상한도 걸어 두세요. 넘치면 인덱스만 멈추고 인제스트는 계속됩니다.
+
+> 💡 **핵심**: 인제스트(받기)와 로그 인덱스(저장·검색)는 다른 관문이고 따로 과금됩니다. 전부 받되, 인덱스는 Exclusion Filter와 Daily Quota로 골라 담으세요.$aix$,
+  $aix${"type":"flow","title":"로그 한 줄이 지나는 관문","nodes":[{"label":"앱·컨테이너 로그","sublabel":"Datadog Agent가 파일·stdout 수집","icon":"file-text","tone":"muted"},{"label":"인제스트","sublabel":"GB 기준 과금 · 로그 파이프라인 파싱","icon":"download","tone":"primary","edgeLabel":"HTTPS 전송"},{"label":"Exclusion Filter · Daily Quota","sublabel":"debug 100% 제외, 헬스체크 95% 샘플링","icon":"filter","tone":"warning"},{"label":"로그 인덱스","sublabel":"건수 기준 과금 · 보존 기간 선택 · 검색·알림","icon":"database","tone":"success","edgeLabel":"통과한 로그만"}],"caption":"제외된 로그도 Live Tail·메트릭·아카이브에는 남습니다 — 버리는 게 아니라 '비싼 서랍'에 안 넣는 것입니다."}$aix$::jsonb, null, 5, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5247902f-808a-d7e0-1bba-43db829d2f45', 'edbfe86b-a127-11c6-a910-882a08a25542', 'datadog-basics/log-search-and-patterns', 'log-search-and-patterns', '로그 검색·패턴·Live Tail: 장애 원인 5분 만에 찾기',
+  $aix$새벽 2시, "결제가 안 돼요"라는 알림. 로그가 초당 수천 줄 쌓이는데 어디서부터 볼까요? 탐정의 소거법처럼 조건을 하나씩 더해 범위를 좁힙니다.
+
+## 검색 문법: 소거의 도구
+
+**Logs > Log Explorer**를 열고 검색창에 조건을 씁니다. 규칙은 둘입니다.
+
+- **예약 속성**은 `@` 없이: `service:checkout`, `status:error`, `host:web-01`, `source:nginx`
+- **그 외 속성**은 `@`로 시작: `@http.status_code:500`, `@user.id:1234`
+
+```text
+service:checkout status:error                      # 공백 = AND
+service:checkout @http.status_code:5*              # 와일드카드: 500~599
+@http.status_code:[500 TO 599] -@http.url:*healthz*  # 범위 + 제외(-)
+@duration:>2000000000 OR status:error              # 2초 초과 또는 에러
+```
+
+왼쪽 **Facets** 패널은 클릭으로 조건을 더하는 지름길입니다. 통합 서비스 태깅을 했다면 `env`·`service`·`version` 패싯이 기본입니다.
+
+## 소거 순서: 5분 루틴
+
+1. 시간 범위를 알림 전후 15분으로 좁힙니다.
+2. `service:checkout status:error` — 에러만 남깁니다.
+3. **Group into > Patterns**로 전환합니다. 비슷한 메시지가 묶여 수천 줄이 **5~10개 패턴**이 됩니다. 건수가 튄 패턴이 범인입니다.
+4. 그 패턴의 샘플 로그에서 `version` 패싯을 봅니다. 새 버전에서만 나오면 배포가 원인입니다.
+5. **Saved View**로 저장해 재사용합니다.
+
+## Live Tail: 지금 이 순간
+
+Log Explorer 상단 시간 범위 드롭다운에서 **Live Tail**을 고르면 인덱스 여부와 상관없이 **인제스트되는 모든 로그**가 실시간으로 흐릅니다. 수집을 방금 켰을 때나 배포 직후 확인용입니다. 양이 많으면 자동 샘플링되니 조건으로 좁혀 보세요.
+
+**여기서 막힌다면**
+
+- `@http.status_code:500`이 안 잡히면 로그 하나를 열어 실제 속성 경로를 확인하세요.
+- Live Tail엔 있는데 Explorer에 없다면 Exclusion Filter나 Daily Quota로 인덱스되지 않은 것입니다.
+
+> 💡 **핵심**: service·status로 거르고 → Patterns로 묶고 → version으로 가릅니다. 이 세 단계가 새벽 2시의 5분입니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"Log Explorer — 소거법으로 좁히기","lines":[{"text":"Past 15 Minutes  ·  env:prod","tone":"dim"},{"text":"service:checkout","tone":"cmd"},{"text":"48,213 logs","tone":"out"},{"text":"service:checkout status:error","tone":"cmd"},{"text":"1,904 logs","tone":"out"},{"text":"# Group into > Patterns","tone":"comment"},{"text":"1,612  connection refused to redis://cache:6379 ...","tone":"err"},{"text":"  241  payment provider timeout after * ms","tone":"out"},{"text":"   51  invalid coupon code *","tone":"dim"},{"text":"# 패턴 클릭 → version 패싯: 1.4.2 에서만 발생","tone":"comment"},{"text":"원인 확정: 1.4.2 배포 후 cache 연결 실패 → 롤백","tone":"ok"}],"caption":"48,213줄이 세 번의 소거로 한 문장이 됩니다 — 패턴 뷰가 가장 큰 도약입니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '42b05205-be73-f274-2856-00bc0b701917', 'dc6b2461-ba49-7ba2-caac-869c50a13452', 'datadog-basics/metrics-and-dashboards', 'metrics-and-dashboards', '메트릭 종류와 대시보드 만들기',
+  $aix$팀원끼리 같은 "요청 수"를 다른 숫자로 말한다면 메트릭 **타입**을 모르는 것입니다. 대시보드보다 이것부터 잡습니다.
+
+## 메트릭 5가지 타입
+
+지하철역으로 비유합니다.
+
+- **COUNT** — 구간 내 횟수. "10초 동안 개찰구 통과 120명."
+- **RATE** — 초당 횟수. "초당 12명." DogStatsD의 COUNT는 화면에서 RATE로 표시됩니다(Agent 체크·API는 그대로).
+- **GAUGE** — 순간 값. "지금 승강장의 340명." CPU 사용률·메모리·큐 길이.
+- **HISTOGRAM** — Datadog Agent가 분포를 계산해 **avg·count·median·95percentile·max** 5개로 보냅니다.
+- **DISTRIBUTION** — Datadog 서버가 전 호스트를 합쳐 계산. 여러 호스트의 **정확한 퍼센타일**용.
+
+## 대시보드 만들기
+
+1. **Dashboards > New Dashboard**, 이름을 정합니다.
+2. **Add Widgets**에서 고릅니다.
+   - **Timeseries** — 시간 변화. 선(line)·면(area)·막대(bars).
+   - **Query Value** — 현재 값 하나를 큰 숫자로.
+   - **Top List** — 태그별 순위. "CPU 상위 10개 호스트".
+3. 메트릭(예: `system.cpu.user`)을 고르고 **from**에 `env:prod`, **avg by**에 `host`처럼 나눌 태그를 넣습니다.
+4. 오른쪽 위 **Save**.
+
+**Template Variables**로 `$env`를 만들고 쿼리에 `$env`라고 쓰면, 드롭다운으로 prod↔staging을 한 번에 바꿉니다.
+
+**여기서 막힌다면**
+
+- `system.cpu.user`가 없으면 Datadog Agent가 아직 보고 전입니다. `datadog-agent status`와 시간 범위(Past 15 Minutes 이상)를 확인하세요.
+- 그래프가 한 줄만 나오면 **avg by**에 `host`를 넣지 않은 것입니다.
+
+> 💡 **핵심**: 타입을 알면 그래프를 믿을 수 있습니다. Timeseries·Query Value·Top List 세 위젯과 템플릿 변수만으로 팀의 첫 현황판이 완성됩니다.$aix$,
+  $aix${"type":"grid","title":"메트릭 타입 지도","items":[{"label":"COUNT","sublabel":"구간 내 횟수 · 개찰구 통과 120명","icon":"users","tone":"primary"},{"label":"RATE","sublabel":"초당 횟수 · 초당 12명","icon":"timer","tone":"primary"},{"label":"GAUGE","sublabel":"순간 값 · 지금 승강장 340명","icon":"gauge","tone":"accent"},{"label":"HISTOGRAM","sublabel":"Datadog Agent 계산 · 1개 → 5개 메트릭","icon":"chart","tone":"warning"},{"label":"DISTRIBUTION","sublabel":"서버 계산 · 전 호스트 정확한 p99","icon":"trending-up","tone":"warning"},{"label":"위젯 3종","sublabel":"Timeseries · Query Value · Top List","icon":"monitor","tone":"success"}],"caption":"HISTOGRAM과 DISTRIBUTION은 편리한 만큼 메트릭 개수를 5배로 늘립니다 — 마지막 레슨의 비용과 연결됩니다."}$aix$::jsonb, $aix${"title":"첫 대시보드에 Timeseries 위젯 추가하기","app":{"kind":"browser","url":"app.datadoghq.com/dashboard/lists","blocks":[{"id":"b-h1","type":"heading","label":"Dashboards"},{"id":"b-new","type":"button","label":"+ New Dashboard"},{"id":"b-name","type":"input","label":"Dashboard Name","hidden":true},{"id":"b-create","type":"button","label":"New Dashboard","hidden":true},{"id":"b-h2","type":"heading","label":"Web 서비스 현황","hidden":true},{"id":"b-add","type":"button","label":"+ Add Widgets","hidden":true},{"id":"b-ts","type":"card","label":"📈 Timeseries  ·  🔢 Query Value  ·  📊 Top List","hidden":true},{"id":"b-metric","type":"input","label":"Select a metric…","hidden":true},{"id":"b-from","type":"input","label":"from (everywhere)","hidden":true},{"id":"b-by","type":"badge","label":"avg by host","hidden":true},{"id":"b-title","type":"input","label":"Widget title","hidden":true},{"id":"b-save","type":"button","label":"Save","hidden":true},{"id":"b-widget","type":"card","label":"📈 CPU (prod) — avg by host · 3 lines  ✓ Saved","hidden":true}]},"actions":[{"t":"caption","text":"① Dashboards 메뉴에서 새 대시보드를 만듭니다"},{"t":"move","target":"b-new"},{"t":"click"},{"t":"type","target":"b-name","text":"Web 서비스 현황"},{"t":"reveal","target":"b-create"},{"t":"click","target":"b-create"},{"t":"hide","target":"b-name"},{"t":"hide","target":"b-create"},{"t":"reveal","target":"b-h2"},{"t":"caption","text":"② Add Widgets에서 Timeseries를 고릅니다"},{"t":"reveal","target":"b-add"},{"t":"click","target":"b-add"},{"t":"reveal","target":"b-ts"},{"t":"click","target":"b-ts"},{"t":"caption","text":"③ 메트릭과 범위(from), 나눌 태그(avg by)를 넣습니다"},{"t":"type","target":"b-metric","text":"system.cpu.user"},{"t":"type","target":"b-from","text":"env:prod"},{"t":"reveal","target":"b-by"},{"t":"type","target":"b-title","text":"CPU (prod)"},{"t":"caption","text":"④ Save를 누르면 위젯이 대시보드에 놓입니다"},{"t":"reveal","target":"b-save"},{"t":"click","target":"b-save"},{"t":"reveal","target":"b-widget"},{"t":"caption","text":"✅ 같은 방법으로 Query Value·Top List를 더하면 첫 현황판 완성"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c1f224c0-362d-d452-f877-e03b9c10c28b', 'dc6b2461-ba49-7ba2-caac-869c50a13452', 'datadog-basics/monitors', 'monitors', 'Datadog 모니터 만들기: 임계값·이상 탐지·복구 조건·노이즈 줄이기',
+  $aix$대시보드는 **보고 있을 때만** 쓸모가 있습니다. 새벽에 나 대신 지켜보다 깨워 줄 것, 그것이 **Datadog 모니터**입니다.
+
+## 모니터 종류: 무엇을 감시할까
+
+**Monitors > New Monitor**에서 종류를 고릅니다. 입문용 여섯 가지입니다.
+
+- **Metric** — 메트릭이 임계값을 넘으면. 가장 기본.
+- **Logs** — 조건에 맞는 로그가 N분에 N건 넘으면.
+- **Host** — 호스트가 보고를 멈추면.
+- **Anomaly(이상 탐지)** — 과거 패턴에서 벗어나면. 알고리즘 basic·agile·robust, 계절성(시간·일·주)의 **3배 이상 과거 데이터** 필요.
+- **Outlier** — 같은 그룹 중 하나만 다르게 굴면.
+- **Composite** — 여러 모니터를 AND/OR로 묶어 오탐 감소. "에러율 높음 **AND** 트래픽 있음".
+
+## 임계값과 복구 임계값
+
+보일러는 18도에 켜지고 20도에 꺼집니다. 한 값으로 켜고 끄면 경계에서 계속 딸깍거리기 때문입니다. 모니터도 같습니다.
+
+- **Alert threshold** — 울리는 값. 예: 에러율 5%
+- **Warning threshold** — 그 전 주의 값. 예: 3%
+- **Alert recovery threshold** — **해제**되는 값. 예: 2%. 없으면 5% 근처에서 알림·복구가 반복(플래핑)됩니다.
+- **평가 윈도우** — "최근 5분 평균"처럼 볼 기간.
+
+## 노이즈 줄이는 세 설정
+
+- **No Data** — 데이터가 끊겼을 때의 처리. `Show NO DATA and notify`면 "조용한 것"도 알림. 원래 끊기는 배치 지표는 `Show OK`나 `Evaluate as zero`.
+- **Renotify** — 미해결이면 N분마다 재알림. **N회 후 중단**을 함께 켭니다.
+- **Evaluation delay** — 늦게 도착하는 클라우드 메트릭은 평가를 늦춰 가짜 No Data를 막습니다.
+
+우선순위 **P1~P5**도 붙여 둡니다.
+
+> 💡 **핵심**: 좋은 모니터는 "울리는 값"과 "꺼지는 값"이 다르고, No Data 처리를 정했고, 재알림에 상한이 있습니다. 이 셋이 없으면 알림은 소음이 됩니다.$aix$,
+  $aix${"type":"cycle","title":"모니터 상태의 순환과 임계값","center":"평가 윈도우마다 반복","nodes":[{"label":"OK","sublabel":"에러율 < 2%","icon":"check"},{"label":"WARN","sublabel":"3% 초과 · 주의 알림","icon":"alert"},{"label":"ALERT","sublabel":"5% 초과 · @slack·@pagerduty","icon":"siren"},{"label":"RECOVERED","sublabel":"복구 임계값 2% 미만으로 하락","icon":"refresh"},{"label":"NO DATA","sublabel":"N분간 데이터 없음 · 알림 여부 선택","icon":"eye"}],"caption":"울리는 값(5%)과 꺼지는 값(2%) 사이의 간격이 플래핑을 막는 완충지대입니다."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5931ddfc-775b-b6e3-e7e4-c4fd850aa948', 'dc6b2461-ba49-7ba2-caac-869c50a13452', 'datadog-basics/notifications-and-oncall', 'notifications-and-oncall', '알림 채널: Slack·PagerDuty·Datadog On-Call과 @-멘션 문법',
+  $aix$모니터가 울려도 **아무도 보지 않는 곳**에 울리면 없는 것과 같습니다. 알림이 사람에게 닿는 경로를 설계합니다.
+
+## @-멘션 한 줄로 채널 연결
+
+모니터 편집 화면 아래 **Notify your team** 칸에 `@` 핸들을 적으면 그 채널로 갑니다. 먼저 **Integrations**에서 통합을 연결합니다(Slack은 **Configure > Add a workspace**, 채널에 `/invite @Datadog`).
+
+- `@slack-<채널명>` — Slack. 계정이 여러 개면 `@slack-<계정>-<채널명>`
+- `@pagerduty-<서비스명>` — PagerDuty 인시던트 생성
+- `@oncall-<팀 핸들>` — Datadog On-Call 팀 호출
+- `@webhook-<이름>` — 사내 시스템에 HTTP 전송
+- `@이메일주소` — 이메일
+
+핸들 앞뒤엔 공백이 있어야 인식됩니다.
+
+## 상태별 다른 문장: 조건 템플릿
+
+한 메시지에서 상태별로 내용과 채널을 나눕니다.
+
+```text
+{{#is_alert}}
+🔴 {{service.name}} 에러율 {{value}}% (임계 {{threshold}}%) — 호스트 {{host.name}}
+런북: https://wiki.example.com/runbook/checkout
+@pagerduty-checkout @slack-incident
+{{/is_alert}}
+{{#is_warning}}⚠️ 에러율 {{value}}% 상승 중 @slack-checkout-alerts{{/is_warning}}
+{{#is_recovery}}✅ 복구됨 @slack-checkout-alerts{{/is_recovery}}
+```
+
+경고는 Slack만, 알림(alert)은 PagerDuty까지 — **심각도별 채널 분리**가 새벽 호출을 줄이는 첫 방법입니다. `{{#is_no_data}}`·`{{#is_renotify}}`도 같은 방식입니다.
+
+## 온콜: 누가 받나
+
+병원 당직 호출은 간호사 → 당직 의사 → 과장 순으로 올라갑니다. 이 **일정과 에스컬레이션 정책**을 맡는 도구가 둘입니다.
+
+- **PagerDuty** — 오래된 표준.
+- **Datadog On-Call** — Datadog 자체 온콜 제품(2024년 공개). 왼쪽 메뉴 **On-Call**(app.datadoghq.com/on-call)에서 **Teams · Schedules · Escalation Policies**를 만듭니다. 페이지는 **Triggered → Acknowledged → Resolved**를 지나며, 승인이 없으면 다음 사람으로 넘어갑니다. 좌석 단위로 과금됩니다.
+
+> 💡 **핵심**: 심각도별로 채널을 나누고(`{{#is_alert}}`엔 페이저, `{{#is_warning}}`엔 Slack), 사람에게 닿는 마지막 구간은 온콜 도구의 에스컬레이션에 맡기세요.$aix$,
+  $aix${"type":"chat","title":"#incident 채널에 도착한 알림","messages":[{"role":"system","text":"Datadog 모니터 [checkout 에러율] 상태 변경: WARN → ALERT (P1)"},{"role":"ai","text":"🔴 checkout 에러율 6.8% (임계 5%) — 호스트 web-03\n런북: wiki.example.com/runbook/checkout\n📟 @pagerduty-checkout 인시던트 #4821 생성됨"},{"role":"user","text":"확인했습니다. 1.4.2 배포 롤백 진행 중 (Acknowledged)"},{"role":"ai","text":"✅ [Recovered] checkout 에러율 1.2% — 복구 임계값(2%) 아래로 하락. 인시던트 #4821 자동 해제"}],"caption":"같은 모니터, 상태마다 다른 문장과 채널 — 조건 템플릿이 알림을 '읽을 수 있는 것'으로 만듭니다."}$aix$::jsonb, null, 5, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '29ed2ee9-e56f-8818-f086-26b93e02673e', 'dc6b2461-ba49-7ba2-caac-869c50a13452', 'datadog-basics/cost-control-and-next', 'cost-control-and-next', '비용 관리: 커스텀 메트릭·카디널리티·로그 인덱스 폭탄 피하기 + 다음 단계',
+  $aix$**카디널리티**와 **로그 인덱스** — Datadog 청구서 사고의 대부분은 이 두 단어로 설명됩니다.
+
+## 커스텀 메트릭은 '조합'으로 센다
+
+수도 계량기를 방마다 달면 방 수만큼 요금이 나옵니다. Datadog도 **메트릭 이름 + 태그 값 조합 하나**를 커스텀 메트릭 1개로 셉니다.
+
+- `checkout.latency`에 `endpoint` 5종 × `status` 3종 × `host` 10대 → **150개**
+- HISTOGRAM으로 보내면 조합마다 5개 파생 → **750개**
+- 태그에 `user_id`를 붙이면 사용자 수만큼 폭발합니다 — 카디널리티 문제입니다.
+
+2026년 9월 기준 Infrastructure Pro는 호스트당 **100개**, Enterprise는 **200개**가 포함되며 조직 전체로 합산됩니다. 과금은 **월 평균(시간별 고유 개수)** 기준, 초과분은 **공식 요금 페이지에서 확인**하세요.
+
+예방 3원칙: ① user_id·request_id·이메일·URL처럼 **무한한 값은 태그로 쓰지 않기**. ② **HISTOGRAM·DISTRIBUTION은 퍼센타일이 정말 필요할 때만**, 평균이면 GAUGE. ③ **Metrics > Summary**에서 카디널리티를 점검하고, 폭발한 메트릭은 **Metrics without Limits**로 인덱스 태그만 남기기.
+
+## 로그 인덱스 폭탄 체크리스트
+
+- 인덱스마다 **Daily Quota**가 있는가?
+- `status:debug`·헬스체크·로드밸런서 접근 로그에 **Exclusion Filter**가 있는가?
+- 보존 기간이 필요 이상 길지 않은가?
+- **Plan & Usage**(왼쪽 아래 계정 메뉴)를 주 1회 보는 사람이 있는가?
+
+## 다음 단계
+
+"어디서 시간을 썼나"는 트레이스의 몫입니다. **"Datadog 심화: APM·SLO·인시던트 운영"** 에서 APM·SLO·인시던트 운영을 배웁니다. Kubernetes를 더 깊이 보려면 **"Kubernetes 운영: 프로덕션 클러스터 설계와 관리"** 도 함께 들으세요.
+
+> 💡 **핵심**: 커스텀 메트릭은 태그 조합 수로, 로그는 인덱스 건수로 청구됩니다. 무한한 값은 태그에서 빼고, 인덱스엔 쿼터와 제외 필터를 걸면 청구서는 예측 가능해집니다.$aix$,
+  $aix${"type":"steps","title":"청구서를 예측 가능하게 만드는 4단계","steps":[{"label":"태그 설계 점검","sublabel":"user_id·request_id 같은 무한 값 제거","icon":"filter"},{"label":"메트릭 타입 다이어트","sublabel":"HISTOGRAM → 필요 없으면 GAUGE","icon":"gauge"},{"label":"인덱스 관문 잠그기","sublabel":"Daily Quota + Exclusion Filter + 보존 기간","icon":"lock"},{"label":"주 1회 사용량 확인","sublabel":"Plan & Usage · Metrics Summary","icon":"dollar"}],"caption":"비용 사고는 '한 번의 실수'가 아니라 '점검 루틴의 부재'에서 옵니다."}$aix$::jsonb, null, 5, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: Kubernetes 운영: 프로덕션 클러스터 설계와 관리
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '5d3f71ca-82ab-d56f-f5cf-b6d4fa9883a3', 'kubernetes-production', 'Kubernetes 운영: 프로덕션 클러스터 설계와 관리', $aix$kubectl apply가 성공했다고 서비스가 안전한 것은 아닙니다. 트래픽이 몰리면 OOMKilled로 죽고, 배포할 때마다 몇 초씩 502가 나고, 노드 하나가 점검에 들어가면 서비스가 통째로 사라지는 클러스터는 '동작하는' 클러스터일 뿐 '운영 가능한' 클러스터가 아닙니다. 이 강의는 입문 강의와 실제 프로덕션 사이의 간극을 채웁니다. requests·limits와 QoS 클래스, 프로브 3종, HPA·VPA·Karpenter·KEDA, PDB와 토폴로지 분산, 영구 저장소와 StatefulSet, RBAC·NetworkPolicy·Pod Security Admission, 그리고 Helm 차트 직접 만들기와 Argo CD GitOps, Argo Rollouts 점진 배포, 버전 정책과 비용 최적화까지 — 운영자가 매일 마주치는 결정을 근거와 함께 익힙니다.$aix$,
+  null, 'devops', 'advanced', array['Kubernetes', 'K8s 운영', 'Helm', 'GitOps', 'Argo CD', '오토스케일링']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '4d2bdefe-cac2-ce93-d40d-a9e3d06f35e2', '5d3f71ca-82ab-d56f-f5cf-b6d4fa9883a3', 'reliability', '안정성 설계', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'd0afd146-5608-1523-6237-ce752a7b9954', '5d3f71ca-82ab-d56f-f5cf-b6d4fa9883a3', 'state-and-security', '상태와 보안', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '5b672dbc-3a90-80ec-1019-700736aff349', '5d3f71ca-82ab-d56f-f5cf-b6d4fa9883a3', 'delivery-and-operations', '배포와 운영', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8621b2a6-f357-3350-818c-bc6b9490009b', '4d2bdefe-cac2-ce93-d40d-a9e3d06f35e2', 'kubernetes-production/production-readiness', 'production-readiness', '프로덕션 준비도 체크리스트: 입문과 운영의 간극',
+  $aix$입문 강의에서 띄운 디플로이먼트는 `kubectl get pods`에 **Running**이라고 뜹니다. 그 상태로 실서비스 트래픽을 받으면 어떻게 될까요? 대부분은 첫 주 안에 다음 셋 중 하나를 겪습니다.
+
+## 입문 클러스터가 프로덕션에서 깨지는 3가지 방식
+
+- **조용히 죽는다** — 리소스 제한이 없어 파드 하나가 노드 메모리를 다 먹고, 이웃 파드까지 OOMKilled로 쓰러집니다.
+- **배포할 때마다 끊긴다** — 준비 안 된 파드에 트래픽이 들어가 롤링 업데이트마다 몇 초씩 502가 납니다.
+- **노드 점검 한 번에 사라진다** — 레플리카 3개가 모두 같은 노드에 있어, 그 노드를 비우는 순간 서비스가 0개가 됩니다.
+
+새집 입주 전 **사전점검**과 같습니다. 문이 열리고 불이 켜지는 것(Running)과, 누수·전기 용량까지 확인한 것(운영 준비)은 다른 이야기입니다.
+
+## 이 강의의 로드맵
+
+1. **안정성 설계 (모듈 1)** — requests·limits, 프로브 3종, 오토스케일링, PDB·어피니티·토폴로지 분산
+2. **상태와 보안 (모듈 2)** — PV·PVC·StorageClass, StatefulSet·DaemonSet·Job·CronJob, RBAC, NetworkPolicy·Pod Security Admission
+3. **배포와 운영 (모듈 3)** — Helm 차트 직접 만들기, Argo CD GitOps, Argo Rollouts 점진 배포, 버전 정책·비용 최적화
+
+## 운영자의 체크리스트
+
+- 모든 컨테이너에 requests·limits가 있고, QoS 클래스를 알고 정했는가?
+- readinessProbe가 있는가? liveness가 너무 공격적이지 않은가?
+- 레플리카가 노드·존에 분산되고, PDB가 있는가?
+- 파드가 필요 이상의 권한(RBAC·네트워크·호스트 접근)을 갖지 않는가?
+- 배포가 Git 이력으로 추적되고, 실패 시 자동으로 되돌아가는가?
+
+> 💡 **핵심**: 프로덕션 준비도는 "떠 있는가"가 아니라 **"죽었을 때, 배포할 때, 몰릴 때 어떻게 되는가"**에 답할 수 있는 상태입니다.$aix$,
+  $aix${"type":"grid","title":"프로덕션 준비도 5개 영역","items":[{"label":"리소스","sublabel":"requests·limits·QoS","icon":"cpu","tone":"primary"},{"label":"헬스","sublabel":"프로브 3종","icon":"activity","tone":"primary"},{"label":"확장·중단 내성","sublabel":"HPA·PDB·분산","icon":"scaling","tone":"accent"},{"label":"상태 저장","sublabel":"PV·StatefulSet","icon":"hard-drive","tone":"accent"},{"label":"보안","sublabel":"RBAC·NetworkPolicy·PSA","icon":"shield","tone":"warning"},{"label":"배포·운영","sublabel":"Helm·GitOps·업그레이드","icon":"rocket","tone":"success"}],"caption":"Running 한 단어 뒤에 숨은 여섯 영역 — 어느 하나가 비면 그곳에서 첫 장애가 납니다."}$aix$::jsonb, null, 4, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bbe9d09e-6344-af2d-c0ff-eb25d88cc4d4', '4d2bdefe-cac2-ce93-d40d-a9e3d06f35e2', 'kubernetes-production/resources-and-qos', 'resources-and-qos', '리소스 requests·limits와 QoS 클래스: OOMKilled 예방',
+  $aix$프로덕션 장애 1순위는 화려한 버그가 아니라 **리소스 설정 누락**입니다. requests와 limits 두 줄이 파드의 배치와 생사를 결정합니다.
+
+## requests와 limits는 하는 일이 다릅니다
+
+- **requests** — 스케줄러가 노드를 고를 때 보는 **예약량**. 노드의 남은 requests가 부족하면 파드는 Pending에 머뭅니다.
+- **limits** — 실행 중 넘을 수 없는 **상한**. 메모리 limit을 넘으면 컨테이너가 죽고(OOMKilled), CPU limit을 넘으면 죽이지 않고 **스로틀링**합니다.
+
+```yaml
+resources:
+  requests:
+    cpu: 250m        # 0.25코어
+    memory: 256Mi
+  limits:
+    memory: 256Mi    # 메모리는 request와 같게
+```
+
+## QoS 클래스: 노드가 부족할 때 누가 먼저 쫓겨나나
+
+- **Guaranteed** — 모든 컨테이너가 CPU·메모리 **requests = limits**. 가장 마지막에 축출.
+- **Burstable** — request 또는 limit이 하나라도 있지만 Guaranteed는 아님. 중간 순위.
+- **BestEffort** — requests·limits가 전혀 없음. 노드가 압박받으면 **가장 먼저** 축출.
+
+`kubectl get pod <이름> -o jsonpath='{.status.qosClass}'`로 확인합니다. 비행기 오버부킹과 같습니다 — 스탠바이(BestEffort)부터 내립니다.
+
+## CPU limit 논쟁, 현재의 권고
+
+- **requests는 반드시** 설정합니다. 없으면 스케줄러가 눈을 감고 배치합니다.
+- **메모리는 requests = limits**가 안전합니다. 압축이 안 되므로 넘치면 죽는 것 외에 답이 없습니다.
+- **CPU limit은 신중히** 정합니다. Kubernetes 초기 핵심 개발자 Tim Hockin을 비롯한 많은 실무자가 "CPU는 request만, limit은 없거나 넉넉히"를 권합니다. 단, 여러 팀이 한 노드를 공유해 이웃을 보호해야 하면 limit이 필요합니다. 공식 문서의 강제 규칙은 아니므로 **팀의 우선순위로 결정**하세요.
+
+> 💡 **핵심**: requests는 배치, limits는 생사를 결정합니다. **메모리는 request=limit, CPU는 request 필수·limit은 근거를 갖고** — OOMKilled와 스로틀링을 함께 줄이는 출발점입니다.$aix$,
+  $aix${"type":"compare","title":"QoS 클래스 3종 — 축출 순서","columns":[{"title":"BestEffort","icon":"alert","tone":"warning","items":["requests·limits 없음","배치 예측 불가","노드 압박 시 1순위 축출","프로덕션에선 금지"]},{"title":"Burstable","icon":"gauge","tone":"accent","items":["request 또는 limit 일부","request 이상 사용 시 축출 후보","2순위 축출","대부분의 웹 앱"]},{"title":"Guaranteed","icon":"shield","tone":"primary","items":["모든 컨테이너 requests=limits","예약량이 곧 상한","마지막에 축출","DB·핵심 컴포넌트"]}],"caption":"같은 노드가 흔들릴 때 어떤 파드가 남을지는 코드가 아니라 이 두 줄의 조합이 정합니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'dc53d764-e7b2-1d2b-ff96-368dd265ab6e', '4d2bdefe-cac2-ce93-d40d-a9e3d06f35e2', 'kubernetes-production/probes', 'probes', '프로브 3종: liveness·readiness·startup을 잘못 쓰면 생기는 일',
+  $aix$"배포할 때마다 30초쯤 502가 나요" — 대부분 **readinessProbe가 없거나 잘못된** 탓입니다. 프로브는 컨테이너에 던지는 세 가지 질문입니다.
+
+## 세 가지 질문, 세 가지 결과
+
+- **livenessProbe** — "살아 있나?" 실패하면 **재시작**합니다.
+- **readinessProbe** — "준비 됐나?" 실패하면 Service(서비스)에서 **빼서 트래픽을 끊습니다**.
+- **startupProbe** — "켜지는 중인가?" 성공할 때까지 위 두 프로브를 **잠재웁니다**.
+
+핸들러는 `httpGet`(200~399 성공)·`tcpSocket`·`exec`·`grpc`, 기본값은 `periodSeconds` 10·`timeoutSeconds` 1·`failureThreshold` 3입니다.
+
+```yaml
+# Deployment의 containers[] 항목 아래에 추가
+readinessProbe:
+  httpGet: { path: /ready, port: 8080 }
+  periodSeconds: 5
+  failureThreshold: 3
+livenessProbe:
+  httpGet: { path: /healthz, port: 8080 }
+  periodSeconds: 10
+  failureThreshold: 3
+startupProbe:
+  httpGet: { path: /healthz, port: 8080 }
+  periodSeconds: 5
+  failureThreshold: 30   # 최대 150초 부팅 허용
+```
+
+## 잘못 쓰면 이렇게 됩니다
+
+- **liveness가 공격적** → 잠깐의 GC 멈춤에도 재시작되는 **재시작 폭풍**.
+- **liveness가 DB까지 검사** → DB 장애가 앱 전체 재시작으로 번집니다. liveness는 **프로세스 자신만**, 의존성은 readiness에서.
+
+병원 트리아지와 같습니다 — readiness는 "진료 가능한가", liveness는 "심정지인가".
+
+## 따라 하기
+
+1. readinessProbe를 추가하고 `kubectl apply -f deployment.yaml && kubectl rollout status deployment/<이름>`.
+2. 옆 터미널에서 `curl`을 0.5초마다 반복해 200만 나오는지 봅니다.
+
+**여기서 막힌다면**
+- `0/1 Running`이 계속되면 `kubectl describe pod`의 Events 확인 — `Readiness probe failed: ... statuscode: 404`면 경로 오타.
+- `Liveness probe failed: ... context deadline exceeded`가 반복되면 `timeoutSeconds`를 3~5초로.
+
+> 💡 **핵심**: readiness는 **트래픽 스위치**, liveness는 **재시작 버튼**, startup은 **부팅 유예**. 하나만 둔다면 readiness입니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"kubectl — readinessProbe 추가 후 롤링 업데이트","lines":[{"text":"kubectl apply -f deployment.yaml","tone":"cmd"},{"text":"deployment.apps/shop-web configured","tone":"out"},{"text":"kubectl rollout status deployment/shop-web","tone":"cmd"},{"text":"Waiting for deployment \"shop-web\" rollout to finish: 1 of 3 updated replicas are available...","tone":"dim"},{"text":"Waiting for deployment \"shop-web\" rollout to finish: 2 of 3 updated replicas are available...","tone":"dim"},{"text":"deployment \"shop-web\" successfully rolled out","tone":"ok"},{"text":"# 옆 터미널의 curl 루프","tone":"comment"},{"text":"200 200 200 200 200 200 200 200","tone":"ok"},{"text":"kubectl get pods -l app=shop-web","tone":"cmd"},{"text":"shop-web-7d9f6c8b5-2kx9p   1/1   Running   0   42s","tone":"out"},{"text":"shop-web-7d9f6c8b5-8qhzt   1/1   Running   0   31s","tone":"out"},{"text":"shop-web-7d9f6c8b5-mv4rc   1/1   Running   0   20s","tone":"out"}],"caption":"준비된 파드만 엔드포인트에 들어가니 교체 중에도 502가 한 번도 섞이지 않습니다."}$aix$::jsonb, $aix${"title":"readinessProbe 추가 → 무중단 롤아웃 확인","app":{"kind":"code-editor","windowTitle":"deployment.yaml — shop-web","files":[{"id":"f-deploy","name":"deployment.yaml","active":true},{"id":"f-svc","name":"service.yaml"},{"id":"f-values","name":"kustomization.yaml"}],"code":[{"id":"c1","text":"containers:"},{"id":"c2","text":"- name: web","indent":1},{"id":"c3","text":"image: ghcr.io/acme/shop-web:2.4.1","indent":2},{"id":"c4","text":"ports:","indent":2},{"id":"c5","text":"- containerPort: 8080","indent":2},{"id":"c6","text":"readinessProbe:","indent":2,"tone":"add","hidden":true},{"id":"c7","text":"httpGet: { path: /ready, port: 8080 }","indent":3,"tone":"add","hidden":true},{"id":"c8","text":"periodSeconds: 5","indent":3,"tone":"add","hidden":true},{"id":"c9","text":"failureThreshold: 3","indent":3,"tone":"add","hidden":true}],"terminal":[{"id":"t1","text":"kubectl apply -f deployment.yaml","tone":"cmd","hidden":true},{"id":"t2","text":"deployment.apps/shop-web configured","tone":"out","hidden":true},{"id":"t3","text":"kubectl rollout status deploy/shop-web","tone":"cmd","hidden":true},{"id":"t4","text":"Waiting for rollout to finish: 1 of 3 updated replicas are available...","tone":"out","hidden":true},{"id":"t5","text":"Waiting for rollout to finish: 2 of 3 updated replicas are available...","tone":"out","hidden":true},{"id":"t6","text":"deployment \"shop-web\" successfully rolled out","tone":"ok","hidden":true},{"id":"t7","text":"# curl 루프: 200 200 200 200 200 200 200 200","tone":"ok","hidden":true}]},"actions":[{"t":"caption","text":"① 지금은 프로브가 없어 뜨는 즉시 트래픽이 들어갑니다"},{"t":"move","target":"c5"},{"t":"click"},{"t":"wait","ms":400},{"t":"caption","text":"② 컨테이너 항목 아래에 readinessProbe를 추가합니다"},{"t":"type","target":"c6","text":"readinessProbe:"},{"t":"type","target":"c7","text":"httpGet: { path: /ready, port: 8080 }"},{"t":"type","target":"c8","text":"periodSeconds: 5"},{"t":"type","target":"c9","text":"failureThreshold: 3"},{"t":"wait","ms":500},{"t":"caption","text":"③ 적용하고 롤아웃 진행을 지켜봅니다"},{"t":"type","target":"t1","text":"kubectl apply -f deployment.yaml"},{"t":"reveal","target":"t2"},{"t":"type","target":"t3","text":"kubectl rollout status deploy/shop-web"},{"t":"reveal","target":"t4"},{"t":"wait","ms":600},{"t":"reveal","target":"t5"},{"t":"wait","ms":600},{"t":"reveal","target":"t6"},{"t":"caption","text":"④ 옆 터미널의 curl 루프는 교체 중에도 200만 찍습니다"},{"t":"reveal","target":"t7"},{"t":"move","target":"t7"},{"t":"caption","text":"✅ 준비된 파드만 트래픽을 받아 무중단 배포 완성"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1b4f318a-2391-f20c-fbed-213eb4bff2f9', '4d2bdefe-cac2-ce93-d40d-a9e3d06f35e2', 'kubernetes-production/autoscaling', 'autoscaling', '오토스케일링: HPA·VPA·Cluster Autoscaler/Karpenter·KEDA 언제 무엇을',
+  $aix$오토스케일링 도구가 다섯 개나 되는 이유는 **"무엇을 늘리는가"가 다르기 때문**입니다. 파드 개수, 파드 크기, 노드 개수, 그리고 이벤트 — 축이 네 개입니다.
+
+## 파드를 늘린다·키운다: HPA와 VPA
+
+HPA는 CPU 사용률 같은 지표를 보고 **레플리카 수**를 조절합니다. 기준이 requests 대비 백분율이므로 requests가 없으면 동작하지 않고, metrics-server가 필요합니다.
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: { name: shop-web }
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: shop-web
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target: { type: Utilization, averageUtilization: 60 }
+```
+
+VPA는 개수 대신 **파드 하나의 requests**를 실사용량에 맞춥니다. `updateMode: "Off"`면 값을 바꾸지 않고 **추천만** 합니다. 공식 문서대로 **같은 지표(CPU·메모리)로 HPA와 함께 쓰지 말고**, Auto/Recreate 모드는 파드를 재생성하므로 PDB와 함께 쓰세요.
+
+## 노드를 늘린다: Cluster Autoscaler vs Karpenter
+
+- **Cluster Autoscaler** — 클라우드의 **노드 그룹** 단위로 노드를 늘리고 줄입니다.
+- **Karpenter** — Pending 파드의 요구(CPU·메모리·아키텍처·스팟)에 **딱 맞는 노드를 즉시** 만들고, 노는 노드는 통합(consolidation)해 없앱니다. NodePool과 클라우드별 NodeClass(예: EC2NodeClass) CRD로 정의합니다. AWS·Azure가 대표 제공자이고, 그 외는 공식 저장소를 확인하세요.
+
+## 이벤트로 늘린다: KEDA
+
+큐 길이·Prometheus 지표·cron 시각 같은 **외부 이벤트**로 스케일하며, **0개까지 줄일 수 있습니다**. ScaledObject가 워크로드와 이벤트 소스를 연결하고, 내부적으로 HPA를 만들어 1→N은 HPA에게, 0↔1은 KEDA가 직접 담당합니다.
+
+식당으로 비유하면 HPA는 **웨이터 수**, VPA는 **웨이터 한 명의 역량**, Cluster Autoscaler/Karpenter는 **홀 크기**, KEDA는 **예약 건수를 보고 미리 출근시키는 매니저**입니다.
+
+> 💡 **핵심**: HPA(개수)·VPA(크기)·Karpenter/CA(노드)·KEDA(이벤트)는 **다른 축**입니다. 웹 앱은 HPA + 노드 오토스케일러, 큐 소비자는 KEDA, requests 산정은 VPA 추천 모드부터.$aix$,
+  $aix${"type":"stack","title":"오토스케일링 4개 층","layers":[{"label":"이벤트 · KEDA","sublabel":"큐 길이·요청 수·cron → 0개까지 축소","icon":"zap","tone":"accent"},{"label":"파드 개수 · HPA","sublabel":"CPU·메모리·커스텀 지표 → 레플리카 수","icon":"scaling","tone":"primary"},{"label":"파드 크기 · VPA","sublabel":"실사용량 → requests 조정(추천 모드 권장)","icon":"gauge","tone":"primary"},{"label":"노드 개수 · Cluster Autoscaler / Karpenter","sublabel":"Pending 파드 → 노드 추가·통합","icon":"server","tone":"muted"}],"caption":"위쪽 층이 파드를 늘려도 아래층(노드)이 따라오지 않으면 Pending만 늘어납니다."}$aix$::jsonb, null, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7c915d6e-f764-0f70-c8ba-70697970871a', '4d2bdefe-cac2-ce93-d40d-a9e3d06f35e2', 'kubernetes-production/pdb-affinity-topology', 'pdb-affinity-topology', 'PDB·어피니티·테인트·토폴로지 분산: 노드 하나가 죽어도 살아남기',
+  $aix$레플리카 3개를 띄웠는데 셋이 모두 같은 노드에 올라갔다면, 그 노드가 죽는 순간 레플리카는 0개입니다. 개수만으로는 안전하지 않습니다 — **어디에 놓이는가**와 **한 번에 몇 개까지 빼도 되는가**를 함께 정해야 합니다.
+
+## PDB: 한 번에 빼도 되는 개수
+
+PDB는 노드 점검(`kubectl drain`)이나 오토스케일러의 노드 축소 같은 **자발적 중단** 때 "최소 몇 개는 남겨 둬"를 선언합니다. drain은 PDB를 위반하는 축출을 하지 않고 기다립니다.
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: shop-web
+spec:
+  minAvailable: 2          # 또는 maxUnavailable: 1 (둘 중 하나만)
+  selector:
+    matchLabels:
+      app: shop-web
+```
+
+값은 정수 또는 `"50%"` 같은 백분율(올림 처리)입니다. 단, 노드가 갑자기 죽는 **비자발적 장애**는 PDB가 막지 못합니다 — 그건 배치 규칙의 몫입니다.
+
+## 배치 규칙 3종
+
+- **topologySpreadConstraints** — 같은 레이블의 파드를 존·노드마다 **최대 1개 차이**로 고르게 퍼뜨립니다.
+- **어피니티** — nodeAffinity는 "SSD 노드에만", podAntiAffinity는 "같은 노드에 같은 앱 두 개 금지". `required…`는 강제, `preferred…`는 선호.
+- **테인트·톨러레이션** — 노드에 `kubectl taint nodes gpu-1 gpu=true:NoSchedule`을 붙이면, 같은 키를 `tolerations`에 가진 파드만 올라갑니다. 효과는 NoSchedule·PreferNoSchedule·NoExecute(기존 파드도 내보냄).
+
+```yaml
+# Deployment의 template.spec 아래
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: topology.kubernetes.io/zone
+  whenUnsatisfiable: DoNotSchedule
+  labelSelector:
+    matchLabels:
+      app: shop-web
+```
+
+계란을 한 바구니에 담지 말라는 말 그대로입니다. 토폴로지 분산이 **바구니를 나누고**, PDB가 **한 번에 옮길 계란 수**를 정합니다.
+
+## 함께 쓸 때의 함정
+
+- PDB의 `minAvailable`이 레플리카 수와 같으면(3 중 3) drain이 영원히 끝나지 않습니다.
+- `whenUnsatisfiable: DoNotSchedule`은 조건을 못 맞추면 Pending을 만듭니다. 존이 2개인 클러스터에서 존 3개 분산을 요구하지 마세요.
+
+> 💡 **핵심**: 레플리카 수는 시작일 뿐입니다. **토폴로지 분산으로 퍼뜨리고, PDB로 한 번에 빼는 수를 제한하고, 테인트로 특수 노드를 지키면** 노드 하나는 언제 죽어도 됩니다.$aix$,
+  $aix${"type":"flow","title":"노드 점검(drain) 시 무슨 일이 일어나나","nodes":[{"label":"kubectl drain node-b","sublabel":"노드 비우기 요청","icon":"wrench","tone":"muted"},{"label":"PDB 확인","sublabel":"minAvailable: 2 — 지금 3개 가동","icon":"shield","tone":"warning","edgeLabel":"축출 API 호출"},{"label":"파드 1개 축출","sublabel":"2개 남음 → 허용","icon":"x","tone":"accent","edgeLabel":"예산 내"},{"label":"다른 존 노드에 재배치","sublabel":"topologySpread·antiAffinity 준수","icon":"route","tone":"primary"},{"label":"3개 복구 → 다음 파드 축출","sublabel":"노드가 빌 때까지 반복","icon":"check","tone":"success"}],"loopBack":{"from":4,"to":1,"label":"예산이 회복되면 다음 축출"},"caption":"PDB는 '몇 개를 남길지', 분산 규칙은 '어디로 갈지'를 정해 점검 중에도 서비스가 유지됩니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5a77ebcc-a7bd-4476-e7cc-a247573935bb', 'd0afd146-5608-1523-6237-ce752a7b9954', 'kubernetes-production/persistent-storage', 'persistent-storage', 'PV·PVC·StorageClass: 상태 있는 워크로드의 저장소',
+  $aix$파드는 언제든 죽고 다시 태어나며, 그 안에 쓴 파일은 함께 사라집니다. **파드보다 오래 살아야 하는 데이터**는 파드 바깥에 두어야 하고, Kubernetes는 이를 세 오브젝트로 나눕니다.
+
+## 세 오브젝트의 역할 분담
+
+- **PV** — 실제 디스크 한 덩어리. 클러스터 자원입니다.
+- **PVC** — "10Gi, 읽기·쓰기 한 노드"처럼 앱이 내는 **신청서**. 파드는 PV가 아니라 PVC를 참조합니다.
+- **StorageClass** — 디스크의 **종류와 만드는 방법**. PVC가 들어오면 이 정의대로 PV를 **자동 생성**합니다(동적 프로비저닝).
+
+호텔에 비유하면 PVC는 **예약 요청**, StorageClass는 **객실 등급표**, PV는 **배정된 방**입니다.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shop-db-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: fast-ssd     # 생략하면 기본 StorageClass
+  resources:
+    requests:
+      storage: 20Gi
+```
+
+## 운영자가 꼭 정해야 하는 세 가지
+
+- **accessModes** — `ReadWriteOnce`(한 노드에서 읽기·쓰기, 블록 디스크의 기본)·`ReadOnlyMany`·`ReadWriteMany`(여러 노드 동시 쓰기, NFS류 필요)·`ReadWriteOncePod`(단일 파드만). 블록 스토리지에 RWX를 요구하면 PVC가 영원히 Pending입니다.
+- **reclaimPolicy** — PVC를 지웠을 때 PV의 운명. 기본값 `Delete`는 디스크까지 지우니, 프로덕션 DB는 `Retain`으로 바꿔 실수로 PVC를 지워도 데이터가 남게 하세요.
+- **volumeBindingMode** — `Immediate`는 PVC 생성 즉시, `WaitForFirstConsumer`는 파드가 스케줄될 때까지 기다려 **파드와 같은 존**에 디스크를 만듭니다. 멀티 존에서 후자가 아니면 "디스크는 A존, 파드는 B존"이 됩니다.
+
+기본 StorageClass는 `storageclass.kubernetes.io/is-default-class: "true"` 애노테이션으로 지정하고 `kubectl get storageclass`에 `(default)`로 표시됩니다.
+
+> 💡 **핵심**: 앱은 PVC만 알고, 디스크의 정체는 StorageClass가 숨깁니다. 프로덕션에서는 **Retain, WaitForFirstConsumer, 올바른 accessModes** 세 값을 먼저 확인하세요.$aix$,
+  $aix${"type":"steps","title":"동적 프로비저닝의 흐름","steps":[{"label":"PVC 생성","sublabel":"20Gi · RWO · fast-ssd","icon":"file-text"},{"label":"StorageClass 조회","sublabel":"프로비저너·등급·바인딩 모드","icon":"layers"},{"label":"프로비저너가 PV 생성","sublabel":"클라우드 디스크 실제 발급","icon":"hard-drive"},{"label":"PVC ↔ PV Bound","sublabel":"1:1 결합","icon":"link"},{"label":"파드에 마운트","sublabel":"volumes.persistentVolumeClaim","icon":"package"}],"caption":"WaitForFirstConsumer면 3단계가 파드 스케줄 뒤로 밀려 디스크와 파드가 같은 존에 놓입니다."}$aix$::jsonb, null, 5, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '79cdc3a7-4c09-5f8b-92dd-0d5d3c79f7e8', 'd0afd146-5608-1523-6237-ce752a7b9954', 'kubernetes-production/stateful-workloads', 'stateful-workloads', 'StatefulSet·DaemonSet·Job·CronJob: 디플로이먼트가 아닌 것들',
+  $aix$디플로이먼트는 "구별되지 않는 파드 N개"용입니다. DB 노드는 서로 구별되어야 하고, 로그 수집기는 노드마다 하나씩, 야간 정산은 끝나면 종료되어야 합니다 — 각각 다른 컨트롤러가 있습니다.
+
+## StatefulSet: 이름과 디스크가 있는 파드
+
+- 파드 이름이 `db-0, db-1, db-2`처럼 **순번**으로 고정되고, 재생성돼도 같은 이름·같은 PVC를 다시 받습니다.
+- `volumeClaimTemplates`가 파드마다 PVC를 **하나씩 자동 생성**합니다. 스케일 다운·삭제 후에도 PVC는 남습니다(`persistentVolumeClaimRetentionPolicy`로 조절).
+- **헤드리스 Service**(`clusterIP: None`)가 필요합니다. `db-0.db.prod.svc.cluster.local`처럼 파드별 고정 DNS 이름이 생겨 복제본끼리 서로를 찾습니다.
+
+학급 번호표와 같습니다. 디플로이먼트는 "아무나 3명", StatefulSet은 "1번·2번·3번" — 결석해도 번호와 사물함(PVC)은 그대로입니다.
+
+## DaemonSet: 노드마다 정확히 하나
+
+새 노드가 추가되면 파드가 하나 생기고, 노드가 빠지면 함께 사라집니다. 노드 상태 테인트(not-ready 등)의 톨러레이션은 자동으로 붙지만, **컨트롤 플레인 노드의 테인트**(`node-role.kubernetes.io/control-plane`)는 직접 적어야 그곳에도 뜹니다.
+
+## Job·CronJob: 끝이 있는 작업
+
+Job은 파드가 **성공 종료**할 때까지 재시도합니다. `restartPolicy`는 `Never` 또는 `OnFailure`만 가능하고, `backoffLimit`(기본 6)을 넘기면 실패입니다. CronJob은 정해진 시각에 Job을 만듭니다.
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata: { name: nightly-report }
+spec:
+  schedule: "0 3 * * *"          # 매일 03:00
+  timeZone: "Asia/Seoul"
+  concurrencyPolicy: Forbid       # 이전 실행이 안 끝났으면 건너뜀
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - { name: report, image: ghcr.io/acme/report:1.8 }
+```
+
+`concurrencyPolicy`는 `Allow`(기본, 겹쳐 실행)·`Forbid`·`Replace`(이전 것을 죽이고 새로 시작). 동시에 돌면 안 되는 정산·백업은 반드시 `Forbid`로 두세요.
+
+> 💡 **핵심**: 구별되는 파드 → StatefulSet, 노드마다 하나 → DaemonSet, 끝이 있는 일 → Job/CronJob. **디플로이먼트가 아닌 것을 디플로이먼트로 만드는 순간** 데이터가 섞이고 배치가 겹칩니다.$aix$,
+  $aix${"type":"grid","title":"워크로드 컨트롤러 선택 지도","items":[{"label":"디플로이먼트","sublabel":"구별 없는 파드 N개 · 웹·API","icon":"boxes","tone":"primary"},{"label":"StatefulSet","sublabel":"순번 이름 + 전용 PVC · DB·큐","icon":"database","tone":"accent"},{"label":"DaemonSet","sublabel":"노드마다 1개 · 로그·모니터링","icon":"server","tone":"accent"},{"label":"Job","sublabel":"성공까지 재시도 후 종료 · 마이그레이션","icon":"check","tone":"success"},{"label":"CronJob","sublabel":"시각 예약 · 정산·백업","icon":"timer","tone":"success"},{"label":"헤드리스 Service","sublabel":"clusterIP: None · 파드별 DNS","icon":"network","tone":"muted"}],"caption":"질문은 하나 — '이 파드들은 서로 구별되어야 하는가, 노드마다 있어야 하는가, 끝나야 하는가'."}$aix$::jsonb, null, 6, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '12157628-e22f-55b5-6dda-d8a86e3d0c30', 'd0afd146-5608-1523-6237-ce752a7b9954', 'kubernetes-production/rbac-and-service-accounts', 'rbac-and-service-accounts', 'RBAC와 ServiceAccount: 최소 권한 원칙',
+  $aix$입문 때 쓰던 kubeconfig는 대개 **cluster-admin**, 클러스터의 모든 것을 할 수 있는 열쇠입니다. 팀원과 CI 파이프라인, 앱 파드 수십 개가 모두 그 열쇠를 들고 있다면 사고는 시간 문제입니다.
+
+## RBAC의 네 조각
+
+- **Role / ClusterRole** — 권한 목록. Role은 **네임스페이스 안**, ClusterRole은 **클러스터 전체**.
+- **RoleBinding / ClusterRoleBinding** — 권한을 주체(사용자·그룹·ServiceAccount)에 **연결**. RoleBinding은 ClusterRole도 참조할 수 있어 "공용 읽기 권한을 이 네임스페이스에만 부여"가 가능합니다.
+
+호텔 카드키와 같습니다. Role은 "3층 객실 문 열기"라는 **권한 규격**, RoleBinding은 그 규격을 **특정 손님 카드에 굽는 일**입니다.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { name: pod-reader, namespace: shop }
+rules:
+- apiGroups: [""]                 # "" = core 그룹
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: ci-pod-reader, namespace: shop }
+subjects:
+- { kind: ServiceAccount, name: ci-bot, namespace: shop }
+roleRef: { kind: Role, name: pod-reader, apiGroup: rbac.authorization.k8s.io }
+```
+
+확인은 `kubectl auth can-i`로 직접 물어봅니다.
+
+- `kubectl auth can-i list secrets --as=system:serviceaccount:shop:ci-bot`
+- `kubectl auth can-i --list -n shop` — 내가 가진 권한 전체
+
+## 파드의 신원, ServiceAccount
+
+파드는 기본적으로 `default` ServiceAccount 토큰을 `/var/run/secrets/kubernetes.io/serviceaccount/`에 **자동 마운트**합니다. API를 호출하지 않는 웹 앱에도 토큰이 들어가 있고, 컨테이너가 뚫리면 그것이 첫 발판이 됩니다.
+
+- API를 쓰지 않는 앱은 파드 spec 또는 ServiceAccount에 `automountServiceAccountToken: false`를 둡니다(파드 spec 값이 우선).
+- API를 쓰는 앱은 **전용 ServiceAccount**에 필요한 동사만 담은 Role을 바인딩합니다. `default` 계정에 권한을 주는 것은 네임스페이스 전체에 주는 것과 같습니다.
+
+> 💡 **핵심**: cluster-admin은 사람 한두 명에게만. 나머지는 **네임스페이스 Role + 전용 ServiceAccount**, 확신이 없으면 `kubectl auth can-i`로 물어보세요.$aix$,
+  $aix${"type":"compare","title":"Role vs ClusterRole — 범위와 용도","columns":[{"title":"Role + RoleBinding","icon":"key","tone":"primary","items":["네임스페이스 하나에 한정","파드·디플로이먼트·ConfigMap 등","팀별 개발자·앱 ServiceAccount","최소 권한의 기본 단위"]},{"title":"ClusterRole + ClusterRoleBinding","icon":"globe","tone":"warning","items":["클러스터 전체","노드·네임스페이스·PV 등 전역 리소스","클러스터 운영자·오퍼레이터","cluster-admin은 극소수만"]},{"title":"ClusterRole + RoleBinding","icon":"link","tone":"accent","items":["권한 정의는 공용, 부여는 네임스페이스","예: 공용 'view' 역할을 shop에만","중복 Role 작성 방지","실무에서 가장 많이 쓰는 조합"]}],"caption":"권한 정의(Role류)와 부여(Binding류)를 분리하면 같은 규격을 여러 곳에 안전하게 재사용할 수 있습니다."}$aix$::jsonb, null, 6, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c911c862-86d8-02b4-93a7-e71e3d7b0d92', 'd0afd146-5608-1523-6237-ce752a7b9954', 'kubernetes-production/network-policy-and-pod-security', 'network-policy-and-pod-security', 'NetworkPolicy와 Pod Security Admission: 기본은 ''전부 허용''이다',
+  $aix$Kubernetes의 기본값은 **모든 파드가 서로 통신 가능**, **루트 실행·권한 상승 허용**입니다. 프론트엔드 하나가 뚫리면 DB까지 한 번에 닿습니다.
+
+## NetworkPolicy: 파드 사이의 방화벽
+
+NetworkPolicy는 레이블로 고른 파드에 "이 트래픽만 허용"을 붙입니다. 허용 규칙에 없는 것은 **전부 차단**, 여러 정책은 합집합입니다. 정석은 **default-deny를 먼저 깔고** 필요한 경로만 여는 것.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: shop
+spec:
+  podSelector: {}          # 네임스페이스의 모든 파드
+  policyTypes: ["Ingress", "Egress"]
+```
+
+그다음 "web → api 8080", "api → db 5432", "모든 파드 → kube-dns 53"을 엽니다. **DNS 허용을 잊으면** 이름 해석이 전부 실패합니다.
+
+NetworkPolicy는 **CNI 플러그인이 구현**합니다. 미지원 플러그인(kind 기본 포함)에선 아무 일도 없으니, 로컬 실습은 Calico나 Cilium에서 하세요.
+
+## Pod Security Admission: 레이블 하나로 위험한 파드 거부
+
+- **레벨** — `privileged`(제한 없음) · `baseline`(privileged 컨테이너·hostNetwork·hostPath 등 금지) · `restricted`(baseline + 비루트·allowPrivilegeEscalation: false·capabilities 전부 drop·seccomp RuntimeDefault).
+- **모드** — `enforce`(거부) · `audit`(감사 로그만) · `warn`(경고만).
+
+```bash
+kubectl label ns shop pod-security.kubernetes.io/enforce=baseline pod-security.kubernetes.io/warn=restricted
+```
+
+이제 baseline 위반은 **생성 거부**, restricted 위반은 **경고만**. 기존 워크로드가 많다면 warn/audit로 목록을 먼저 확보한 뒤 enforce로 올리세요.
+
+아파트로 비유하면 NetworkPolicy는 **동 사이 출입문 통제**, Pod Security Admission은 **입주 심사**입니다.
+
+> 💡 **핵심**: 새 네임스페이스에는 **default-deny NetworkPolicy**와 **pod-security 레이블(baseline enforce + restricted warn)**을 함께 붙이세요. 기본값은 '전부 허용'입니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"kubectl — Pod Security Admission 경고와 거부","lines":[{"text":"kubectl label ns shop pod-security.kubernetes.io/enforce=baseline pod-security.kubernetes.io/warn=restricted","tone":"cmd"},{"text":"namespace/shop labeled","tone":"out"},{"text":"kubectl apply -f web.yaml -n shop","tone":"cmd"},{"text":"Warning: would violate PodSecurity \"restricted:latest\": allowPrivilegeEscalation != false (container \"web\" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container \"web\" must set securityContext.capabilities.drop=[\"ALL\"]), runAsNonRoot != true","tone":"err"},{"text":"deployment.apps/web created","tone":"ok"},{"text":"kubectl apply -f debug-privileged.yaml -n shop","tone":"cmd"},{"text":"Error from server (Forbidden): error when creating \"debug-privileged.yaml\": pods \"debug\" is forbidden: violates PodSecurity \"baseline:latest\": privileged (container \"debug\" must not set securityContext.privileged=true)","tone":"err"},{"text":"# warn 레벨은 경고만, enforce 레벨은 거부","tone":"comment"}],"caption":"warn은 고칠 목록을 알려 주고 enforce는 문을 닫습니다 — 순서대로 올리면 무중단으로 강화할 수 있습니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f9b83ab2-6d0a-42b2-ec19-cd1ab0e3e902', '5b672dbc-3a90-80ec-1019-700736aff349', 'kubernetes-production/helm-chart-authoring', 'helm-chart-authoring', 'Helm 차트 직접 만들기: values·템플릿·Helm 4에서 달라진 점',
+  $aix$우리 앱의 매니페스트 여러 장을 **하나의 Helm 차트**로 묶어 dev·staging·prod에 값만 바꿔 배포합니다.
+
+## `helm create shop-web`이 만들어 주는 뼈대
+
+- `Chart.yaml` — 이름·`version`(Helm 차트 버전)·`appVersion`(앱 버전).
+- `values.yaml` — `replicaCount`·`image.repository`/`tag`·`resources` 등 기본값.
+- `templates/` — deployment·service 등 템플릿, `NOTES.txt`, 공용 함수 `_helpers.tpl`.
+
+## 템플릿 문법과 배포 명령
+
+```yaml
+# templates/deployment.yaml 일부
+metadata:
+  name: {{ include "shop-web.fullname" . }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  template:
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+```
+
+- `{{ .Values.x }}`는 values.yaml의 값, `{{ .Chart.Name }}`은 Helm 차트 정보, `include`는 `_helpers.tpl`의 정의 호출.
+
+레시피(템플릿)와 재료(values)를 나눈 요리책 — 같은 레시피로 2인분(dev)도 20인분(prod)도.
+
+검사·렌더링·배포는 세 명령입니다. `--install` 덕분에 첫 배포와 업그레이드가 같은 명령입니다.
+
+```bash
+helm lint ./shop-web                  # 문법 검사
+helm template shop-web ./shop-web     # 렌더링 결과 확인
+helm upgrade --install shop-web ./shop-web -n shop --create-namespace -f values-prod.yaml --wait
+# -f로 환경별 values를 겹치고, --set image.tag=2.4.1로 값 하나만 덮어쓰기
+```
+
+## Helm 4에서 달라진 점 (2025-11 출시)
+
+- **서버측 적용(SSA) 기본** — 새 설치는 SSA, Helm 3 시절 릴리스는 업그레이드 시 이전 방식 유지(`--server-side true|false|auto`).
+- **`--wait` 개선** — kstatus 기반 감시로 준비 상태를 더 정확히 판단합니다(예전 방식 `--wait=legacy`).
+- **플러그인 재설계** — post-renderer를 **플러그인 이름**으로 지정합니다.
+- **Helm 3 EOL** — 2026-09-09 마지막 릴리스, **2027-02-10까지 보안 패치만**.
+
+**여기서 막힌다면**
+- `invalid ownership metadata` — 같은 이름의 리소스가 Helm 밖에 이미 있음. `--take-ownership`으로 소유권을 가져오세요.
+- `nil pointer evaluating interface` — values 경로 오타(예: `.Values.image.tags`). `helm template`으로 먼저 확인하세요.
+
+> 💡 **핵심**: Helm 차트는 **템플릿 + values(환경별 값)**. `helm create` → `helm template`/`lint` → `helm upgrade --install`이 매 배포의 루틴입니다.$aix$,
+  $aix${"type":"steps","title":"Helm 차트 작성에서 배포까지","steps":[{"label":"helm create shop-web","sublabel":"Chart.yaml · values.yaml · templates/","icon":"package"},{"label":"values·템플릿 수정","sublabel":"image·replicaCount·resources","icon":"file-pen"},{"label":"helm lint / helm template","sublabel":"문법 검사 · 렌더링 결과 확인","icon":"search"},{"label":"helm upgrade --install","sublabel":"-f values-prod.yaml --wait","icon":"rocket"},{"label":"helm history / rollback","sublabel":"리비전 단위로 되돌리기","icon":"refresh"}],"caption":"렌더링 결과를 눈으로 확인하는 3단계를 건너뛰면 실수는 클러스터에서 발견됩니다."}$aix$::jsonb, $aix${"title":"helm create → values 수정 → upgrade --install","app":{"kind":"code-editor","windowTitle":"values.yaml — shop-web Helm 차트","files":[{"id":"f-chart","name":"Chart.yaml"},{"id":"f-values","name":"values.yaml","active":true},{"id":"f-deploy","name":"templates/deployment.yaml"},{"id":"f-helpers","name":"templates/_helpers.tpl"}],"code":[{"id":"c1","text":"replicaCount: 1","tone":"del"},{"id":"c2","text":"replicaCount: 3","tone":"add","hidden":true},{"id":"c3","text":"image:"},{"id":"c4","text":"repository: nginx","indent":1,"tone":"del"},{"id":"c5","text":"repository: ghcr.io/acme/shop-web","indent":1,"tone":"add","hidden":true},{"id":"c6","text":"tag: \"\"","indent":1,"tone":"del"},{"id":"c7","text":"tag: \"2.4.1\"","indent":1,"tone":"add","hidden":true},{"id":"c8","text":"service:"},{"id":"c9","text":"type: ClusterIP","indent":1},{"id":"c10","text":"port: 80","indent":1}],"terminal":[{"id":"t1","text":"helm create shop-web","tone":"cmd","hidden":true},{"id":"t2","text":"Creating shop-web","tone":"out","hidden":true},{"id":"t3","text":"helm lint ./shop-web","tone":"cmd","hidden":true},{"id":"t4","text":"1 chart(s) linted, 0 chart(s) failed","tone":"ok","hidden":true},{"id":"t5","text":"helm upgrade -i shop-web ./shop-web","tone":"cmd","hidden":true},{"id":"t6","text":"Release \"shop-web\" does not exist. Installing it now.","tone":"out","hidden":true},{"id":"t7","text":"STATUS: deployed   REVISION: 1","tone":"ok","hidden":true},{"id":"t8","text":"kubectl get pods -n shop","tone":"cmd","hidden":true},{"id":"t9","text":"shop-web-6c8d9f7b4-x2k1p   1/1   Running   (외 2개)","tone":"out","hidden":true}]},"actions":[{"t":"caption","text":"① helm create로 Helm 차트 뼈대를 만듭니다"},{"t":"type","target":"t1","text":"helm create shop-web"},{"t":"reveal","target":"t2"},{"t":"wait","ms":500},{"t":"caption","text":"② values.yaml에서 레플리카 수와 이미지를 바꿉니다"},{"t":"dblclick","target":"c1"},{"t":"type","target":"c2","text":"replicaCount: 3"},{"t":"dblclick","target":"c4"},{"t":"type","target":"c5","text":"repository: ghcr.io/acme/shop-web"},{"t":"dblclick","target":"c6"},{"t":"type","target":"c7","text":"tag: \"2.4.1\""},{"t":"caption","text":"③ lint로 문법을 검사합니다"},{"t":"type","target":"t3","text":"helm lint ./shop-web"},{"t":"reveal","target":"t4"},{"t":"caption","text":"④ upgrade -i(--install) 한 명령으로 설치합니다"},{"t":"type","target":"t5","text":"helm upgrade -i shop-web ./shop-web"},{"t":"reveal","target":"t6"},{"t":"reveal","target":"t7"},{"t":"type","target":"t8","text":"kubectl get pods -n shop"},{"t":"reveal","target":"t9"},{"t":"move","target":"t9"},{"t":"caption","text":"✅ 리비전 1 배포 완료 — 같은 명령이 다음 업그레이드에도 쓰입니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4d39eb0e-0c21-5938-6a47-fa34c548850d', '5b672dbc-3a90-80ec-1019-700736aff349', 'kubernetes-production/gitops-with-argocd', 'gitops-with-argocd', 'GitOps와 Argo CD: Git이 곧 클러스터 상태',
+  $aix$`kubectl apply`를 사람이 노트북에서 실행하는 한, "지금 프로덕션에 뭐가 배포돼 있지?"에 아무도 확실히 답할 수 없습니다. GitOps는 그 답을 **Git 저장소**로 못박습니다.
+
+## GitOps의 규칙 셋
+
+- 클러스터의 **원하는 상태**는 전부 Git에 있다.
+- 사람은 클러스터를 직접 만지지 않고 **Git에 PR**한다.
+- 도구가 Git과 클러스터를 **끊임없이 비교**해 드리프트를 없앤다.
+
+오케스트라 악보와 같습니다. 악보(Git)가 바뀌면 연주(클러스터)가 바뀌고, 몰래 음을 바꾸면(`kubectl edit`) 지휘자(Argo CD)가 되돌립니다.
+
+## Argo CD의 핵심 오브젝트: Application
+
+"이 저장소의 이 경로를, 이 클러스터의 이 네임스페이스에" 배포하라는 선언입니다.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: { name: shop-web, namespace: argocd }
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/acme/k8s-manifests.git
+    targetRevision: main
+    path: apps/shop-web
+  destination: { server: https://kubernetes.default.svc, namespace: shop }
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: ["CreateNamespace=true"]
+```
+
+`automated`는 Git이 바뀌면 자동 동기화, `prune`은 Git에서 지운 리소스를 클러스터에서도 삭제, `selfHeal`은 손으로 바꾼 것을 되돌립니다. 처음엔 **수동 Sync**로 diff를 익힌 뒤 켜세요.
+
+## 설치와 두 가지 상태
+
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml   # CRD가 커서 서버측 적용 필요
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+argocd admin initial-password -n argocd   # 초기 admin 비밀번호
+```
+
+- **Sync 상태** — `Synced` / `OutOfSync`(Git과 차이). 새 커밋 직후나 누가 손으로 고쳤을 때.
+- **Health 상태** — `Healthy` / `Progressing` / `Degraded` / `Suspended` / `Missing` / `Unknown`. 하위 리소스 중 **가장 나쁜 것**이 Application의 헬스.
+
+UI에서는 **+ New App**으로 만들고, OutOfSync일 때 **Sync** → **Synchronize**를 누르면 Healthy가 됩니다.
+
+**여기서 막힌다면**
+- `repository not accessible` — 비공개 저장소 자격 증명을 Settings > Repositories에 등록하세요.
+- Sync 직후 다시 `OutOfSync` — HPA 등 다른 컨트롤러가 바꾸는 필드입니다. `ignoreDifferences`로 제외하세요.
+
+> 💡 **핵심**: GitOps에서 배포는 `kubectl`이 아니라 **PR 머지**입니다. Argo CD는 Git과 클러스터의 차이를 보여 주고(OutOfSync), 없애 줍니다(Sync → Healthy).$aix$,
+  $aix${"type":"cycle","title":"GitOps 조정 루프","center":"Git = 원하는 상태","nodes":[{"label":"PR 머지","sublabel":"매니페스트·values 변경","icon":"git-branch"},{"label":"차이 감지","sublabel":"OutOfSync","icon":"eye"},{"label":"동기화","sublabel":"Sync → Progressing","icon":"refresh"},{"label":"정상 확인","sublabel":"Synced · Healthy","icon":"check"},{"label":"드리프트 감시","sublabel":"수동 변경 → selfHeal","icon":"shield"}],"caption":"사람이 클러스터를 직접 바꿔도 루프가 Git 상태로 되돌리기 때문에 Git 이력이 곧 배포 이력이 됩니다."}$aix$::jsonb, $aix${"title":"Argo CD UI에서 OutOfSync → Sync → Healthy","app":{"kind":"browser","url":"localhost:8080/applications/argocd/shop-web","blocks":[{"id":"b-title","type":"heading","label":"shop-web"},{"id":"b-src","type":"text","label":"acme/k8s-manifests · main · apps/shop-web → cluster: in-cluster / ns: shop"},{"id":"b-out","type":"badge","label":"⟳ OutOfSync  (image: 2.4.0 → 2.4.1)"},{"id":"b-healthy0","type":"badge","label":"♥ Healthy"},{"id":"b-sync","type":"button","label":"SYNC"},{"id":"b-panel","type":"card","label":"Synchronizing application manifests from main — Revision: HEAD · Prune ☐ · Dry Run ☐","hidden":true},{"id":"b-synchronize","type":"button","label":"SYNCHRONIZE","hidden":true},{"id":"b-syncing","type":"badge","label":"⟳ Syncing…","hidden":true},{"id":"b-prog","type":"badge","label":"◔ Progressing","hidden":true},{"id":"b-tree","type":"card","label":"Deployment shop-web  ·  ReplicaSet shop-web-7d9f6c8b5  ·  Pods 3/3 Running","hidden":true},{"id":"b-synced","type":"badge","label":"✓ Synced to main (a1f9c2e)","hidden":true},{"id":"b-healthy","type":"badge","label":"♥ Healthy","hidden":true}]},"actions":[{"t":"caption","text":"① 새 커밋이 머지되자 Application이 OutOfSync로 바뀌었습니다"},{"t":"move","target":"b-out"},{"t":"wait","ms":600},{"t":"caption","text":"② 상단 SYNC 버튼을 누르면 동기화 패널이 열립니다"},{"t":"click","target":"b-sync"},{"t":"reveal","target":"b-panel"},{"t":"reveal","target":"b-synchronize"},{"t":"wait","ms":500},{"t":"caption","text":"③ 패널의 SYNCHRONIZE로 Git 상태를 적용합니다"},{"t":"click","target":"b-synchronize"},{"t":"hide","target":"b-panel"},{"t":"hide","target":"b-synchronize"},{"t":"hide","target":"b-out"},{"t":"hide","target":"b-healthy0"},{"t":"reveal","target":"b-syncing"},{"t":"reveal","target":"b-prog"},{"t":"wait","ms":900},{"t":"caption","text":"④ 롤아웃이 끝나면 리소스 트리가 초록으로 바뀝니다"},{"t":"reveal","target":"b-tree"},{"t":"hide","target":"b-syncing"},{"t":"hide","target":"b-prog"},{"t":"reveal","target":"b-synced"},{"t":"reveal","target":"b-healthy"},{"t":"caption","text":"✅ Synced + Healthy — Git과 클러스터가 다시 일치합니다"},{"t":"wait","ms":800}]}$aix$::jsonb, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '63d736b5-e6e3-842c-a9d4-5050fa303bd2', '5b672dbc-3a90-80ec-1019-700736aff349', 'kubernetes-production/progressive-delivery', 'progressive-delivery', '카나리 배포·블루그린 배포: Argo Rollouts로 점진적 전환',
+  $aix$롤링 업데이트는 "새 파드가 뜨면 옛 파드를 지운다"까지만 합니다. **느리지만 죽지는 않는** 버그는 100% 사용자에게 전달됩니다. 점진적 배포는 **일부에게 먼저, 지표를 보고 결정**을 자동화합니다.
+
+## Argo Rollouts: 디플로이먼트를 대체하는 CRD
+
+`kind: Rollout`은 `spec.template`이 디플로이먼트와 같고, `strategy`만 다릅니다.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata: { name: shop-web }
+spec:
+  selector: { matchLabels: { app: shop-web } }
+  template:                      # Deployment와 동일한 파드 템플릿
+    metadata: { labels: { app: shop-web } }
+    spec: { containers: [{ name: web, image: ghcr.io/acme/shop-web:2.4.1 }] }
+  strategy:
+    canary:
+      steps:
+      - setWeight: 10
+      - pause: { duration: 10m }
+      - setWeight: 50
+      - pause: {}                # 사람이 promote할 때까지 대기
+```
+
+## 카나리 배포: 조금씩 늘리기
+
+- `setWeight`는 새 버전이 받는 **트래픽 비율**. 트래픽 라우터(Ingress·Gateway API·서비스 메시)가 없으면 **파드 수 비율**로 근사.
+- `pause: { duration: 10m }`은 시간 대기, `pause: {}`는 **사람이 승인**할 때까지.
+- **AnalysisTemplate**을 끼우면 Prometheus·Datadog 지표(에러율·p99)가 기준 미달일 때 **자동 롤백**.
+
+`kubectl argo rollouts get rollout shop-web --watch`로 진행을 보고, `… promote shop-web`으로 다음 단계, `… abort shop-web`으로 되돌립니다.
+
+## 블루그린 배포: 한 번에 바꾸기
+
+`strategy.blueGreen`은 새 버전(그린)을 **전체 크기로** 띄운 뒤 Service(서비스) 셀렉터를 한 번에 전환합니다. 비용은 두 배, 대신 전환·롤백이 순간적입니다.
+
+- `activeService`(필수)가 실제 트래픽을 받고, `previewService`로 전환 전에 그린을 미리 테스트합니다.
+- `autoPromotionEnabled: false`면 promote할 때까지 전환하지 않고, `scaleDownDelaySeconds`(기본 30)만큼 옛 버전을 남겨 둡니다.
+
+신제품 시식(카나리)과 매장 리뉴얼 오픈(블루그린)의 차이 — 반응을 보며 늘리느냐, 다 지어 놓고 간판을 바꾸느냐.
+
+무상태 웹·API에 지표가 있으면 **카나리 + 분석**, 두 버전 공존이 어렵거나(DB 스키마 변경) 즉시 복귀가 중요하면 **블루그린**입니다.
+
+> 💡 **핵심**: 롤링 업데이트는 "뜨는가"만 봅니다. 점진적 배포는 **"좋은가"를 지표로 확인하며 트래픽을 옮기고, 나쁘면 스스로 되돌립니다.**$aix$,
+  $aix${"type":"compare","title":"카나리 배포 vs 블루그린 배포","columns":[{"title":"카나리 배포","icon":"trending-up","tone":"primary","items":["10% → 50% → 100% 단계별 전환","AnalysisTemplate로 지표 기반 자동 롤백","추가 비용 작음(파드 몇 개)","두 버전이 한동안 공존"]},{"title":"블루그린 배포","icon":"refresh","tone":"accent","items":["그린을 전체 크기로 미리 띄움","activeService 셀렉터 한 번에 전환","비용 2배, 전환·롤백은 순간","previewService로 사전 테스트"]}],"caption":"지표로 판단할 수 있으면 카나리, 두 버전 공존이 어렵거나 즉시 복귀가 생명이면 블루그린입니다."}$aix$::jsonb, null, 6, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1b2deed2-1e35-a1d4-8062-250d4bfc1625', '5b672dbc-3a90-80ec-1019-700736aff349', 'kubernetes-production/upgrades-cost-and-next', 'upgrades-cost-and-next', '버전 정책(N-2)·안전한 업그레이드·비용 최적화 + 다음 단계',
+  $aix$클러스터는 만들어 두면 끝이 아니라 **매년 두세 번 이사**해야 하는 집입니다. 오래된 버전은 보안 패치를 받지 못합니다.
+
+## 버전 정책(N-2)과 안전한 업그레이드 순서
+
+- 2026년 9월 기준 최신은 **1.37**. 공식 지원은 **최근 3개 마이너(N-2)**, 각 마이너는 약 **14개월**(12개월 정규 패치 + 2개월 유지보수) 뒤 EOL.
+- 관리형 서비스(EKS·GKE·AKS)는 지원 정책이 따로 있습니다.
+
+1. **제거되는 API 확인** — 릴리스 노트를 보고 해당 매니페스트를 먼저 고칩니다.
+2. **스테이징부터** 같은 경로로 올립니다.
+3. **컨트롤 플레인 먼저** — kube-apiserver → 나머지. **마이너 한 단계씩만**(1.35 → 1.36 → 1.37), 건너뛰기 금지.
+4. **노드는 그다음** — kubelet은 최대 3마이너 낮아도 되니 `kubectl drain --ignore-daemonsets`로 하나씩 교체합니다. PDB가 있어야 무중단입니다(5강).
+5. 애드온(CNI·metrics-server·CSI)도 호환 버전으로 올립니다.
+
+## 비용 최적화: 낭비는 requests에서 시작된다
+
+- **requests 적정화** — 낭비의 대부분은 실사용의 몇 배로 잡힌 requests입니다. VPA 추천 모드로 실측값을 얻어 조정하세요(4강).
+- **노드 통합·스팟** — Karpenter consolidation이나 Cluster Autoscaler 축소로 빈 노드를 없애고, 중단돼도 되는 배치·큐 소비자는 **스팟 노드**에 격리합니다.
+- **비용 가시화** — OpenCost(CNCF 인큐베이팅, 벤더 중립)나 상용 Kubecost로 네임스페이스·디플로이먼트 단위 비용을 봅니다.
+
+## 다음 단계
+
+남은 것은 **관측**입니다 — 카나리 분석 지표, SLO, 인시던트 대응은 **"Datadog 심화: APM·SLO·인시던트 운영"**에서 이어집니다. Datadog이 처음이라면 **"Datadog 입문: 서비스 모니터링 시작하기"**부터 들으세요.
+
+> 💡 **핵심**: 운영은 세 개의 달력 — **분기별 업그레이드**, **월별 requests·비용 점검**, **매 배포의 점진적 전환**. 리듬이 없으면 EOL과 청구서를 동시에 만납니다.$aix$,
+  $aix${"type":"chat","title":"업그레이드 계획 짜기","messages":[{"role":"user","text":"프로덕션이 1.34인데 지원이 곧 끝난대요. 1.37로 한 번에 올려도 되나요?"},{"role":"ai","text":"kube-apiserver는 마이너를 건너뛸 수 없어요. 1.34 → 1.35 → 1.36 → 1.37, 세 번에 나눠야 합니다. 각 단계마다 제거된 API를 먼저 점검하세요."},{"role":"user","text":"순서는요?"},{"role":"ai","text":"스테이징 먼저. 그다음 컨트롤 플레인 → 노드 그룹을 하나씩 drain하며 교체. PDB가 없는 워크로드는 이때 끊깁니다 — 업그레이드 전에 PDB부터 채우세요."},{"role":"system","text":"이번 주기 체크: 제거 API 0건 · PDB 12/12 · 스테이징 1.35 완료"}],"caption":"'한 번에'는 없습니다 — 마이너 한 단계, 컨트롤 플레인 먼저, 노드는 PDB를 믿고 하나씩."}$aix$::jsonb, null, 6, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: Datadog 심화: APM·SLO·인시던트 운영
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  '482f0df1-a530-9731-0d26-813aeb26ab84', 'datadog-advanced', 'Datadog 심화: APM·SLO·인시던트 운영', $aix$대시보드는 전부 초록색인데 사용자는 '느리다'고 말합니다. 이 강의는 그 간극을 메우는 Datadog의 심화 기능을 다룹니다. Single Step Instrumentation으로 코드 수정 없이 APM을 켜고, 플레임그래프로 느린 DB 쿼리 한 줄을 찾고, Continuous Profiler로 원인 함수까지 내려갑니다. 이어서 SLI·SLO·에러 버짓으로 '얼마나 안정적이면 충분한가'를 숫자로 정의하고, 번 레이트 알림과 Incident Management로 장애를 선언부터 포스트모템까지 운영합니다. 마지막으로 OpenTelemetry와 Terraform으로 관측 자산을 벤더 종속 없이 코드로 관리하는 법을 배웁니다.$aix$,
+  null, 'devops', 'advanced', array['Datadog', 'APM', '분산 추적', 'SLO', '인시던트', 'OpenTelemetry']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '179c5982-a22a-fa69-e509-92fc2268ef07', '482f0df1-a530-9731-0d26-813aeb26ab84', 'apm-and-tracing', 'APM과 분산 추적', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'c5e1c202-24c5-d34a-ea89-0191980d2148', '482f0df1-a530-9731-0d26-813aeb26ab84', 'slo-and-incidents', 'SLO와 인시던트', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'e253cad0-c391-a917-7a64-6e89d7afd72f', '482f0df1-a530-9731-0d26-813aeb26ab84', 'platform-practices', '플랫폼 운영', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a3790226-fb73-f891-d89b-4d2a3aa63245', '179c5982-a22a-fa69-e509-92fc2268ef07', 'datadog-advanced/why-apm', 'why-apm', '대시보드는 초록인데 사용자는 느리다: APM이 필요한 순간',
+  $aix$인프라 대시보드는 전부 초록색입니다. 그런데 고객센터에는 "결제가 느려요"가 쌓입니다. 이 간극을 메우는 도구가 **APM**이고, 이 강의의 출발점입니다.
+
+## 인프라 메트릭이 말해 주지 않는 것
+
+- CPU 40%, 메모리 여유, 에러율 0.1% — 모두 정상. 그런데 결제 API의 p99 레이턴시는 4초.
+- 인프라 메트릭은 **서버가 건강한지**를 말해 줍니다. **요청 하나가 어디서 시간을 쓰는지**는 말해 주지 않습니다.
+- 요청 하나가 5~10개 서비스를 거치면, 로그만으로는 "누구 탓"인지 찾기 어렵습니다.
+
+도로 CCTV와 차량 블랙박스의 차이입니다. CCTV(대시보드)는 도로 전체 흐름을 보여 주지만, 내 차가 **어느 교차로에서 몇 분을 서 있었는지**는 블랙박스(APM)만 압니다.
+
+## APM이 하는 일
+
+- 요청 하나를 **트레이스** 하나로 기록하고, 거쳐 간 구간마다 **스팬**을 남깁니다.
+- 서비스별 골든 시그널(요청 수·에러·레이턴시 퍼센타일)을 자동 집계합니다.
+- 느린 요청을 열면 플레임그래프가 나오고, 느린 DB 쿼리 한 줄까지 내려갈 수 있습니다.
+
+## 이 강의 로드맵
+
+1. **APM과 분산 추적** — Single Step Instrumentation으로 켜고, Software Catalog·서비스 맵으로 구조를 읽고, 느린 요청과 원인 함수를 찾습니다.
+2. **SLO와 인시던트** — "얼마나 안정적이면 충분한가"를 숫자로 정하고, 번 레이트 알림·인시던트 운영·Synthetics·RUM을 더합니다.
+3. **플랫폼 운영** — OpenTelemetry로 벤더 종속을 줄이고, Terraform으로 관측 자산을 코드화합니다.
+
+"Datadog 입문"에서 Datadog Agent 설치와 통합 서비스 태깅(env·service·version)을 마쳤다는 전제로 진행합니다.
+
+> 💡 **핵심**: 인프라 메트릭은 "서버가 살아 있나", APM은 "이 요청이 왜 느린가"에 답합니다. 사용자 체감은 후자에서 나옵니다.$aix$,
+  $aix${"type":"compare","title":"인프라 모니터링 vs APM","columns":[{"title":"인프라 모니터링","icon":"server","tone":"muted","items":["단위: 호스트·컨테이너","질문: 서버가 건강한가","CPU·메모리·디스크·네트워크","요청 하나의 경로는 모름"]},{"title":"APM","icon":"activity","tone":"primary","items":["단위: 요청(트레이스)·구간(스팬)","질문: 이 요청이 왜 느린가","레이턴시 퍼센타일·에러·처리량","느린 DB 쿼리 한 줄까지 추적"]}],"caption":"두 시야를 통합 서비스 태깅으로 이어야 '서버는 멀쩡한데 느린' 장애가 풀립니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ce357b8d-c4d5-8639-0ace-edfdb5e66d1c', '179c5982-a22a-fa69-e509-92fc2268ef07', 'datadog-advanced/distributed-tracing-basics', 'distributed-tracing-basics', '분산 추적의 원리: 트레이스·스팬·컨텍스트 전파',
+  $aix$서비스 A가 B를 부르고 B가 DB를 부릅니다. 이 흩어진 조각을 **하나의 요청**으로 이어 붙이는 원리를 알아야 APM 화면이 읽힙니다.
+
+## 트레이스와 스팬
+
+- **트레이스**는 요청 하나의 전체 여정입니다. `trace_id` 하나로 묶입니다.
+- **스팬**은 여정의 한 구간입니다. `GET /checkout` 처리, `SELECT ... FROM orders` 쿼리처럼요. 스팬마다 `span_id`, 부모 id, 시작 시각, 소요 시간, 태그(`db.statement` 등)가 붙습니다.
+- 맨 처음 스팬이 **루트 스팬**, 각 서비스에 처음 들어오는 스팬이 **서비스 엔트리 스팬**입니다. 서비스 페이지의 레이턴시·에러율은 엔트리 스팬 기준입니다.
+
+택배 송장번호(trace_id) 하나로 집하·허브·배송 기사의 스캔 기록(스팬)이 이어지고, 어느 거점에서 하루를 묵었는지 보이는 것과 같습니다.
+
+## 컨텍스트 전파: 헤더에 실어 보낸다
+
+A가 B를 호출할 때 추적 라이브러리가 요청 헤더에 식별자를 자동으로 실어 보냅니다.
+
+```text
+traceparent: 00-<trace-id 32자리 hex>-<span-id 16자리 hex>-01
+x-datadog-trace-id: <trace-id 하위 64비트, 10진수>
+x-datadog-parent-id: <span-id, 10진수>
+x-datadog-sampling-priority: 1
+```
+
+- `traceparent`는 **W3C Trace Context** 표준 헤더로, OpenTelemetry 등과 호환됩니다.
+- `x-datadog-*`는 Datadog 고유 형식입니다. Datadog 추적 라이브러리는 기본값(`DD_TRACE_PROPAGATION_STYLE=datadog,tracecontext,baggage`)으로 **두 형식을 모두 주입하고 읽습니다**. 그래서 OpenTelemetry SDK가 섞인 환경도 한 트레이스로 이어집니다.
+
+## 샘플링: 전부 저장하지 않는다
+
+- Datadog Agent는 기본적으로 **초당 약 10개 트레이스**를 목표로 헤드 기반 샘플링(루트에서 저장 여부를 정해 하위로 전파)을 합니다. 에러 트레이스는 별도 샘플러가 추가로 잡습니다.
+- "내 트레이스가 안 보여요"의 가장 흔한 원인이 샘플링입니다. 최근 15분은 Live Search로 샘플링 없이 볼 수 있습니다(5강).
+
+> 💡 **핵심**: 분산 추적 = trace_id를 헤더에 실어 서비스 사이로 넘기는 것. 헤더가 끊기면 트레이스도 끊깁니다.$aix$,
+  $aix${"type":"flow","title":"요청 하나가 남기는 스팬의 사슬","nodes":[{"label":"브라우저 → web","sublabel":"루트 스팬 · trace_id 생성","icon":"globe","tone":"primary"},{"label":"checkout 서비스","sublabel":"서비스 엔트리 스팬 GET /checkout","icon":"server","tone":"accent","edgeLabel":"traceparent 헤더로 전파"},{"label":"payment 서비스","sublabel":"POST /charge","icon":"dollar","tone":"accent","edgeLabel":"같은 trace_id, 새 span_id"},{"label":"PostgreSQL","sublabel":"SELECT … FROM orders (자식 스팬)","icon":"database","tone":"warning","edgeLabel":"db.statement 태그 기록"}],"caption":"각 칸이 스팬 하나이고, 화살표마다 헤더가 trace_id를 넘겨 줍니다 — 이 사슬이 끊기면 두 개의 트레이스가 됩니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0380446c-a9c2-d1a9-aa20-2611652c115b', '179c5982-a22a-fa69-e509-92fc2268ef07', 'datadog-advanced/single-step-instrumentation', 'single-step-instrumentation', 'Single Step Instrumentation: 코드 수정 없이 APM 켜기',
+  $aix$예전에는 서비스마다 추적 라이브러리를 넣고 코드를 고쳐야 했습니다. **Single Step Instrumentation**(SSI)은 Datadog Agent 설정 몇 줄로 끝냅니다.
+
+## 동작 원리
+
+- Kubernetes에서는 **Cluster Agent**가 어드미션 컨트롤러로 동작합니다. 새 파드가 뜰 때 `datadog-init-apm-inject` init 컨테이너로 추적 라이브러리를 주입합니다.
+- 지원 언어: **Java, Node.js, Python, .NET, Ruby, PHP**. Go는 미지원.
+
+관리사무소(Cluster Agent)가 **새 입주자(파드)에게 출입카드를 자동 발급**하는 방식입니다.
+
+## 설정: Operator / Helm / 호스트
+
+DatadogAgent CR(Operator)에 추가합니다.
+
+```yaml
+apiVersion: datadoghq.com/v2alpha1
+kind: DatadogAgent
+metadata:
+  name: datadog
+  namespace: datadog
+spec:
+  features:
+    apm:
+      instrumentation:
+        enabled: true
+        enabledNamespaces:
+          - shop
+```
+
+- Helm 차트는 values에 `datadog.apm.instrumentation.enabled: true`와 `enabledNamespaces`. Cluster Agent **7.52 이상** 필요.
+- Linux 호스트는 `DD_APM_INSTRUMENTATION_ENABLED=host`, Docker 컨테이너 대상은 `DD_APM_INSTRUMENTATION_ENABLED=docker`. 언어·버전 고정은 `DD_APM_INSTRUMENTATION_LIBRARIES=java:1,python:3`.
+
+## 적용은 재시작 후
+
+- 이미 떠 있는 파드는 바뀌지 않습니다. `kubectl rollout restart deployment/checkout -n shop`으로 새 파드를 띄워야 주입됩니다.
+- 새 파드에 `datadog-init-apm-inject` init 컨테이너가 보이면 성공.
+
+**여기서 막힌다면**
+- 서비스가 안 보인다 → 파드 재시작, `enabledNamespaces`, 통합 서비스 태깅 레이블 확인.
+- 파드가 `Init:Error` → Agent 파드 로그와 지원 언어 확인.
+
+> 💡 **핵심**: SSI = Cluster Agent가 파드 생성 시 라이브러리를 자동 주입. 설정 → **재시작** → APM > Services 확인, 이 세 박자입니다.$aix$,
+  $aix${"type":"steps","title":"SSI 적용 4단계","steps":[{"label":"DatadogAgent CR 수정","sublabel":"features.apm.instrumentation.enabled: true","icon":"file-text"},{"label":"kubectl apply","sublabel":"Cluster Agent가 주입 규칙 활성화","icon":"terminal"},{"label":"rollout restart","sublabel":"새 파드에 init 컨테이너 주입","icon":"refresh"},{"label":"APM > Services 확인","sublabel":"트래픽 후 서비스 자동 등장","icon":"activity"}],"caption":"3단계를 빠뜨리면 아무 일도 일어나지 않습니다 — 주입은 파드가 '새로 뜰 때'만 일어납니다."}$aix$::jsonb, $aix${"title":"Operator 설정으로 checkout 서비스에 APM 켜기","app":{"kind":"code-editor","windowTitle":"datadog-agent.yaml — kubectl","files":[{"id":"f-cr","name":"datadog-agent.yaml","active":true},{"id":"f-dep","name":"checkout-deployment.yaml"}],"code":[{"id":"c1","text":"apiVersion: datadoghq.com/v2alpha1"},{"id":"c2","text":"kind: DatadogAgent"},{"id":"c3","text":"metadata:"},{"id":"c4","text":"name: datadog","indent":1},{"id":"c5","text":"namespace: datadog","indent":1},{"id":"c6","text":"spec:"},{"id":"c7","text":"features:","indent":1},{"id":"c8","text":"apm:","indent":2},{"id":"c9","text":"instrumentation:","indent":3,"tone":"add","hidden":true},{"id":"c10","text":"enabled: true","indent":4,"tone":"add","hidden":true},{"id":"c11","text":"enabledNamespaces:","indent":4,"tone":"add","hidden":true},{"id":"c12","text":"- shop","indent":5,"tone":"add","hidden":true},{"id":"c13","text":"logCollection:","indent":2},{"id":"c14","text":"enabled: true","indent":3}],"terminal":[{"id":"t1","text":"kubectl apply -f datadog-agent.yaml","tone":"cmd","hidden":true},{"id":"t2","text":"datadogagent.datadoghq.com/datadog configured","tone":"ok","hidden":true},{"id":"t3","text":"kubectl rollout restart deploy/checkout -n shop","tone":"cmd","hidden":true},{"id":"t4","text":"deployment.apps/checkout restarted","tone":"ok","hidden":true},{"id":"t5","text":"kubectl get pod -n shop -l app=checkout -o jsonpath='{.items[0].spec.initContainers[*].name}'","tone":"cmd","hidden":true},{"id":"t6","text":"datadog-init-apm-inject datadog-lib-js-init","tone":"ok","hidden":true},{"id":"t7","text":"# 트래픽 유입 후 APM > Services 에 'checkout' 서비스 등장","tone":"out","hidden":true}]},"actions":[{"t":"caption","text":"① DatadogAgent CR의 apm 아래에 instrumentation 블록을 추가합니다"},{"t":"move","target":"c8"},{"t":"click"},{"t":"type","target":"c9","text":"instrumentation:"},{"t":"type","target":"c10","text":"enabled: true"},{"t":"caption","text":"② 먼저 shop 네임스페이스에만 켭니다 (스테이징부터)"},{"t":"type","target":"c11","text":"enabledNamespaces:"},{"t":"type","target":"c12","text":"- shop"},{"t":"wait","ms":500},{"t":"caption","text":"③ 적용하면 Cluster Agent가 주입 규칙을 활성화합니다"},{"t":"type","target":"t1","text":"kubectl apply -f datadog-agent.yaml"},{"t":"reveal","target":"t2"},{"t":"wait","ms":500},{"t":"caption","text":"④ 이미 떠 있는 파드는 바뀌지 않으므로 재시작합니다"},{"t":"reveal","target":"t3"},{"t":"reveal","target":"t4"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ 새 파드에 init 컨테이너가 주입됐는지 확인합니다"},{"t":"reveal","target":"t5"},{"t":"reveal","target":"t6"},{"t":"move","target":"t6"},{"t":"caption","text":"✅ 코드 한 줄 수정 없이 APM 켜기 완료 — 트래픽이 오면 APM > Services에 나타납니다"},{"t":"reveal","target":"t7"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '36f919a3-53b0-c1fb-a951-1e60ad0cae11', '179c5982-a22a-fa69-e509-92fc2268ef07', 'datadog-advanced/service-catalog-and-map', 'service-catalog-and-map', 'Software Catalog(구 Service Catalog)와 서비스 맵: 의존 관계 읽기',
+  $aix$서비스가 30개를 넘으면 "이거 누구 담당이지?"와 "이게 죽으면 뭐가 같이 죽지?"가 장애 대응 시간의 절반을 잡아먹습니다. Datadog은 이 두 질문에 카탈로그와 서비스 맵으로 답합니다.
+
+## Service Catalog → Software Catalog
+
+- 예전 이름 **Service Catalog**는 **Software Catalog**로 개편·확장되었습니다. 서비스뿐 아니라 데이터스토어·큐·API·시스템 같은 엔티티까지 다룹니다. 최신 문서는 Internal Developer Portal의 'Catalog'로 부릅니다(`app.datadoghq.com/services`).
+- SSI로 계측된 서비스는 **자동 등록**됩니다. RUM 앱, Universal Service Monitoring으로 잡힌 서비스도 들어옵니다.
+- 서비스별 뷰: **Ownership**(팀·Slack 채널·저장소·온콜), **Performance**(레이턴시·에러율·처리량), **Reliability**(SLO·인시던트·배포), **Security**, **Costs** 등.
+
+카탈로그는 회사 **조직도**(누가 담당), 서비스 맵은 **자리 배치도**(누가 누구와 자주 이야기하는가)입니다.
+
+## 서비스 맵 읽는 법
+
+- APM 메뉴의 **Service Map**을 열고 `env` 드롭다운으로 범위(prod/staging)를 고릅니다.
+- 점이 서비스, 선이 관측된 호출입니다. 서비스를 **Inspect**하면 **왼쪽은 사용자에 가까운 호출자, 오른쪽은 근본 원인일 가능성이 높은 피호출자**입니다.
+- 모니터에 `service` 태그를 붙여 두면 모니터 상태가 노드 색으로 표시됩니다. 빨간 노드에서 **오른쪽으로** 따라가면 원인 후보가 나옵니다.
+
+장애 때 동선: 빨간 노드 → 오른쪽 의존 서비스 → 카탈로그 Ownership의 온콜 → 호출. 이 30초가 "누구한테 물어봐야 하지?" 30분을 대신합니다.
+
+> 💡 **핵심**: 카탈로그는 "누구 것인가", 서비스 맵은 "무엇에 의존하는가". 둘 다 APM 데이터에서 자동으로 채워지므로 SSI를 켠 순간 공짜로 얻는 지도입니다.$aix$,
+  $aix${"type":"grid","title":"Software Catalog가 답하는 질문들","items":[{"label":"Ownership","sublabel":"팀 · Slack · 저장소 · 온콜","icon":"users","tone":"primary"},{"label":"Performance","sublabel":"레이턴시 · 에러율 · 처리량","icon":"gauge","tone":"accent"},{"label":"Reliability","sublabel":"SLO · 인시던트 · 배포 이력","icon":"shield","tone":"success"},{"label":"Relationships","sublabel":"의존 관계 그래프 = 서비스 맵","icon":"network","tone":"warning"},{"label":"엔티티 종류","sublabel":"서비스 · 데이터스토어 · 큐 · API","icon":"boxes","tone":"muted"},{"label":"자동 등록 소스","sublabel":"APM · USM · RUM","icon":"activity","tone":"muted"}],"caption":"메타데이터(Ownership)는 사람이 채우고, 나머지는 계측 데이터가 채웁니다 — 비어 있는 칸이 곧 팀의 관측 사각지대입니다."}$aix$::jsonb, null, 5, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f947511f-d816-b63c-daf3-1da2de794231', '179c5982-a22a-fa69-e509-92fc2268ef07', 'datadog-advanced/finding-slow-requests', 'finding-slow-requests', '느린 요청 찾기: 플레임그래프·스팬 태그·Trace Explorer',
+  $aix$"결제가 느려요" 문의가 왔지만 서버는 멀쩡합니다. APM으로 **어느 쿼리가 몇 초를 잡아먹는지** 15분 안에 찾아봅니다.
+
+## p99에서 시작해 Trace Explorer로
+
+- 평균 200ms여도 p99가 2.4초면 **100명 중 1명은 2.4초 이상** 기다립니다.
+- **APM > Services**의 Latency 그래프에서 p50~p99를 고를 수 있습니다. p99가 튀는 리소스를 먼저 잡습니다.
+- **APM > Traces** 검색 문법: `service:checkout env:prod status:error`, `@duration:>2s`, `@http.status_code:5*`.
+- `@`가 붙는 것은 **스팬 속성**(`@db.statement` 등). 붙지 않는 것은 예약 필드(`service`, `resource_name`, `status`, `env`)입니다.
+- **Live Search**는 최근 15분의 모든 스팬을 샘플링 없이 보여 줍니다. 그 밖은 보존 필터로 인덱스된 스팬만 검색됩니다(커스텀 15일, 지능형 보존 필터 30일).
+
+## 플레임그래프 읽기
+
+트레이스를 열면 플레임그래프가 나옵니다. 간트 차트처럼 **가장 긴 막대가 공기를 결정**합니다.
+
+- 위가 루트 스팬, 아래가 자식 스팬. 가로 길이가 시간, 색이 서비스입니다.
+- 가장 긴 자식 막대가 병목. 짧은 막대가 수십 개 반복되면 N+1 쿼리. 부모 아래 **빈 공간**은 계측되지 않은 구간입니다.
+- 스팬을 클릭하면 **스팬 태그**(`db.statement`, `http.url`, `error.message`)가 보입니다. "이 요청이 왜 느렸나"는 집계 메트릭이 아니라 스팬 태그에서 나옵니다.
+
+**여기서 막힌다면**
+- `@duration:>2000`이 안 먹는다 → 단위를 붙이세요(`2s`, `500ms`).
+- 어제 트레이스가 없다 → 보존 필터(Retention Filters)에 해당 서비스가 있는지 확인.
+
+> 💡 **핵심**: 서비스 페이지 p99 → Traces에서 `@duration:>2s` → 플레임그래프의 가장 긴 막대 → 스팬 태그의 `db.statement`. 이 네 번 클릭이 APM 디버깅의 기본 동선입니다.$aix$,
+  $aix${"type":"stack","title":"플레임그래프를 층으로 읽으면","layers":[{"label":"GET /checkout — 2.62s","sublabel":"checkout · 루트 스팬 (전체 시간)","icon":"globe","tone":"primary"},{"label":"SELECT * FROM orders WHERE user_id = ? — 1.94s","sublabel":"postgres · 가장 긴 자식 = 병목","icon":"database","tone":"warning"},{"label":"POST /charge — 0.31s","sublabel":"payment · 정상 범위","icon":"dollar","tone":"accent"},{"label":"(계측되지 않은 구간) — 0.37s","sublabel":"checkout 자체 코드 · 빈 공간","icon":"cpu","tone":"muted"}],"caption":"부모 시간에서 자식 막대를 뺀 '빈 공간'도 단서입니다 — 거기가 다음 강의의 프로파일링이 필요한 자리입니다."}$aix$::jsonb, $aix${"title":"Trace Explorer에서 느린 DB 스팬 찾기","app":{"kind":"browser","url":"app.datadoghq.com/apm/traces","blocks":[{"id":"b-h","type":"heading","label":"APM > Traces"},{"id":"b-search","type":"input","label":"Search for spans…"},{"id":"b-p99","type":"badge","label":"checkout · p99 2.41s · 37 spans","hidden":true},{"id":"b-sort","type":"button","label":"Duration ▼"},{"id":"b-row1","type":"card","label":"GET /checkout · 2.62s · checkout · prod","hidden":true},{"id":"b-row2","type":"card","label":"GET /checkout · 2.38s · checkout · prod","hidden":true},{"id":"b-detail","type":"heading","label":"Trace 7f3a2c… · Flame Graph","hidden":true},{"id":"b-span1","type":"card","label":"▇▇▇▇▇▇▇▇▇▇ checkout · GET /checkout · 2.62s","hidden":true},{"id":"b-span2","type":"card","label":"  ▇▇▇▇▇▇▇ postgres · SELECT * FROM orders · 1.94s","hidden":true},{"id":"b-span3","type":"card","label":"  ▇ payment · POST /charge · 0.31s","hidden":true},{"id":"b-tags","type":"button","label":"Span Tags","hidden":true},{"id":"b-tag1","type":"card","label":"db.statement: SELECT * FROM orders WHERE user_id = ?","hidden":true},{"id":"b-tag2","type":"card","label":"db.row_count: 48,213 · peer.hostname: orders-db","hidden":true},{"id":"b-insight","type":"badge","label":"병목: user_id 인덱스 없음 → 풀스캔 1.94s","hidden":true}]},"actions":[{"t":"caption","text":"① checkout 서비스의 2초 넘는 스팬만 검색합니다"},{"t":"move","target":"b-search"},{"t":"click"},{"t":"type","target":"b-search","text":"service:checkout env:prod @duration:>2s"},{"t":"wait","ms":500},{"t":"reveal","target":"b-p99"},{"t":"caption","text":"② Duration 내림차순으로 정렬해 가장 느린 요청을 맨 위로"},{"t":"move","target":"b-sort"},{"t":"click"},{"t":"reveal","target":"b-row1"},{"t":"reveal","target":"b-row2"},{"t":"wait","ms":500},{"t":"caption","text":"③ 가장 느린 트레이스를 열면 플레임그래프가 나옵니다"},{"t":"move","target":"b-row1"},{"t":"click"},{"t":"reveal","target":"b-detail"},{"t":"reveal","target":"b-span1"},{"t":"reveal","target":"b-span2"},{"t":"reveal","target":"b-span3"},{"t":"wait","ms":600},{"t":"caption","text":"④ 가장 긴 자식 막대(postgres)를 클릭해 스팬 태그를 봅니다"},{"t":"move","target":"b-span2"},{"t":"click"},{"t":"reveal","target":"b-tags"},{"t":"click","target":"b-tags"},{"t":"reveal","target":"b-tag1"},{"t":"reveal","target":"b-tag2"},{"t":"wait","ms":500},{"t":"caption","text":"✅ 원인 확정 — orders 테이블 풀스캔. 인덱스 추가 후 같은 검색으로 재확인합니다"},{"t":"reveal","target":"b-insight"},{"t":"move","target":"b-insight"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '268130ec-2077-76a4-fdc8-a5e860a4037c', '179c5982-a22a-fa69-e509-92fc2268ef07', 'datadog-advanced/profiling-and-error-tracking', 'profiling-and-error-tracking', 'Continuous Profiler와 Error Tracking: 원인 함수까지',
+  $aix$트레이스는 "어느 스팬이 느린지"까지 알려 줍니다. 스팬 안쪽, **어느 함수가 CPU를 태우는지**는 프로파일링이 필요합니다. 수천 건 쏟아지는 에러를 읽을 수 있게 묶는 것이 Error Tracking입니다.
+
+## Continuous Profiler
+
+- 실행 중인 프로세스의 CPU·메모리 할당·wall time 등을 낮은 오버헤드로 **항상** 수집합니다. 응급실(트레이스)이 아니라 상시 건강검진입니다.
+- 켜기: 추적 라이브러리가 있다면 환경변수 하나입니다. Kubernetes면 컨테이너 `env`에 추가하고 롤아웃합니다.
+
+```yaml
+env:
+  - name: DD_PROFILING_ENABLED
+    value: "true"
+```
+
+- 지원 언어: Java, Python, Go, Ruby, Node.js, .NET, PHP.
+- **APM > Profiler**에서 서비스를 고르면 **함수·라인 단위** 플레임그래프가 나옵니다.
+- 트레이스 스팬의 **Code Hotspots**를 누르면 그 순간의 프로파일로 점프합니다. "계측되지 않은 빈 공간"이 여기서 풀립니다.
+
+## Error Tracking
+
+- 스택 트레이스와 메시지가 비슷한 에러를 **이슈(issue) 하나로 자동 묶습니다**. 소스는 APM 트레이스·로그·RUM·모바일 SDK.
+- 이슈마다 첫·마지막 발생, 영향 사용자 수가 보이고, 소스코드 통합을 연결하면 의심 커밋까지 표시됩니다.
+- APM 소스일 때 **Exception Replay**: 예외 순간의 변수 값을 캡처해 재현 없이 원인을 봅니다.
+- 새 이슈가 생기거나 급증하면 **Error Tracking 모니터** 타입으로 알림을 보냅니다.
+
+고객센터가 같은 문의 500건을 FAQ 한 항목으로 묶는 것과 같습니다.
+
+함께 쓰는 동선: 새 배포 → Error Tracking에 새 이슈 → 대표 트레이스 → 느린 스팬의 Code Hotspots → 원인 함수. 배포 후 10분 안에 "어느 함수를 되돌릴지"가 나옵니다.
+
+> 💡 **핵심**: 트레이스는 요청 단위, 프로파일은 함수 단위, Error Tracking은 에러를 이슈 단위로. 셋이 이어지면 "느리다"에서 "이 함수의 이 줄"까지 내려갑니다.$aix$,
+  $aix${"type":"compare","title":"Continuous Profiler vs Error Tracking","columns":[{"title":"Continuous Profiler","icon":"cpu","tone":"primary","items":["질문: 어느 함수가 자원을 쓰나","CPU · 메모리 할당 · wall time","DD_PROFILING_ENABLED=true","APM > Profiler · Code Hotspots"]},{"title":"Error Tracking","icon":"bug","tone":"warning","items":["질문: 어떤 에러가 새로 생겼나","유사 에러 → 이슈로 자동 그룹화","APM · 로그 · RUM · 모바일 소스","Exception Replay · 새 이슈 알림"]}],"caption":"왼쪽은 '느림'의 원인 함수를, 오른쪽은 '깨짐'의 새 패턴을 잡습니다 — 배포 직후에는 둘을 나란히 열어 두세요."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'd77d56dc-5695-8d0d-92ef-64b8223390b2', 'c5e1c202-24c5-d34a-ea89-0191980d2148', 'datadog-advanced/sli-slo-error-budget', 'sli-slo-error-budget', 'SLI·SLO·에러 버짓: 얼마나 안정적이면 충분한가',
+  $aix$"100% 안정"은 목표가 아닙니다. 비용이 무한대이고, 어차피 달성도 못 합니다. SRE는 대신 **"얼마나 실패해도 괜찮은가"**를 숫자로 정합니다. 그 숫자가 SLO이고, 남은 실패 허용량이 에러 버짓입니다.
+
+## 세 단어의 관계
+
+- **SLI** — 잰 값. "성공 응답 비율", "1초 안에 응답한 비율". 보통 `좋은 이벤트 / 전체 이벤트`로 계산합니다.
+- **SLO** — 그 값의 목표. "30일 동안 99.9% 이상".
+- **SLA** — 고객과의 계약. 어기면 보상. 보통 SLO보다 느슨하게 잡아 내부 목표가 먼저 경고를 울리게 합니다.
+
+용돈에 비유하면, SLO는 "이번 달 실패에 쓸 수 있는 용돈 한도"를 정하는 것이고, 에러 버짓은 **남은 잔액**입니다.
+
+## 에러 버짓 계산
+
+99.9%면 허용 실패는 0.1%입니다. 30일은 43,200분이니 0.1%는 **43.2분**입니다.
+
+```text
+에러 버짓 = (1 - SLO) × 기간
+99.9%  × 30일 = 0.001  × 43,200분 = 43.2분  (약 43분)
+99.99% × 30일 = 0.0001 × 43,200분 = 4.3분
+99.5%  × 30일 = 0.005  × 43,200분 = 216분 (3.6시간)
+```
+
+요청 수 기준이면 30일 1,000만 요청에 99.9%는 **실패 1만 건**까지 허용입니다. "9가 하나 늘면 허용량은 10분의 1"이라는 감각을 가져가세요.
+
+## 버짓으로 의사결정하기
+
+- 버짓이 **넉넉하면** 배포 속도를 올리고 실험을 늘립니다. 안정성을 너무 지키는 것도 낭비입니다.
+- 버짓이 **바닥이면** 기능 배포를 멈추고 안정화 작업을 우선합니다. 이 규칙을 팀이 미리 합의해 두는 것이 SLO의 진짜 가치입니다.
+- 좋은 SLI 고르기: **사용자가 체감하는 것**(가용성, 레이턴시)을, 사용자에 가까운 지점(로드밸런서, 서비스 엔트리 스팬)에서 잽니다. CPU 사용률은 SLI가 아닙니다.
+- 목표는 현재 실측치보다 **조금만 높게**. 100%는 버짓이 0이라 알림이 의미를 잃습니다.
+
+> 💡 **핵심**: SLI는 재는 것, SLO는 약속, 에러 버짓은 남은 잔액. 99.9%/30일 = 약 43분 — 이 숫자 하나를 외우면 나머지는 비례식입니다.$aix$,
+  $aix${"type":"cycle","title":"에러 버짓이 돌리는 의사결정 루프","center":"30일 롤링","nodes":[{"label":"SLI 측정","sublabel":"좋은 이벤트 / 전체","icon":"gauge"},{"label":"SLO와 비교","sublabel":"99.9% 목표","icon":"target"},{"label":"버짓 잔량 확인","sublabel":"43.2분 중 남은 시간","icon":"wallet"},{"label":"배포 속도 결정","sublabel":"가속 또는 동결","icon":"rocket"}],"caption":"SLO의 목적은 알림이 아니라 '이번 주에 배포해도 되는가'라는 팀의 결정을 숫자에 맡기는 것입니다."}$aix$::jsonb, null, 6, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e55557f7-5ea5-ec80-f1e4-a66c9892f87e', 'c5e1c202-24c5-d34a-ea89-0191980d2148', 'datadog-advanced/slo-in-datadog', 'slo-in-datadog', 'Datadog SLO 만들기와 번 레이트 알림',
+  $aix$계산은 끝났으니 Datadog에 SLO를 만들고, "버짓이 위험한 속도로 타고 있다"를 알려 주는 번 레이트 알림을 붙입니다.
+
+## 세 종류의 SLO와 만들기
+
+- **Metric-based** — `좋은 이벤트 / 전체 이벤트`를 카운트 메트릭으로 계산. 요청 성공률 같은 요청 기반 SLI용.
+- **Monitor-based** — 기존 모니터가 OK였던 **시간 비율**.
+- **Time Slice** — 메트릭 조건(예: p99 < 1s)을 1분 또는 5분 슬라이스로 평가한 시간 비율. 모니터 없이 만들 수 있어 최근 권장됩니다.
+- 시간 창은 7·30·90일. 목표는 반드시 **100% 미만**이어야 에러 버짓이 생깁니다.
+- 만들기: **Service Management > SLOs** → **New SLO +** → 종류·쿼리·목표(99.9%·30일) → **Save and Set Alert**.
+
+## 번 레이트 알림
+
+번 레이트는 `현재 에러율 / (1 - SLO)`. 1이면 기간 끝에 딱 맞게 소진, 14.4면 14.4배 빠릅니다. 연료 잔량보다 **소모 속도**가 먼저 위험을 알립니다.
+
+- 알림은 **Error Budget 알림**(버짓 n% 소진)과 **Burn Rate 알림**(소진 속도 초과) 두 종류.
+- **long window**와 **short window**를 둘 다 넘어야 울려 스파이크 오탐을 거릅니다. long(1~48시간)을 고르면 short는 **long의 1/12**로 자동 계산됩니다.
+- 구글 SRE 워크북 권장값(99.9%/30일): **14.4**(1시간/5분, 버짓 2% 소진 → 호출), **6**(6시간/30분, 5% → 호출), **1**(3일/6시간, 10% → 티켓).
+
+**여기서 막힌다면**
+- 목표에 100을 넣을 수 없다 → 의도된 제한. 99.99처럼 100 미만으로.
+- Monitor-based SLO에 번 레이트 탭이 없다 → 메트릭 계열 모니터만 지원. Time Slice로 바꾸세요.
+
+> 💡 **핵심**: 요청 기반은 Metric-based, 시간 기반은 Time Slice. 알림은 번 레이트 14.4(1h)와 6(6h) 두 개면 대부분의 팀에 충분합니다.$aix$,
+  $aix${"type":"compare","title":"Datadog SLO 3종 고르기","columns":[{"title":"Metric-based","icon":"chart","tone":"primary","items":["좋은 이벤트 / 전체 이벤트","요청 성공률 · 카운트 기반","분자·분모 메트릭 쿼리","번 레이트 알림 지원"]},{"title":"Monitor-based","icon":"bell","tone":"muted","items":["모니터 OK 시간 비율","시간 기반 · 모니터 필요","여러 모니터 묶기 가능","메트릭 모니터만 번 레이트"]},{"title":"Time Slice","icon":"timer","tone":"success","items":["조건 만족 슬라이스 비율","시간 기반 · 모니터 불필요","1분 또는 5분 슬라이스","보정(correction) 처리 깔끔"]}],"caption":"새로 만든다면 요청은 Metric-based, 업타임은 Time Slice — Monitor-based는 이미 있는 모니터를 재활용할 때만."}$aix$::jsonb, $aix${"title":"Metric-based SLO 99.9% 만들고 번 레이트 알림 붙이기","app":{"kind":"browser","url":"app.datadoghq.com/slo","blocks":[{"id":"b-h","type":"heading","label":"Service Management > SLOs"},{"id":"b-new","type":"button","label":"New SLO +"},{"id":"b-type-m","type":"card","label":"Metric-based — 좋은 이벤트 / 전체 이벤트 (카운트)","hidden":true},{"id":"b-type-t","type":"card","label":"Time Slice — 조건을 만족한 시간 비율","hidden":true},{"id":"b-num","type":"input","label":"Good events (numerator)","hidden":true},{"id":"b-den","type":"input","label":"Total events (denominator)","hidden":true},{"id":"b-target","type":"input","label":"Target (%)","hidden":true},{"id":"b-window","type":"badge","label":"Time window: 30 days · rolling","hidden":true},{"id":"b-eb","type":"badge","label":"Error budget: 43.2 min / 30 days","hidden":true},{"id":"b-save","type":"button","label":"Save and Set Alert","hidden":true},{"id":"b-tab","type":"button","label":"Burn Rate","hidden":true},{"id":"b-br","type":"input","label":"Burn rate threshold","hidden":true},{"id":"b-long","type":"input","label":"Long window (hours)","hidden":true},{"id":"b-short","type":"badge","label":"Short window: 5 min (auto = long ÷ 12)","hidden":true},{"id":"b-done","type":"button","label":"Save and Exit","hidden":true},{"id":"b-ok","type":"badge","label":"✅ checkout-availability SLO + Burn Rate 모니터 생성","hidden":true}]},"actions":[{"t":"caption","text":"① SLO 목록에서 New SLO +를 누릅니다"},{"t":"move","target":"b-new"},{"t":"click"},{"t":"reveal","target":"b-type-m"},{"t":"reveal","target":"b-type-t"},{"t":"caption","text":"② 요청 성공률이므로 Metric-based를 선택합니다"},{"t":"move","target":"b-type-m"},{"t":"click"},{"t":"reveal","target":"b-num"},{"t":"reveal","target":"b-den"},{"t":"caption","text":"③ 분자는 성공 요청, 분모는 전체 요청 카운트 메트릭"},{"t":"type","target":"b-num","text":"sum:shop.requests{status:ok}.as_count()"},{"t":"type","target":"b-den","text":"sum:shop.requests{*}.as_count()"},{"t":"caption","text":"④ 목표 99.9%, 30일 롤링 — 에러 버짓 43.2분이 자동 계산됩니다"},{"t":"reveal","target":"b-target"},{"t":"type","target":"b-target","text":"99.9"},{"t":"reveal","target":"b-window"},{"t":"reveal","target":"b-eb"},{"t":"wait","ms":500},{"t":"caption","text":"⑤ Save and Set Alert → Burn Rate 탭"},{"t":"reveal","target":"b-save"},{"t":"click","target":"b-save"},{"t":"reveal","target":"b-tab"},{"t":"click","target":"b-tab"},{"t":"reveal","target":"b-br"},{"t":"reveal","target":"b-long"},{"t":"caption","text":"⑥ 임계값 14.4, long window 1시간 — short window는 자동으로 5분"},{"t":"type","target":"b-br","text":"14.4"},{"t":"type","target":"b-long","text":"1"},{"t":"reveal","target":"b-short"},{"t":"wait","ms":400},{"t":"reveal","target":"b-done"},{"t":"click","target":"b-done"},{"t":"caption","text":"✅ SLO와 번 레이트 모니터 완성 — 6시간/6 짝을 하나 더 만들면 표준 구성입니다"},{"t":"reveal","target":"b-ok"},{"t":"move","target":"b-ok"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '316633bd-04bc-3eb5-2254-049ef4a644d1', 'c5e1c202-24c5-d34a-ea89-0191980d2148', 'datadog-advanced/incident-management', 'incident-management', 'Incident Management: 선언·역할·타임라인·포스트모템',
+  $aix$알림이 울렸고 진짜 장애입니다. 가장 큰 손실은 기술이 아니라 **혼란**에서 옵니다. 누가 지휘하고, 어디서 소통하고, 무엇을 기록하는지가 정해져 있으면 장애가 절반 시간에 끝납니다.
+
+## 선언: Declare Incident
+
+- 경로: **Service Management > Incident Management > Declare Incident**. 모니터 알림의 **Actions > Declare incident**, Slack `/datadog incident`로도 됩니다.
+- 기본 필수 항목은 **제목**과 **심각도**(SEV-1이 가장 심각, SEV-5까지). **Incident Commander**(지휘자)는 선택 항목이지만 선언 시점에 바로 지정하는 것이 원칙입니다.
+- Slack 연동 시 `#incident-<번호>` 채널이 자동 생성되고, 상태 변경 시 토픽이 갱신됩니다.
+
+## 역할과 상태
+
+- 기본 응답자 유형은 **Incident Commander**(삭제·이름 변경 불가)와 **Responder**(조사·복구).
+- 상태는 **Active**(영향 진행 중) → **Stable**(영향 멎음, 조사 중) → **Resolved**(조사 완료) → **Completed**(후속 조치 완료).
+
+화재 지휘관은 **직접 호스를 잡지 않습니다**.
+
+## 타임라인과 포스트모템
+
+- **타임라인**에는 상태 변경, 담당 지정, Slack 메시지, 첨부 그래프가 자동으로 쌓입니다.
+- **포스트모템**은 Incident Settings의 템플릿으로 만듭니다. Datadog Notebooks·Confluence·Google Drive에 저장. `{{incident.title}}` 같은 변수가 자동으로 채워지고, 타임라인이 10개 이상이면 AI 요약 변수도 쓸 수 있습니다. 원칙은 사람을 탓하지 않는(blameless) 서술.
+- 재발 방지 작업은 **Follow-ups**로 등록해 Jira 등으로 넘깁니다.
+
+> 💡 **핵심**: 선언(제목·SEV, 그리고 Commander 지정) → 채널 자동 생성 → 상태 4단계 → 타임라인이 포스트모템의 재료. 지휘자는 손이 아니라 머리로 일합니다.$aix$,
+  $aix${"type":"chat","title":"#incident-1042 (Slack 자동 생성 채널)","messages":[{"role":"system","text":"Datadog: SEV-2 인시던트 #1042 선언됨 — 'checkout 5xx 급증'. Commander: 김온콜. 상태: Active"},{"role":"user","text":"[Commander] 영향 범위부터. 결제 실패율과 시작 시각 확인해 주세요. 저는 CS팀에 공지합니다."},{"role":"ai","text":"[Responder] 14:02부터 결제 실패 12%. 서비스 맵에서 payment → orders-db 빨간 노드. 어제 배포된 v2.4.0 의심."},{"role":"user","text":"[Commander] v2.4.0 롤백 진행해 주세요. 타임라인에 그래프 첨부했습니다."},{"role":"system","text":"Datadog: 상태 변경 Active → Stable (14:31). 채널 토픽 갱신됨"},{"role":"ai","text":"[Responder] 롤백 완료, 실패율 0.2%로 복귀. 근본 원인은 포스트모템에서."}],"caption":"지휘자는 방향과 소통을, 대응자는 조사와 복구를 — 채널의 모든 메시지가 타임라인에 남아 포스트모템의 초안이 됩니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'd50747d0-0f4d-3d17-4f50-3d985ce3ad59', 'c5e1c202-24c5-d34a-ea89-0191980d2148', 'datadog-advanced/synthetics-and-rum', 'synthetics-and-rum', '사용자 관점 감시: Synthetics 테스트와 RUM',
+  $aix$서버 쪽 지표가 전부 정상인데 로그인 버튼이 안 눌리는 장애가 있습니다. 사용자 쪽에서 봐야만 보이는 문제입니다. Datadog은 **로봇 고객**(Synthetics)과 **진짜 고객**(RUM) 두 시야를 제공합니다.
+
+## Synthetics: 로봇 고객을 보낸다
+
+- **API 테스트**: HTTP·SSL·DNS·WebSocket·TCP·UDP·ICMP·gRPC 요청을 주기적으로 보내 상태 코드·응답 시간·인증서 만료를 검사합니다.
+- **Multistep API 테스트**: 여러 요청을 체인으로 묶고(기본 최대 10단계), 로그인 응답의 토큰을 **변수로 추출**해 다음 요청에 씁니다.
+- **Browser 테스트**: 실제 브라우저로 클릭·입력을 녹화해 재생합니다.
+- 실행 위치는 **Managed locations**(전 세계 Datadog 거점) 또는 **Private locations**(사내망용 자체 실행기).
+- 만들기: **New Test** → 종류 → URL과 어설션 → 위치·주기 → 알림.
+
+미스터리 쇼퍼처럼, 손님이 없는 시간에도 "결제 단말기가 작동하는지"를 확인합니다.
+
+## RUM: 진짜 사용자의 브라우저에서
+
+**Digital Experience > Add an Application**에서 JavaScript 앱을 만들면 `applicationId`와 `clientToken`이 발급됩니다.
+
+```javascript
+import { datadogRum } from "@datadog/browser-rum";
+datadogRum.init({
+  applicationId: "<APP_ID>",
+  clientToken: "<CLIENT_TOKEN>",
+  site: "datadoghq.com",
+  service: "shop-web", env: "prod", version: "1.4.0",
+  sessionSampleRate: 100,
+  sessionReplaySampleRate: 20,
+});
+```
+
+- 수집 항목: 페이지 로드 시간, Core Web Vitals, JS 에러, 리소스 로딩, 사용자 액션.
+- **세션 리플레이**: 사용자 화면을 영상처럼 재생합니다. 기본값 `defaultPrivacyLevel: "mask"`는 텍스트·입력값을 모두 가리고, 비밀번호·이메일·카드번호 입력란은 항상 마스킹됩니다.
+- RUM 이벤트는 백엔드 트레이스와 연결됩니다.
+
+Synthetics는 **트래픽이 없어도** 감시하고, RUM은 **실제 체감**을 봅니다. 대체가 아니라 보완입니다.
+
+> 💡 **핵심**: Synthetics는 "지금 정상인가"를 밖에서 묻고, RUM은 "사용자가 실제로 어땠나"를 안에서 듣습니다. 배포 직후엔 Synthetics, 불만 접수 후엔 RUM 세션 리플레이.$aix$,
+  $aix${"type":"grid","title":"사용자 관점 감시 도구 지도","items":[{"label":"API 테스트","sublabel":"HTTP · SSL · DNS · gRPC 등","icon":"link","tone":"primary"},{"label":"Multistep API","sublabel":"최대 10단계 · 변수 추출","icon":"workflow","tone":"primary"},{"label":"Browser 테스트","sublabel":"클릭 여정 녹화·재생","icon":"monitor","tone":"primary"},{"label":"Private location","sublabel":"사내망·스테이징 실행기","icon":"lock","tone":"muted"},{"label":"RUM 브라우저 SDK","sublabel":"Web Vitals · JS 에러 · 액션","icon":"users","tone":"accent"},{"label":"세션 리플레이","sublabel":"화면 재생 · 입력 마스킹","icon":"play","tone":"accent"}],"caption":"파란 칸은 트래픽이 없어도 돌고, 보라 칸은 실제 방문자가 있어야 채워집니다 — 그래서 둘 다 필요합니다."}$aix$::jsonb, null, 6, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1af2ac2d-1a50-aecc-d083-f8458d5ee381', 'e253cad0-c391-a917-7a64-6e89d7afd72f', 'datadog-advanced/opentelemetry-and-datadog', 'opentelemetry-and-datadog', 'OpenTelemetry와 Datadog: DDOT Collector, 벤더 종속 줄이기',
+  $aix$계측 코드를 한 벤더 전용으로 박아 두면 백엔드를 바꾸기가 거의 불가능합니다. **OpenTelemetry**로 계측을 표준화하고, Datadog으로 보내는 경로 셋을 비교합니다.
+
+## 경로 1: DDOT Collector (권장 기본값)
+
+- **DDOT**는 Datadog Agent에 내장된 OpenTelemetry Collector입니다. 각 노드에서 Agent와 함께 뜨고, 앱은 같은 노드의 4317(gRPC)/4318(HTTP)로 OTLP를 보냅니다.
+
+```yaml
+# DatadogAgent CR 일부 (Datadog Operator)
+spec:
+  features:
+    otelCollector:
+      enabled: true
+      ports:
+        - containerPort: 4317
+          hostPort: 4317
+          name: otel-grpc
+        - containerPort: 4318
+          hostPort: 4318
+          name: otel-http
+```
+
+Helm이면 `datadog.otelCollector.enabled: true`, Agent 7.67 이상.
+
+## 경로 2·3: OTLP 인제스트, 독립 Collector
+
+- **Datadog Agent의 OTLP 인제스트** — 기존 Datadog Agent가 OTLP를 **직접** 받습니다. 설정 키는 `otlp_config.receiver.protocols.grpc.endpoint: 0.0.0.0:4317`(HTTP 4318). 가장 가볍지만 Collector 프로세서는 못 씁니다.
+- **독립 OpenTelemetry Collector + Datadog Exporter** — 벤더 중립성이 최대이고 tail 샘플링도 가능하지만, Collector 운영은 팀 몫입니다.
+
+**220V 표준 콘센트**처럼, 앱은 OTLP 플러그만 갖추면 어디에 꽂을지는 나중에 정합니다.
+
+## 앱 쪽에서 챙길 것
+
+- 표준 환경변수 `OTEL_SERVICE_NAME`, `OTEL_RESOURCE_ATTRIBUTES=deployment.environment.name=prod,service.version=1.4.0`을 Datadog이 통합 서비스 태깅으로 매핑합니다. 옛 표기 `deployment.environment`는 폐기 예정.
+- 헤더는 W3C `traceparent`. Datadog 라이브러리도 기본으로 읽어(2강) OTel SDK와 SSI 서비스가 섞여도 트레이스가 이어집니다.
+
+> 💡 **핵심**: 새로 시작하면 DDOT, 이미 Agent가 있고 가볍게면 OTLP 인제스트, 이미 Collector를 운영 중이면 Datadog Exporter. 앱은 언제나 OTLP 표준만 바라보게 하세요.$aix$,
+  $aix${"type":"compare","title":"OpenTelemetry → Datadog 3가지 경로","columns":[{"title":"DDOT Collector","icon":"boxes","tone":"primary","items":["Agent 내장 OTel Collector","표준 파이프라인 + Datadog 기능","features.otelCollector.enabled","새 Kubernetes 도입의 기본값"]},{"title":"Agent OTLP 인제스트","icon":"download","tone":"accent","items":["기존 Agent가 4317/4318 수신","가장 가벼운 시작","프로세서 커스터마이징 불가","Agent 이미 있을 때"]},{"title":"독립 Collector + Exporter","icon":"route","tone":"muted","items":["자체 운영 OTel Collector","tail 샘플링 등 고급 파이프라인","벤더 중립성 최대","운영 부담은 팀 몫"]}],"caption":"세 경로 모두 앱 쪽 코드는 같습니다 — OTLP로 내보내기만 하면 경로는 인프라 팀이 나중에 바꿀 수 있습니다."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e2f9b84a-9682-be2f-a8f2-3d89d7c58c34', 'e253cad0-c391-a917-7a64-6e89d7afd72f', 'datadog-advanced/observability-as-code-and-next', 'observability-as-code-and-next', '관측 자산을 코드로: Terraform 프로바이더·대시보드 JSON·모니터 템플릿 + 마무리',
+  $aix$클릭으로 만든 대시보드 50개와 모니터 200개. 누가 언제 왜 바꿨는지 모르고, 스테이징에 똑같이 만들려면 반나절입니다. 손맛 요리를 **레시피**로 바꾸듯, 관측 자산도 IaC로 관리합니다.
+
+## Terraform Datadog 프로바이더
+
+```hcl
+terraform {
+  required_providers {
+    datadog = { source = "DataDog/datadog" }
+  }
+}
+provider "datadog" {
+  api_key = var.datadog_api_key
+  app_key = var.datadog_app_key
+  api_url = "https://api.datadoghq.com/"  # EU는 api.datadoghq.eu
+}
+```
+
+키는 변수나 환경변수로 넣습니다. 모니터는 `datadog_monitor` 리소스입니다.
+
+```hcl
+resource "datadog_monitor" "checkout_cpu" {
+  name    = "[checkout] CPU 사용률 높음"
+  type    = "metric alert"
+  query   = "avg(last_5m):avg:system.cpu.user{service:checkout} > 80"
+  message = "checkout CPU 80% 초과 @slack-oncall"
+  monitor_thresholds { critical = 80 }
+}
+```
+
+- SLO는 `datadog_service_level_objective`, Synthetics는 `datadog_synthetics_test` 리소스.
+- 서비스 목록을 `for_each`로 돌리면 **모니터 템플릿**이 됩니다.
+
+## 대시보드는 JSON으로
+
+- 대시보드 설정(⚙) 메뉴에 **Copy dashboard JSON**·**Export dashboard JSON**·**Import dashboard JSON**이 있습니다. Import는 기존 내용을 덮어씁니다.
+- Terraform에서는 `datadog_dashboard_json` 리소스에 `dashboard = file("checkout.json")`으로 넘깁니다. UI에서 만들고 → JSON → 코드로 봉인하는 흐름을 씁니다.
+
+## 마무리: 6강의 복습 동선
+
+이 카테고리는 **Docker 입문 → Docker 실전 → Kubernetes 입문 → Datadog 입문 → Kubernetes 운영 → Datadog 심화** 순서였습니다.
+
+- "Kubernetes 운영"의 카나리 배포 + SLO·번 레이트 → **SLO 기반 자동 롤백**.
+- "Datadog 입문"의 통합 서비스 태깅 + SSI·서비스 맵 → 태그 세 개가 모든 것의 열쇠.
+- "Docker 실전"의 취약점 스캔 + Software Catalog Security 뷰 → 이미지부터 서비스까지 보안 시야.
+
+다음 단계는 **연습**입니다. 내 서비스 하나에 SLO와 번 레이트 알림을 붙이고, 팀과 게임데이(가짜 장애 리허설)를 해 보세요.
+
+> 💡 **핵심**: 모니터·SLO·대시보드도 배포 산출물입니다. Terraform과 JSON으로 코드화하면 리뷰·재현·롤백이 생기고, 관측 체계가 사람 기억이 아닌 저장소에 남습니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"terraform — datadog 관측 자산 배포","lines":[{"text":"terraform plan -var-file=prod.tfvars","tone":"cmd"},{"text":"# datadog_monitor.checkout_cpu will be created","tone":"comment"},{"text":"  + type  = \"metric alert\"","tone":"out"},{"text":"  + query = \"avg(last_5m):avg:system.cpu.user{service:checkout} > 80\"","tone":"out"},{"text":"# datadog_service_level_objective.checkout_availability will be created","tone":"comment"},{"text":"  + target = 99.9  (timeframe 30d)","tone":"out"},{"text":"# datadog_dashboard_json.checkout will be updated in-place","tone":"comment"},{"text":"Plan: 2 to add, 1 to change, 0 to destroy.","tone":"dim"},{"text":"terraform apply -auto-approve -var-file=prod.tfvars","tone":"cmd"},{"text":"Apply complete! Resources: 2 added, 1 changed, 0 destroyed.","tone":"ok"}],"caption":"plan 출력이 곧 변경 리뷰 문서입니다 — 임계값 80이 90으로 바뀌는 것도 PR에서 보입니다."}$aix$::jsonb, null, 7, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
 -- 강의: AI 디자인 마스터: Midjourney & Stable Diffusion
 insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
   '16df7143-b4d3-92ba-470f-25e9d5bb2d9a', 'ai-design', 'AI 디자인 마스터: Midjourney & Stable Diffusion', $aix$2026년의 이미지 생성 AI는 '뽑기'가 아니라 '설계'의 도구입니다. 이 강의에서는 주제·스타일·구도·조명·파라미터로 이루어진 프롬프트의 문법을 익히고, Midjourney의 스타일·옴니 레퍼런스와 Stable Diffusion의 ControlNet으로 결과물을 정밀하게 통제합니다. 나아가 일관된 캐릭터 제작, 업스케일 파이프라인, 히어로 이미지·아이콘 같은 상업용 웹 에셋 워크플로우와 2026년 기준 라이선스·저작권 이슈까지 — 실무에 바로 쓰는 순서로 배웁니다.$aix$,

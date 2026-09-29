@@ -16,6 +16,12 @@ import { aiPassiveIncome } from "./courses/ai-passive-income";
 import { aiPm } from "./courses/ai-pm";
 import { axTeam } from "./courses/ax-team";
 import { genAiOfficeBasics } from "./courses/gen-ai-office-basics";
+import { dockerBasics } from "./courses/docker-basics";
+import { dockerProduction } from "./courses/docker-production";
+import { kubernetesBasics } from "./courses/kubernetes-basics";
+import { kubernetesProduction } from "./courses/kubernetes-production";
+import { datadogBasics } from "./courses/datadog-basics";
+import { datadogAdvanced } from "./courses/datadog-advanced";
 import { realEstateBasics } from "./courses/real-estate-basics";
 import { realEstateFirstHome } from "./courses/real-estate-first-home";
 import { realEstateMarketTax } from "./courses/real-estate-market-tax";
@@ -33,6 +39,13 @@ export const COURSES: Course[] = [
   loopEngineering, // intermediate: 프롬프트 위에 에이전틱 워크플로우 설계
   aiGameDev, // intermediate: 응용 프로젝트
   aiHarness, // advanced: 평가·테스트 프레임워크
+  // Track 1.5: 인프라 & DevOps — 학습 순서(입문 → 심화)대로 나열
+  dockerBasics, // beginner: 컨테이너 개념과 Docker 기본기
+  dockerProduction, // intermediate: 이미지 최적화·보안·CI
+  kubernetesBasics, // intermediate: 오케스트레이션 입문
+  datadogBasics, // intermediate: 관측가능성과 모니터링 시작
+  kubernetesProduction, // advanced: 프로덕션 클러스터 운영
+  datadogAdvanced, // advanced: APM·SLO·인시던트
   // Track 2: 크리에이티브 — 학습 순서(입문 → 심화)대로 나열
   aiDesign, // beginner: 이미지 생성 기초
   aiAudio, // beginner: 음악·더빙

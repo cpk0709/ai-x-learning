@@ -6,6 +6,33 @@
 
 ---
 
+## 2026-09-30 — 인프라 & DevOps 카테고리 신설: Docker·Kubernetes·Datadog 6강의 (v0.8)
+
+### 추가 내용 (강의 27개 / 레슨 323개 / 데모 68개 / 용어 500여 개)
+- 신규 카테고리 `devops`("인프라 & DevOps"). 난이도 순 6강의·79레슨·데모 18개:
+  - **docker-basics** (입문, 15레슨 82분) 컨테이너 개념→설치·라이선스→run/lifecycle/포트/볼륨→Dockerfile·빌드 캐시→Compose·레지스트리·pull 한도→에러 사전
+  - **docker-production** (중급, 12레슨 70분) 멀티스테이지·베이스 이미지(slim/Alpine/Distroless/Hardened Images)·BuildKit·네트워크·Compose 실전·비루트/시크릿·Scout/Trivy 스캔·리소스 제한·GitHub Actions 빌드
+  - **kubernetes-basics** (중급, 14레슨 85분) 아키텍처·선언형·kind/Docker Desktop·파드/kubectl/디플로이먼트/Service/ConfigMap·Secret/네임스페이스·**Ingress→Gateway API**·롤링 업데이트·Helm·트러블슈팅
+  - **datadog-basics** (중급, 13레슨 74분) 관측가능성·요금 구조·Agent 설치·통합 서비스 태깅·인프라/Docker/Kubernetes(Operator) 모니터링·로그 인제스트 vs 인덱스·대시보드·모니터·알림·비용
+  - **kubernetes-production** (심화, 13레슨 77분) requests/limits·QoS·프로브·오토스케일링(HPA/VPA/Karpenter/KEDA)·PDB/어피니티·PV/PVC·StatefulSet 등·RBAC·NetworkPolicy/PSA·Helm 차트 작성(Helm 4)·Argo CD·Argo Rollouts·업그레이드/비용
+  - **datadog-advanced** (심화, 12레슨 74분) 분산 추적·SSI·Software Catalog·Trace Explorer·Profiler/Error Tracking·SLI/SLO/에러 버짓·번 레이트·Incident Management·Synthetics/RUM·OpenTelemetry(DDOT)·Terraform
+- 인프라용 아이콘 13종 추가(package/boxes/container/ship/activity/bell/network/hard-drive/scaling/siren/bug/route/timer), 용어사전 인프라 용어 약 175개 추가.
+
+### 3단계 파이프라인 (집필 → 독립 검수 → 압축)
+- ① 집필 에이전트 6개 병렬: 공통 지침 파일(`/tmp/devops-course-spec.md`)에 **사전 검증한 사실 20여 건**(K8s 1.37, Helm 4 2025-11, ingress-nginx 2026-03 EOL, Docker Hub 한도 100/6h, Desktop 라이선스 250명·$10M, Datadog 무료 5호스트 등)과 레슨 슬러그·제목·데모 배정을 고정해 상호 참조가 어긋나지 않게 함. 각자 WebSearch 10회 이상.
+- ② **독립 검수 에이전트 6개**(집필자와 분리): 사실 주장 목록화 → 공식 문서 재검증 → 직접 수정. 총 **31건 정정** — 예: Incident 선언 필수 항목(제목·심각도 2개, Commander는 선택), `DD_APM_INSTRUMENTATION_ENABLED=all` 미확인 삭제, OTel `deployment.environment.name`, `actions/checkout@v7`, 비루트 1024 미만 포트 서술(Engine 20.10+ 완화), Alpine musl 오류 문구(exec format error는 아키텍처 불일치), Docker Scout는 Desktop에만 내장, DaemonSet 컨트롤 플레인 톨러레이션, Helm `--take-ownership`, Datadog On-Call·Plan & Usage·Live Tail 메뉴 경로, GHCR classic PAT, BuildKit COPY 에러 문구 등.
+- ③ 분량 측정 결과 신규 강의 본문 중앙값이 1,200~1,540자로 기존(≈900자)보다 길어 **압축 패스**(사실 불변, content만 편집) 추가 수행.
+- **교훈**: 집필자 자가 검증만으로는 UI 경로·기본값·최신 메이저 버전 오류가 남는다 — 사실 밀도가 높은 기술 강의는 반드시 별도 검수자를 붙일 것. 또한 분량 목표는 집필 지침에 "글자 수"로 명시해야 한다(문장 수·헤딩 수 지침만으로는 1.5배로 늘어남).
+
+### 발견·수정한 기존 결함
+- 홈 화면 `CATEGORIES` 배열에 `realestate`가 빠져 있어 **부동산 카테고리가 홈에 노출되지 않던 문제** 수정(카테고리 추가 체크리스트를 CLAUDE.md에 6곳으로 명문화).
+- Supabase `courses.category` check 제약이 dev/creative/business만 허용해 seed.sql이 실패할 상태 → `0002_category_check.sql` 마이그레이션 추가.
+
+### 용어사전 설계 결정
+- 한글 키는 부분 문자열 매칭이라 일반 명사 충돌이 잦음. "태그"(해시태그)·"볼륨"(음량)·"차트"(그래프)·"이미지"(생성 이미지)·"에이전트"(AI)는 단독 등록하지 않고 "이미지 태그"·"Docker 볼륨"·"Helm 차트"·"컨테이너 이미지"·"Datadog Agent"로 한정. 이미 있던 노드·오케스트레이션·트레이스·드리프트·매니페스트와 새로 겹친 인프라·클러스터·오퍼레이터·처리량은 **문맥 병합 정의**로 처리(비-devops 강의에서의 등장 위치를 스크립트로 전수 확인).
+
+---
+
 ## 2026-07-30 — 신규 강의: 생성형 AI 첫걸음 + 카테고리 내 난이도순 정렬 (v0.6)
 
 ### 추가 내용 (강의 17개 / 레슨 186개 / 데모 50개)

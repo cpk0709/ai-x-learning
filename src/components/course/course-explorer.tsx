@@ -12,6 +12,7 @@ import { CourseCard } from "./course-card";
 const TABS: { value: Category | "all"; label: string }[] = [
   { value: "all", label: "전체" },
   { value: "dev", label: CATEGORY_META.dev.label },
+  { value: "devops", label: CATEGORY_META.devops.label },
   { value: "creative", label: CATEGORY_META.creative.label },
   { value: "business", label: CATEGORY_META.business.label },
   { value: "realestate", label: CATEGORY_META.realestate.label },
