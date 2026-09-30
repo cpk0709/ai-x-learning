@@ -1737,7 +1737,7 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 ## "생성됐다"와 "게임에 쓸 수 있다"는 다릅니다
 
-메시란 3D 모델의 표면을 이루는 그물 구조입니다. 생성 직후의 메시는 대부분 그대로 못 씁니다. 반드시 확인하세요.
+3D 메시란 3D 모델의 표면을 이루는 그물 구조입니다. 생성 직후의 메시는 대부분 그대로 못 씁니다. 반드시 확인하세요.
 
 - **폴리곤 수** — 폴리곤은 3D 모델을 이루는 작은 면 조각으로, 많을수록 무겁습니다. 생성 모델은 수만 개가 기본이라, 작은 소품이면 수백~수천 개로 줄이는 **리토폴로지**가 필요합니다.
 - **면 구조 품질** — 움직여야 하는 모델(캐릭터)은 변형에 견디는 사각형(쿼드) 기반 면 구조가 필요해 수동 정리가 남습니다.
@@ -10920,6 +10920,2952 @@ insert into public.lessons (id, module_id, key, slug, title, content_markdown, i
 
 > 💡 **핵심**: 고급 투자자의 정의 = 더 많이 아는 사람이 아니라, 검증 → 소액 실행 → 복기 → 갱신의 루프를 멈추지 않는 사람입니다.$aix$,
   $aix${"type":"cycle","title":"투자 원칙을 다듬는 루프","center":"잃지 않는 것이 먼저","nodes":[{"label":"공부·검증","sublabel":"공식 소스로 재확인","icon":"book"},{"label":"소액 실행","sublabel":"감당 가능한 리스크만","icon":"target"},{"label":"복기","sublabel":"판단 근거 기록","icon":"file-text"},{"label":"원칙 갱신","sublabel":"제도 변화 반영","icon":"refresh"}],"caption":"제도는 계속 바뀝니다 — 원칙도 버전 업하는 투자자가 오래 살아남습니다."}$aix$::jsonb, null, 5, 14
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 공인중개사 시험 로드맵: 제도·전략·합격 공식
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'bf12a5ee-cea0-bafb-d3ef-387dbe2a047d', 'realtor-exam-roadmap', '공인중개사 시험 로드맵: 제도·전략·합격 공식', $aix$공인중개사 시험은 매년 10만 명 이상이 접수하는 국민 자격시험이지만, 정작 '어떤 시험인지'를 정확히 아는 사람은 드뭅니다. 이 강의는 시험 제도(과목·문항·시간·절대평가 기준·1차 면제)와 2026년 제37회 일정, Q-Net 원서접수 흐름, 과목별 성격과 공부 순서, 기출문제 회독법, 시험장 시간 배분, 그리고 합격 후 실무교육·개설등록까지를 초보자 눈높이로 한 번에 정리합니다. 공인중개사 시험 대비 시리즈 6강의의 첫 번째, 진입점 강의입니다.$aix$,
+  null, 'realestate', 'beginner', array['공인중개사', '자격시험', '시험 전략', 'Q-Net', '절대평가', '기출문제']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '2c490b4d-c82e-f0fb-56d9-533bda3b70f2', 'bf12a5ee-cea0-bafb-d3ef-387dbe2a047d', 'exam-system', '시험 제도 이해', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '32414a65-0f04-7a4c-95ec-165ac27bb83a', 'bf12a5ee-cea0-bafb-d3ef-387dbe2a047d', 'study-strategy', '학습 전략', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '003943b7-dbe6-1074-5566-7a354059ee4a', 'bf12a5ee-cea0-bafb-d3ef-387dbe2a047d', 'exam-day-and-after', '시험 당일과 그 이후', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '17dd3a81-fc3a-b5c2-56e3-25d96d5a4c53', '2c490b4d-c82e-f0fb-56d9-533bda3b70f2', 'realtor-exam-roadmap/why-realtor-license', 'why-realtor-license', '공인중개사, 왜 지금도 국민 자격증인가',
+  $aix$2025년 제36회 시험 접수자는 165,112명. 경기가 식었다는 말이 나와도 매년 10만 명 넘게 도전하는 시험, 왜일까요?
+
+## 자격증 하나가 여는 문
+
+- **개업**: 개설등록을 마치면 내 이름으로 중개사무소를 열 수 있습니다.
+- **취업**: 소속공인중개사로 중개법인·경매법인·기존 사무소에서 실무를 배울 수 있습니다.
+- **커리어 가산점**: 부동산 개발·자산관리·금융기관 부동산 부서, 분양대행 등에서 우대받는 경우가 많습니다.
+- **인생 2막**: 나이·학력·경력 제한이 전혀 없어 은퇴 준비자와 주부의 도전이 많습니다.
+
+현실도 알아야 합니다. 개업 사무소는 이미 많고, 수입은 경기와 지역에 따라 편차가 큽니다. 자격증은 **취업 보장서가 아니라 출발선**입니다. 운전면허가 운전 실력이 아니라 도로에 나갈 자격인 것과 같습니다.
+
+## 이 시리즈 6강의 지도
+
+1. **시험 로드맵** — 제도·전략·합격 공식 (이 강의)
+2. **1차 부동산학개론** — 시험에 나오는 핵심만
+3. **1차 민법 및 민사특별법** — 사례로 푸는 핵심 조문
+4. **2차 공인중개사법령 및 중개실무** — 등록부터 거래신고까지
+5. **2차 부동산공법** — 6개 법률 구조로 정복하기
+6. **2차 부동산공시법 및 부동산세법** — 지적·등기·세금 한 번에
+
+## 시작 전에 알아둘 원칙
+
+- 합격은 절대평가라서 남과 경쟁하지 않습니다. 기준 점수만 넘으면 됩니다.
+- 시험은 **시험 시행일(2026-10-31) 현재 시행 중인 법령**이 기준입니다. 국회 계류 중인 개정안은 출제 대상이 아닙니다.
+- 📌 출제 포인트: 응시 자격에 학력·나이·경력 제한은 없습니다. "대학 졸업자만 응시할 수 있다"처럼 조건을 붙인 지문은 **X**.
+- 📌 출제 포인트: 단, 부정행위자는 처분일부터 **5년**, 자격취소자는 **3년** 동안 응시할 수 없습니다.
+
+> 💡 **핵심**: 공인중개사 자격증은 "누구나 도전할 수 있는 출발선"입니다. 이 강의로 시험의 지도를 먼저 그리고, 다음 5개 강의로 과목을 정복하세요.$aix$,
+  $aix${"type":"flow","title":"공인중개사 시험 대비 시리즈 6강의","nodes":[{"label":"시험 로드맵","sublabel":"제도·전략·합격 공식 (이 강의)","icon":"map","tone":"primary"},{"label":"1차 부동산학개론","sublabel":"경제·금융·감정평가","icon":"chart","tone":"accent"},{"label":"1차 민법 및 민사특별법","sublabel":"법률행위·물권·계약","icon":"scale","tone":"accent"},{"label":"2차 공인중개사법령·중개실무","sublabel":"등록·의무·거래신고","icon":"handshake","tone":"success"},{"label":"2차 부동산공법","sublabel":"국토계획법 등 6법","icon":"landmark","tone":"success"},{"label":"2차 공시법·세법","sublabel":"지적·등기·세금","icon":"stamp","tone":"success"}],"caption":"1차 2과목 → 2차 3과목 순서로 이어집니다. 지금은 첫 칸, 지도를 그리는 단계입니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '390902bf-15a7-6dc4-b6ec-9a623a46a847', '2c490b4d-c82e-f0fb-56d9-533bda3b70f2', 'realtor-exam-roadmap/exam-structure', 'exam-structure', '시험 구조: 1차 2과목·2차 3과목, 문항·시간·배점',
+  $aix$하루에 1차와 2차가 모두 치러지는 시험입니다. 구조를 모르면 공부 계획 자체가 어긋납니다.
+
+## 하루 3교시, 5과목 200문항
+
+| 교시 | 과목 | 문항·시간 |
+|---|---|---|
+| 1차 (09:30~11:10) | 부동산학개론 / 민법 및 민사특별법 | 40+40문항, 100분 |
+| 2차 1교시 (13:00~14:40) | 공인중개사법령 및 중개실무 / 부동산공법 | 40+40문항, 100분 |
+| 2차 2교시 (15:30~16:20) | 부동산공시법(24문항·60점) + 부동산세법(16문항·40점) | 40문항, 50분 |
+
+- 전 과목 **객관식 5지선다**, 과목당 100점 만점입니다.
+- 2차 2교시는 공시법 24문항과 세법 16문항을 합쳐 한 과목 100점으로 봅니다.
+- 시행 주체는 법률상 **시·도지사**(원칙)이지만, 국토교통부장관이 직접 시행할 수 있고 실제로는 한국산업인력공단(Q-Net)에 위탁되어 있습니다.
+
+## 과목별 범위, 한 줄씩
+
+- **부동산학개론**: 경제·시장·정책·금융·투자·감정평가론. 계산문제가 섞입니다.
+- **민법 및 민사특별법**: 총칙 중 법률행위, 질권을 제외한 물권법, 계약법 중 총칙·매매·교환·임대차, 그리고 주택임대차보호법 등 특별법.
+- **공인중개사법령 및 중개실무**: 공인중개사법·부동산 거래신고 관련 법령과 실무.
+- **부동산공법**: 국토계획법·도시개발법·도시정비법·건축법·주택법·농지법 6개 법률.
+- **공시법·세법**: 지적(공간정보관리법)과 부동산등기법, 그리고 취득세·재산세·양도소득세 등.
+
+건물 5층에 비유하면, 1차 두 과목은 **기초 공사**, 2차 세 과목은 그 위에 올리는 **층**입니다. 기초가 부실하면 층은 올라가지 않습니다.
+
+- 📌 출제 포인트: "2차 2교시는 100분이다" → **X**, 50분입니다. 숫자 바꿔치기 함정의 전형입니다.
+- 📌 출제 포인트: 과목 내 영역별 문항 수는 법정 고정값이 없습니다(최근 기출 기준으로만 참고).
+
+> 💡 **핵심**: 5과목 200문항, 하루 3교시. 표의 시간과 문항 수를 그대로 외우세요. 시험은 이 숫자를 그대로 묻습니다.$aix$,
+  $aix${"type":"grid","title":"5과목 한눈에 보기","items":[{"label":"부동산학개론","sublabel":"1차 · 40문항 · 계산 포함","icon":"chart","tone":"accent"},{"label":"민법 및 민사특별법","sublabel":"1차 · 40문항 · 사례형","icon":"scale","tone":"accent"},{"label":"공인중개사법령·중개실무","sublabel":"2차 1교시 · 40문항","icon":"handshake","tone":"success"},{"label":"부동산공법","sublabel":"2차 1교시 · 40문항 · 6법","icon":"landmark","tone":"success"},{"label":"부동산공시법","sublabel":"2차 2교시 · 24문항 · 60점","icon":"stamp","tone":"primary"},{"label":"부동산세법","sublabel":"2차 2교시 · 16문항 · 40점","icon":"receipt","tone":"primary"}],"caption":"2차 2교시는 공시법과 세법이 한 과목(100점)으로 합산됩니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '9a13d42c-7a67-2fed-90fc-a018ff5859c8', '2c490b4d-c82e-f0fb-56d9-533bda3b70f2', 'realtor-exam-roadmap/passing-rules-and-stats', 'passing-rules-and-stats', '합격 기준과 통계: 절대평가 40/60, 1차 면제, 최근 합격률',
+  $aix$"몇 점 맞으면 붙나요?"에 대한 답은 단순합니다. 하지만 그 단순한 규칙에 함정이 세 개 숨어 있습니다.
+
+## 합격 공식: 40점과 60점
+
+- **매 과목 40점 이상** (40문항 기준 16문항) — 한 과목이라도 40점 미만이면 과락으로 불합격입니다.
+- **전 과목 평균 60점 이상** — 1차는 두 과목 평균, 2차는 세 과목 평균입니다.
+- 두 조건을 **동시에** 만족해야 합니다. 평균이 70점이어도 한 과목이 35점이면 떨어집니다.
+
+시험은 절대평가입니다. 몇 명이 응시하든 기준을 넘으면 전원 합격입니다. 상대평가 전환은 수년째 **논의만 있었고 2026년 9월 현재 확정된 것은 없습니다**. 시행령에 "선발예정인원을 공고하면 고득점자순"이라는 조항이 있지만, 실제로 공고된 적은 없습니다.
+
+## 1차 면제라는 두 번째 기회
+
+- 1차에 합격하면 **다음 회 시험에 한해** 1차가 면제됩니다. 1년짜리 티켓입니다.
+- 1·2차를 같은 날 응시했는데 1차에 불합격하면, 2차 점수가 아무리 좋아도 **2차는 무효**입니다.
+- 면제 대상자가 "1·2차 동시"로 접수하면 **면제 포기**로 처리됩니다. 반드시 "2차만" 접수하세요.
+
+버스 환승에 비유하면, 1차 합격은 **환승 할인 30분 안에 다음 버스를 타는 것**입니다. 다음 회를 놓치면 처음부터 요금을 냅니다.
+
+## 최근 통계로 보는 현실
+
+제36회(2025) 결과: 1차 응시 80,387명 중 18,901명 합격(23.51%), 2차 응시 33,247명 중 10,686명 합격(32.14%). 열 명 중 두세 명이 붙는 시험입니다. 절대평가인데 합격률이 낮은 이유는 **과락** 때문입니다.
+
+- 📌 출제 포인트: "1차 합격자는 이후 3회에 걸쳐 1차가 면제된다" → **X**, 다음 회 1번뿐입니다.
+- 📌 출제 포인트: "매 과목 40점 이상이면 평균과 관계없이 합격" → **X**, 평균 60점도 필요합니다.
+
+> 💡 **핵심**: 합격 = 매 과목 40점 이상 **그리고** 평균 60점 이상. 전략은 "잘하는 과목으로 평균을 채우고, 약한 과목은 40점 방어선을 지키는 것"입니다.$aix$,
+  $aix${"type":"compare","title":"같은 평균, 다른 결과","columns":[{"title":"합격 (평균 62점)","icon":"check","tone":"success","items":["학개론 72점","민법 52점","모든 과목 40점 이상 ✓","평균 60점 이상 ✓"]},{"title":"불합격 (평균 62점)","icon":"x","tone":"warning","items":["학개론 88점","민법 36점","민법 40점 미만 → 과락 ✕","평균은 넘었지만 탈락"]},{"title":"1차 면제자","icon":"badge-check","tone":"primary","items":["전년 1차 합격","다음 회 1번만 유효","'2차만' 접수 필수","동시 접수 = 면제 포기"]}],"caption":"평균이 같아도 한 과목의 과락이 결과를 뒤집습니다 — 절대평가의 진짜 관문은 40점 방어선입니다."}$aix$::jsonb, null, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bd6ec931-9364-797d-2ae4-8fa14a5e2509', '2c490b4d-c82e-f0fb-56d9-533bda3b70f2', 'realtor-exam-roadmap/schedule-and-application', 'schedule-and-application', '2026 제37회 일정과 Q-Net 원서접수',
+  $aix$공부를 아무리 잘해도 접수 기간을 놓치면 1년이 사라집니다. 일정과 접수 화면을 미리 눈에 익혀 두세요.
+
+## 2026년 제37회 일정
+
+- **정기 원서접수**: 2026-08-03(월) ~ 08-07(금)
+- **빈자리(추가) 접수**: 10-01 ~ 10-02
+- **시험일**: 2026-10-31(토), 1·2차 동시 시행
+- **합격자 발표**: 2026-12-02
+
+매년 일정이 비슷하지만(8월 접수, 10월 마지막 토요일 시험), 반드시 **Q-Net 시행공고**를 직접 확인하세요. 법령상 개략 공고는 매년 **2월 말일까지**, 시행공고는 시험일 **90일 전까지** 나옵니다(시행령 제7조).
+
+## 원서접수 5단계 (아래 데모로 따라가기)
+
+1. **로그인** — Q-Net 회원가입 후 로그인. 사진을 먼저 등록해 둡니다: 6개월 이내 촬영, 3.5×4.5cm 컬러, 무배경, JPG 200KB 이하.
+2. **원서접수 → 접수하기** — "2026년도 제37회 공인중개사 자격시험"을 선택합니다.
+3. **응시종목 선택** — 1·2차 동시 / 1차만 / 2차만(면제자). 면제자는 꼭 "2차만"입니다.
+4. **시험장 선택** — 지역·시군구를 고르고 조회하면 잔여 좌석이 보입니다. 집 가까운 곳은 첫날 오전에 마감되는 경우가 많습니다.
+5. **결제** — 1차 13,700원 / 2차 14,300원 / 동시 28,000원. 접수기간 내 취소는 100% 환불, 이후는 단계적으로 줄어듭니다.
+
+콘서트 예매와 똑같습니다. 사진(회원 정보)을 미리 준비하고, 오픈 시간에 들어가 좌석(시험장)을 잡는 게임입니다.
+
+## 접수 후 할 일
+
+- 마이페이지에서 **수험표**를 출력합니다. 시험장·좌석 정보가 여기에 있습니다.
+- 📌 출제 포인트: 공고는 두 번 — 개략 공고 "2월 말일까지", 시행공고 "시험일 90일 전까지". 주체는 시험시행기관장. 두 숫자를 서로 바꾼 지문이 함정입니다.
+- 📌 출제 포인트: 시험은 "매년 1회 이상" 시행합니다. "2회 이상"으로 바꾼 지문이 나옵니다.
+
+> 💡 **핵심**: 접수는 8월 첫째 주 단 5일. 사진을 7월에 미리 등록하고, 접수 첫날 오전에 시험장을 잡으세요.$aix$,
+  $aix${"type":"steps","title":"Q-Net 원서접수 5단계","steps":[{"label":"로그인 · 사진 등록","sublabel":"6개월 이내 · 3.5×4.5cm · 200KB","icon":"user"},{"label":"원서접수 → 접수하기","sublabel":"제37회 공인중개사 선택","icon":"clipboard"},{"label":"응시종목 선택","sublabel":"동시 / 1차만 / 2차만(면제자)","icon":"list-checks"},{"label":"시험장 선택","sublabel":"지역·시군구 조회 → 잔여 좌석","icon":"map-pin"},{"label":"결제 · 수험표 출력","sublabel":"동시 28,000원 · 마이페이지","icon":"banknote"}],"caption":"정기 접수 2026-08-03~08-07 — 5일짜리 창이 닫히면 10월 빈자리 접수 이틀뿐입니다."}$aix$::jsonb, $aix${"title":"Q-Net에서 제37회 원서접수 따라하기","app":{"kind":"browser","url":"www.q-net.or.kr","blocks":[{"id":"hd-home","type":"heading","label":"Q-Net 공인중개사"},{"id":"btn-login","type":"button","label":"로그인"},{"id":"in-id","type":"input","label":"아이디"},{"id":"in-pw","type":"input","label":"비밀번호"},{"id":"btn-apply","type":"button","label":"원서접수"},{"id":"card-exam","type":"card","label":"2026년도 제37회 공인중개사 자격시험 · 접수 08.03~08.07 → 접수하기","hidden":true},{"id":"badge-photo","type":"badge","label":"사진 등록 완료 (6개월 이내 · 3.5×4.5cm · JPG 200KB 이하)","hidden":true},{"id":"btn-both","type":"button","label":"응시종목: 제1·2차 동시 응시","hidden":true},{"id":"btn-second","type":"button","label":"응시종목: 제2차만 (1차 면제자)","hidden":true},{"id":"in-region","type":"input","label":"시험장 선택 — 지역 / 시·군·구","hidden":true},{"id":"btn-search","type":"button","label":"조회","hidden":true},{"id":"card-site","type":"card","label":"서울 강남구 · ○○중학교 · 잔여 128석 → 선택","hidden":true},{"id":"txt-fee","type":"text","label":"응시수수료 28,000원 (제1·2차 동시)","hidden":true},{"id":"btn-pay","type":"button","label":"결제하기","hidden":true},{"id":"card-done","type":"card","label":"✅ 접수 완료 — 마이페이지에서 수험표 출력","hidden":true}]},"actions":[{"t":"caption","text":"① 로그인 — 사진은 접수 전에 미리 등록해 둡니다"},{"t":"click","target":"btn-login"},{"t":"type","target":"in-id","text":"realtor2026"},{"t":"type","target":"in-pw","text":"••••••••"},{"t":"caption","text":"② 원서접수 메뉴에서 제37회 시험을 찾아 접수하기"},{"t":"click","target":"btn-apply"},{"t":"reveal","target":"card-exam"},{"t":"reveal","target":"badge-photo"},{"t":"click","target":"card-exam"},{"t":"caption","text":"③ 응시종목 — 면제자가 아니면 1·2차 동시를 선택"},{"t":"reveal","target":"btn-both"},{"t":"reveal","target":"btn-second"},{"t":"click","target":"btn-both"},{"t":"caption","text":"④ 지역·시군구를 조회해 잔여 좌석이 있는 시험장을 선택"},{"t":"type","target":"in-region","text":"서울특별시 > 강남구"},{"t":"reveal","target":"btn-search"},{"t":"click","target":"btn-search"},{"t":"reveal","target":"card-site"},{"t":"click","target":"card-site"},{"t":"caption","text":"⑤ 수수료 확인 후 결제 — 접수기간 내 취소는 100% 환불"},{"t":"reveal","target":"txt-fee"},{"t":"reveal","target":"btn-pay"},{"t":"click","target":"btn-pay"},{"t":"reveal","target":"card-done"},{"t":"caption","text":"✅ 접수 완료 — 수험표를 출력해 시험장·좌석을 확인하세요"}]}$aix$::jsonb, 7, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b3d7e3b6-e4ff-50ed-9358-a008fbf1a347', '32414a65-0f04-7a4c-95ec-165ac27bb83a', 'realtor-exam-roadmap/subject-characteristics', 'subject-characteristics', '과목별 성격: 이해 과목·암기 과목·계산 과목과 과락 위험',
+  $aix$다섯 과목을 같은 방법으로 공부하면 반드시 한 과목에서 구멍이 납니다. 과목마다 "근육"이 다르기 때문입니다.
+
+## 세 종류의 근육
+
+- **이해 과목 — 민법 및 민사특별법**: 사례를 읽고 "누가 이기는가"를 판단합니다. 조문 암기보다 **판례의 논리**를 이해해야 하고, 초반 진도가 가장 느립니다. 일단 이해되면 점수가 안정적입니다.
+- **암기 과목 — 부동산공법, 공인중개사법령, 공시법**: 숫자·기간·절차를 정확히 기억해야 합니다. 특히 공법은 6개 법률의 양이 방대해 **가장 흔한 과락 과목**으로 꼽힙니다. 공인중개사법령은 범위가 좁고 반복이 많아 **점수를 쌓는 과목**입니다.
+- **계산 과목 — 부동산학개론, 부동산세법**: 학개론은 최근 기출 기준 계산문제가 10문항 안팎 나옵니다(제36회 11문항, EBS 총평 기준). 세법은 16문항 중 세액 계산·세율이 섞입니다. 공식을 외우는 게 아니라 **손으로 풀어 본 횟수**가 점수입니다.
+
+## 과락 위험 지도
+
+- 위험 1순위 **부동산공법**: 양이 많고 낯선 용어. "버릴 단원"을 정해 40점 방어선을 지키는 전략이 필요합니다.
+- 위험 2순위 **부동산세법**: 문항이 16개라 하나 틀릴 때 타격이 큽니다. 다만 공시법과 합산되므로 공시법에서 보완할 수 있습니다.
+- 안정 과목 **공인중개사법령**: 평균 60점을 끌어올리는 효자 과목입니다.
+
+헬스장에 비유하면, 민법은 자세를 배우는 데 오래 걸리는 **스쿼트**, 공법은 매일 꾸준히 채워야 하는 **유산소**, 학개론 계산은 반복 횟수가 곧 기록인 **팔굽혀펴기**입니다.
+
+- 📌 출제 포인트: 학개론은 부동산학개론 85%·부동산감정평가론 15% 안팎, 민법은 민법 85%·민사특별법 15% 안팎(EBS 학습전략 기준)으로 출제됩니다. 법정 고정값은 아닙니다.
+- 📌 출제 포인트: 2차 2교시는 공시법 60점 + 세법 40점 합산 → 세법이 약해도 공시법으로 40점 방어선을 지킬 수 있습니다.
+
+> 💡 **핵심**: 민법은 이해, 공법은 암기, 학개론은 계산. 과목의 근육을 알고 공부법을 바꾸는 순간 과락이 사라집니다.$aix$,
+  $aix${"type":"compare","title":"과목의 세 가지 근육","columns":[{"title":"이해 과목","icon":"lightbulb","tone":"accent","items":["민법 및 민사특별법","사례 → 결론 판단","초반 진도 느림","이해되면 점수 안정"]},{"title":"암기 과목","icon":"book-open","tone":"warning","items":["공법 · 중개사법령 · 공시법","숫자·기간·절차 정확히","공법 = 과락 1순위","중개사법령 = 점수 효자"]},{"title":"계산 과목","icon":"percent","tone":"primary","items":["학개론 · 세법","학개론 계산 10문항 안팎","공식보다 풀어 본 횟수","세법은 공시법과 합산"]}],"caption":"과목마다 쓰는 근육이 다릅니다 — 같은 공부법을 다섯 번 반복하면 반드시 구멍이 납니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '02b30d73-5d94-dcd4-1902-59ce51df81b5', '32414a65-0f04-7a4c-95ec-165ac27bb83a', 'realtor-exam-roadmap/study-order-and-plan', 'study-order-and-plan', '공부 순서와 기간별 플랜: 6개월·1년, 동차 vs 1차 선합격',
+  $aix$"몇 달이면 되나요?"의 답은 하루에 낼 수 있는 시간과 목표(동차합격인지 1차 먼저인지)에 따라 갈립니다.
+
+## 공부 순서의 원칙
+
+1. **민법부터** — 가장 오래 걸리고, 공인중개사법령·공시법 이해의 바탕이 됩니다.
+2. **학개론과 병행** — 성격이 달라(계산) 민법의 지루함을 상쇄합니다.
+3. **2차는 공인중개사법령 → 공시법 → 세법 → 공법** — 점수가 잘 나오는 과목으로 자신감을 쌓고, 양이 많은 공법은 기본서 1회독 후 기출문제 위주로 돌립니다.
+
+## 두 가지 전략
+
+- **동차합격 (1·2차 같은 해)**: 5과목을 한 해에. 하루 3시간 이상 확보되는 전업·반전업 수험생에게 맞습니다. 합격 시 1년을 벌지만, 1차 과락이면 2차 점수가 무효가 되는 위험이 있습니다.
+- **1차 선합격 → 다음 해 2차**: 직장인·육아 병행에 현실적입니다. 1차 면제는 다음 회 1번뿐이므로 두 번째 해에 반드시 2차를 끝내야 합니다.
+
+마라톤에 비유하면, 동차는 풀코스 한 번, 선합격은 **하프 두 번**입니다. 완주 확률은 체력(시간)에 달려 있습니다.
+
+## 기간별 플랜 뼈대
+
+- **1년 플랜 (동차)**: 11~2월 민법·학개론 기본서 → 3~5월 2차 기본서 → 6~8월 전 과목 기출문제 회독 → 9~10월 모의고사·약점 과목 집중.
+- **6개월 플랜 (1차 선합격)**: 5~6월 민법·학개론 기본서 → 7~8월 기출문제 3회독 → 9~10월 모의고사·오답 정리.
+- 어느 플랜이든 **8월 접수 전 기출문제 1회독**은 끝나 있어야 합니다. 그래야 "동시 접수"가 도박이 아닙니다.
+
+- 📌 출제 포인트: 1차 면제는 다음 회 시험 1번 — 선합격 전략의 시간표가 여기서 나옵니다.
+- 📌 출제 포인트: 1·2차 동시 응시자가 1차에 불합격하면 2차는 무효 — 동차 전략의 위험이 여기서 나옵니다.
+
+> 💡 **핵심**: 민법 먼저, 공법은 마지막. 하루 3시간이 안 되면 1차 선합격이 정답이고, 어느 쪽이든 8월 전에 기출문제 1회독을 끝내세요.$aix$,
+  $aix${"type":"flow","title":"1년 동차 플랜의 흐름","nodes":[{"label":"11~2월 · 1차 기본서","sublabel":"민법 먼저, 학개론 병행","icon":"book","tone":"accent"},{"label":"3~5월 · 2차 기본서","sublabel":"중개사법령 → 공시법 → 세법 → 공법","icon":"book-open","tone":"accent"},{"label":"6~8월 · 기출문제 회독","sublabel":"전 과목 3회독 목표","icon":"repeat","tone":"primary","edgeLabel":"8월 접수 전 1회독 완료"},{"label":"9~10월 · 모의고사","sublabel":"약점 과목 40점 방어","icon":"target","tone":"warning"},{"label":"10-31 시험","sublabel":"1·2차 동시","icon":"calendar-check","tone":"success"}],"loopBack":{"from":3,"to":2,"label":"틀린 단원은 기출로 되돌아가기"},"caption":"6개월 선합격 플랜은 이 흐름에서 2차 기본서 칸을 빼고 1차 두 과목만 돌립니다."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '075f6fde-aa0e-bf9c-a62f-a44d662ada34', '32414a65-0f04-7a4c-95ec-165ac27bb83a', 'realtor-exam-roadmap/materials-and-lectures', 'materials-and-lectures', '기본서·기출·모의고사·인강 고르기와 쓰는 법',
+  $aix$교재를 다섯 권씩 사 놓고 한 권도 끝내지 못하는 것이 초보 수험생의 가장 흔한 실패입니다. 교재는 종류별로 **역할**이 다릅니다.
+
+## 교재의 3층 구조
+
+- **기본서 (1층)**: 개념을 처음 배우는 책. 과목당 1권, 출판사는 **인강 강사와 같은 곳**으로 맞춥니다. 두께에 겁먹지 말고 1회독은 "이해 60%"로 통과하세요.
+- **기출문제집 (2층)**: 합격의 몸통입니다. 최근 10년 안팎이 수록된 과목별 기출문제집을 고르고, 해설이 **지문마다** 달린 책을 선택합니다. 정답만 알려 주는 해설은 회독 효과가 없습니다.
+- **모의고사·요약서 (3층)**: 시험 두 달 전부터. 시간 배분 훈련과 최종 암기용입니다. 새 개념을 배우는 도구가 아닙니다.
+
+요리로 비유하면 기본서는 **레시피**, 기출문제는 **직접 해 보는 요리**, 모의고사는 **손님 앞 리허설**입니다. 레시피만 읽고 요리를 잘하게 되는 사람은 없습니다.
+
+## 인강 고르는 기준 3가지
+
+1. **무료 맛보기로 3강 이상** 들어 보고 말 속도·설명 방식이 맞는지 확인합니다. 기준은 유명세가 아니라 "끝까지 들을 수 있는가"입니다.
+2. **기본 이론 → 기출 풀이 → 모의고사**까지 한 강사(또는 한 브랜드)로 이어지는지 봅니다. 중간에 바꾸면 용어 표기와 정리 체계가 달라져 시간을 잃습니다.
+3. EBS는 저렴하고 체계적이며, 학원 인강은 문제 분석과 모의고사가 풍부합니다. 예산과 시간으로 고르세요.
+
+## 사지 말아야 할 것
+
+- 개정 전 연도 교재. 시험은 **시행일 현재 법령** 기준이므로 세법·공법은 반드시 해당 연도판.
+- 두 강사의 기본서를 동시에. 정리 방식이 충돌해 오히려 헷갈립니다.
+- 📌 출제 포인트: 시험은 **시험 시행일 현재 시행 중인 법령**이 기준 — 국회 계류 중인 개정안·입법예고안은 출제되지 않습니다.
+- 📌 출제 포인트: 교재를 고를 때는 "2026년 시행 공인중개사법 개정(2026-02-15·08-28 시행)"처럼 최신 개정 반영 여부를 확인하세요. 개정 직후 시험은 개정 내용이 출제 1순위입니다.
+
+> 💡 **핵심**: 기본서 1권 + 기출문제집 1권 + 마지막 두 달 모의고사. 강사는 맛보기 3강으로 고르고, 중간에 바꾸지 마세요.$aix$,
+  $aix${"type":"stack","title":"교재의 3층 구조","layers":[{"label":"모의고사 · 요약서","sublabel":"시험 2개월 전 · 시간 배분·최종 암기","icon":"hourglass","tone":"warning"},{"label":"기출문제집","sublabel":"합격의 몸통 · 지문별 해설 · 3회독","icon":"list-checks","tone":"primary"},{"label":"기본서 + 인강","sublabel":"과목당 1권 · 같은 강사로 끝까지","icon":"book","tone":"muted"}],"caption":"아래층(기본서)은 한 번, 가운데층(기출문제)은 여러 번, 위층(모의고사)은 마지막에."}$aix$::jsonb, null, 5, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'fc66a45a-3952-2927-34ab-9c99d0105538', '32414a65-0f04-7a4c-95ec-165ac27bb83a', 'realtor-exam-roadmap/past-exam-method', 'past-exam-method', '기출문제 회독법: 지문 분석·오답 노트·함정 패턴',
+  $aix$기출문제는 답을 맞히는 도구가 아니라 **출제자의 습관을 읽는 자료**입니다. 그래서 "풀었다"와 "회독했다"는 다른 말입니다.
+
+## 3회독, 매번 다른 목적
+
+- **1회독 — 지문 단위로 O/X**: 문제를 5개 지문으로 쪼개 각각 O/X를 판단합니다. 정답을 맞혔어도 나머지 4개 지문 중 모르는 것이 있으면 "틀린 문제"로 표시합니다.
+- **2회독 — 틀린 지문의 이유 쓰기**: "왜 X인가"를 한 줄로 적습니다. "5년 → 3년으로 바뀐 숫자", "할 수 있다 → 하여야 한다로 바뀐 어미"처럼 **함정의 종류**를 이름 붙입니다.
+- **3회독 — 오답만 빠르게**: 표시된 지문만 다시 봅니다. 여기서도 틀리면 그 조문을 기본서에서 찾아 형광펜.
+
+## 함정 지문의 3대 패턴
+
+1. **숫자 바꿔치기**: 기간·비율·문항 수를 살짝 바꿉니다. "부정행위자는 처분일부터 3년간 응시 정지" → X(5년).
+2. **어미 뒤집기**: "할 수 있다 ↔ 하여야 한다", "포함한다 ↔ 제외한다". 재량과 의무를 바꾸는 패턴입니다.
+3. **주체 바꿔치기**: "시·도지사 ↔ 국토교통부장관 ↔ 등록관청". 누가 하는 일인지를 묻습니다.
+
+## 오답 노트는 "지문 은행"으로
+
+노트에 문제를 베끼지 마세요. **틀린 지문 한 줄 + 왜 틀렸는지 한 줄 + 패턴 이름** 세 칸만 씁니다. 스터디를 한다면 이 지문을 O/X 퀴즈로 서로 던지는 것이 가장 빠른 복습입니다(아래 데모).
+
+낚시로 비유하면, 기출문제는 **물고기**가 아니라 **물고기가 다니는 길목**입니다. 길목을 외우면 새 문제도 같은 자리에서 잡힙니다.
+
+- 📌 출제 포인트: "1차 시험 합격자는 다음 회 시험에 한하여 1차 시험이 면제된다" → **O**. 여기서 "다음 회"를 "3회"로, "면제"를 "면제할 수 있다"로 바꾼 지문이 함정입니다.
+- 📌 출제 포인트: "공인중개사자격증은 국토교통부장관이 교부한다" → **X**, 시·도지사입니다(법 제5조). 주체 바꿔치기의 대표 예입니다.
+
+> 💡 **핵심**: 문제가 아니라 **지문**을 O/X로 판정하고, 틀린 지문에 패턴 이름을 붙이세요. 3회독의 목적은 매번 다릅니다.$aix$,
+  $aix${"type":"cycle","title":"기출문제 회독 사이클","center":"지문 단위로 반복","nodes":[{"label":"지문별 O/X","sublabel":"5개 지문 모두 판정","icon":"list-checks"},{"label":"틀린 이유 쓰기","sublabel":"패턴 이름 붙이기","icon":"pen-line"},{"label":"지문 은행 정리","sublabel":"지문·이유·패턴 3칸","icon":"clipboard"},{"label":"오답만 재풀이","sublabel":"또 틀리면 기본서로","icon":"repeat"}],"caption":"숫자 바꿔치기 · 어미 뒤집기 · 주체 바꿔치기 — 함정은 세 갈래 길목에서 반복됩니다."}$aix$::jsonb, $aix${"title":"스터디 채널에서 함정 지문 OX 퀴즈 주고받기","app":{"kind":"chat-app","workspace":"공인중개사 37회 스터디","channels":[{"id":"ch-ox","name":"함정지문-OX","active":true},{"id":"ch-qna","name":"질문-답변"},{"id":"ch-plan","name":"일정-공유"}],"composerId":"composer","messages":[{"id":"m1","author":"스터디장 김OO","time":"오후 9:00","text":"오늘의 OX ① — 1차 시험 합격자는 이후 3회에 걸쳐 1차 시험이 면제된다. (O/X)","hidden":true},{"id":"m2","author":"나","time":"오후 9:01","text":"X — 다음 회 시험 1번만 면제 (숫자 바꿔치기)","hidden":true},{"id":"m3","author":"스터디장 김OO","time":"오후 9:01","text":"정답 ✅ 패턴: 숫자 바꿔치기 (1회 → 3회). 시행령 제5조 확인!","hidden":true},{"id":"m4","author":"스터디장 김OO","time":"오후 9:02","text":"OX ② — 부정행위자는 시험이 무효가 되고, 처분일부터 3년간 응시자격이 정지된다. (O/X)","hidden":true},{"id":"m5","author":"박OO","time":"오후 9:03","text":"X — 5년! 공인중개사법 제4조의3. 자격취소 3년과 헷갈리게 만든 함정","hidden":true},{"id":"m6","author":"스터디장 김OO","time":"오후 9:03","text":"정답 ✅ OX ③ — 매 과목 40점 이상이면 평균과 관계없이 합격한다. (O/X)","hidden":true},{"id":"m7","author":"이OO","time":"오후 9:04","text":"X — 평균 60점도 필요. 조건 하나를 빼는 '누락형' 함정","hidden":true},{"id":"m8","author":"스터디봇","bot":true,"time":"오후 9:05","text":"📒 오늘 지문 은행 3건 저장: 숫자 바꿔치기 2 · 조건 누락 1. 내일 재출제 예정.","hidden":true}]},"actions":[{"t":"caption","text":"① 스터디장이 오답 노트에서 함정 지문을 OX로 던집니다"},{"t":"reveal","target":"m1"},{"t":"wait","ms":700},{"t":"caption","text":"② 정답만 쓰지 않고 '왜 X인지 + 패턴 이름'을 함께 답합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"X — 다음 회 시험 1번만 면제 (숫자 바꿔치기)"},{"t":"wait","ms":400},{"t":"reveal","target":"m2"},{"t":"reveal","target":"m3"},{"t":"wait","ms":600},{"t":"caption","text":"③ 비슷한 숫자(3년/5년)를 섞은 두 번째 함정"},{"t":"reveal","target":"m4"},{"t":"reveal","target":"m5"},{"t":"move","target":"m5"},{"t":"wait","ms":500},{"t":"caption","text":"④ 조건 하나를 빼서 만든 '누락형' 함정"},{"t":"reveal","target":"m6"},{"t":"wait","ms":700},{"t":"reveal","target":"m7"},{"t":"caption","text":"⑤ 지문·이유·패턴 3칸이 그대로 지문 은행이 됩니다"},{"t":"reveal","target":"m8"},{"t":"move","target":"m8"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '54f54dd9-3cec-55f3-9b95-53ab5fd4cfc6', '003943b7-dbe6-1074-5566-7a354059ee4a', 'realtor-exam-roadmap/exam-day-tactics', 'exam-day-tactics', '시험장 전략: 시간 배분·모르는 문제 처리·OMR 마킹',
+  $aix$1년을 공부해도 당일 운영이 서툴면 아는 문제를 놓칩니다. 시험장은 지식이 아니라 **운영 능력**을 시험하는 곳이기도 합니다.
+
+## 입실과 준비물
+
+- **입실 마감**: 1차 09:00, 2차 1교시 12:30, 2차 2교시 15:10(시행공고 기준, 당해 공고로 재확인). 마감 뒤에는 들어갈 수 없습니다.
+- **준비물**: 신분증(공고에 명시된 종류만 인정), 수험표, **컴퓨터용(검정) 사인펜**. 시계는 통신 기능 없는 것만.
+- 휴대전화 등 **전자기기는 소지 자체가 적발 대상**입니다. 사용 여부와 상관없이 무효 처리되고 부정행위로 다뤄질 수 있습니다.
+- 결시하거나 답안카드 제출을 거부하면 **다음 교시에 응시할 수 없습니다**.
+
+## 100분에 80문항: 시간 배분 공식
+
+- 문항당 평균 **1분 15초**. 마킹·검토 10분을 빼면 실제 풀이는 문항당 1분 안팎입니다.
+- **1바퀴(60분)**: 읽자마자 답이 보이는 문제만 풉니다. 계산·박스형·긴 사례는 번호에 표시하고 넘깁니다.
+- **2바퀴(25분)**: 표시한 문제 중 풀 수 있는 것부터. 한 문제에 3분을 넘기면 포기 표시.
+- **마킹·검토(15분)**: 마킹은 **과목 단위로 끊어서**. 마지막 5분에 몰아 마킹하다 밀려 쓰는 것이 최악의 사고입니다.
+
+## 모르는 문제와 마킹
+
+- 절대평가이므로 빈칸은 손해만 있습니다. 모르면 **"모두"·"항상"이 없는 지문을 고른다**처럼 찍는 규칙을 하나 정해 두세요.
+- 답안카드는 **전산 판독**됩니다. 흐린 마킹·이중 마킹은 수험자 책임이라 이의제기가 받아들여지지 않습니다. 수정은 공고가 허용하는 방법으로만.
+
+비행기 조종에 비유하면, 이륙 전 체크리스트(준비물)와 착륙 절차(마킹)를 정해 두면 비행 중(풀이)에 판단력을 아낄 수 있습니다.
+
+- 📌 출제 포인트: 부정행위 → "그 시험을 무효로 하고 처분일부터 **5년**간 응시자격 정지"(법 제4조의3). 자격취소 후 3년과 바꿔 묻습니다.
+- 📌 출제 포인트: 부정행위 사실은 시험시행기관장이 **지체 없이** 다른 시험시행기관장에게 통보합니다.
+
+> 💡 **핵심**: 1바퀴는 아는 문제만, 마킹은 과목 단위로, 전자기기는 가방 속 전원 OFF. 당일의 적은 문제가 아니라 시간과 실수입니다.$aix$,
+  $aix${"type":"steps","title":"100분 운영 공식","steps":[{"label":"입실 마감 30분 전 도착","sublabel":"신분증 · 수험표 · 컴퓨터용 사인펜","icon":"clock"},{"label":"1바퀴 60분","sublabel":"아는 문제만 · 어려운 문제는 표시","icon":"check"},{"label":"2바퀴 25분","sublabel":"표시 문제 · 3분 넘기면 포기","icon":"hourglass"},{"label":"마킹·검토 15분","sublabel":"과목 단위 마킹 · 빈칸 0","icon":"pen-line"}],"caption":"문항당 1분 15초 — 마킹 시간을 먼저 떼어 놓고 남은 시간으로 푸는 것이 순서입니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '62821051-e03a-aece-8561-1784b755e426', '003943b7-dbe6-1074-5566-7a354059ee4a', 'realtor-exam-roadmap/after-passing-and-next', 'after-passing-and-next', '합격 후: 실무교육·개설등록·취업 경로 + 다음 단계',
+  $aix$12월 2일 합격자 발표 다음 날부터 새 절차가 시작됩니다. 자격증이 있어도 바로 "개업"은 아닙니다.
+
+## 합격에서 개업까지 4단계
+
+1. **자격증 교부** — 시·도지사가 합격자 결정 공고일부터 **1개월 이내**에 교부합니다(공인중개사법 제5조, 시행규칙 제3조).
+2. **실무교육** — 개설등록 신청 전 **1년 이내**에 시·도지사가 실시하는 실무교육을 받아야 합니다(법 제34조). 시간은 시행령 제28조 개정으로 **2026-01-01부터 45시간**(종전 28~32시간).
+3. **개설등록** — 관할 시장·군수·구청장에게 신청(법 제9조, 시행령 제13조). **7일 이내** 서면 통지, 업무보증 설정 확인 후 등록증 교부.
+4. **개업** — 등록증 게시·인장 등록을 마치면 개업공인중개사입니다.
+
+식당 개업에 비유하면 자격증은 **조리사 자격**, 실무교육은 **위생교육**, 개설등록은 **영업신고**입니다. 셋이 다 있어야 문을 엽니다.
+
+- 📌 출제 포인트: "28~32시간"은 **개정 전** 숫자 — 시행일 현재 법령 기준인 45시간으로 기억하세요.
+- 📌 출제 포인트: 등록 결격사유 벌금형 기준은 "이 법을 위반하여 **300만 원 이상** 벌금형 후 3년 미경과"(법 제10조). 다른 법률 위반 벌금형은 해당 없습니다.
+
+## 취업 경로와 숫자 암기표
+
+경로는 셋입니다(일반론). **바로 개업**, 기존 사무소·중개법인에서 **소속공인중개사로 실무를 익힌 뒤 개업**(가장 흔함), 부동산 개발·자산관리·금융기관 등 **자격 우대 기업 취업**.
+
+| 항목 | 숫자 |
+|---|---|
+| 합격 기준 | 매 과목 40점 이상 · 평균 60점 이상 |
+| 1차 면제 | 다음 회 시험 1번 |
+| 응시 제한 | 부정행위 5년 · 자격취소 3년 |
+| 실무교육 · 자격증 교부 | 45시간 · 공고일부터 1개월 |
+| 개설등록 통지 | 신청일부터 7일 |
+
+## 다음 단계
+
+지도는 그렸습니다. 다음 강의 **"1차 부동산학개론: 시험에 나오는 핵심만"**으로 들어가세요(민법 병행 가능).
+
+> 💡 **핵심**: 자격증(1개월) → 실무교육(45시간, 등록 전 1년 이내) → 개설등록(7일 통지) → 개업. 표의 숫자를 그대로 외우세요.$aix$,
+  $aix${"type":"flow","title":"합격에서 개업까지","nodes":[{"label":"합격자 발표","sublabel":"2026-12-02 · Q-Net","icon":"trophy","tone":"success"},{"label":"자격증 교부","sublabel":"시·도지사 · 공고일부터 1개월 이내","icon":"award","tone":"primary","edgeLabel":"법 제5조 · 시행규칙 제3조"},{"label":"실무교육 45시간","sublabel":"등록 신청 전 1년 이내 · 시·도지사","icon":"graduation-cap","tone":"accent","edgeLabel":"법 제34조 · 시행령 제28조"},{"label":"개설등록 신청","sublabel":"시장·군수·구청장 · 7일 이내 통지","icon":"stamp","tone":"accent","edgeLabel":"법 제9조 · 시행령 제13조"},{"label":"업무보증 → 등록증","sublabel":"보증 설정 확인 후 교부","icon":"shield","tone":"warning"},{"label":"개업 또는 취업","sublabel":"개업공인중개사 · 소속공인중개사","icon":"handshake","tone":"success"}],"caption":"실무교육 없이는 개설등록이 안 되고, 업무보증 없이는 등록증이 나오지 않습니다 — 순서가 곧 시험 포인트입니다."}$aix$::jsonb, null, 6, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 1차 부동산학개론: 시험에 나오는 핵심만
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'e76b859d-6890-cf7f-ddb0-1c8e8086fb33', 'realtor-real-estate-theory', '1차 부동산학개론: 시험에 나오는 핵심만', $aix$부동산학개론은 공인중개사 1차의 '이해 과목'입니다. 경제·금융·투자·감정평가가 섞여 있어 처음엔 막막하지만, 사실 매년 같은 자리에서 같은 개념이 나옵니다. 이 강의는 토지의 특성과 용어, 수요·공급과 탄력성, 시장과 경기변동, 지대·입지 이론, 정책, 금융과 투자 분석, 증권화와 리츠, 개발·관리·마케팅, 감정평가 3방식과 공시지가 제도까지 14개 화면으로 압축했습니다. 매 레슨 출제 포인트와 함정 지문 패턴, 실제 숫자로 검산한 계산 예시를 붙였습니다.$aix$,
+  null, 'realestate', 'intermediate', array['공인중개사', '부동산학개론', '탄력성 계산', '감정평가', '부동산 금융', '1차 시험']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'a22b0784-7057-256b-89a9-fdd4d334be50', 'e76b859d-6890-cf7f-ddb0-1c8e8086fb33', 'fundamentals', '부동산의 기초', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'b5f96033-af46-efda-9347-99ba8ed1713a', 'e76b859d-6890-cf7f-ddb0-1c8e8086fb33', 'economics-and-market', '부동산 경제와 시장', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '0de04acb-7f39-dcbb-70a3-a2c24f12c671', 'e76b859d-6890-cf7f-ddb0-1c8e8086fb33', 'finance-and-investment', '금융과 투자', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'd11344ac-cdab-750d-4295-f654f0fc8e7e', 'e76b859d-6890-cf7f-ddb0-1c8e8086fb33', 'development-appraisal', '개발·관리·감정평가', 3
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a0a12e44-040c-5783-baa0-7e5081346231', 'a22b0784-7057-256b-89a9-fdd4d334be50', 'realtor-real-estate-theory/subject-map', 'subject-map', '부동산학개론 출제 지도: 영역별 비중과 공략 순서',
+  $aix$학개론은 "공부할수록 어렵다"는 말이 나오는 과목입니다. 범위가 넓어서가 아니라, **어디서 몇 문제가 나오는지 모른 채 앞에서부터 읽기 때문**입니다.
+
+## 40문항은 이렇게 나뉩니다
+
+1차 1교시(09:30~11:10, 100분)에 민법과 함께 40문항을 풉니다. 영역별 문항은 공식 고정값이 없고, 최근 기출을 학원·EBS가 분석한 결과는 대략 이렇습니다.
+
+- **총론**(개념·특성·용어) 4문항 안팎
+- **경제론**(수요·공급·탄력성) 5~6 / **시장론·입지론** 5~6
+- **정책론** 5~6 / **투자론** 5~6 / **금융론** 5~6
+- **개발·관리·마케팅** 3~5 / **감정평가론** 5~6 (가격공시 제도 매년 1문항)
+
+계산 문제는 제36회(2025)에 학원 분석 기준 11문항 안팎으로, 최근 회차 중 가장 많은 편이었습니다. 계산을 통째로 버리면 과락 위험이 커집니다.
+
+## 공략 순서: 뒤에서 앞으로가 아니라 "돈이 도는 순서"로
+
+지하철 노선도를 외울 때 역 이름을 순서대로 외우지 않죠. 환승역부터 잡습니다. 학개론의 환승역은 **경제론과 투자·금융론**입니다.
+
+1. 총론·토지 용어 (암기, 빠르게)
+2. 경제론 → 시장론 → 정책론 (하나의 이야기)
+3. 금융 → 투자 → 증권화 (계산 공식 공유)
+4. 개발·관리·마케팅 → 감정평가 (마지막에 몰아서)
+
+## 법령 기준 시점
+
+시험은 **시험 시행일(2026-10-31) 현재 시행 중인 법령**이 기준입니다(Q-Net 시행공고 원칙). 학개론에서 법령이 걸리는 곳은 리츠·가격공시 제도 정도이니, 그 두 곳만 시행일 기준으로 확인하면 됩니다.
+
+📌 출제 포인트
+- 영역별 비중은 "대략"만 기억하고, 계산 10문항 안팎은 반드시 대비
+- 총론은 4문항이지만 정답률이 높아 점수 방어에 유리
+- 감정평가론은 공식 3개와 공시 제도 1문항이 거의 매년 출제
+
+> 💡 **핵심**: 학개론은 40문항 중 약 30문항이 경제·정책·투자·금융·감정평가 5개 영역에서 나옵니다. 이 강의도 그 순서로 갑니다.$aix$,
+  $aix${"type":"grid","title":"부동산학개론 출제 지도 (최근 기출 분석 기준, 대략)","items":[{"label":"총론","sublabel":"개념·특성·용어 · 4문항 안팎","icon":"book","tone":"muted"},{"label":"경제론","sublabel":"수요·공급·탄력성 · 5~6","icon":"trending-up","tone":"primary"},{"label":"시장·입지론","sublabel":"경기변동·거미집·지대 · 5~6","icon":"map-pin","tone":"primary"},{"label":"정책론","sublabel":"시장실패·규제 효과 · 5~6","icon":"landmark","tone":"accent"},{"label":"투자·금융론","sublabel":"NPV·상환·MBS · 10~12","icon":"banknote","tone":"accent"},{"label":"개발·관리·마케팅","sublabel":"방식·위험·STP · 3~5","icon":"building","tone":"muted"},{"label":"감정평가론","sublabel":"3방식·공시지가 · 5~6","icon":"scale","tone":"success"},{"label":"계산 문제","sublabel":"전 영역 합쳐 10문항 안팎","icon":"percent","tone":"warning"}],"caption":"문항 수는 공식 고정값이 아니라 학원·EBS의 기출 분석 평균입니다. 비중이 큰 곳부터 공략하세요."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2348479f-2e33-f995-61a3-70edfccb6ea4', 'a22b0784-7057-256b-89a9-fdd4d334be50', 'realtor-real-estate-theory/concept-and-characteristics', 'concept-and-characteristics', '부동산의 개념과 토지의 특성: 부동성·부증성·영속성·개별성',
+  $aix$"토지는 왜 감가상각을 하지 않을까?" 이 질문에 한 단어로 답할 수 있으면 총론의 절반은 끝났습니다. 답은 영속성입니다.
+
+## 부동산의 개념: 세 가지 눈으로 본다
+
+부동산학은 부동산을 **법률적·경제적·기술(물리)적** 측면이 합쳐진 복합개념으로 봅니다.
+
+- **법률적**: 민법 제99조 제1항의 "토지 및 그 정착물"이 협의의 부동산. 자동차·선박·항공기·건설기계, 입목, 광업재단·공장재단처럼 등기·등록으로 부동산처럼 다루는 것은 **준부동산**(의제부동산)이라 부릅니다.
+- **경제적**: 자산·자본·생산요소·소비재·상품
+- **기술적**: 공간·위치·자연·환경
+
+## 토지의 자연적 특성 4가지와 파생 현상
+
+시험은 특성 자체보다 **"그래서 무슨 현상이 생기는가"**를 묻습니다.
+
+- **부동성** → 시장이 지역별로 쪼개지고(국지성), 직접 가서 보는 임장이 필요하고, 외부효과가 생깁니다.
+- **부증성** → 물리적 공급이 불가능해 지대가 발생하고, 토지 이용이 집약화됩니다. 단, 용도 전환에 의한 **경제적(용도적) 공급은 가능**합니다.
+- **영속성** → 물리적 감가상각이 배제되고, 소모되지 않아 장기 투자·임대차 시장이 성립합니다.
+- **개별성** → 일물일가 법칙이 배제되고 표준화가 어려워 감정평가가 필요해집니다.
+
+인문적 특성으로 **용도의 다양성**(최유효이용 판단 근거), 합병·분할 가능성, 위치의 가변성이 따라옵니다.
+
+같은 반 학생 30명을 떠올려 보세요. 자리는 못 바꾸고(부동성), 인원은 늘릴 수 없고(부증성), 졸업해도 학교는 남고(영속성), 똑같은 학생은 한 명도 없습니다(개별성).
+
+📌 출제 포인트
+- 부증성 → "토지의 용도적 공급도 불가능하다"는 함정 지문(X). 물리적 공급만 불가능
+- 영속성 → 감가상각 배제, 개별성 → 일물일가 법칙 배제. 서로 바꿔 쓰면 오답
+- 준부동산은 "민법상 부동산"이 아니라 "부동산처럼 다루는 동산" — 등기·등록이 핵심
+
+> 💡 **핵심**: 특성 4개는 각각 "그래서 ~가 생긴다"까지 세트로 외우세요. 시험은 파생 현상을 묻습니다.$aix$,
+  $aix${"type":"stack","title":"토지의 자연적 특성 → 파생 현상","layers":[{"label":"부동성","sublabel":"지역시장(국지성) · 임장 필요 · 외부효과","icon":"map-pin","tone":"primary"},{"label":"부증성","sublabel":"물리적 공급 불가 · 지대 발생 · 집약적 이용","icon":"lock","tone":"warning"},{"label":"영속성","sublabel":"감가상각 배제 · 장기 투자·임대 시장","icon":"hourglass","tone":"accent"},{"label":"개별성","sublabel":"일물일가 법칙 배제 · 표준화 곤란 · 감정평가 필요","icon":"layers","tone":"success"}],"caption":"특성은 원인, 오른쪽 파생 현상이 시험의 정답 지문입니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a0b67fc3-c5fd-e966-8c11-e756a002d005', 'a22b0784-7057-256b-89a9-fdd4d334be50', 'realtor-real-estate-theory/land-classification', 'land-classification', '토지 용어 정리: 택지·나지·필지·획지·후보지·이행지',
+  $aix$"주택지가 상업지로 바뀌는 중인 땅은 후보지인가 이행지인가?" 매년 나오는 이 한 문제가 토지 용어 단원의 전부입니다. 답은 이행지입니다.
+
+## 짝으로 외우는 용어
+
+토지 용어는 홀로 외우면 헷갈리고, **대립 짝으로 외우면 안 헷갈립니다**.
+
+- **필지 vs 획지** — 필지는 지번이 붙는 **법적 등록 단위**, 획지는 가격 수준이 비슷해 하나로 보는 **경제적·이용상 단위**. 한 필지가 여러 획지가 될 수도, 여러 필지가 한 획지가 될 수도 있습니다.
+- **후보지 vs 이행지** — 후보지는 택지·농지·임지 같은 **대분류 사이**의 전환(농지→택지), 이행지는 **같은 대분류 안**에서의 세부 용도 변화(주택지→상업지, 전→답).
+- **나지 vs 건부지** — 나지는 건물 등 정착물이 없고 지상권처럼 사용을 제한하는 사법상 권리도 없는 땅. 건부지는 건물이 서 있는 땅으로, 건물에 묶여 원칙적으로 **나지보다 가격이 낮게 평가**됩니다(건부감가).
+
+## 그 밖에 한 줄씩
+
+- **택지**: 주거·상업·공업용 건축이 가능한 토지 (지목 "대"와 다름)
+- **맹지**: 도로에 접하지 않은 토지 → 건축허가가 어려워 가격이 낮음
+- **법지**: 경사면처럼 소유권은 있지만 활용 실익이 없는 땅
+- **빈지**: 바닷가처럼 활용 실익은 있지만 사적 소유권이 인정되지 않는 땅
+- **포락지**: 물에 침식되어 수면 아래로 잠긴 땅
+- **공지**: 건부지 중 건물이 차지하지 않은 여유 부분
+
+옷장에 비유하면 필지는 "서랍 번호", 획지는 "같이 입는 코디 묶음"입니다. 번호와 묶음은 일치하지 않아도 됩니다.
+
+📌 출제 포인트
+- 후보지·이행지는 매년 예시 지문으로 출제 — "대분류 간 = 후보지"만 기억
+- 법지·빈지는 "소유권 있음/없음, 실익 없음/있음"이 정확히 반대
+- 건부지 가격은 원칙 나지 이하. 개발제한 등으로 예외적 건부증가 가능
+
+> 💡 **핵심**: 필지↔획지, 후보지↔이행지, 나지↔건부지, 법지↔빈지. 네 쌍의 짝만 정확히 잡으면 이 단원은 끝입니다.$aix$,
+  $aix${"type":"compare","title":"대립 짝으로 보는 토지 용어","columns":[{"title":"법적 단위 vs 경제적 단위","icon":"ruler","tone":"primary","items":["필지: 지번 하나 = 등록 단위","획지: 가격 수준이 비슷한 묶음","필지≠획지, 서로 포함 가능"]},{"title":"후보지 vs 이행지","icon":"map","tone":"accent","items":["후보지: 농지→택지 (대분류 간)","이행지: 주택지→상업지 (대분류 안)","\"바뀌는 중\"이라는 점은 같음"]},{"title":"나지 vs 건부지","icon":"home","tone":"warning","items":["나지: 정착물·사법상 제한 없음","건부지: 건물 있음, 건부감가 원칙","공지 = 건부지의 여유 부분"]}],"caption":"시험은 정의를 통째로 묻지 않고, 짝 중 하나를 바꿔 넣은 지문을 냅니다."}$aix$::jsonb, null, 5, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3aab4a51-b92f-4385-26ed-77554d921886', 'b5f96033-af46-efda-9347-99ba8ed1713a', 'realtor-real-estate-theory/demand-supply-elasticity', 'demand-supply-elasticity', '수요·공급과 균형: 탄력성 계산 문제 풀이법',
+  $aix$경제론 5~6문항 중 계산은 보통 1~2문항, 그중 탄력성은 거의 매년 나옵니다. 공식 하나와 부호 규칙만 알면 **2분 안에 푸는 보너스 문제**입니다.
+
+## 수요의 변화 vs 수요량의 변화
+
+- 가격이 바뀌어 **곡선 위에서** 움직이면 "수요량의 변화"
+- 소득·인구·대체재 가격·기대 등이 바뀌어 **곡선 자체가** 이동하면 "수요의 변화"
+
+균형은 수요 증가·공급 감소면 가격 상승, 반대면 하락. 두 곡선이 동시에 움직이면 가격이나 거래량 중 하나는 **"알 수 없다"**가 정답이 될 수 있습니다. 예를 들어 소득 증가(수요↑)와 건축비 상승(공급↓)이 겹치면 가격은 확실히 오르지만 거래량은 알 수 없습니다.
+
+## 탄력성 공식과 판정
+
+탄력성 = 수요량 변화율 ÷ 가격 변화율(절댓값). 1보다 크면 탄력적, 작으면 비탄력적, 1이면 단위탄력적. 변화의 출발점에 따라 값이 달라지는 문제를 피하려면 **중간점 공식**을 씁니다.
+
+```text
+[중간점 공식] 가격 100→120, 수요량 100→80
+수요량 변화율 = (80-100) ÷ ((80+100)/2) = -22.2%
+가격 변화율   = (120-100) ÷ ((120+100)/2) = 18.2%
+탄력성 = 22.2 ÷ 18.2 ≈ 1.22 → 탄력적
+```
+
+- **교차탄력성**: 대체재는 양(+), 보완재는 음(−)
+- **소득탄력성**: 정상재 양(+), 열등재 음(−)
+- 공급 탄력성은 **단기 비탄력적, 장기 탄력적**. 건물을 짓는 데 시간이 걸리기 때문입니다.
+
+고무줄을 떠올리세요. 잘 늘어나면(탄력적) 가격을 조금만 올려도 수요가 많이 빠지고, 딱딱하면(비탄력적) 가격을 올려도 수요가 별로 안 줍니다. 그래서 **비탄력적일수록 공급자에게 가격 전가가 쉽습니다**.
+
+📌 출제 포인트
+- "수요가 탄력적일 때 가격 인상 → 총수입 감소", 비탄력적이면 총수입 증가
+- 완전비탄력적 = 수직선(탄력성 0), 완전탄력적 = 수평선(무한대)
+- 함정: 문제에 "변화율"이 주어지면 그대로 나누고, "가격·수량"이 주어지면 중간점인지 확인
+
+> 💡 **핵심**: 탄력성 = 수량 변화율 ÷ 가격 변화율. 중간점 공식은 분모를 두 값의 평균으로 바꾸는 것뿐입니다.$aix$,
+  $aix${"type":"terminal","windowTitle":"탄력성 계산 — 시험장 풀이 순서","lines":[{"text":"# 문제: 가격 4억→5억, 수요량 100→90 (중간점)","tone":"comment"},{"text":"수요량 변화율 = (90-100)/95 = -10.5%","tone":"out"},{"text":"가격 변화율   = (5-4)/4.5 = 22.2%","tone":"out"},{"text":"탄력성 = 10.5 / 22.2 = 0.47","tone":"cmd"},{"text":"✓ 1보다 작다 → 비탄력적","tone":"ok"},{"text":"# 판정: 가격 올려도 수요가 크게 안 줌 → 총수입 증가","tone":"comment"},{"text":"# 함정 체크: 부호는 절댓값, 분모는 평균값","tone":"dim"}],"caption":"숫자 두 쌍이 주어지면 중간점, 변화율이 바로 주어지면 그대로 나눕니다."}$aix$::jsonb, null, 7, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a111f01a-c768-9235-1c77-518e2580aaa0', 'b5f96033-af46-efda-9347-99ba8ed1713a', 'realtor-real-estate-theory/market-and-cycle', 'market-and-cycle', '부동산 시장의 특성·경기변동·거미집 이론',
+  $aix$"공급이 수요보다 탄력적이면 가격이 균형으로 수렴한다." 맞을까요? 틀렸습니다. 거미집 이론에서 공급이 더 탄력적이면 **발산**합니다. 이 한 줄이 매년 시장론에서 1문항입니다.
+
+## 부동산 시장의 특성
+
+부동성·개별성에서 그대로 파생됩니다. 시장이 **지역별로 국지화**되고, 상품이 비표준화되어 있고, 거래가 비공개적이며, 정보가 비대칭적이고, 단기 공급이 비탄력적입니다. 그래서 완전경쟁시장이 되기 어렵습니다.
+
+**효율적 시장 가설**은 정보가 가격에 얼마나 반영되는가로 시장을 나눕니다.
+- **약성**: 과거 정보만 반영 → 기술적 분석으로는 초과이윤 불가
+- **준강성**: 공표된 정보까지 반영 → 기본적 분석도 무용
+- **강성**: 미공개 정보까지 반영 → 어떤 정보로도 초과이윤 불가
+
+**할당 효율적 시장**은 자원 배분이 효율적인 시장으로, 불완전경쟁시장도 할당 효율적일 수 있습니다.
+
+## 경기변동 4국면
+
+회복 → 상향 → 후퇴 → 하향이 반복되고, 별도로 **안정시장**이 있습니다. 상향시장에서는 과거 거래가격이 새 거래의 **하한선**, 하향시장에서는 **상한선**이 됩니다. 회복기에는 매수인 우위에서 매도인 우위로 바뀌고, 건축허가 신청이 늘고 공실이 줄어듭니다.
+
+## 거미집 이론: 시차가 만드는 진동
+
+공급이 가격에 **한 기간 늦게** 반응하기 때문에 가격이 오르내리며 거미집 모양을 그립니다. 방향은 탄력성 비교로 정해집니다.
+
+- 수요 탄력성 > 공급 탄력성 → **수렴형**
+- 수요 탄력성 < 공급 탄력성 → **발산형**
+- 같으면 → **순환형**
+
+기울기로 주어지면 반대입니다. 수요곡선 기울기 절댓값 < 공급곡선 기울기 절댓값이면 수렴형입니다.
+
+📌 출제 포인트
+- 거미집은 "탄력성은 수요가 크면 수렴, 기울기는 수요가 작으면 수렴" — 둘을 함께 기억
+- 상향시장의 과거 가격 = 하한선, 하향시장 = 상한선 (바꿔 내는 함정)
+- 준강성 시장에서 "공표 정보로 초과이윤 가능"(X)
+
+> 💡 **핵심**: 거미집 = 공급의 시차 반응. 수요가 더 탄력적이면 수렴, 공급이 더 탄력적이면 발산.$aix$,
+  $aix${"type":"cycle","title":"부동산 경기변동 4국면","center":"안정시장은 별도","nodes":[{"label":"회복시장","sublabel":"매수인→매도인 우위 전환","icon":"trending-up"},{"label":"상향시장","sublabel":"과거 가격 = 하한선 · 공실 최저","icon":"rocket"},{"label":"후퇴시장","sublabel":"가격 상승 멈춤 · 거래 한산","icon":"clock"},{"label":"하향시장","sublabel":"과거 가격 = 상한선 · 공실 증가","icon":"alert"}],"caption":"국면마다 '과거 거래가격이 상한인가 하한인가'가 시험 지문의 핵심입니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6cd162d6-47ef-dd10-1f04-62a41f90d656', 'b5f96033-af46-efda-9347-99ba8ed1713a', 'realtor-real-estate-theory/location-and-rent-theory', 'location-and-rent-theory', '입지·지대 이론: 리카도·튀넨·알론소·크리스탈러·허프',
+  $aix$입지·지대 이론은 "누가 무엇을 주장했나"를 바꿔 끼운 지문이 3문항 안팎 나옵니다. 학자마다 **키워드 하나**만 잡으면 됩니다.
+
+## 지대 이론: 지대는 왜 생기나
+
+- **리카도 차액지대**: 토지의 **비옥도 차이**가 지대를 만든다. 한계지의 지대는 0이고, 지대는 곡물 가격이 높아 생긴 결과(잉여)입니다.
+- **마르크스 절대지대**: 토지를 **소유**한다는 사실만으로 최열등지에도 지대가 붙는다.
+- **튀넨 위치지대**: 비옥도가 같아도 **시장까지의 거리(수송비)**로 지대가 달라진다. 도심에 가까울수록 지대가 높고 작물이 동심원으로 배치됩니다.
+- **마샬 준지대**: 기계 같은 인공 생산요소가 **단기에** 얻는 초과 소득.
+- **알론소 입찰지대**: 이용자별 **최고 지불용의 지대**를 그린 곡선. 기울기가 급한 상업이 도심을, 완만한 주거가 외곽을 차지합니다.
+
+도시 구조는 버제스 **동심원** → 호이트 **선형** → 해리스·울만 **다핵심** 순입니다.
+
+## 상업 입지 이론
+
+- **크리스탈러 중심지**: 중심지가 유지되려면 **최소요구치** 이상의 수요가 필요하고, **재화의 도달범위** 안에서 상권이 형성됩니다.
+- **레일리 소매인력**: 도시의 흡인력은 **인구에 비례, 거리의 제곱에 반비례**. 컨버스가 분기점 공식으로 발전시켰습니다.
+- **허프 확률모형**: 점포 선택 확률은 **매장면적에 비례, 거리의 마찰계수 승에 반비례**. 교통이 좋을수록 마찰계수가 작아집니다.
+- **넬슨 소매입지 8원칙**: 상권 잠재력, 접근 가능성, 성장 가능성, 중간 저지성, 누적 흡인력, **양립성**(보완 업종끼리 고객 공유), 경쟁 회피성, 경제성.
+
+카페 자리라면 크리스탈러는 "손님이 최소 몇 명은 와야", 허프는 "큰 매장이 가까우면 그리로", 넬슨은 "빵집 옆이 좋다"입니다.
+
+📌 출제 포인트
+- 리카도 = 비옥도, 튀넨 = 거리(수송비), 알론소 = 지불용의 곡선
+- 허프: 면적 비례·거리 반비례. "거리에 비례"로 바꾸는 함정
+- 레일리는 도시 간 흡인력, 허프는 점포 선택 확률 — 단위가 다름
+
+> 💡 **핵심**: 학자 옆에 키워드 하나(비옥도·소유·거리·지불용의·최소요구치·확률)만 붙이세요. 지문은 그 키워드를 바꿔 냅니다.$aix$,
+  $aix${"type":"grid","title":"학자별 키워드 지도","items":[{"label":"리카도","sublabel":"차액지대 · 비옥도 · 한계지 지대 0","icon":"wheat","tone":"primary"},{"label":"마르크스","sublabel":"절대지대 · 소유 자체","icon":"key","tone":"primary"},{"label":"튀넨","sublabel":"위치지대 · 수송비 · 동심원","icon":"map-pin","tone":"primary"},{"label":"알론소","sublabel":"입찰지대 · 지불용의 곡선","icon":"trending-up","tone":"primary"},{"label":"버제스·호이트·해리스","sublabel":"동심원 · 선형 · 다핵심","icon":"building","tone":"muted"},{"label":"크리스탈러","sublabel":"중심지 · 최소요구치 · 도달범위","icon":"target","tone":"accent"},{"label":"레일리·컨버스","sublabel":"인구 비례 · 거리² 반비례 · 분기점","icon":"scale","tone":"accent"},{"label":"허프·넬슨","sublabel":"확률모형(면적·거리) · 8원칙(양립성)","icon":"shopping-cart","tone":"success"}],"caption":"지대 이론(위) → 도시 구조(중간) → 상업 입지(아래)의 순서로 정리하면 흐름이 보입니다."}$aix$::jsonb, null, 7, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '03ef6677-b7c9-049d-9586-c0065c32b018', 'b5f96033-af46-efda-9347-99ba8ed1713a', 'realtor-real-estate-theory/policy', 'policy', '부동산 정책: 시장실패와 정부 개입, 임대료 규제·분양가상한제의 효과',
+  $aix$정책론은 "정부가 왜 개입하고, 개입하면 무슨 일이 생기나"를 묻습니다. 결론은 늘 같습니다. **가격을 균형 아래로 묶으면 초과수요와 공급 감소가 따라옵니다.**
+
+## 왜, 어떻게 개입하나
+
+시장실패의 원인은 공공재(도로·공원, 무임승차), **외부효과**, 정보 비대칭, 독점입니다. 외부효과는 방향에 따라 처방이 반대입니다.
+
+- 정(+)의 외부효과(공원 옆 주택) → 사회적 최적보다 **과소 생산** → 보조금
+- 부(−)의 외부효과(공장 매연) → **과다 생산** → 조세(피구세)·규제
+
+개입 방식은 둘로 나뉩니다.
+
+- **직접 개입**: 정부가 공급자·수요자가 되거나 가격을 직접 통제 — 공공임대주택, 토지비축(토지은행), 공영개발, 토지수용, 임대료·분양가 규제
+- **간접 개입**: 수요·공급 요인에 영향 — 조세, 보조금, 금융(대출 규제), 정보 제공(실거래가 공개)
+
+## 가격 규제의 효과
+
+**임대료 규제**: 최고임대료를 **균형 임대료보다 낮게** 정하면 단기에는 임차인이 득을 보지만, 시간이 지나면 임대 공급이 줄고 초과수요가 생기며 암시장·주택 질 저하·이동 감소가 나타납니다. 상한을 균형보다 **높게** 정하면 아무 효과가 없습니다.
+
+**분양가상한제**: 분양가를 시장가보다 낮게 묶으면 당첨자에게 **전매차익**이 생겨 청약이 과열되고, 장기적으로 신규 공급이 줄고 품질이 낮아질 수 있습니다.
+
+## 조세는 누가 부담하나
+
+세금은 **비탄력적인 쪽이 더 부담**합니다. 임대주택 공급이 비탄력적이면 재산세를 올려도 임대인이 대부분 떠안고, 수요가 비탄력적이면 임차인에게 전가됩니다.
+
+편의점 도시락 가격을 시장가 절반으로 묶는다고 상상해 보세요. 처음엔 다 좋아하지만 곧 물량이 사라지고 뒷거래가 생깁니다. 임대료 규제도 같은 구조입니다.
+
+📌 출제 포인트
+- "상한을 균형보다 높게 설정하면 초과수요 발생"(X) — 효과 없음
+- 정(+)의 외부효과 = 과소 생산 = 보조금. 부(−) = 과다 = 조세
+- 토지비축·공공임대는 직접 개입, 조세·보조금·금융은 간접 개입
+
+> 💡 **핵심**: 가격 규제는 균형 아래일 때만 작동하고, 작동하면 반드시 초과수요·공급 감소·암시장이 따라옵니다.$aix$,
+  $aix${"type":"flow","title":"임대료 규제(균형 아래 상한)의 연쇄 효과","nodes":[{"label":"최고임대료 < 균형 임대료","sublabel":"정부가 가격 직접 통제","icon":"gavel","tone":"primary"},{"label":"단기: 임차인 이익","sublabel":"기존 세입자 임대료 하락","icon":"users","tone":"success","edgeLabel":"바로"},{"label":"초과수요 발생","sublabel":"빌리려는 사람 > 빌려주는 집","icon":"trending-up","tone":"warning","edgeLabel":"곧"},{"label":"장기: 공급 감소","sublabel":"임대 포기 · 용도 전환 · 신축 감소","icon":"alert","tone":"warning","edgeLabel":"시간이 지나면"},{"label":"암시장 · 질 저하 · 이동 감소","sublabel":"규제의 역설","icon":"x","tone":"muted"}],"caption":"상한이 균형보다 높으면 이 사슬은 시작조차 하지 않습니다 — 매년 나오는 함정입니다."}$aix$::jsonb, null, 6, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4a6e30c9-665a-06b8-5e27-c0f2140dbd51', '0de04acb-7f39-dcbb-70a3-a2c24f12c671', 'realtor-real-estate-theory/real-estate-finance', 'real-estate-finance', '부동산 금융: LTV·DTI·DSR, 고정·변동금리, 원리금균등·원금균등 계산',
+  $aix$"원금균등이 원리금균등보다 총이자가 많다." 이 지문은 틀렸습니다. 같은 조건이면 **원금균등의 총이자가 더 적습니다**. 왜인지 숫자로 확인해 봅니다.
+
+## 대출 한도를 정하는 세 가지 비율
+
+- **LTV**는 담보(집값) 기준, **DTI**는 연소득 대비 주택대출 원리금(+기타 대출 이자), **DSR**은 연소득 대비 **모든 대출의 원리금**입니다. 규제 강도는 DSR이 가장 셉니다.
+- 2026년 9월 기준 예시 수치(금융위 발표): 규제지역(서울 전역·경기 일부) LTV 40%, 비규제지역 70%, 은행 DSR 40%, 스트레스 DSR 3단계 시행 중. **정책에 따라 자주 바뀌는 숫자라 시험은 정의와 강도 비교만** 묻습니다.
+
+## 고정금리 vs 변동금리
+
+고정금리는 금리 변동 위험을 **대출기관**이 지므로 초기 금리가 높고, 변동금리는 **차입자**가 지므로 초기 금리가 낮습니다. 시장금리가 오를 것으로 예상되면 차입자는 고정금리가 유리합니다.
+
+## 상환 방식: 숫자로 비교
+
+1억 원, 연 6%(월 0.5%), 20년(240회) 기준입니다.
+
+```text
+원리금균등: 매월 716,431원 고정
+  1회차 = 이자 500,000 + 원금 216,431 → 갈수록 원금 비중↑
+  총이자 ≈ 7,194만 원
+원금균등: 매월 원금 416,667원 + 남은 원금의 이자
+  1회차 = 416,667 + 500,000 = 916,667원 → 갈수록 납입액↓
+  총이자 ≈ 6,025만 원
+```
+
+- **원리금균등상환**: 매월 같은 금액, 초기 이자 비중 큼, 총이자 많음
+- **원금균등상환**: 초기 부담 큼, 납입액 점점 감소, 총이자 적음
+- **만기일시**: 이자만 내다 만기에 원금 전액
+- **점증(체증)식**: 초기 납입 적고 점점 증가 — 소득이 늘 젊은 층에 적합
+
+**저당상수**는 "대출 1원당 매 기간 갚는 금액"으로, 연 5%·20년 연납이면 약 0.0802입니다. 대출액 × 저당상수 = 원리금균등 연 납입액.
+
+📌 출제 포인트
+- 원리금균등: 초기 이자↑ 원금↓, 원금균등: 초기 납입액 최대
+- 변동금리는 차입자가 금리 위험 부담 → 초기 금리 낮음
+- LTV/DTI/DSR 수치는 "정책에 따라 변동" — 정의와 강도 비교만 출제
+
+> 💡 **핵심**: 총이자는 원금균등 < 원리금균등 < 만기일시. 초기 부담은 그 반대입니다.$aix$,
+  $aix${"type":"compare","title":"상환 방식 비교 (1억 · 연 6% · 20년)","columns":[{"title":"원리금균등","icon":"repeat","tone":"primary","items":["매월 716,431원 고정","초기 이자 50만 > 원금 21.6만","총이자 약 7,194만 원","가계 예산 짜기 쉬움"]},{"title":"원금균등","icon":"trending-up","tone":"accent","items":["1회차 916,667원 → 점점 감소","매월 원금 416,667원 고정","총이자 약 6,025만 원","초기 부담 크지만 이자 절약"]},{"title":"만기일시·점증식","icon":"hourglass","tone":"muted","items":["만기일시: 이자만 내다 만기 원금","총이자 가장 많음","점증식: 초기 적게, 점점 늘림","소득 증가 예상층에 적합"]}],"caption":"같은 조건이면 총이자는 원금균등이 가장 적고 만기일시가 가장 많습니다."}$aix$::jsonb, $aix${"title":"대출 이자 계산기로 상환 방식 비교하기","app":{"kind":"browser","url":"search.naver.com — 대출이자 계산기","blocks":[{"id":"h-title","type":"heading","label":"이자 계산기 · 대출"},{"id":"in-amount","type":"input","label":"대출금액 (원)"},{"id":"in-term","type":"input","label":"대출기간 (년)"},{"id":"in-rate","type":"input","label":"연이자율 (%)"},{"id":"btn-equal-total","type":"button","label":"원리금균등"},{"id":"btn-equal-prin","type":"button","label":"원금균등"},{"id":"btn-bullet","type":"button","label":"만기일시"},{"id":"btn-calc","type":"button","label":"계산하기"},{"id":"card-r1","type":"card","label":"월 상환금 716,431원 · 총이자 71,943,454원","hidden":true},{"id":"badge-r1","type":"badge","label":"1회차: 원금 216,431 + 이자 500,000","hidden":true},{"id":"card-r2","type":"card","label":"1회차 916,667원 → 마지막 회차 418,750원 · 총이자 60,250,000원","hidden":true},{"id":"badge-r2","type":"badge","label":"총이자 차이: 약 1,169만 원 절약","hidden":true}]},"actions":[{"t":"caption","text":"① 대출 조건을 입력합니다 (1억 · 20년 · 연 6%)"},{"t":"move","target":"in-amount"},{"t":"click"},{"t":"type","target":"in-amount","text":"100,000,000"},{"t":"click","target":"in-term"},{"t":"type","target":"in-term","text":"20"},{"t":"click","target":"in-rate"},{"t":"type","target":"in-rate","text":"6"},{"t":"caption","text":"② 원리금균등을 선택해 계산합니다"},{"t":"move","target":"btn-equal-total"},{"t":"click"},{"t":"move","target":"btn-calc"},{"t":"click"},{"t":"reveal","target":"card-r1"},{"t":"reveal","target":"badge-r1"},{"t":"wait","ms":700},{"t":"caption","text":"③ 원금균등으로 바꿔 총이자를 비교합니다"},{"t":"move","target":"btn-equal-prin"},{"t":"click"},{"t":"click","target":"btn-calc"},{"t":"reveal","target":"card-r2"},{"t":"reveal","target":"badge-r2"},{"t":"move","target":"badge-r2"},{"t":"caption","text":"✅ 원금균등의 총이자가 더 적습니다 — 시험 지문 그대로"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '3bb6a820-90f2-f670-ad07-6bbb2c35ba78', '0de04acb-7f39-dcbb-70a3-a2c24f12c671', 'realtor-real-estate-theory/investment-analysis', 'investment-analysis', '투자 분석: 현금흐름·NPV·IRR·수익률·레버리지 효과',
+  $aix$투자론 5~6문항의 절반은 "이 투자를 해야 하나"를 숫자로 판정하는 문제입니다. 판정 도구는 **NPV·IRR·수익성지수** 세 개, 재료는 **현금흐름표** 하나입니다.
+
+## 현금흐름표: 위에서 아래로 빼기
+
+- 가능총소득(PGI) − 공실·불량부채 + 기타소득 = **유효총소득(EGI)**
+- EGI − 운영경비(OE) = **순영업소득(NOI)**
+- NOI − 부채서비스액(원리금) = **세전현금흐름(BTCF)**
+- BTCF − 영업소득세 = **세후현금흐름(ATCF)**
+
+운영경비에는 재산세·보험료·관리비가 들어가고, **대출 이자·감가상각·소득세는 들어가지 않습니다**(자주 나오는 함정).
+
+## 할인현금흐름법 3형제
+
+```text
+투자 1억, 1년 후 6,600만, 2년 후 6,050만, 할인율 10%
+현가 = 6,600/1.1 + 6,050/1.21 = 6,000 + 5,000 = 11,000만
+NPV = 11,000 − 10,000 = +1,000만 → 채택
+PI  = 11,000 ÷ 10,000 = 1.1 → 1 이상이면 채택
+IRR = NPV가 0이 되는 할인율 → 10%보다 크므로 채택
+```
+
+- **NPV** ≥ 0, **PI** ≥ 1, **IRR** ≥ 요구수익률이면 채택. 같은 할인율이면 세 판정은 일치합니다.
+- 요구수익률 = 무위험률 + 위험할증률(+ 예상 인플레이션).
+
+어림셈법과 비율도 함께 나옵니다.
+
+- **승수**: 총소득승수 = 총투자액 ÷ 총소득, 순소득승수 = 총투자액 ÷ NOI (자본회수기간)
+- **수익률**: 종합자본환원율 = NOI ÷ 총투자액, 지분배당률 = BTCF ÷ 지분투자액
+- **부채감당률(DCR)** = NOI ÷ 부채서비스액. 1보다 커야 원리금을 감당합니다.
+
+## 레버리지 효과
+
+지분수익률 = 총자본수익률 + (총자본수익률 − 이자율) × 부채/지분. 총자본수익률 8%, 이자율 5%, 부채비율 1이면 지분수익률은 **11%**. 총자본수익률이 이자율보다 **높을 때만 정(+)**의 레버리지, 낮으면 부(−)의 레버리지로 손실이 커집니다.
+
+📌 출제 포인트
+- 운영경비에 이자·감가상각·소득세 불포함
+- NPV·PI·IRR 판정은 같은 할인율에서 일치. "IRR < 요구수익률인데 NPV > 0"(X)
+- 정(+)의 레버리지 조건 = 총자본수익률 > 저당수익률(이자율)
+
+> 💡 **핵심**: 현금흐름표를 위에서 아래로 뺀 뒤 할인하면 NPV, 0이 되는 할인율이 IRR. 레버리지는 "수익률 > 이자율"일 때만 지렛대입니다.$aix$,
+  $aix${"type":"steps","title":"투자 판정 4단계","steps":[{"label":"현금흐름표 작성","sublabel":"PGI → EGI → NOI → BTCF → ATCF","icon":"clipboard"},{"label":"요구수익률 결정","sublabel":"무위험률 + 위험할증(+인플레)","icon":"gauge"},{"label":"할인해 NPV·PI·IRR 계산","sublabel":"NPV≥0 · PI≥1 · IRR≥요구수익률","icon":"chart"},{"label":"레버리지·DCR 점검","sublabel":"총자본수익률 > 이자율? · DCR > 1?","icon":"shield"}],"caption":"3단계 판정은 같은 할인율이면 결론이 같습니다 — 다르게 나오는 지문은 함정입니다."}$aix$::jsonb, null, 7, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '52ce1cd6-2722-1ff8-ec6e-b6f0924bd7aa', '0de04acb-7f39-dcbb-70a3-a2c24f12c671', 'realtor-real-estate-theory/securitization-and-reits', 'securitization-and-reits', '증권화와 리츠: MBS·REITs·PF의 구조',
+  $aix$은행이 20년짜리 주택대출을 내주고도 돈이 마르지 않는 이유는 그 대출을 **증권으로 만들어 팔기 때문**입니다. 이것이 2차 저당시장입니다.
+
+## 1차 시장과 2차 시장
+
+- **1차 저당시장**: 차입자 ↔ 대출기관(은행)
+- **2차 저당시장**: 대출기관 → 유동화기관(한국주택금융공사 등) → 투자자. 대출채권이 MBS로 바뀌어 거래되고 은행에 자금이 돌아옵니다.
+
+## MBS 4종: 위험을 누가 지느냐
+
+- **MPTS**(지분형): 저당 풀 소유권이 **투자자**에게 이전. 조기상환 위험도 투자자 부담 → 수익률 높음
+- **MBB**(채권형): 저당 풀은 **발행자** 보유. 채무불이행·조기상환 위험을 발행자가 지므로 **초과담보** 필요
+- **MPTB**(혼합형): 소유권은 발행자, 원리금은 투자자에게 이체. 조기상환 위험은 투자자 부담, MBB보다 초과담보 적음
+- **CMO**: 저당 풀을 만기·위험이 다른 **여러 트랜치**로 나눠 발행
+
+## 리츠와 PF
+
+리츠는 자기관리(상근 임직원, 실체회사)·위탁관리·기업구조조정(명목회사) 세 종류입니다.
+
+| 구분 | 자기관리 | 위탁관리 | 기업구조조정 |
+|---|---|---|---|
+| 설립자본금 | 5억 원 | 3억 원 | 3억 원 |
+| 최저자본금 | 70억 원 | 50억 원 | 50억 원 |
+| 배당 | 이익배당한도 50% 이상 | 90% 이상 | 90% 이상 |
+
+최저자본금은 영업인가·등록 후 6개월이 지난 뒤 기준이고, 총자산의 80% 이상은 부동산·관련 증권·현금, 70% 이상은 부동산이어야 합니다(제25조).
+
+**PF**는 사업주 신용이 아니라 **그 사업의 미래 현금흐름**을 담보로 빌리는 방식입니다. 비소구(사업주의 다른 재산에 청구 제한)·부외금융(사업주 부채로 잡히지 않음)이 특징입니다.
+
+📌 출제 포인트
+- "MBB는 조기상환 위험을 투자자가 부담"(X) — 발행자 부담
+- 자기관리 70억·5억·50%, 위탁·기업구조조정 50억·3억·90%
+- PF = 사업 현금흐름 담보 + 비소구 + 부외금융
+
+> 💡 **핵심**: MBS는 "위험이 누구에게 있나"(MPTS 투자자 / MBB 발행자 / MPTB 혼합), 리츠는 "70·50억, 5·3억, 50·90%"입니다.$aix$,
+  $aix${"type":"flow","title":"주택금융의 흐름: 1차 시장 → 2차 시장","nodes":[{"label":"차입자","sublabel":"주택 구입, 원리금 상환","icon":"user","tone":"muted"},{"label":"대출기관 (1차 시장)","sublabel":"은행 · 저당권 설정","icon":"landmark","tone":"primary","edgeLabel":"대출"},{"label":"유동화기관","sublabel":"한국주택금융공사 등 · 저당 풀 구성","icon":"layers","tone":"accent","edgeLabel":"대출채권 매각"},{"label":"MBS 투자자 (2차 시장)","sublabel":"MPTS · MBB · MPTB · CMO","icon":"chart","tone":"success","edgeLabel":"증권 발행"}],"loopBack":{"from":3,"to":1,"label":"자금 재공급 → 새 대출 여력"},"caption":"2차 시장이 있어야 은행이 장기 대출을 계속 내줄 수 있습니다."}$aix$::jsonb, null, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '04e54390-3443-af63-aad8-b44d017451f9', 'd11344ac-cdab-750d-4295-f654f0fc8e7e', 'realtor-real-estate-theory/development-and-management', 'development-and-management', '부동산 개발과 관리: 개발 방식·위험·자산관리 3단계',
+  $aix$"등가교환방식에서는 토지소유자가 공사비를 부담한다." 틀린 지문입니다. 등가교환은 **토지를 내고 건물 지분을 받는** 방식이라 공사비는 개발업자가 댑니다.
+
+## 개발의 단계와 위험
+
+개발은 아이디어 → 예비 타당성 → 부지 확보 → 타당성 분석 → 금융 → 건설 → 마케팅으로 진행됩니다(워포드의 7단계). 위험은 세 가지로 나눕니다.
+
+- **법률적 위험**: 인허가·용도지역 변경 등 법적 환경 변화
+- **시장 위험**: 수요 예측 실패·공실. 개발 기간이 길수록 커지고 가장 큰 위험으로 꼽힘
+- **비용 위험**: 공사비 상승·공기 지연
+
+## 개발 방식: 땅 주인이 무엇을 내고 무엇을 받나
+
+- **자체개발**: 토지소유자가 직접. 이익도 위험도 본인 것
+- **지주공동사업**: 토지소유자(땅) + 개발업자(자금·기술)가 이익을 나눔
+  - **등가교환**: 토지 일부와 완성 건물의 지분을 가치대로 맞교환
+  - **사업수탁**: 개발업자가 사업을 대행하고, 명의와 이익은 토지소유자에게
+- **토지신탁**: 소유권을 **신탁회사로 이전**, 신탁회사가 개발·분양 뒤 수익을 돌려줌
+- **컨소시엄**: 여러 회사가 공동 참여해 위험 분산
+
+## 관리: 3방식과 3단계
+
+관리 방식은 **자기관리**(직영: 기밀·신속하지만 전문성 부족), **위탁관리**(전문성·비용 절감, 기밀 유출·책임 소재 위험), **혼합관리**(과도기에 적합, 책임 불분명)로 나뉩니다.
+
+관리 내용은 소극에서 적극으로 3단계입니다.
+1. **시설관리(FM)**: 청소·설비 유지·보수 — 시설을 "굴러가게"
+2. **재산관리(PM)**: 임대차·임대료 징수·수익 극대화 — 건물을 "벌게"
+3. **자산관리(AM)**: 포트폴리오·매입·매각·리모델링 판단 — 자산을 "키우게"
+
+📌 출제 포인트
+- 등가교환 = 토지↔건물 지분 교환, 사업수탁 = 명의·이익 토지소유자
+- 토지신탁은 소유권이 신탁회사로 넘어감 (사업수탁과 구별)
+- 자산관리(AM)가 가장 적극적·전략적, 시설관리(FM)가 가장 소극적
+
+> 💡 **핵심**: 개발 방식은 "땅 주인이 소유권을 넘기나(신탁), 지분을 바꾸나(등가교환), 명의만 빌려주나(사업수탁)"로 구분하세요.$aix$,
+  $aix${"type":"steps","title":"부동산 관리의 3단계 (소극 → 적극)","steps":[{"label":"시설관리 FM","sublabel":"청소 · 설비 · 보안 · 유지보수","icon":"wrench"},{"label":"재산관리 PM","sublabel":"임대차 · 임대료 · 공실 관리 · 수익 극대화","icon":"receipt"},{"label":"자산관리 AM","sublabel":"포트폴리오 · 매입매각 · 리모델링 판단","icon":"chart"}],"caption":"시험은 세 단계 중 '가장 적극적·전략적인 단계'가 무엇인지를 묻습니다 — 자산관리입니다."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '9ee542b0-7ce3-5dc4-d6d4-de77e09d2327', 'd11344ac-cdab-750d-4295-f654f0fc8e7e', 'realtor-real-estate-theory/marketing', 'marketing', '부동산 마케팅: STP·4P·AIDA',
+  $aix$마케팅은 매년 1문항, 그리고 거의 항상 **"이 개념은 어느 전략에 속하나"**를 묻습니다. 세 전략의 소속만 정확히 잡으면 1점 확보입니다.
+
+## 3대 마케팅 전략
+
+- **시장점유 마케팅**: 공급자 중심. 표적시장을 선점하는 전략으로 **STP**와 **4P 믹스**가 여기 속합니다.
+- **고객점유 마케팅**: 소비자 중심. 구매 결정의 심리 단계마다 접점을 만드는 전략으로 **AIDA**가 여기 속합니다.
+- **관계 마케팅**: 한 번 팔고 끝이 아니라 장기 신뢰·브랜드로 재구매·소개를 만드는 전략입니다.
+
+## STP와 4P: 시장점유 전략의 도구
+
+1. **세분화(Segmentation)**: 인구·지리·심리·행동 기준으로 시장을 나눔
+2. **표적시장(Targeting)**: 그중 집중할 집단 선택
+3. **포지셔닝(Positioning)**: 경쟁 상품과 구별되는 이미지를 고객 머릿속에 심음
+
+**4P 믹스**는 무엇을 얼마에 어디서 어떻게 알릴지입니다.
+
+- **제품(Product)**: 평면·설계·브랜드·커뮤니티 시설
+- **가격(Price)**: 시가 정책, 저가(침투)·고가(스키밍)·신축 가격
+- **유통(Place)**: 직접 분양 vs 분양 대행사
+- **판촉(Promotion)**: 광고·홍보·인적 판매·사은품
+
+## AIDA: 고객 마음의 4단계
+
+**주의(Attention) → 관심(Interest) → 욕망(Desire) → 행동(Action)**. 모델하우스 방문객이 "눈길 → 궁금 → 갖고 싶다 → 계약"으로 움직이는 순서입니다.
+
+소개팅에 비유하면 STP는 "누구를 만날지 고르는 것", 4P는 "어떤 모습으로 나갈지", AIDA는 "상대의 마음이 움직이는 순서"입니다.
+
+📌 출제 포인트
+- "AIDA는 시장점유 마케팅 전략이다"(X) — 고객점유
+- STP의 순서: 세분화 → 표적 → 포지셔닝. 순서를 바꾸는 함정
+- 4P 중 가격 전략의 침투(저가)·스키밍(고가) 구분
+
+> 💡 **핵심**: STP·4P = 시장점유(공급자), AIDA = 고객점유(소비자), 장기 신뢰 = 관계 마케팅.$aix$,
+  $aix${"type":"flow","title":"고객점유 마케팅 — AIDA 4단계","nodes":[{"label":"주의 Attention","sublabel":"광고·현수막에 눈길이 간다","icon":"eye","tone":"muted"},{"label":"관심 Interest","sublabel":"입지·평면을 찾아본다","icon":"search","tone":"primary"},{"label":"욕망 Desire","sublabel":"모델하우스에서 살고 싶어진다","icon":"sparkles","tone":"accent"},{"label":"행동 Action","sublabel":"청약·계약","icon":"file-pen","tone":"success"}],"caption":"AIDA는 소비자 심리의 순서이므로 '고객점유' 전략입니다. STP·4P는 공급자의 '시장점유' 전략."}$aix$::jsonb, null, 4, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '54ec5090-432f-ca43-359c-2d6760ae549d', 'd11344ac-cdab-750d-4295-f654f0fc8e7e', 'realtor-real-estate-theory/appraisal-three-methods', 'appraisal-three-methods', '감정평가 3방식: 원가법·거래사례비교법·수익환원법과 공시지가 제도',
+  $aix$같은 건물의 가치를 세 사람이 다르게 구합니다. 한 사람은 "지으면 얼마", 한 사람은 "옆 건물은 얼마에 팔렸나", 한 사람은 "월세로 얼마 버나". 이것이 **감정평가 3방식**입니다.
+
+## 3방식 6방법 (감정평가에 관한 규칙 제11조)
+
+- **원가방식**(비용성): 원가법 → 가액, 적산법 → 임료
+- **비교방식**(시장성): 거래사례비교법 → 가액, 임대사례비교법 → 임료, 공시지가기준법 → 토지 가액
+- **수익방식**(수익성): 수익환원법 → 가액, 수익분석법 → 임료
+
+토지는 **공시지가기준법**, 건물은 **원가법**이 주된 방법이고(규칙 제14조·제15조), 방법별 시산가액을 비교·조정해 최종 가액을 정합니다(제12조).
+
+## 공식 세 개
+
+```text
+원가법      적산가액 = 재조달원가 − 감가누계액
+거래사례비교법 비준가액 = 사례가격 × 사정보정 × 시점수정 × 지역요인 × 개별요인 × 면적비
+수익환원법  수익가액 = 순영업소득(NOI) ÷ 환원이율   예) 600만 ÷ 5% = 1억 2,000만
+```
+
+감가수정은 경제적 내용연수를 기준으로 **정액법·정률법·상환기금법** 중 가장 적합한 방법을 쓰고, 부적절하면 관찰감가 등으로 조정합니다(감정평가 실무기준). 감가 요인은 물리적·기능적·경제적 세 가지입니다.
+
+## 공시지가 제도 (부동산 가격공시에 관한 법률)
+
+| 구분 | 주체 | 공시기준일 · 시기 |
+|---|---|---|
+| 표준지공시지가 | 국토교통부장관 | 1월 1일 기준, 이의신청 공시일부터 30일 |
+| 개별공시지가 | 시장·군수·구청장 | 매년 5월 31일까지 결정·공시, 이의신청 30일 |
+| 표준·공동주택가격 | 국토교통부장관 | 1월 1일 기준, 공동주택 4월 30일까지 |
+| 개별주택가격 | 시장·군수·구청장 | 4월 30일까지 |
+
+표준지공시지가는 토지 거래의 지표이자 개별공시지가·감정평가의 **기준**이고, 개별공시지가는 세금·부담금 산정의 기준입니다. 아래 데모에서 실제 조회 화면을 봅니다.
+
+📌 출제 포인트
+- "표준지는 국토교통부장관, 개별지는 시장·군수·구청장" — 주체 바꿔치기가 매년 출제
+- 수익환원법은 환원이율이 낮을수록 가액이 커짐
+- 적산법·임대사례비교법·수익분석법은 가액이 아니라 **임료**를 구하는 방법
+
+> 💡 **핵심**: 원가(비용)·비교(시장)·수익(수익성) 3방식 × 가액/임료 = 6방법. 토지는 공시지가기준법이 원칙입니다.$aix$,
+  $aix${"type":"compare","title":"감정평가 3방식 한눈에","columns":[{"title":"원가방식 (비용성)","icon":"wrench","tone":"primary","items":["원가법 → 가액","적산법 → 임료","재조달원가 − 감가수정","건물의 주된 방법"]},{"title":"비교방식 (시장성)","icon":"scale","tone":"accent","items":["거래사례비교법 → 가액","임대사례비교법 → 임료","공시지가기준법 → 토지","사정·시점·지역·개별 보정"]},{"title":"수익방식 (수익성)","icon":"banknote","tone":"success","items":["수익환원법 → 가액","수익분석법 → 임료","NOI ÷ 환원이율","이율↓ 가액↑"]}],"caption":"각 방식은 '가액을 구하는 법'과 '임료를 구하는 법' 한 쌍씩 — 총 6방법입니다."}$aix$::jsonb, $aix${"title":"부동산공시가격알리미에서 표준지공시지가 조회하기","app":{"kind":"browser","url":"www.realtyprice.kr","blocks":[{"id":"h-site","type":"heading","label":"부동산공시가격 알리미"},{"id":"menu-view","type":"button","label":"공시가격열람"},{"id":"menu-land","type":"button","label":"토지 › 표준지 공시지가 열람","hidden":true},{"id":"h-page","type":"heading","label":"표준지공시지가 열람","hidden":true},{"id":"sel-year","type":"input","label":"검색년도","hidden":true},{"id":"sel-sido","type":"input","label":"시도","hidden":true},{"id":"sel-sigungu","type":"input","label":"시군구","hidden":true},{"id":"sel-eupmyeon","type":"input","label":"읍면","hidden":true},{"id":"btn-search","type":"button","label":"검색","hidden":true},{"id":"card-result","type":"card","label":"소재지 ○○동 100 · 지목 대 · 면적 250㎡ · 이용상황 상업용","hidden":true},{"id":"badge-price","type":"badge","label":"공시지가(원/㎡) · 용도지역 일반상업지역","hidden":true},{"id":"btn-view","type":"button","label":"열람","hidden":true}]},"actions":[{"t":"caption","text":"① 상단 메뉴 공시가격열람 → 토지 → 표준지 공시지가 열람"},{"t":"move","target":"menu-view"},{"t":"click"},{"t":"reveal","target":"menu-land"},{"t":"move","target":"menu-land"},{"t":"click"},{"t":"reveal","target":"h-page"},{"t":"reveal","target":"btn-search"},{"t":"caption","text":"② 검색년도와 지역을 고릅니다 (공시기준일 1월 1일)"},{"t":"click","target":"sel-year"},{"t":"type","target":"sel-year","text":"2026"},{"t":"click","target":"sel-sido"},{"t":"type","target":"sel-sido","text":"서울특별시"},{"t":"click","target":"sel-sigungu"},{"t":"type","target":"sel-sigungu","text":"종로구"},{"t":"click","target":"sel-eupmyeon"},{"t":"type","target":"sel-eupmyeon","text":"종로1가"},{"t":"move","target":"btn-search"},{"t":"click"},{"t":"caption","text":"③ 결과 표에서 지목·면적·이용상황·공시지가(원/㎡)를 읽습니다"},{"t":"reveal","target":"card-result"},{"t":"reveal","target":"badge-price"},{"t":"reveal","target":"btn-view"},{"t":"move","target":"badge-price"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4647ecfe-54b0-ee24-0ea3-8ba8c5583717', 'd11344ac-cdab-750d-4295-f654f0fc8e7e', 'realtor-real-estate-theory/calculation-drill-and-next', 'calculation-drill-and-next', '계산문제 총정리와 숫자 암기표 + 다음 단계',
+  $aix$계산 문제는 10문항 안팎이지만 쓰이는 공식은 **10개가 안 됩니다**. 마지막 화면에서 한 번에 모아 봅니다.
+
+## 계산 공식 카드
+
+```text
+탄력성      = 수량 변화율 ÷ 가격 변화율 (중간점: 분모를 평균값으로)
+지분수익률   = 총자본수익률 + (총자본수익률 − 이자율) × 부채/지분
+NPV        = Σ 현금유입 현가 − 투자액  /  PI = 현가 ÷ 투자액
+저당상수     = 원리금균등 매기 납입액 ÷ 대출액
+NOI        = 유효총소득 − 운영경비  /  DCR = NOI ÷ 부채서비스액
+수익가액     = NOI ÷ 환원이율  /  적산가액 = 재조달원가 − 감가누계액
+비준가액     = 사례가격 × 사정 × 시점 × 지역 × 개별 × 면적비
+허프 확률    ∝ 매장면적 ÷ 거리^마찰계수
+```
+
+## 자주 나오는 숫자·기간 암기표
+
+| 항목 | 숫자 | 근거 |
+|---|---|---|
+| 리츠 최저자본금 | 자기관리 70억 / 위탁·기업구조조정 50억 | 부동산투자회사법 제10조 |
+| 리츠 설립자본금·배당 | 5억·50% 이상 / 3억·90% 이상 | 같은 법 제6조·제28조 |
+| 리츠 자산 구성 | 총자산 80% 부동산·증권·현금, 70% 부동산 | 같은 법 제25조 |
+| 표준지공시지가 | 국토교통부장관 · 1월 1일 · 이의신청 30일 | 가격공시법 제3조·제7조, 시행령 제3조 |
+| 개별공시지가·개별주택가격 | 시장·군수·구청장 · 5월 31일 / 4월 30일 | 같은 법 제10조·제17조, 시행령 제21조·제38조 |
+
+📌 출제 포인트: 함정 지문 패턴 3가지
+
+1. **주체 바꿔치기**: "개별공시지가는 국토교통부장관이 결정·공시한다"(X)
+2. **조건 뒤집기**: "공급이 수요보다 탄력적이면 수렴형"(X), "총자본수익률 < 이자율이면 정(+)의 레버리지"(X)
+3. **포함 항목 끼워넣기**: "운영경비에 대출 이자가 포함된다"(X), "MBB의 조기상환 위험은 투자자 부담"(X)
+
+계산 문제는 시험장에서 **마지막에** 푸세요. 이론 문제 30개를 먼저 확보하고 남은 시간을 계산에 쓰는 것이 과락을 피하는 순서입니다.
+
+## 다음 단계
+
+학개론이 "부동산이 어떻게 움직이나"였다면, 다음 과목은 "그 거래가 법적으로 유효한가"입니다. 이어서 **"1차 민법 및 민사특별법: 사례로 푸는 핵심 조문"**을 들으세요. 같은 교시에 함께 푸는 과목이라, 두 과목의 시간 배분 전략도 그곳에서 이어집니다.
+
+> 💡 **핵심**: 공식 8개와 숫자표 5행이면 계산·법령 문항의 대부분이 해결됩니다. 이 화면을 시험 전날 다시 열어 보세요.$aix$,
+  $aix${"type":"chat","title":"스터디 채널 — 함정 지문 OX","messages":[{"role":"user","text":"Q. 공급의 가격탄력성이 수요의 가격탄력성보다 크면 거미집 모형은 수렴형이다. (O/X)"},{"role":"ai","text":"X. 공급이 더 탄력적이면 발산형. 수요가 더 탄력적일 때 수렴형입니다."},{"role":"user","text":"Q. 개별공시지가는 국토교통부장관이 매년 5월 31일까지 결정·공시한다."},{"role":"ai","text":"X. 주체가 틀림. 시장·군수·구청장이 결정·공시. 국토교통부장관은 표준지공시지가."},{"role":"user","text":"Q. 총자본수익률 8%, 이자율 5%, 부채비율 1이면 지분수익률은 11%다."},{"role":"ai","text":"O. 8 + (8−5)×1 = 11%. 정(+)의 레버리지 조건도 충족."}],"caption":"함정은 주체·조건·포함 항목 세 군데에서 나옵니다. 지문을 읽을 때 그 세 곳만 의심하세요."}$aix$::jsonb, null, 6, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 1차 민법 및 민사특별법: 사례로 푸는 핵심 조문
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'bfba1f9a-847a-2287-873a-aa009f389e25', 'realtor-civil-law', '1차 민법 및 민사특별법: 사례로 푸는 핵심 조문', $aix$민법은 공인중개사 1차에서 가장 '이해'가 필요한 과목입니다. 조문을 통째로 외우는 대신, 이 강의는 매 레슨 갑·을·병 사례 하나를 놓고 '누가 누구에게 무엇을 주장할 수 있는가'를 따라가며 핵심 조문을 몸에 익힙니다. 총칙(법률행위·의사표시·대리·무효와 취소) → 물권법(변동·소유권·용익물권·담보물권) → 계약법(총칙·매매·임대차) → 민사특별법(주택·상가임대차, 집합건물, 부동산실명법, 가등기담보) 순서로 출제 지도를 그대로 따라가고, 시험에 그대로 나오는 숫자·기간은 국가법령정보센터 조문으로 검증해 마지막 레슨 암기표에 모았습니다.$aix$,
+  null, 'realestate', 'intermediate', array['공인중개사', '민법', '민사특별법', '주택임대차보호법', '물권법', '계약법']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'd6ddeff4-5bf2-62b1-127d-1ed581e73f2c', 'bfba1f9a-847a-2287-873a-aa009f389e25', 'juristic-acts', '총칙: 법률행위', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '49667069-a6ae-e8e8-48d6-f7c214287a96', 'bfba1f9a-847a-2287-873a-aa009f389e25', 'property-law', '물권법', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'e7215a73-5b6a-efce-3dca-02b80701b992', 'bfba1f9a-847a-2287-873a-aa009f389e25', 'contracts', '계약법', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'b5514d1a-2acd-5719-0022-881528740daf', 'bfba1f9a-847a-2287-873a-aa009f389e25', 'special-laws', '민사특별법', 3
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c43e9890-72db-1af6-b733-d037355bf72f', 'd6ddeff4-5bf2-62b1-127d-1ed581e73f2c', 'realtor-civil-law/subject-map', 'subject-map', '민법 출제 지도: 총칙·물권·계약·특별법 비중과 사례형 문제 읽는 법',
+  $aix$민법 40문항은 조문 암기 시험이 아니라 **"갑·을·병 중 누가 이기는가"를 묻는 사례 시험**입니다. 지도를 먼저 펴고 출발합시다.
+
+## 출제 지도: 어디서 몇 문항이 나오나
+
+- 최근 기출 기준 대략 **총칙(법률행위) 10 · 물권법 14 · 계약법 10 · 민사특별법 6문항 안팎**입니다(학원·EBS 총평 분석, 공식 고정값은 아님).
+- 이 강의의 4개 모듈이 그 순서와 같습니다. 문항이 가장 많은 물권법, 사례가 가장 긴 계약법에 시간을 더 쓰세요.
+- 기준 법령은 **시험 시행일(2026-10-31) 현재 시행 중인 법령**입니다(Q-Net 시행공고 원칙). 민법은 2026-03-17 개정본(상속 부분이라 범위 밖), 상가건물임대차보호법은 2026-05-12 시행 개정본이 기준입니다.
+
+## 사례형 문제, 3단계로 읽기
+
+- **갑**은 보통 본인·소유자·매도인, **을**은 상대방·매수인, **병**은 나중에 끼어든 제3자입니다.
+- ① 누가 누구에게 무엇을 했나(계약·등기·점유) → ② 흠이 있나, 병은 선의인가 악의인가 → ③ 묻는 것이 "할 수 **있다**"인가 "**없다**"인가.
+- 지하철 노선도와 같습니다. 모든 역을 외울 필요는 없고 **환승역(선의 제3자 보호, 등기 시점)**만 알면 길을 잃지 않습니다.
+
+## 📌 출제 포인트: 함정 지문 3패턴
+
+- **무효 vs 취소** 바꿔치기: "통정허위표시는 취소할 수 있다" → X(무효).
+- **숫자 바꿔치기**: "취소권은 추인할 수 있는 날부터 10년" → X(3년).
+- **주체 바꿔치기**: "본인도 표현대리를 주장할 수 있다" → X(상대방만).
+
+> 💡 **핵심**: 민법은 "조문 → 사례"가 아니라 **"사례 → 조문"** 순서로 공부해야 점수가 됩니다. 매 레슨의 갑·을·병 사례를 먼저 읽고 조문을 확인하세요.$aix$,
+  $aix${"type":"grid","title":"민법 및 민사특별법 40문항 출제 지도","items":[{"label":"총칙: 법률행위","sublabel":"약 10문항 · 의사표시·대리·무효취소","icon":"file-pen","tone":"primary"},{"label":"물권법","sublabel":"약 14문항 · 변동·소유권·용익·담보","icon":"landmark","tone":"accent"},{"label":"계약법","sublabel":"약 10문항 · 총칙·매매·임대차","icon":"handshake","tone":"success"},{"label":"민사특별법","sublabel":"약 6문항 · 주택·상가·집합건물·실명법","icon":"shield","tone":"warning"},{"label":"사례형 읽기","sublabel":"갑·을·병 + 선의/악의","icon":"users","tone":"muted"},{"label":"기준 법령","sublabel":"2026-10-31 시행 중 법령","icon":"calendar-check","tone":"muted"}],"caption":"문항 수는 최근 기출 기반 추정치 — 물권법과 계약법에서 절반 이상이 나옵니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '6fa28cf1-1727-1dca-090b-11f148035f9b', 'd6ddeff4-5bf2-62b1-127d-1ed581e73f2c', 'realtor-civil-law/juristic-act-basics', 'juristic-act-basics', '법률행위의 요건과 목적: 확정·가능·적법·사회적 타당성',
+  $aix$계약서에 도장을 찍어도 법이 "없던 일"로 만드는 경우가 있습니다. 법률행위가 효력을 갖기 위한 **4개의 관문**을 통과하지 못했을 때입니다.
+
+## 목적의 4가지 요건
+
+- **확정성** — 무엇을 사고파는지 정해질 수 있어야 합니다.
+- **실현 가능성** — 원시적 불능(계약 당시 이미 불가능)이면 무효(처음부터 효력 없음).
+- **적법성** — 강행규정 위반은 무효. 단속규정(처벌만 하는 규정) 위반은 유효. 예: 실거래가를 낮춰 쓴 다운계약은 처벌 대상이지만 계약 자체는 유효(판례).
+- **사회적 타당성** — 제103조·제104조가 여기입니다.
+
+## 반사회질서(제103조)와 불공정(제104조)
+
+- 제103조: 선량한 풍속 기타 사회질서 위반 → **무효**. 대표 사례가 **부동산 이중매매에서 제2매수인이 매도인의 배임에 적극 가담**한 경우입니다.
+- 제104조: **궁박·경솔·무경험** 중 하나 + 현저하게 공정을 잃음 → 무효. 셋을 모두 갖출 필요는 없습니다.
+- 두 무효는 **절대적 무효**: 선의 제3자에게도 주장할 수 있고, 추인해도 살아나지 않습니다(제139조). 제103조 위반으로 건넨 급부는 불법원인급여라 돌려받지 못합니다(제746조).
+
+놀이터 규칙에 비유하면, 규칙 안에서 진 게임은 결과가 남지만 **규칙 자체를 어긴 게임은 시작부터 없던 것**이 됩니다.
+
+## 갑·을·병 사례와 📌 출제 포인트
+
+갑이 X토지를 을에게 팔고 중도금까지 받은 뒤, 사정을 아는 병에게 다시 팔아 등기를 넘겼습니다. 병이 배임에 **적극 가담**했다면 갑·병 매매는 무효이고, 을은 갑을 대위해 병의 등기 말소를 청구할 수 있습니다.
+
+- 제104조는 증여처럼 대가 없는 행위에는 적용되지 않습니다(판례).
+- 대리인이 계약한 경우 **궁박은 본인**, **경솔·무경험은 대리인** 기준.
+- "제103조 위반 무효는 선의 제3자에게 대항할 수 없다" → X(절대적 무효).
+
+> 💡 **핵심**: 제103·104조 무효는 **누구에게나, 언제나, 추인해도** 무효입니다. 다음 레슨의 "상대적 무효"와 대비해 기억하세요.$aix$,
+  $aix${"type":"stack","title":"법률행위 목적의 4관문","layers":[{"label":"사회적 타당성","sublabel":"제103조 반사회질서 · 제104조 불공정 → 절대적 무효","icon":"scale","tone":"warning"},{"label":"적법성","sublabel":"강행규정 위반 무효 · 단속규정 위반은 유효","icon":"gavel","tone":"primary"},{"label":"실현 가능성","sublabel":"원시적 불능이면 무효","icon":"target","tone":"accent"},{"label":"확정성","sublabel":"내용이 정해질 수 있어야","icon":"check","tone":"muted"}],"caption":"아래 관문부터 차례로 통과해야 유효 — 시험은 맨 위 두 층에서 대부분 나옵니다."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '16f60ee5-c8c1-9889-526b-ea60027ec06d', 'd6ddeff4-5bf2-62b1-127d-1ed581e73f2c', 'realtor-civil-law/defective-declarations', 'defective-declarations', '흠 있는 의사표시: 비진의·통정허위표시·착오·사기강박과 제3자 보호',
+  $aix$말과 속마음이 다르거나, 속아서 한 계약은 어떻게 될까요? 민법은 흠의 종류에 따라 **무효·취소·유효**를 다르게 배정하고, 그 끝에 항상 같은 꼬리를 붙입니다.
+
+## 네 가지 흠과 효과
+
+- **비진의 의사표시(제107조)** — 원칙 **유효**. 상대방이 진의 아님을 알았거나 알 수 있었으면 무효.
+- **통정허위표시(제108조)** — 상대방과 짜고 한 거짓 표시 → **무효**.
+- **착오(제109조)** — 법률행위 내용의 **중요부분** 착오면 취소 가능. 단 표의자에게 **중대한 과실**이 있으면 취소 불가.
+- **사기·강박(제110조)** — 취소 가능. **제3자가 사기·강박**한 경우에는 상대방이 그 사실을 알았거나 알 수 있었을 때만 취소.
+
+## 공통 꼬리: 선의의 제3자에게 대항하지 못한다
+
+네 조문 모두 "무효(취소)는 **선의의 제3자에게 대항하지 못한다**"로 끝납니다. 이것이 상대적 무효입니다.
+
+- 제3자는 **선의**면 충분하고 무과실까지 요구되지 않습니다. 선의는 추정되므로 무효를 주장하는 쪽이 악의를 입증합니다.
+- 가짜 가격표를 붙여 둔 가게와 같습니다. 그 가격표를 믿고 산 손님에게는 **"사실 그 가격이 아니었다"고 물릴 수 없습니다**.
+
+## 갑·을·병 사례와 📌 출제 포인트
+
+갑이 채권자의 강제집행을 피하려고 을과 짜고 X주택을 을 명의로 가장매매했고, 을이 이를 병에게 팔았습니다. 갑·을 매매는 무효지만, **병이 선의라면 갑은 병에게 무효를 주장할 수 없습니다**.
+
+- 착오 취소는 표의자의 경과실이 있어도 가능하고, 취소한 표의자는 상대방에게 손해배상책임을 지지 않습니다(판례).
+- 동기의 착오는 그 동기가 **표시되어 법률행위 내용이 된 경우**에만 중요부분 착오가 될 수 있습니다.
+- "제3자의 사기로 계약한 자는 언제나 취소할 수 있다" → X(상대방의 인식 필요).
+
+> 💡 **핵심**: 흠의 효과는 **유효(107) → 무효(108) → 취소(109·110)** 순으로 외우고, 네 개 모두 **선의 제3자 앞에서는 멈춘다**는 점만 붙이면 끝입니다.$aix$,
+  $aix${"type":"compare","title":"흠 있는 의사표시 4종 비교","columns":[{"title":"원칙 유효","icon":"check","tone":"success","items":["비진의 의사표시 (107조)","상대방이 알았거나 알 수 있었으면 무효","선의 제3자 보호"]},{"title":"무효","icon":"x","tone":"warning","items":["통정허위표시 (108조)","가장매매·가장양도","선의 제3자 보호 (상대적 무효)"]},{"title":"취소 가능","icon":"alert","tone":"primary","items":["착오 (109조) — 중요부분·중과실 없을 때","사기·강박 (110조)","제3자 사기는 상대방 인식 필요","선의 제3자 보호"]}],"caption":"세 칸 모두 마지막 줄이 같다 — '선의의 제3자에게 대항하지 못한다'."}$aix$::jsonb, null, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '365ce35b-b0f9-6af9-79d5-f359771119ff', 'd6ddeff4-5bf2-62b1-127d-1ed581e73f2c', 'realtor-civil-law/agency', 'agency', '대리: 대리권·무권대리·표현대리 사례',
+  $aix$집주인 대신 부동산에 나온 "사촌 동생"이 계약서에 서명했다면, 그 계약은 누구 것일까요? 대리(본인을 대신해 법률행위를 하고 효과는 본인에게 생기는 제도)의 문제입니다.
+
+## 대리의 기본 구조
+
+- 대리인이 권한 안에서 **본인을 위한 것임을 표시(현명)**하고 한 의사표시는 **직접 본인에게 효력**(제114조).
+- 대리인은 행위능력자일 필요가 없습니다(제117조). 자기계약·쌍방대리는 본인 허락 없으면 금지되지만 **채무의 이행은 가능**(제124조).
+
+## 무권대리: 대리권 없이 한 계약
+
+- 본인이 **추인하지 않으면 본인에게 효력 없음**(제130조). 추인하면 계약 시로 소급, 단 제3자 권리는 해치지 못함(제133조).
+- 상대방의 무기: **최고권**(제131조, 선의·악의 불문, 확답 없으면 거절로 봄), **철회권**(제134조, **선의만**), **무권대리인에 대한 이행·손해배상 선택 청구**(제135조, 상대방이 알았거나 알 수 있었을 때 또는 대리인이 제한능력자면 책임 없음).
+
+## 표현대리: 본인이 만든 '외관'의 책임
+
+- **제125조** 대리권 수여를 표시한 경우, **제126조** 권한을 넘은 경우(상대방에게 **정당한 이유**), **제129조** 대리권 소멸 후.
+- 셋 모두 상대방이 대리권 없음을 알았거나 과실로 몰랐다면 성립하지 않습니다. 회사가 직원에게 "부장" 명함을 쥐여 준 셈이라, **명함을 믿은 거래처는 회사가 책임**집니다.
+
+**갑·을·병 사례** — 갑이 을에게 X토지 **임대** 대리권만 주었는데 을이 병에게 X토지를 **매도**했습니다. 병이 을에게 매도 권한이 있다고 믿을 정당한 이유가 있으면 **제126조 표현대리**로 갑이 책임을 집니다.
+
+📌 출제 포인트
+- 표현대리는 **상대방만** 주장할 수 있고, 성립하면 본인 책임을 과실상계로 줄일 수 없습니다.
+- 무권대리 철회권은 선의 상대방만, 최고권은 악의라도 가능.
+- 아래 데모에서 제125조 원문을 직접 찾아보세요.
+
+> 💡 **핵심**: 무권대리는 "본인이 추인하느냐", 표현대리는 "상대방이 믿을 만했느냐"가 열쇠입니다. 두 제도는 상대방이 **선택**해 주장합니다.$aix$,
+  $aix${"type":"flow","title":"대리권 없는 계약의 처리 흐름","nodes":[{"label":"대리권 없이 계약","sublabel":"을이 갑 명의로 병과 계약","icon":"file-pen","tone":"muted"},{"label":"본인 추인?","sublabel":"제130조 · 최고권(131) · 철회권(134)","icon":"user","tone":"primary","edgeLabel":"병의 선택"},{"label":"추인 → 소급 유효","sublabel":"제133조 · 제3자 권리 보호","icon":"check","tone":"success","edgeLabel":"추인"},{"label":"표현대리 성립?","sublabel":"125 · 126 · 129 — 외관 + 정당한 이유","icon":"eye","tone":"accent","edgeLabel":"거절"},{"label":"무권대리인 책임","sublabel":"제135조 이행 또는 손해배상","icon":"alert","tone":"warning","edgeLabel":"불성립"}],"caption":"표현대리가 성립하면 본인이 책임, 아니면 무권대리인이 책임 — 상대방(병)이 갈림길을 선택합니다."}$aix$::jsonb, $aix${"title":"국가법령정보센터에서 민법 제125조 찾아 읽기","app":{"kind":"browser","url":"www.law.go.kr","blocks":[{"id":"hd","type":"heading","label":"국가법령정보센터"},{"id":"menu","type":"text","label":"법령 · 행정규칙 · 자치법규 · 판례·해석례등 · 별표·서식"},{"id":"q","type":"input","label":"검색어 입력"},{"id":"btn-search","type":"button","label":"검색"},{"id":"tab","type":"badge","label":"현행법령","hidden":true},{"id":"r1","type":"card","label":"민법 [시행 2026. 3. 17.] [법률 제21454호] · 법무부","hidden":true},{"id":"r2","type":"card","label":"민법 제312조의2 단서의 시행에 관한 규정 [대통령령] · 전세금 증액 상한","hidden":true},{"id":"view-tabs","type":"text","label":"본문 · 제정·개정이유 · 연혁 · 3단비교 · 신구법비교","hidden":true},{"id":"btn-jo","type":"button","label":"조문선택","hidden":true},{"id":"jo-input","type":"input","label":"조문 번호","hidden":true},{"id":"art","type":"card","label":"제125조(대리권수여의 표시에 의한 표현대리)","hidden":true},{"id":"art-text","type":"text","label":"제삼자에 대하여 타인에게 대리권을 수여함을 표시한 자는 그 대리권의 범위내에서 행한 그 타인과 그 제삼자간의 법률행위에 대하여 책임이 있다. 그러나 제삼자가 대리권없음을 알았거나 알 수 있었을 때에는 그러하지 아니하다.","hidden":true},{"id":"art2","type":"card","label":"제126조(권한을 넘은 표현대리) — 정당한 이유","hidden":true},{"id":"art3","type":"card","label":"제129조(대리권소멸후의 표현대리) — 선의·무과실","hidden":true}]},"actions":[{"t":"caption","text":"① 법령명으로 검색합니다"},{"t":"move","target":"q"},{"t":"click"},{"t":"type","target":"q","text":"민법"},{"t":"click","target":"btn-search"},{"t":"reveal","target":"tab"},{"t":"reveal","target":"r1"},{"t":"reveal","target":"r2"},{"t":"wait","ms":500},{"t":"caption","text":"② 현행 민법 본문을 열고 조문선택으로 이동합니다"},{"t":"move","target":"r1"},{"t":"click"},{"t":"reveal","target":"view-tabs"},{"t":"reveal","target":"btn-jo"},{"t":"click","target":"btn-jo"},{"t":"type","target":"jo-input","text":"125"},{"t":"caption","text":"③ 제125조 원문에서 '알았거나 알 수 있었을 때' 단서를 확인합니다"},{"t":"reveal","target":"art"},{"t":"reveal","target":"art-text"},{"t":"move","target":"art-text"},{"t":"wait","ms":800},{"t":"caption","text":"④ 이어서 제126조·제129조도 같은 방법으로 비교해 봅니다"},{"t":"reveal","target":"art2"},{"t":"reveal","target":"art3"},{"t":"wait","ms":700}]}$aix$::jsonb, 7, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '63502d8d-a159-8aef-fbca-30a892b3b594', 'd6ddeff4-5bf2-62b1-127d-1ed581e73f2c', 'realtor-civil-law/invalidity-conditions', 'invalidity-conditions', '무효와 취소, 조건과 기한: 추인·전환·취소권 행사기간',
+  $aix$"무효"와 "취소"는 일상에서는 비슷하게 쓰이지만 시험에서는 **정반대 방향으로 채점**됩니다. 이 한 레슨에서 확실히 갈라 두세요.
+
+## 무효 vs 취소
+
+- **무효**: 처음부터 효력 없음. 누구나 주장, 기간 제한 없음. 추인해도 살아나지 않고, 무효임을 알고 추인하면 **새로운 법률행위**로 봅니다(제139조). 일부무효는 원칙 전부무효(제137조), 다른 행위의 요건을 갖추면 **전환**(제138조).
+- **취소**: 일단 유효, 취소하면 **처음부터 무효**로 봅니다(제141조). 취소권자는 제한능력자·착오·사기·강박 표의자와 대리인·승계인만(제140조). 추인하면 확정 유효(제143조)이고, 추인은 **취소 원인이 소멸한 뒤**에만 효력(제144조). 이행·이행청구·담보제공 등이 있으면 **법정추인**(제145조).
+- **취소권 행사기간(제146조)**: 추인할 수 있는 날부터 **3년**, 법률행위를 한 날부터 **10년** — 둘 중 먼저 오는 날에 소멸.
+
+유통기한이 두 개 찍힌 식품과 같습니다. **먼저 도래하는 날짜**에 버려야 합니다.
+
+## 조건과 기한
+
+- **정지조건** 성취 → 효력 발생, **해제조건** 성취 → 효력 소멸(제147조).
+- 불법조건이 붙으면 법률행위 전체가 무효(제151조①). 이미 성취된 조건: 정지조건이면 조건 없는 행위, 해제조건이면 무효(②). 성취 불가능한 조건: 해제조건이면 조건 없는 행위, 정지조건이면 무효(③).
+- 기한은 **채무자의 이익**으로 추정하고 포기할 수 있습니다(제153조).
+
+## 갑·을·병 사례와 📌 출제 포인트
+
+미성년자 갑이 법정대리인 동의 없이 X토지를 을에게 팔았습니다. 갑이 성년이 된 날부터 **3년**이 지나면 취소권은 소멸합니다. 그 사이 갑이 을에게 대금 지급을 **청구**했다면 법정추인으로 취소하지 못합니다.
+
+- "무효인 법률행위를 추인하면 소급하여 유효" → X.
+- "취소권은 법률행위를 한 날부터 3년" → X(10년).
+- 취소된 제한능력자는 **현존 이익** 한도에서만 반환(제141조 단서).
+
+> 💡 **핵심**: 무효는 **"원래 없다"**, 취소는 **"있다가 없어진다"**. 취소권의 3년/10년은 매년 나오는 숫자입니다.$aix$,
+  $aix${"type":"compare","title":"무효와 취소, 무엇이 다른가","columns":[{"title":"무효","icon":"x","tone":"warning","items":["처음부터 효력 없음","누구나 · 기간 제한 없음","추인해도 유효 안 됨 (알고 추인 = 새 행위)","일부무효 → 원칙 전부무효 · 전환 가능"]},{"title":"취소","icon":"hourglass","tone":"primary","items":["취소 전까지 유효 → 취소 시 소급 무효","취소권자만 (제140조)","추인하면 확정 유효 · 법정추인","추인할 수 있는 날부터 3년 / 행위일부터 10년"]}],"caption":"함정은 늘 오른쪽 맨 아래 — 3년과 10년을 뒤집어 놓습니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1b4967b5-90d5-5ff1-7559-4955b24c4646', '49667069-a6ae-e8e8-48d6-f7c214287a96', 'realtor-civil-law/property-rights-and-changes', 'property-rights-and-changes', '물권의 종류와 변동: 등기·인도, 공시의 원칙·공신의 원칙',
+  $aix$잔금까지 다 냈는데 등기를 안 했다면, 그 집은 누구 것일까요? 물권법은 이 질문에 **"등기한 사람"**이라고 냉정하게 답합니다.
+
+## 물권의 종류 — 마음대로 만들 수 없다
+
+- **물권법정주의**(제185조): 물권은 법률 또는 관습법에 의하지 않고는 임의로 창설할 수 없습니다.
+- 민법상 8종: 점유권·소유권, 용익물권(지상권·지역권·전세권), 담보물권(유치권·질권·저당권). 관습법상 법정지상권·분묘기지권도 물권입니다.
+
+## 물권변동 — 제186조와 제187조
+
+- **제186조**: 법률행위(매매·증여 등)로 인한 부동산 물권변동은 **등기해야 효력**이 생깁니다(성립요건주의).
+- **제187조**: 상속·공용징수·판결·경매 기타 법률 규정에 의한 취득은 **등기 없이** 효력, 단 **등기하지 않으면 처분 못함**.
+- 여기서 판결은 **형성판결**(공유물분할 판결 등)만이고 이행판결은 아닙니다. 경매는 매각대금 완납 시 취득합니다. 동산은 **인도**(제188조).
+
+이사는 했는데 전입신고를 안 한 것과 같습니다. 실제로 살고 있어도 **서류상으로는 없는 사람**입니다.
+
+## 공시의 원칙은 있고, 공신의 원칙은 없다
+
+- 우리 민법은 부동산 등기에 **공신의 원칙을 인정하지 않습니다**. 무효인 등기를 믿고 샀어도 소유권을 얻지 못합니다(동산은 선의취득으로 보호, 제249조).
+- 대신 등기에는 **추정력**이 있어 등기명의자가 권리자로 추정됩니다.
+
+**갑·을·병 사례** — 갑이 X토지를 을에게 팔고 잔금까지 받았지만 등기는 아직입니다. 갑이 병에게 다시 팔아 **병이 등기**하면 소유자는 병입니다. 을은 갑에게 채무불이행 책임만 물을 수 있습니다(병의 적극 가담이 없다면).
+
+📌 출제 포인트
+- "상속으로 취득한 부동산은 등기 없이 처분할 수 있다" → X.
+- 중간생략등기는 3자 합의가 있으면 유효(판례), 미등기 매수인은 소유권 없음.
+
+> 💡 **핵심**: 부동산은 **계약 ≠ 소유권**. 제186조(등기해야)와 제187조(등기 없이, 그러나 처분은 등기)를 한 쌍으로 외우세요.$aix$,
+  $aix${"type":"stack","title":"물권의 체계와 변동 규칙","layers":[{"label":"소유권 · 점유권","sublabel":"완전한 지배 / 사실상 지배","icon":"home","tone":"primary"},{"label":"용익물권","sublabel":"지상권 · 지역권 · 전세권","icon":"key","tone":"accent"},{"label":"담보물권","sublabel":"유치권 · 질권 · 저당권","icon":"lock","tone":"warning"},{"label":"변동 규칙","sublabel":"186조 등기해야 효력 / 187조 등기 없이 취득·처분은 등기","icon":"stamp","tone":"success"},{"label":"물권법정주의 (185조)","sublabel":"법률·관습법 외 창설 불가 · 공신의 원칙 없음","icon":"scale","tone":"muted"}],"caption":"위 세 층이 '무엇', 아래 두 층이 '어떻게 생기고 바뀌는가' — 시험은 아래 두 층에서 더 나옵니다."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5974e8c1-ce3c-cea3-1821-6ea634bde976', '49667069-a6ae-e8e8-48d6-f7c214287a96', 'realtor-civil-law/possession-and-ownership', 'possession-and-ownership', '점유권과 소유권: 취득시효·상린관계·공동소유',
+  $aix$남의 땅을 20년 갈아먹으면 내 땅이 된다는 말, 진짜일까요? 조건이 붙긴 하지만 **진짜**입니다.
+
+## 점유와 취득시효
+
+- 점유는 물건을 **사실상 지배**하는 것(제192조). 점유자는 **소유의 의사(자주)·선의·평온·공연**으로 점유한 것으로 추정되지만(제197조), **무과실은 추정되지 않습니다**.
+- **점유취득시효**(제245조①): 20년간 자주·평온·공연 점유 + **등기**해야 소유권 취득.
+- **등기부취득시효**(②): 소유자로 등기한 자가 10년간 자주·평온·공연·**선의·무과실** 점유.
+
+## 상린관계 — 이웃 사이의 최소 규칙
+
+- **주위토지통행권**(제219조): 공로로 나갈 길이 없으면 이웃 토지 통행 가능, 손해는 **보상**. 단 **분할·일부양도**로 길이 막힌 경우는 보상 없이 통행(제220조).
+- 건물은 경계(토지가 맞닿는 선)에서 **0.5m** 이상 띄워야 하고, 착공 후 1년 또는 완성 후에는 손해배상만 청구(제242조).
+
+## 공동소유 3형태
+
+- **공유**: 지분 처분 자유(제263조). 공유물 **처분·변경은 전원 동의**(제264조), **관리는 지분 과반수**(제265조), 보존행위는 각자. 분할청구 자유, **5년** 내 분할금지 특약 가능(제268조).
+- **합유**(조합 재산): 지분 처분에 전원 동의, 분할청구 불가(제273조).
+- **총유**(비법인사단): 관리·처분은 **사원총회 결의**(제276조).
+
+셰어하우스와 같습니다. 가구 배치(관리)는 다수결이지만, **집을 파는 것(처분)은 전원 동의**입니다.
+
+**갑·을·병 사례** — 갑·을·병이 X토지를 1/3씩 공유합니다. 갑·을이 정에게 X를 임대한 것은 관리행위로 유효하지만, 갑이 **단독으로 X 전체를 매도**하면 처분행위라 다른 지분에는 효력이 없습니다.
+
+📌 출제 포인트
+- "점유자의 무과실은 추정된다" → X.
+- 선의·무과실은 등기부취득시효(10년)에만 요건, 20년 시효에는 불필요.
+
+> 💡 **핵심**: 취득시효는 **20년+등기 / 10년+등기명의+선의·무과실**, 공동소유는 **관리=과반수, 처분=전원**. 이 두 줄이 이 레슨의 점수입니다.$aix$,
+  $aix${"type":"compare","title":"공유 · 합유 · 총유","columns":[{"title":"공유","icon":"users","tone":"primary","items":["지분 있음 · 처분 자유","처분·변경 전원 동의","관리 지분 과반수","분할청구 O (5년 금지 특약)"]},{"title":"합유","icon":"handshake","tone":"accent","items":["조합 재산","지분 처분 전원 동의","분할청구 X","조합 해산 시 분할"]},{"title":"총유","icon":"landmark","tone":"muted","items":["비법인사단 (종중·교회)","지분 없음","관리·처분 사원총회 결의","사용·수익은 정관·규약"]}],"caption":"지분이 있느냐, 있어도 마음대로 팔 수 있느냐, 아예 없느냐 — 왼쪽에서 오른쪽으로 갈수록 개인의 몫이 줄어듭니다."}$aix$::jsonb, null, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'b8a6d22b-2f5f-befa-609f-c47392f889b7', '49667069-a6ae-e8e8-48d6-f7c214287a96', 'realtor-civil-law/usufructuary-rights', 'usufructuary-rights', '용익물권: 지상권·지역권·전세권 비교',
+  $aix$남의 땅 위에 내 건물을 세우고, 옆집 땅으로 다니고, 목돈을 맡기고 남의 집에 산다 — 셋 모두 **남의 부동산을 쓰는 물권**, 용익물권입니다.
+
+## 지상권 — 땅 위에 내 건물
+
+- 건물·수목 소유를 위해 타인 토지를 사용하는 물권. **지료는 요소가 아니어서 무상도 가능**합니다.
+- **최단존속기간**(제280조): 석조 등 **견고한 건물·수목 30년**, **기타 건물 15년**, **건물 이외 공작물 5년**. 더 짧게 정하면 이 기간까지 연장되고, 정하지 않으면 최단기간(제281조).
+- 지료 **2년 이상 연체**면 설정자가 소멸청구(제287조).
+
+## 지역권 — 내 땅의 편익을 위해 남의 땅을 쓴다
+
+- 요역지(편익을 받는 땅)를 위해 승역지(제공하는 땅)를 이용하는 권리.
+- **부종성**(제292조): 요역지 소유권과 함께 이전하고, 요역지와 **분리하여 양도 불가**. **계속되고 표현된** 지역권만 시효취득(제294조).
+
+## 전세권 — 등기된 목돈 거주권
+
+- 전세금 지급 + 등기로 성립, **우선변제권** 있음(제303조). 농경지는 불가.
+- 존속기간 **최장 10년**, 넘게 정하면 10년으로 단축. **건물은 최단 1년**(제312조).
+- **법정갱신**(제312조④, **건물만**): 만료 6월~1월 전에 설정자가 갱신거절·조건변경 통지를 안 하면 동일 조건으로 갱신, 기간은 **정함이 없는 것**으로 봅니다.
+
+세 권리는 렌트의 3형제입니다. 지상권은 **땅을 빌려 내 건물**, 지역권은 **옆집 통로 이용권**, 전세권은 **보증금 맡긴 등기된 거주권**.
+
+**갑·을·병 사례** — 갑이 을에게 **목조 건물** 소유 목적 지상권을 **10년**으로 설정했습니다. 견고한 건물이 아니므로 최단기간은 15년 → 약정은 **15년으로 연장**됩니다.
+
+📌 출제 포인트
+- 전세권 15년 약정 → 10년으로 단축. 지상권은 최장기간 제한 없음.
+- "지역권은 요역지와 분리하여 양도할 수 있다" → X.
+
+> 💡 **핵심**: 지상권은 **최단(30/15/5)**, 전세권은 **최장(10)·건물 최단(1)**. '최단'과 '최장'을 바꿔 묻는 지문을 조심하세요.$aix$,
+  $aix${"type":"grid","title":"용익물권 3종 핵심 숫자 지도","items":[{"label":"지상권 최단기간","sublabel":"견고 30년 · 기타 15년 · 공작물 5년","icon":"building","tone":"primary"},{"label":"지상권 소멸청구","sublabel":"지료 2년 이상 연체","icon":"alert","tone":"warning"},{"label":"지역권 부종성","sublabel":"요역지와 분리 양도 X","icon":"route","tone":"accent"},{"label":"지역권 시효취득","sublabel":"계속 + 표현된 것만","icon":"hourglass","tone":"accent"},{"label":"전세권 존속기간","sublabel":"최장 10년 · 건물 최단 1년","icon":"key","tone":"success"},{"label":"전세권 법정갱신","sublabel":"건물만 · 6월~1월 전 통지 없으면","icon":"calendar-check","tone":"success"}],"caption":"숫자 6개가 이 레슨의 전부 — 지상권은 '최단', 전세권은 '최장'이라는 방향만 헷갈리지 마세요."}$aix$::jsonb, null, 6, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '63b23e7e-d383-0807-7fcd-714e151dee05', '49667069-a6ae-e8e8-48d6-f7c214287a96', 'realtor-civil-law/security-rights', 'security-rights', '담보물권: 유치권·저당권과 법정지상권·일괄경매',
+  $aix$수리비를 안 준 차를 정비소가 돌려주지 않는 것(유치권)과, 은행이 열쇠는 주되 서류만 잡는 것(저당권). 담보물권 두 축은 **점유하느냐 등기하느냐**로 갈립니다.
+
+## 유치권 — 점유가 생명
+
+- 요건(제320조): 타인의 물건 **점유** + **그 물건에 관하여 생긴 채권**(견련성) + **변제기 도래** + 점유가 불법이 아닐 것.
+- 등기 없이 성립하고 **우선변제권은 없지만** 경매 청구는 가능(제322조). **점유를 잃으면 소멸**(제328조), 채무자는 다른 담보를 제공해 소멸청구 가능(제327조).
+- 경매에서 매수인은 유치권자에게 그 채권을 **변제할 책임**이 있습니다(민사집행법 제91조⑤) — 낙찰자가 인수하므로 권리분석의 최대 변수입니다.
+
+## 저당권 — 등기가 생명
+
+- **효력 범위**(제358조): 저당부동산에 **부합된 물건과 종물**에 미침. 다른 약정으로 배제 가능.
+- **피담보채권 범위**(제360조): 원본·이자·위약금·손해배상·실행비용. 지연배상은 **1년분**만.
+
+## 법정지상권(제366조)과 일괄경매(제365조)
+
+- **제366조**: 저당권 설정 **당시** 토지 위에 건물이 있고 소유자가 같았는데, 경매로 토지·건물 소유자가 달라지면 건물 소유자에게 지상권이 인정됩니다. 지료는 **법원**이 정합니다.
+- **제365조**: 토지에 저당권을 설정한 **뒤** 설정자가 건물을 지으면 저당권자는 토지·건물을 **함께 경매** 청구 가능. 단 **건물 대가에서는 우선변제 못 받음**.
+
+**갑·을·병 사례** — 갑 소유 X토지와 그 위 Y건물 중 **X토지에만** 을이 저당권을 설정했고, 경매로 병이 X를 취득했습니다. 건물 소유자 갑은 병에 대해 **법정지상권**을 갖습니다.
+
+📌 출제 포인트
+- "유치권자는 경매대가에서 우선변제를 받는다" → X.
+- 제366조는 설정 당시 건물이 **존재**해야, 제365조는 설정 **후** 축조한 건물.
+
+> 💡 **핵심**: 유치권은 **점유·견련성·우선변제권 없음·낙찰자 인수**, 저당권은 **등기·부합물과 종물·지연배상 1년분**. 366과 365는 "건물이 설정 전에 있었나, 후에 지었나"로 가릅니다.$aix$,
+  $aix${"type":"flow","title":"토지 저당권 실행과 건물의 운명","nodes":[{"label":"갑 소유 X토지에 을 저당권 설정","sublabel":"건물 존재 여부가 갈림길","icon":"landmark","tone":"muted"},{"label":"설정 당시 건물 있음 → 제366조","sublabel":"경매로 소유자 분리 시 법정지상권 · 지료는 법원","icon":"building","tone":"success","edgeLabel":"건물 먼저"},{"label":"설정 후 건물 축조 → 제365조","sublabel":"토지+건물 일괄경매 · 건물 대가 우선변제 X","icon":"gavel","tone":"warning","edgeLabel":"저당권 먼저"},{"label":"유치권 있는 경우","sublabel":"매수인이 인수 (민사집행법 91조⑤)","icon":"lock","tone":"accent","edgeLabel":"공사대금 미지급"}],"caption":"권리분석에서 낙찰자가 떠안는 것은 법정지상권과 유치권 — 둘 다 이 레슨의 조문입니다."}$aix$::jsonb, null, 7, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '54d29570-93d4-fb57-7bdc-fabcdd15ac07', 'e7215a73-5b6a-efce-3dca-02b80701b992', 'realtor-civil-law/contract-general', 'contract-general', '계약 총칙: 성립, 동시이행의 항변권, 위험부담, 제3자를 위한 계약, 해제',
+  $aix$잔금일에 매도인은 "돈 먼저", 매수인은 "서류 먼저"라고 버틴다면? 계약 총칙은 이런 **줄다리기의 규칙**입니다.
+
+## 성립과 동시이행
+
+- 격지자 간 계약은 **승낙 통지를 발송한 때** 성립(제531조).
+- **동시이행의 항변권**(제536조): 쌍무계약에서 상대방이 이행을 제공할 때까지 내 이행을 거절할 수 있습니다. 상대방 채무의 **변제기가 안 됐으면** 불가. 이 항변권이 있으면 이행하지 않아도 **이행지체 책임이 없습니다**.
+
+## 위험부담 — 누구 잘못도 없이 집이 사라지면
+
+- **채무자위험부담주의**(제537조): 쌍방 책임 없는 사유로 이행불능 → 채무자(매도인)는 대금을 청구할 수 없습니다.
+- **예외**(제538조): 채권자의 귀책 또는 **수령지체 중** 불능이면 채무자가 대금 청구 가능, 대신 면한 이익은 상환.
+
+택배가 배송 중 파손된 상황과 같습니다. 받는 사람 잘못이 없으면 **보내는 쪽(채무자)의 손해**입니다.
+
+## 제3자를 위한 계약과 해제
+
+- 제3자의 권리는 **수익의 의사표시**를 한 때 생기고(제539조), 그 후 당사자가 변경·소멸시킬 수 없습니다(제541조).
+- **해제**(계약을 처음부터 없던 것으로 되돌리는 일방적 의사표시): 이행지체는 **상당한 기간을 정해 최고** 후(제544조, 미리 거절 의사면 최고 불요), 이행불능은 **최고 없이**(제546조). 해제 의사표시는 **철회 불가**(제543조②).
+- 효과(제548조): **원상회복** + 받은 날부터 **이자**, 단 **제3자의 권리를 해치지 못함**. 손해배상은 별도 청구 가능(제551조).
+
+**갑·을·병 사례** — 갑이 을에게 X주택을 팔고 잔금 전 원인 불명 화재로 X가 전소했습니다. 갑은 을에게 **대금을 청구할 수 없습니다**(제537조). 다만 을이 이유 없이 인수를 미루던 **수령지체 중**이었다면 청구할 수 있습니다(제538조).
+
+📌 출제 포인트
+- "이행불능의 경우에도 최고가 필요하다" → X.
+- 동시이행의 항변권이 있는 동안은 이행지체 책임 없음.
+
+> 💡 **핵심**: 동시이행은 **지체 책임을 막는 방패**, 위험부담은 **채무자 손해가 원칙**, 해제는 **최고 → 의사표시 → 원상회복+이자**입니다.$aix$,
+  $aix${"type":"steps","title":"계약의 일생: 성립에서 해제까지","steps":[{"label":"청약 → 승낙","sublabel":"격지자는 승낙 발송 시 성립 (531조)","icon":"send"},{"label":"이행 단계","sublabel":"동시이행의 항변권 (536조) — 지체 책임 차단","icon":"handshake"},{"label":"불능 발생","sublabel":"쌍방 무책 → 채무자 위험부담 (537조)","icon":"alert"},{"label":"채무불이행","sublabel":"지체: 최고 후 해제 (544조) / 불능: 즉시 (546조)","icon":"clock"},{"label":"해제 효과","sublabel":"원상회복 + 이자 · 제3자 보호 (548조) · 손배 별도 (551조)","icon":"refresh"}],"caption":"사례 문제는 이 다섯 칸 중 '지금 어느 단계인가'를 묻는 것 — 단계를 찍으면 조문이 따라옵니다."}$aix$::jsonb, null, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2f7551e5-6d1a-cb29-3013-f687d3135022', 'e7215a73-5b6a-efce-3dca-02b80701b992', 'realtor-civil-law/sale-and-exchange', 'sale-and-exchange', '매매와 교환: 계약금·담보책임·환매',
+  $aix$계약금 10%를 건넸는데 집값이 뛰었습니다. 매도인이 "두 배로 돌려줄 테니 없던 일로 하자"고 하면, 가능할까요? **가능합니다** — 단, 시점이 중요합니다.
+
+## 계약금: 해약금으로 추정
+
+- **제565조**: 다른 약정이 없으면 계약금은 해약금으로 추정. **당사자 일방이 이행에 착수할 때까지** 교부자는 **포기**, 수령자는 **배액을 상환**하고 해제할 수 있습니다. 이때 손해배상은 청구 못 함(②).
+- 이행 착수의 대표는 **중도금 지급**. 배액 상환은 **제공**으로 충분하고 공탁까지는 불필요.
+
+예약 취소 수수료와 같습니다. 계약금은 '벌금'이 아니라 **'되돌릴 수 있는 티켓' 값**입니다.
+
+## 담보책임: 흠의 종류마다 기간이 다르다
+
+| 흠의 종류 | 조문 | 선의 매수인의 권리 | 행사기간 |
+|---|---|---|---|
+| 권리 전부가 타인 것 | 570 | 해제·손해배상 (악의는 해제만) | 제한 없음 |
+| 권리 일부 타인·수량부족 | 572~574 | 대금감액·해제·손해배상 | 안 날부터 1년 |
+| 지상권·전세권 등 제한 | 575 | 목적 달성 불능 시 해제, 아니면 손해배상 | 안 날부터 1년 |
+| 물건의 하자 | 580·582 | 해제(목적 달성 불능) 또는 손해배상 | 안 날부터 **6월** |
+
+경매에는 물건 하자담보책임이 **적용되지 않습니다**(제580조②).
+
+## 환매: 팔았다가 되사는 권리
+
+- **매매와 동시에** 특약으로 보류해야 하고(제590조), 기간은 **부동산 5년·동산 3년**, 넘으면 단축, 정하지 않으면 5년·3년, **연장 불가**(제591조).
+
+**갑·을·병 사례** — 갑이 을에게 X토지를 팔며 계약금 1천만 원을 받았습니다. 중도금일 전 시세가 급등하자 갑은 **2천만 원을 제공**하고 해제할 수 있습니다. 을이 이미 중도금을 냈다면 **불가**입니다.
+
+📌 출제 포인트
+- "환매기간은 당사자가 합의하면 연장할 수 있다" → X.
+- 계약금 **일부만** 받은 상태에서는 해약금 해제 불가, 해제하려면 **약정 계약금** 기준 배액(판례).
+
+> 💡 **핵심**: 계약금은 **이행 착수 전·배액 상환**, 담보책임은 **1년 vs 6월**, 환매는 **5년·연장 불가**. 이 세 숫자 묶음이 매매 문항의 대부분입니다.$aix$,
+  $aix${"type":"compare","title":"매매의 세 가지 '되돌리기'","columns":[{"title":"해약금 해제 (565조)","icon":"wallet","tone":"primary","items":["이행 착수 전까지","교부자 포기 / 수령자 배액 상환","손해배상 청구 X","중도금 지급 = 착수"]},{"title":"담보책임 (570~582조)","icon":"shield","tone":"warning","items":["권리 흠: 1년 (전부 타인은 제한 없음)","물건 하자: 안 날부터 6월","경매엔 하자담보 X","제척기간"]},{"title":"환매 (590~594조)","icon":"repeat","tone":"accent","items":["매매와 동시 특약","부동산 5년 · 동산 3년","연장 불가","등기하면 제3자 대항"]}],"caption":"같은 '되돌리기'라도 요건과 기간이 전혀 다릅니다 — 세로로 읽어 세트로 외우세요."}$aix$::jsonb, null, 7, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '61eef1ea-7441-5cf3-a71a-97145bc44282', 'e7215a73-5b6a-efce-3dca-02b80701b992', 'realtor-civil-law/lease', 'lease', '민법상 임대차: 존속기간·차임·비용상환·전대',
+  $aix$주택·상가 특별법이 아무리 강해도, 뿌리는 민법 임대차입니다. 특별법이 손대지 않은 부분은 **그대로 민법**이 적용됩니다.
+
+## 존속기간과 해지
+
+- 임대차 **최장기간 제한(구 제651조 20년)은 위헌결정으로 2016년 삭제** → 현재 최장기간 제한이 없습니다.
+- 기간을 정하지 않으면 언제든 해지통고 가능하고, 부동산은 **임대인이 통고하면 6월, 임차인이 통고하면 1월** 뒤 효력(제635조).
+- 건물 임차인의 차임 연체액이 **2기**에 달하면 임대인은 해지 가능(제640조).
+- **묵시의 갱신**(제639조): 만료 후 임차인이 계속 사용하는데 임대인이 이의하지 않으면 동일 조건으로 갱신, 단 제3자가 제공한 담보는 소멸.
+
+## 비용상환·부속물·갱신청구
+
+- **필요비**는 지출 즉시, **유익비**는 종료 시 가액 증가가 **현존**한 때 상환(제626조). 임의규정이라 **포기 특약 유효**.
+- 건물 임차인의 **부속물매수청구권**(제646조), 토지 임차인의 **갱신청구·지상물매수청구권**(제643조)은 **강행규정**(제652조) — 임차인에게 불리한 포기 특약은 무효.
+
+## 전대: 허락 없이 다시 빌려주면
+
+- 임대인 동의 없는 양도·전대는 **해지 사유**(제629조). 단 건물 **소부분**을 쓰게 하는 것은 예외(제632조).
+- 동의 있는 전대: 전차인은 임대인에게 **직접 의무**(제630조), 임대인·임차인이 **합의 해지**해도 전차인 권리는 유지(제631조).
+
+도서관 책과 같습니다. 빌린 책을 남에게 다시 빌려주려면 **사서의 허락**이 필요합니다.
+
+**갑·을·병 사례** — 갑이 을에게 상가건물을 임대했고, 을이 갑 동의 없이 병에게 전부 전대했습니다. 갑은 계약을 **해지**할 수 있고, 병은 갑에게 임차권을 주장할 수 없습니다.
+
+📌 출제 포인트
+- "유익비상환청구권 포기 특약은 무효" → X(유효). "부속물매수청구권 포기 특약" → 무효.
+- 해지통고 기간 **임대인 6월 / 임차인 1월** 바꿔치기.
+- "임대차 존속기간은 20년을 넘을 수 없다" → X(삭제).
+
+> 💡 **핵심**: 민법 임대차의 함정은 **강행규정 목록(제652조)**입니다. 비용상환은 포기 가능, 매수청구권은 포기 불가.$aix$,
+  $aix${"type":"chat","title":"스터디 채널 — 임대차 함정 지문 OX","messages":[{"role":"user","text":"Q1. 임차인이 지출한 유익비 상환청구권을 포기하는 특약은 임차인에게 불리하므로 무효다. (O/X)"},{"role":"ai","text":"X. 제626조 비용상환은 임의규정 — 포기 특약 유효. 강행규정(652조) 목록에 없습니다."},{"role":"user","text":"Q2. 기간을 정하지 않은 건물 임대차에서 임차인이 해지통고하면 6월 후 효력이 생긴다."},{"role":"ai","text":"X. 임차인 통고는 1월, 임대인 통고가 6월(635조). 주체를 바꿔 낸 함정입니다."},{"role":"user","text":"Q3. 임대인 동의 없이 건물 소부분을 타인에게 사용하게 해도 해지 사유가 아니다."},{"role":"ai","text":"O. 제632조 예외. 전부 전대였다면 629조로 해지 가능."}],"caption":"지문의 '주체'와 '임의/강행'만 바꿔도 정답이 뒤집힙니다 — 기출 지문을 이렇게 OX로 주고받아 보세요."}$aix$::jsonb, null, 6, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2f7a7d23-1117-4a55-51bd-a45d562cce76', 'b5514d1a-2acd-5719-0022-881528740daf', 'realtor-civil-law/housing-lease-act', 'housing-lease-act', '주택임대차보호법: 대항력·우선변제권·계약갱신요구권·임차권등기명령',
+  $aix$임차인 을이 3월 1일 입주·전입신고를 했고, 집주인 갑은 같은 날 은행에 근저당권을 설정했습니다. 누가 먼저일까요? 답은 **은행**입니다. 그 이유가 이 레슨입니다.
+
+## 대항력·우선변제권·최우선변제
+
+- **대항력**(제3조①): 주택의 **인도 + 주민등록(전입신고)**을 마친 **다음 날부터** 효력 — 즉 익일 0시.
+- **우선변제권**(제3조의2②): 대항요건 + 임대차계약서상 **확정일자**. 배당받으려면 주택을 **인도**해야 합니다(③).
+- **최우선변제**(제8조): 소액임차인은 보증금 중 일정액을 담보물권자보다 먼저 받습니다(경매신청 등기 **전** 대항요건, **주택가액의 1/2** 한도). 금액은 시행령이 수시 개정되니 **법령에서 확인**.
+
+병원 접수 번호표와 같습니다. 3월 1일에 왔어도 **내 번호는 3월 2일 0시**에 발급됩니다.
+
+## 기간과 갱신
+
+- **최단 2년**(제4조①): 2년 미만 약정은 2년으로 보되, **임차인은 2년 미만이 유효함을 주장 가능**.
+- **묵시적 갱신**(제6조): 임대인은 만료 **6개월~2개월 전**, 임차인은 **2개월 전**까지 통지하지 않으면 동일 조건 2년 갱신. 임차인은 언제든 해지 통지 가능, **3개월** 후 효력(제6조의2).
+- **계약갱신요구권**(제6조의3): 6~2개월 전 요구, **1회**, **2년**. 임대인(직계존·비속 포함) **실거주** 등 9개 사유로만 거절 가능.
+- 증액은 **20분의 1(5%)** 초과 불가, 증액 후 **1년 이내** 재증액 불가(제7조).
+
+## 임차권등기명령(제3조의3)
+
+임대차가 끝났는데 보증금을 못 받으면 법원에 신청. 등기 후에는 **이사·전출해도 대항력·우선변제권 유지**, 비용은 임대인에게 청구할 수 있습니다.
+
+📌 출제 포인트
+- 대항력 "**즉시**" → X, "다음 날부터".
+- "임대인도 2년 미만 약정이 유효하다고 주장할 수 있다" → X(임차인만).
+
+> 💡 **핵심**: 대항력은 **익일**, 기간은 **2년**, 갱신요구는 **1회·2년·5%**, 임차권등기명령은 **이사해도 유지**. 네 묶음이면 6문항 중 절반은 잡습니다.$aix$,
+  $aix${"type":"flow","title":"임차인 보호 장치가 생기는 순서","nodes":[{"label":"인도 + 전입신고","sublabel":"3월 1일","icon":"home","tone":"muted"},{"label":"대항력 발생","sublabel":"다음 날 0시 (3조①) · 양수인 지위 승계","icon":"shield","tone":"primary","edgeLabel":"익일"},{"label":"확정일자 → 우선변제권","sublabel":"3조의2 · 배당 시 인도 필요","icon":"stamp","tone":"accent","edgeLabel":"+ 확정일자"},{"label":"소액이면 최우선변제","sublabel":"8조 · 주택가액 1/2 한도 · 금액은 시행령","icon":"banknote","tone":"success","edgeLabel":"경매신청 등기 전 요건"},{"label":"종료 후 미반환 → 임차권등기명령","sublabel":"3조의3 · 이사해도 유지","icon":"gavel","tone":"warning","edgeLabel":"계약 종료"}],"caption":"위 두 칸이 '살 권리', 가운데가 '돈 받을 권리', 마지막이 '나가도 지키는 권리'."}$aix$::jsonb, null, 7, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '938a8766-8e23-6dc7-ac34-4405db41876e', 'b5514d1a-2acd-5719-0022-881528740daf', 'realtor-civil-law/commercial-lease-and-condominium', 'commercial-lease-and-condominium', '상가건물임대차보호법·집합건물법 핵심',
+  $aix$가게 임차인은 인테리어와 단골이 재산입니다. 그래서 상가건물임대차보호법은 **10년 갱신과 권리금 보호**를 줍니다.
+
+## 상가건물임대차보호법
+
+- **적용 범위**(제2조): 사업자등록 대상 건물 + **환산보증금**(보증금 + 월 차임×100)이 지역별 기준 이하(시행령 제2조). 기준을 **초과해도** 대항력·계약갱신요구·권리금·3기 연체 해지는 적용됩니다(제2조③).
+- **대항력**(제3조): 인도 + **사업자등록 신청** 다음 날. 최단 **1년**(제9조).
+- **갱신요구**(제10조): 만료 **6개월~1개월 전**, 전체 기간 **10년** 한도. **3기** 차임 연체 사실이 있으면 거절 가능, 3기에 달하면 해지(제10조의8). 증액 상한 **5%**(시행령 제4조).
+- **권리금 회수기회 보호**(제10조의4): 종료 **6개월 전~종료 시** 신규임차인과의 계약 방해 시 손해배상(**3년** 시효).
+
+## 집합건물법
+
+- 기본 단위는 **전유부분·공용부분·대지사용권**(제2조)입니다.
+- 공용부분은 구분소유자 **전원의 공유**(제10조), 지분은 전유부분과 **분리처분 불가**(제13조).
+- **대지사용권도 전유부분과 분리처분 금지**(제20조). 규약으로 예외 가능, 미등기 시 **선의 제3자에게 대항 못함**.
+- 관리단은 **당연 설립**(제23조). 규약 설정·변경·폐지는 구분소유자 및 의결권 **각 4분의 3 이상**(제29조).
+
+아파트는 **몸통(전유)과 다리(대지사용권)를 따로 팔 수 없는 인형**입니다.
+
+## 갑·을·병 사례와 📌 출제 포인트
+
+을은 갑의 상가를 2019년 6월부터 임차 중이고 환산보증금은 서울 기준을 넘습니다. 2026년 갱신 요구 시 갑은 **거절할 수 없습니다** — 10년 이내이고 기준 초과 임대차에도 갱신요구권은 적용되기 때문. 단 **3기 연체 사실**이 있으면 거절 가능.
+
+- 주택 2기 vs 상가 **3기**, 주택 6~2개월 vs 상가 **6~1개월**.
+- 기준 초과 임대차에는 최단 1년(제9조)·묵시 갱신(제10조④)·5% 상한은 **적용되지 않습니다**.
+
+> 💡 **핵심**: 상가는 **1년·10년·3기·5%·권리금 6개월**, 집합건물은 **분리처분 금지 + 규약 3/4**. 아래 데모로 갱신 가능 여부를 판단해 보세요.$aix$,
+  $aix${"type":"compare","title":"주택임대차보호법 vs 상가건물임대차보호법","columns":[{"title":"주택","icon":"home","tone":"primary","items":["대항력: 인도 + 주민등록 익일","최단 2년","갱신요구 6~2개월 전 · 1회 · 2년","연체 2기 · 증액 5%","확정일자: 주민센터·등기소 등"]},{"title":"상가","icon":"building","tone":"accent","items":["대항력: 인도 + 사업자등록 신청 익일","최단 1년 · 환산보증금 기준","갱신요구 6~1개월 전 · 전체 10년","연체 3기 · 증액 5%","권리금 회수기회 보호 (6개월 전~종료)"]}],"caption":"숫자가 다른 칸만 표시해 두면 두 법이 섞이지 않습니다 — 2년/1년, 2기/3기, 2개월/1개월."}$aix$::jsonb, $aix${"title":"스터디 채널 상담: 상가 갱신요구, 가능한가요?","app":{"kind":"chat-app","workspace":"공인중개사 스터디","channels":[{"id":"ch-civil","name":"민법-사례질문","active":true},{"id":"ch-theory","name":"학개론"},{"id":"ch-notice","name":"공지"}],"composerId":"composer","messages":[{"id":"m1","author":"수험생 을","time":"오후 9:02","text":"사례 질문요. 2019년 6월부터 서울 상가 임차 중(보증금 2억, 월세 900만 원). 2026년 만료 전 갱신 요구하면 임대인이 거절 못 하나요?","hidden":true},{"id":"m2","author":"멘토 갑","time":"오후 9:05","text":"먼저 환산보증금: 2억 + 900만×100 = 11억 → 서울 9억 초과. 그래도 제2조③에 따라 갱신요구권(10조)은 적용됩니다.","hidden":true},{"id":"m3","author":"멘토 갑","time":"오후 9:06","text":"기간 체크: 2019.6부터 2026이면 7년째 → 전체 10년 이내. 만료 6개월~1개월 전에 요구하면 원칙적으로 거절 불가.","hidden":true},{"id":"m4","author":"수험생 을","time":"오후 9:08","text":"그럼 함정은요?","hidden":true},{"id":"m5","author":"멘토 갑","time":"오후 9:09","text":"① 3기 차임 연체 사실이 있으면 거절 가능(10조①1호). ② 증액은 5% 상한이지만 기준 초과 임대차는 특례(10조의2)로 상한 미적용. ③ '2개월 전'은 주택, 상가는 1개월 전.","hidden":true},{"id":"m6","author":"수험생 을","time":"오후 9:11","text":"정리: 기준 초과라도 갱신요구 O, 10년 이내 O, 3기 연체 있으면 X. 감사합니다!","hidden":true}]},"actions":[{"t":"caption","text":"① 사례가 올라오면 먼저 적용 범위(환산보증금)를 계산합니다"},{"t":"reveal","target":"m1"},{"t":"wait","ms":700},{"t":"move","target":"m1"},{"t":"click"},{"t":"reveal","target":"m2"},{"t":"wait","ms":600},{"t":"caption","text":"② 전체 기간 10년과 요구 시기(6~1개월 전)를 확인합니다"},{"t":"reveal","target":"m3"},{"t":"move","target":"m3"},{"t":"wait","ms":600},{"t":"reveal","target":"m4"},{"t":"caption","text":"③ 함정 세 가지 — 3기 연체, 증액 특례, 주택과 다른 기간"},{"t":"reveal","target":"m5"},{"t":"move","target":"m5"},{"t":"wait","ms":900},{"t":"caption","text":"④ 한 줄 정리를 직접 입력해 봅니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"기준 초과라도 갱신요구 O, 3기 연체 있으면 X"},{"t":"wait","ms":400},{"t":"hide","target":"composer"},{"t":"reveal","target":"composer"},{"t":"reveal","target":"m6"},{"t":"move","target":"m6"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2ce4d3e8-3249-fe6e-10f8-4ea78696ca4d', 'b5514d1a-2acd-5719-0022-881528740daf', 'realtor-civil-law/named-trust-and-next', 'named-trust-and-next', '부동산실명법(명의신탁)·가등기담보법 + 숫자 암기표 + 다음 단계',
+  $aix$"세금 때문에 동생 이름으로 사 뒀어요." 이 한 문장이 부동산실명법의 출발점입니다. 특별법 둘을 정리하고 숫자를 한 표에 모읍니다.
+
+## 부동산실명법: 명의신탁은 무효
+
+- 명의신탁약정은 **무효**, 그에 따른 등기·물권변동도 **무효**(제4조①②). 단 **계약명의신탁에서 매도인이 선의**면 수탁자가 유효하게 소유권을 취득(② 단서). 이 무효는 **제3자에게 대항 못함**(③).
+- **과징금**: 부동산가액의 **30%** 범위(제5조). **특례**(제8조): **종중·배우자·종교단체** 명의는 조세포탈·강제집행 면탈·법령 회피 목적이 없으면 유효.
+
+## 가등기담보법: 빌린 돈 대신 집을 넘기려면 청산부터
+
+- 적용: 대물변제 예약으로 **부동산 가액 > 차용액+이자**인 경우(제1조).
+- 실행 절차(제3·4조): 변제기 후 **청산금 평가액 통지** → 통지 도달부터 **2개월 청산기간** → **청산금 지급** 후 소유권 취득. 채무자에게 불리한 특약은 무효.
+
+## 자주 나오는 숫자·기간 암기표
+
+| 영역 | 숫자 |
+|---|---|
+| 총칙·용익 | 취소권 3년/10년 · 지상권 30/15/5년 · 전세권 최장 10년·건물 1년 |
+| 소유·담보 | 취득시효 20년/10년 · 분할금지 특약 5년 · 저당권 지연배상 1년분 |
+| 계약 | 환매 5년 · 담보책임 1년/6월 · 해지통고 6월/1월 · 연체 2기 |
+| 특별법 | 주택 2년·6~2개월·1회·5% / 상가 1년·10년·6~1개월·3기 / 규약 3/4 · 과징금 30% · 청산기간 2개월 |
+
+**갑·을·병 사례** — 갑이 돈을 대고 을 명의로 병의 X토지를 사게 했는데 병은 명의신탁을 몰랐습니다. X의 소유자는 **을**, 갑은 을에게 매수자금의 부당이득 반환만 청구할 수 있습니다.
+
+📌 출제 포인트
+- "배우자 명의신탁은 어떤 경우에도 유효" → X(회피 목적이면 무효).
+- 청산기간 "1개월" → X(2개월).
+
+**다음 단계**: **"2차 공인중개사법령 및 중개실무: 등록부터 거래신고까지"**로 이어집니다. 대리·임대차·담보물권 지식이 권리분석에 그대로 쓰입니다.
+
+> 💡 **핵심**: 명의신탁은 **무효 + 30% 과징금 + 종중·배우자·종교단체 예외**, 가등기담보는 **통지 → 2개월 → 청산금**.$aix$,
+  $aix${"type":"steps","title":"가등기담보권 실행 절차","steps":[{"label":"변제기 도래","sublabel":"채무자가 갚지 못함","icon":"clock"},{"label":"청산금 평가액 통지","sublabel":"제3조 · 부동산 평가액과 채권액 명시","icon":"mail"},{"label":"청산기간 2개월","sublabel":"통지 도달일부터 · 채무자는 변제·말소 청구 가능","icon":"hourglass"},{"label":"청산금 지급","sublabel":"제4조 · 가액 − 채권액 · 등기와 동시이행","icon":"banknote"},{"label":"소유권 취득 · 본등기","sublabel":"불리한 특약 무효 · 말소청구는 변제기 후 10년까지","icon":"stamp"}],"caption":"'통지 없이 바로 본등기'는 언제나 오답 — 2개월과 청산금이 반드시 사이에 있습니다."}$aix$::jsonb, null, 7, 14
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 2차 공인중개사법령 및 중개실무: 등록부터 거래신고까지
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'ab4731d6-7ef7-613e-27bc-74fb09417279', 'realtor-brokerage-law', '2차 공인중개사법령 및 중개실무: 등록부터 거래신고까지', $aix$2차 시험의 첫 과목은 '조문을 얼마나 정확히 아는가'를 묻습니다. 그래서 공부 방향만 잡으면 가장 점수가 안정적인 과목입니다. 이 강의는 공인중개사법의 목차 순서대로 — 용어 정의, 개설등록과 결격사유, 사무소 운영 신고, 중개계약, 확인·설명 의무(2026-02-15 시행 개정 반영), 중개보수 계산, 금지행위와 손해배상, 제재 체계 — 를 정리하고, 부동산 거래신고 등에 관한 법률(거래신고·전월세신고제·외국인·토지거래허가구역)과 중개실무(등기부·건축물대장 확인, 계약서, 경매·매수신청대리)까지 14개 레슨으로 묶었습니다. 모든 기간·금액·비율은 국가법령정보센터 현행 조문으로 검증했고, '누가·며칠·얼마'를 함정 지문 패턴과 함께 암기표로 정리합니다.$aix$,
+  null, 'realestate', 'intermediate', array['공인중개사법', '부동산 거래신고법', '중개실무', '개설등록', '토지거래허가구역', '2차 시험']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '41d78cc1-f8d4-2e5c-f2d3-79081e66b6e1', 'ab4731d6-7ef7-613e-27bc-74fb09417279', 'system-and-registration', '제도와 등록', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '98f4e8f5-db67-2059-f7af-bd6764901eae', 'ab4731d6-7ef7-613e-27bc-74fb09417279', 'duties-and-liability', '업무와 의무', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '8273569b-6ef6-b758-23e6-8c3b4a6624a1', 'ab4731d6-7ef7-613e-27bc-74fb09417279', 'transaction-reporting-act', '부동산 거래신고 등에 관한 법률', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '89de0301-fe25-1818-c5ab-2dd890230e21', 'ab4731d6-7ef7-613e-27bc-74fb09417279', 'practice', '중개실무', 3
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e4d42170-97f8-c97a-5c09-fe76d78c92ec', '41d78cc1-f8d4-2e5c-f2d3-79081e66b6e1', 'realtor-brokerage-law/subject-map', 'subject-map', '공인중개사법령·거래신고법·중개실무 출제 지도',
+  $aix$2차 첫 과목은 "조문을 얼마나 정확히 외웠나"를 묻는 과목입니다. 그래서 공부 방향만 잘 잡으면 가장 점수가 안정적인 과목이기도 합니다.
+
+## 40문항은 어디서 나오나
+
+세 덩어리로 이뤄져 있습니다(문항 배분은 공식 고정값이 아니라 최근 기출 기준 학원·EBS 분석의 대략치입니다).
+
+- **공인중개사법령** — 약 25~28문항. 등록·업무·의무·제재까지 조문이 그대로 지문이 됩니다.
+- **부동산 거래신고 등에 관한 법률** — 약 6~8문항. 거래신고·전월세신고제·외국인·토지거래허가구역.
+- **중개실무** — 약 5~7문항. 등기부·건축물대장 확인, 계약서 작성, 경매·매수신청대리.
+
+## 공부 원칙 두 가지
+
+1. **법령 기준 시점** — 시험은 시험 시행일(2026-10-31) 현재 시행 중인 법령이 기준입니다(Q-Net 시행공고 원칙). 공인중개사법은 2026-02-15 시행 개정(확인·설명 근거자료에 신탁원부·건축물대장 등본 명시)과 2026-08-28 시행 개정(한국공인중개사협회의 법정단체화)까지 반영해야 합니다. 국회 계류 중인 개정안은 "2026년 9월 기준 확정 아님"으로만 기억하세요.
+2. **숫자와 주체를 세트로** — "누가(등록관청·시·도지사·국토교통부장관), 며칠 안에, 얼마"가 지문의 뼈대입니다. 마지막 레슨에 암기표를 모아 두었습니다.
+
+교통법규 시험과 비슷합니다. 운전(중개) 실력보다 "규칙을 정확히 아는가"를 봅니다.
+
+## 이 강의의 지도
+
+M1 제도와 등록(1~4강) → M2 업무와 의무(5~9강) → M3 거래신고법(10~12강) → M4 중개실무(13~14강). 법의 목차 순서와 같으니, 기출문제를 풀 때도 같은 순서로 정리하면 머리에 남습니다.
+
+**📌 출제 포인트**
+
+- 함정: "개정 법령은 공포일 기준으로 출제된다" → 시험 시행일 현재 **시행 중인** 법령이 기준.
+- 문항 배분 숫자는 공식값이 아니니 외우지 말고, 대신 "주체·기간·금액" 세트를 외우세요.
+
+> 💡 **핵심**: 이 과목은 "주체 + 기간 + 금액"을 정확히 외운 사람이 이깁니다. 조문 순서대로 지도를 그리고, 숫자는 암기표로 반복하세요.$aix$,
+  $aix${"type":"flow","title":"이 강의의 4단계 = 법의 목차 순서","nodes":[{"label":"제도와 등록","sublabel":"정의 · 개설등록 · 결격사유 · 사무소 신고","icon":"badge-check","tone":"primary"},{"label":"업무와 의무","sublabel":"중개계약 · 확인·설명 · 보수 · 금지행위 · 제재","icon":"scroll-text","tone":"accent","edgeLabel":"약 25~28문항 (대략치)"},{"label":"부동산 거래신고법","sublabel":"거래신고 · 전월세신고제 · 외국인 · 토지거래허가","icon":"file-pen","tone":"warning","edgeLabel":"약 6~8문항"},{"label":"중개실무","sublabel":"서류 확인 · 계약서 · 경매 · 매수신청대리","icon":"handshake","tone":"success","edgeLabel":"약 5~7문항"}],"caption":"시험은 2026-10-31 시행 중인 법령이 기준 — 2026-02-15·08-28 시행 개정까지 반영합니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8f6a2484-c03c-3daa-cb0a-1e0083c91034', '41d78cc1-f8d4-2e5c-f2d3-79081e66b6e1', 'realtor-brokerage-law/definitions', 'definitions', '용어 정의: 중개·중개업·개업공인중개사·소속공인중개사·중개보조원·중개대상물',
+  $aix$"중개"와 "중개업"이 다르다는 걸 모르면 첫 문제부터 틀립니다. 정의 조문(제2조)은 매년 1~2문항이 나오는 출발점입니다.
+
+## 사람에 관한 정의
+
+- **중개** — 중개대상물에 대해 거래당사자 간 매매·교환·임대차 그 밖의 권리의 득실변경 행위를 **알선**하는 것.
+- **중개업** — 다른 사람의 의뢰로 **일정한 보수**를 받고 중개를 **업으로** 하는 것. 보수 없이 한 번 알선한 것은 중개업이 아닙니다.
+- **공인중개사** — 이 법에 따른 자격을 취득한 사람. 자격만 있고 개설등록을 안 했으면 개업공인중개사가 아닙니다.
+- **개업공인중개사** — 개설등록을 한 자(법인 포함).
+- **소속공인중개사** — 개업공인중개사에 소속된 공인중개사. 법인의 사원·임원으로서 공인중개사인 자도 포함되고, 중개업무를 **수행하거나 보조**합니다.
+- **중개보조원** — 공인중개사가 아닌 자로서 현장안내·일반서무 등 **단순한 업무**를 보조하는 사람. 중개업무 수행은 불가.
+
+축구팀에 비유하면 개업공인중개사는 구단주 겸 감독, 소속공인중개사는 선수, 중개보조원은 장비 담당입니다. 장비 담당이 경기에 뛰면(계약서 작성·설명) 규칙 위반입니다.
+
+## 물건에 관한 정의: 중개대상물(제3조·시행령 제2조)
+
+토지 / 건축물 그 밖의 토지의 정착물 / 입목(「입목에 관한 법률」) / 공장재단 / 광업재단. 이 다섯 가지가 전부입니다. 판례는 상가 권리금·영업시설, 토지에 정착되지 않은 세차장 구조물은 중개대상물로 보지 않습니다.
+
+## 📌 출제 포인트
+
+- 함정: "소속공인중개사는 중개업무를 보조할 수 있을 뿐 수행할 수 없다" → 틀림. 수행도 보조도 가능합니다.
+- 함정: "중개보조원이 현장안내를 할 때 자신이 중개보조원임을 알릴 필요는 없다" → 틀림. 고지의무(제18조의4) 위반은 500만 원 이하 과태료.
+- 광업권·어업권·금전채권은 권리이지 물건이 아니므로 중개대상물이 아닙니다.
+
+> 💡 **핵심**: 정의 문제는 "보수·업으로·알선"과 "다섯 가지 중개대상물"만 정확하면 끝납니다.$aix$,
+  $aix${"type":"grid","title":"정의 조문 개념 지도","items":[{"label":"중개","sublabel":"권리 득실변경의 알선","icon":"handshake","tone":"primary"},{"label":"중개업","sublabel":"보수 + 업으로","icon":"banknote","tone":"primary"},{"label":"공인중개사","sublabel":"자격 취득자 (등록 전)","icon":"award","tone":"muted"},{"label":"개업공인중개사","sublabel":"개설등록을 한 자 · 법인 포함","icon":"building","tone":"accent"},{"label":"소속공인중개사","sublabel":"수행 + 보조 · 법인 임원 포함","icon":"user","tone":"accent"},{"label":"중개보조원","sublabel":"단순 업무 보조 · 고지의무","icon":"users","tone":"warning"},{"label":"중개대상물 5종","sublabel":"토지 · 건축물 등 정착물 · 입목 · 공장재단 · 광업재단","icon":"layers","tone":"success"},{"label":"중개대상물 아님","sublabel":"권리금 · 광업권 · 금전채권","icon":"x","tone":"muted"}],"caption":"사람 6개 + 물건 5종. '보수·업으로·알선' 세 단어가 중개업의 정의입니다."}$aix$::jsonb, null, 5, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4487b44a-e34b-21fb-504d-f67dbe185c05', '41d78cc1-f8d4-2e5c-f2d3-79081e66b6e1', 'realtor-brokerage-law/registration-requirements', 'registration-requirements', '중개사무소 개설등록: 요건·결격사유·등록 절차와 등록증',
+  $aix$자격증은 '운전면허', 개설등록은 '영업용 번호판'입니다. 면허가 있어도 번호판 없이 손님을 태우면 무등록 영업이죠.
+
+## 누가, 어디에(제9조·시행령 제13조)
+
+- 등록관청은 사무소 소재지의 **시장·군수·구청장**. 신청할 수 있는 자는 **공인중개사(소속공인중개사 제외) 또는 법인**뿐입니다.
+- 등록기준: ① 실무교육 이수 ② 건축물대장에 기재된 건물에 사무소 확보(가설건축물 제외, 소유·전세·임대차·사용대차 모두 가능).
+- 법인 추가 기준: 상법상 회사 또는 협동조합(사회적협동조합 제외)으로 **자본금 5천만 원 이상**, 중개업과 겸업 가능 업무만을 목적으로 설립, **대표자는 공인중개사**, 대표자 제외 임원·사원의 **3분의 1 이상**이 공인중개사, 전원 실무교육 이수.
+
+## 결격사유(제10조): 등록도, 고용도 못 한다
+
+미성년자 / 피성년후견인·피한정후견인 / 파산 후 복권 안 된 자 / 금고 이상 실형 집행 종료·면제 후 **3년** 미경과 / 집행유예 기간 만료 후 **2년** 미경과 / 자격취소 후 3년 / 자격정지 기간 중 / 등록취소 후 3년 / 업무정지 중 폐업한 자(정지기간은 진행) / 업무정지를 받은 법인의 임원이었던 자(정지기간 중) / **이 법 위반으로 300만 원 이상 벌금형** 후 3년 미경과 / 결격 임원이 있는 법인. 이들은 소속공인중개사·중개보조원도 될 수 없습니다.
+
+## 절차와 등록증(시행규칙 제4조·제5조)
+
+신청 → 등록관청이 자격증 발급 시·도지사에게 자격 확인 요청 → **7일 이내 서면 통지** → 업무보증 설정을 확인한 뒤 **등록증 교부**(제11조) → 인장 등록·게시 → 업무 개시. 등록증만 받았다고 영업할 수 있는 것이 아닙니다.
+
+**📌 출제 포인트**
+
+- 함정: "피특정후견인은 결격사유다" → 틀림. 성년·한정후견만 해당.
+- "300만 원 벌금형" 기준은 2013년부터 시행 중인 조문(2026년 개정이 아님). **이 법 위반** 벌금만 해당하고 형법 위반 벌금은 무관.
+- 법인 임원의 결격은 **2개월 이내** 해소하면 등록취소를 면합니다(제38조①3호).
+
+> 💡 **핵심**: 등록은 "공인중개사 또는 법인 + 실무교육 + 건축물대장 건물", 결격은 "3년·2년·300만 원"을 세트로.$aix$,
+  $aix${"type":"steps","title":"개설등록에서 업무 개시까지","steps":[{"label":"실무교육 이수","sublabel":"등록신청일 전 1년 이내 · 시·도지사 · 45시간","icon":"graduation-cap"},{"label":"사무소 확보","sublabel":"건축물대장 기재 건물 (가설건축물 제외)","icon":"building"},{"label":"등록 신청","sublabel":"시장·군수·구청장 = 등록관청","icon":"file-pen"},{"label":"7일 이내 서면 통지","sublabel":"자격 확인 → 종별(법인/공인중개사) 구분 등록","icon":"calendar-check"},{"label":"업무보증 설정 → 등록증 교부","sublabel":"개인 2억 · 법인 4억","icon":"shield"},{"label":"인장 등록 · 게시 → 업무 개시","sublabel":"등록증·요율표·자격증·보증서류·사업자등록증","icon":"stamp"}],"caption":"결격사유(제10조)에 하나라도 걸리면 이 흐름 자체가 시작되지 않습니다."}$aix$::jsonb, null, 6, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c08a3446-fa20-e98b-c009-b0a27f68e58c', '41d78cc1-f8d4-2e5c-f2d3-79081e66b6e1', 'realtor-brokerage-law/office-operation', 'office-operation', '사무소 운영: 명칭·게시·이전·휴폐업·고용인 신고·인장 등록',
+  $aix$사무소를 열고 나면 신고의 연속입니다. 이 숫자들은 "며칠 이내"를 바꿔 내는 함정의 단골입니다.
+
+## 사무소·명칭·게시
+
+- **1개 사무소**만, 등록관청 관할 안에(제13조). 천막 같은 임시 시설물 금지. 법인만 **분사무소**(시·군·구별 1개, 책임자는 공인중개사, 주된 사무소 등록관청에 신고). 공동사용은 가능.
+- 명칭에 **"공인중개사사무소" 또는 "부동산중개"** 문자 사용, 옥외광고물에는 개업공인중개사(법인은 대표자)의 **성명** 표기(제18조). 위반 시 등록관청이 철거 명령·대집행.
+- 사무소 안 게시(제17조·시행규칙 제10조): 등록증 원본, 중개보수·실비 요율 및 한도액표, 자격증 원본, 보증 증명 서류, 사업자등록증. 미게시는 100만 원 이하 과태료.
+
+## 이전·휴업·폐업
+
+- **이전 신고 10일 이내**(제20조). 관할 밖으로 옮기면 **이전 후 등록관청**에 신고하고, 신고 전 사유의 행정처분도 이전 후 등록관청이 합니다.
+- **3개월 초과 휴업**·폐업·재개·휴업기간 변경은 **미리 신고**(제21조·시행령 제18조). 휴업·폐업 신고에는 등록증 첨부. 휴업은 **6개월 초과 금지**(질병 요양·징집·취학·임신·출산 등 예외) — 위반하면 임의적 등록취소.
+- 이전·폐업 신고와 등록취소 시 간판은 **지체 없이** 철거(제21조의2).
+
+## 고용인·인장
+
+- 소속공인중개사·중개보조원 고용은 **업무 개시 전**, 고용관계 종료는 **10일 이내** 신고(시행규칙 제8조). 고용인의 업무상 행위는 개업공인중개사의 행위로 봅니다.
+- 중개보조원은 개업공인중개사와 소속공인중개사를 합한 수의 **5배**까지. 초과 고용은 절대적 등록취소 + 1년/1천만 원.
+- 인장은 **업무 개시 전** 등록, 변경은 **7일 이내**(시행규칙 제9조). 개인은 7~30mm 성명 인장, 법인은 상업등기규칙 인감.
+
+**📌 출제 포인트**
+
+- 함정: "휴업기간 변경은 신고 대상이 아니다" → 틀림.
+- 함정: "관할 밖 이전 신고는 종전 등록관청에" → 이전 후 등록관청.
+
+> 💡 **핵심**: 이전 10일 · 고용종료 10일 · 인장변경 7일 · 휴업 3개월 초과 신고 · 6개월 초과 금지 · 보조원 5배.$aix$,
+  $aix${"type":"grid","title":"사무소 운영 숫자 지도","items":[{"label":"이전 신고","sublabel":"10일 이내 · 관할 밖은 이전 후 등록관청","icon":"map-pin","tone":"primary"},{"label":"고용 · 종료 신고","sublabel":"업무개시 전 · 종료 10일 이내","icon":"users","tone":"primary"},{"label":"인장 등록","sublabel":"업무개시 전 · 변경 7일 이내","icon":"stamp","tone":"accent"},{"label":"휴업 신고","sublabel":"3개월 초과 시 미리 · 6개월 초과 금지","icon":"hourglass","tone":"warning"},{"label":"중개보조원 한도","sublabel":"(개공 + 소공) × 5배","icon":"scaling","tone":"warning"},{"label":"분사무소","sublabel":"법인만 · 시·군·구별 1개 · 책임자 공인중개사","icon":"building","tone":"muted"},{"label":"게시 5종","sublabel":"등록증 · 요율표 · 자격증 · 보증서류 · 사업자등록증","icon":"list-checks","tone":"success"},{"label":"간판 철거","sublabel":"이전 · 폐업 · 등록취소 시 지체 없이","icon":"x","tone":"muted"}],"caption":"'10일·7일·3개월·6개월·5배'만 정확하면 이 레슨 문제는 다 풉니다."}$aix$::jsonb, null, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4d34ebd3-8c68-315e-4aeb-8085933b678e', '98f4e8f5-db67-2059-f7af-bd6764901eae', 'realtor-brokerage-law/brokerage-contracts', 'brokerage-contracts', '일반중개계약·전속중개계약·거래정보망',
+  $aix$손님이 "우리 집만 맡길게요"라고 하면 어떤 계약서를 써야 할까요? 일반과 전속의 차이는 매년 나오는 확정 출제 구간입니다.
+
+## 일반중개계약(제22조)
+
+여러 사무소에 동시에 의뢰할 수 있는 기본형. 의뢰인이 **요청하면** 위치·규모, 거래예정가격, 중개보수 등을 적은 계약서를 작성합니다. 서식 사용·보존 의무는 없고, 국토교통부장관이 표준서식을 정해 권장할 수 있을 뿐입니다.
+
+## 전속중개계약(제23조·시행령 제20조)
+
+- 특정 개업공인중개사 **한 곳에만** 의뢰. **국토교통부령 서식**(별지 제15호)으로 작성하고 **3년** 보존(시행규칙 제14조). 서식을 안 쓰거나 보존 안 하면 업무정지.
+- 유효기간 **3개월**. 다만 당사자 약정이 있으면 약정 우선.
+- 체결 후 **7일 이내**(서식상 기간) 거래정보망 또는 일간신문에 정보 공개. 의뢰인이 비공개를 요청하면 공개 금지 — 공개 의무 위반과 비공개 요청 위반 모두 임의적 등록취소.
+- 공개 정보: 물건 특정 사항, 벽면·도배·시설물 상태, 입지·환경조건, 권리관계(권리자 **인적사항은 공개 금지**), 공법상 제한, 거래예정금액·공시지가(임대차는 공시지가 생략 가능).
+- 서식상 의무: **2주일에 1회 이상** 업무처리 상황을 문서로 통지.
+
+## 거래정보망(제24조·시행규칙 제15조)
+
+- 지정권자는 **국토교통부장관**, 대상은 부가통신사업자. 요건: 가입 개업공인중개사 **500명 이상** + **2개 이상 시·도**에서 **각 30명 이상**, 정보처리기사 1명, 공인중개사 1명 이상.
+- 지정 후 **3개월 이내** 운영규정 승인, **1년 이내** 미설치·운영 시 지정취소(취소 전 청문). 정보는 의뢰받은 것만, 차별 공개 금지(위반 1년/1천만 원).
+
+일반은 아무 버스나 타는 것, 전속은 전세버스 계약입니다. 전세버스는 계약서 양식이 정해져 있고 운행 보고를 받죠.
+
+**📌 출제 포인트**
+
+- 함정: "전속중개계약 유효기간은 언제나 3개월" → 약정 있으면 약정.
+- 함정: "거래정보망 지정권자는 시·도지사" → 국토교통부장관.
+
+> 💡 **핵심**: 전속 = 서식·3년 보존·3개월·7일 공개·2주 보고. 거래정보망 = 500명·2시도 30명·3개월·1년.$aix$,
+  $aix${"type":"compare","title":"일반 vs 전속 vs 거래정보망","columns":[{"title":"일반중개계약","icon":"users","tone":"muted","items":["여러 사무소 동시 의뢰","의뢰인 요청 시 계약서 작성","서식·보존 의무 없음","표준서식은 권장만"]},{"title":"전속중개계약","icon":"file-pen","tone":"primary","items":["한 곳에만 의뢰","국토부령 서식 · 3년 보존","유효기간 3개월 (약정 우선)","7일 내 공개 · 2주 1회 보고"]},{"title":"거래정보망","icon":"network","tone":"accent","items":["국토교통부장관 지정","500명 + 2시도 각 30명","운영규정 3개월 내 승인","1년 미운영 → 지정취소"]}],"caption":"전속의 위반은 '서식·보존 → 업무정지', '공개 의무 → 임의적 등록취소'로 갈립니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5f8d3e86-4a63-0a8e-802b-c5fe20ec5415', '98f4e8f5-db67-2059-f7af-bd6764901eae', 'realtor-brokerage-law/duty-of-disclosure', 'duty-of-disclosure', '확인·설명 의무와 중개대상물 확인·설명서(2026-02 개정: 신탁원부·건축물대장 제시)',
+  $aix$2026-02-15부터 개업공인중개사가 계약 전에 보여줘야 하는 서류가 조문에 늘었습니다. 이 과목 최신 개정의 핵심이라 올해 시험에서 가장 주목받는 조문입니다.
+
+## 확인·설명 의무(제25조)
+
+- 시점: **중개가 완성되기 전**. 상대: 권리를 **취득**하려는 의뢰인(매수·임차인). 방법: 성실·정확하게 설명하고 **근거자료를 제시**.
+- 근거자료(2025-08-14 개정, 2026-02-15 시행 이후 체결 계약부터): 토지대장 등본 또는 부동산종합증명서, 등기사항증명서, **신탁원부**, **건축물대장 등본** 등. 신탁 사기·위반건축물 피해 예방이 취지입니다.
+
+## 확인·설명 사항(시행령 제21조)
+
+기본 사항(종류·소재지·면적·용도·구조·건축연도) / 권리관계 / 거래예정금액·중개보수·실비 / **관리비** / 토지이용계획·공법상 제한 / 시설물·벽면·바닥면·도배 상태 / 환경·입지 조건 / 취득 시 조세. 주택 임대차만 추가: 임대인 정보 제시·소액보증금 보호, 전입세대확인서, 민간임대주택 보증. 별도로 확정일자 정보·미납 국세·지방세 열람 신청이 가능함을 설명(제25조의3).
+
+## 서식과 계약서
+
+- 중개대상물 확인·설명서: 국토교통부령 서식으로 작성해 거래당사자에게 교부, **3년** 보존(공인전자문서센터 보관 시 예외). 개업공인중개사(법인은 대표자, 분사무소는 책임자)가 **서명 및 날인**, 해당 중개를 한 소속공인중개사도 함께.
+- 거래계약서(제26조): 당사자·물건·계약일·금액·인도일·확인·설명서 교부일 등 기재, **5년** 보존. 거짓 기재·이중계약서 금지.
+
+의사가 처방 전에 검사 결과지를 보여주며 설명하는 것과 같습니다. 말로만 하면 의무 이행이 아닙니다.
+
+**📌 출제 포인트**
+
+- 성실 설명·근거자료 미제시: 개업공인중개사 **500만 원 이하 과태료**, 소속공인중개사 **자격정지**.
+- 서식 미교부·미보존·서명날인 누락: **업무정지**.
+- 함정: "확인·설명서 보존 5년, 계약서 3년" → 반대(3년·5년).
+
+> 💡 **핵심**: 계약 전 설명 + 근거자료 제시(신탁원부·건축물대장 포함) → 서식 교부·3년 보존, 계약서 5년.$aix$,
+  $aix${"type":"stack","title":"확인·설명 의무의 4층 구조","layers":[{"label":"중개대상물 확인·설명서","sublabel":"서식 작성 · 교부 · 3년 보존 · 개공 + 소공 서명날인","icon":"file-text","tone":"primary"},{"label":"설명의 근거자료 제시","sublabel":"토지대장(부동산종합증명서) · 등기사항증명서 · 신탁원부 · 건축물대장 등본","icon":"search","tone":"accent"},{"label":"확인·설명 사항 (시행령 제21조)","sublabel":"기본사항 · 권리관계 · 보수·실비 · 관리비 · 공법 제한 · 시설·환경·입지 · 조세","icon":"list-checks","tone":"warning"},{"label":"거래계약서","sublabel":"필수 기재사항 · 5년 보존 · 거짓 기재·이중계약서 금지","icon":"file-pen","tone":"muted"}],"caption":"2026-02-15 시행: 신탁원부·건축물대장 등본이 근거자료 예시로 조문에 명시됐습니다."}$aix$::jsonb, null, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '5ea5167b-a3da-3f32-8740-fddb14d780a6', '98f4e8f5-db67-2059-f7af-bd6764901eae', 'realtor-brokerage-law/brokerage-fee', 'brokerage-fee', '중개보수와 실비: 요율 상한·계산·받을 수 없는 경우',
+  $aix$중개보수는 계산 문제로 나옵니다. 요율표를 외우고 거래금액 산정 규칙만 알면 한 문제는 확정입니다.
+
+## 누가 정하고, 언제 못 받나(제32조)
+
+- 주택(부속토지 포함)은 국토교통부령 상한 안에서 **시·도 조례**로, 주택 외는 **국토교통부령**으로. 의뢰인 **쌍방에게 각각** 받습니다.
+- 개업공인중개사의 고의·과실로 거래가 무효·취소·해제되면 보수를 받을 수 없습니다. 지급시기는 약정, 없으면 **거래대금 지급 완료일**(시행령 제27조의2).
+- 사무소와 물건 소재지가 다르면 **사무소 소재지 시·도 조례** 기준.
+- 실비: 권리관계 확인 비용은 **매도·임대 의뢰인**에게, 계약금 등 반환채무이행 보장 비용은 **매수·임차 의뢰인**에게 영수증을 첨부해 청구.
+
+## 상한요율(시행규칙 별표 1, 주택)
+
+매매·교환: 5천만 원 미만 0.6%(한도 25만 원) / 5천만~2억 0.5%(한도 80만 원) / 2억~9억 0.4% / 9억~12억 0.5% / 12억~15억 0.6% / 15억 이상 0.7%.
+임대차: 5천만 미만 0.5%(20만 원) / 5천만~1억 0.4%(30만 원) / 1억~6억 0.3% / 6억~12억 0.4% / 12억~15억 0.5% / 15억 이상 0.6%.
+주택 외는 **0.9%** 이내 협의, 전용 85㎡ 이하 주거용 오피스텔은 별표 2 상한(매매 0.5%·임대차 0.4%) 이내 협의.
+
+## 거래금액 계산(시행규칙 제20조)
+
+- 월세: **보증금 + 월차임×100**. 합산액이 5천만 원 미만이면 **×70**으로 다시 계산.
+- 교환: 큰 쪽 금액. 같은 물건을 같은 당사자가 매매+임대차 동시 체결하면 **매매만** 적용.
+- 건물 중 주택 면적이 **2분의 1 이상**이면 주택 요율.
+
+```text
+보증금 3,000만 + 월세 40만 → 3,000만 + 40만×100 = 7,000만 (5천만 이상 → 확정)
+7,000만 × 0.4% = 28만 → 한도 30만 이내 → 일방 상한 28만 원
+```
+
+**📌 출제 포인트**
+
+- 상한을 초과해 받으면 명목이 무엇이든 금지행위(1년/1천만 원) + 임의적 등록취소.
+- 함정: "월차임 환산은 항상 ×100" → 합산 5천만 원 미만은 ×70.
+- 함정: "주택 외 중개보수도 시·도 조례로 정한다" → 국토교통부령.
+
+> 💡 **핵심**: 요율표 6단 + "×100, 5천만 미만이면 ×70" + "주택은 조례, 주택 외는 부령 0.9%".$aix$,
+  $aix${"type":"terminal","windowTitle":"중개보수 계산 — 월세 사례","lines":[{"text":"보증금 3,000만 원 · 월세 40만 원 · 주택 임대차","tone":"cmd"},{"text":"거래금액 = 3,000만 + 40만 × 100 = 7,000만 원","tone":"out"},{"text":"# 5천만 원 이상 → ×70 재계산 불필요","tone":"comment"},{"text":"구간: 5천만~1억 → 임대차 상한 0.4%, 한도 30만 원","tone":"out"},{"text":"7,000만 × 0.4% = 28만 원 ≤ 30만 원 → 일방 상한 28만 원","tone":"ok"},{"text":"보증금 2,000만 · 월세 30만 → 5,000만 (5천만 미만!)","tone":"cmd"},{"text":"재계산: 2,000만 + 30만 × 70 = 4,100만 → 0.5%, 한도 20만","tone":"out"},{"text":"4,100만 × 0.5% = 20.5만 → 한도 적용 → 20만 원","tone":"ok"}],"caption":"두 번째 사례처럼 합산이 5천만 원 미만이면 ×70으로 다시 계산 — 시험이 좋아하는 함정입니다."}$aix$::jsonb, null, 6, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8cc48f8c-b3b0-2d6e-7861-fa8e40d14542', '98f4e8f5-db67-2059-f7af-bd6764901eae', 'realtor-brokerage-law/prohibited-acts-and-liability', 'prohibited-acts-and-liability', '금지행위·손해배상책임·업무보증·교육 의무',
+  $aix$"직접 거래", "쌍방대리", "초과 보수" — 금지행위 아홉 가지는 형벌·행정처분·자격정지가 한꺼번에 걸리는 이 과목의 심장입니다.
+
+## 금지행위(제33조①) — 두 그룹으로 외우기
+
+**1년/1천만 원 그룹(1~4호)**: ① 중개대상물 **매매를 업으로** ② 무등록 중개업자와 협력 ③ 어떤 명목이든 **보수·실비 초과** 수수 ④ 거짓 언행으로 의뢰인 판단을 그르침.
+**3년/3천만 원 그룹(5~9호)**: ⑤ 양도 금지 증서의 중개·매매업 ⑥ **직접 거래·쌍방대리** ⑦ 미등기 전매 등 투기 조장 ⑧ 거짓 거래 완료 등 **시세 교란** ⑨ 단체를 만들어 공동중개 제한.
+누구든지 시세 교란 목적의 **업무방해**도 3년/3천만 원(제33조②). 개업공인중개사는 임의적 등록취소, 소속공인중개사는 자격정지가 따라옵니다.
+
+## 손해배상책임과 업무보증(제30조·시행령 제24조)
+
+- 고의·과실로 재산상 손해 → 배상. 사무소를 **타인의 중개 장소로 제공**한 경우도 같습니다.
+- **업무 개시 전** 보증보험·공제·공탁: **개인 2억 원, 법인 4억 원(분사무소마다 2억 원 추가)**. 공탁금은 폐업·사망 후 **3년** 회수 불가.
+- 중개 완성 시 보장금액·기관·기간 설명 + 증서 사본 교부(누락 시 100만 원 이하 과태료). 배상 후 **15일 이내** 재가입.
+
+## 교육(제34조·시행령 제28조)
+
+- **실무교육**: 등록신청일(소속공인중개사는 고용신고일) 전 **1년 이내**, 시·도지사, **45시간**(2026-01-01 시행 개정, 종전 28~32시간).
+- **직무교육**(중개보조원): 3~4시간. **연수교육**: 실무교육 후 **2년마다** 12~16시간, 2년 되기 **2개월 전**까지 통지, 미이수 500만 원 이하 과태료.
+
+금지행위는 '하지 말 것' 목록, 업무보증은 손님을 지키는 보험입니다.
+
+**📌 출제 포인트**
+
+- 함정: "일방대리는 금지행위" → 쌍방대리만 금지.
+- 함정: "법인 보증 4억이면 분사무소 추가 불필요" → 분사무소마다 2억 추가.
+
+> 💡 **핵심**: 금지행위 1~4호는 1년/1천만, 5~9호는 3년/3천만. 보증 2억·4억(+2억), 교육 45·3~4·12~16시간.$aix$,
+  $aix${"type":"grid","title":"금지행위 9가지 — 형벌 그룹별 지도","items":[{"label":"① 매매업","sublabel":"1년/1천만","icon":"shopping-cart","tone":"muted"},{"label":"② 무등록자 협력","sublabel":"1년/1천만","icon":"users","tone":"muted"},{"label":"③ 보수·실비 초과","sublabel":"1년/1천만","icon":"banknote","tone":"muted"},{"label":"④ 거짓 언행","sublabel":"1년/1천만","icon":"alert","tone":"muted"},{"label":"⑤ 금지 증서 중개","sublabel":"3년/3천만","icon":"scroll-text","tone":"warning"},{"label":"⑥ 직접거래 · 쌍방대리","sublabel":"3년/3천만","icon":"handshake","tone":"warning"},{"label":"⑦ 투기 조장","sublabel":"3년/3천만 · 미등기 전매","icon":"trending-up","tone":"warning"},{"label":"⑧⑨ 시세 교란 · 단체 제한","sublabel":"3년/3천만 · 업무방해(②)도 같음","icon":"siren","tone":"warning"}],"caption":"회색 4개 = 1년/1천만, 주황 5개 = 3년/3천만. 개공은 임의적 등록취소, 소공은 자격정지가 추가됩니다."}$aix$::jsonb, null, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '651fb9b2-56b4-1787-193f-818050d53854', '98f4e8f5-db67-2059-f7af-bd6764901eae', 'realtor-brokerage-law/sanctions', 'sanctions', '제재 체계: 자격취소·자격정지, 등록취소·업무정지, 행정형벌·과태료',
+  $aix$제재 문제의 첫 질문은 "누가 내리는 처분인가"입니다. 교사 자격은 교육청, 학교 운영은 학교장이듯 자격은 시·도지사, 등록은 등록관청입니다.
+
+## 자격 처분(시·도지사)
+
+- **자격취소**(제35조, 필수·청문): 부정 취득 / 자격증 양도·대여 / 자격정지 중 중개업무 / 직무 관련 형법 위반 **금고 이상(집행유예 포함)**. 자격증 **7일 이내** 반납.
+- **자격정지**(제36조, **6개월 범위**): 이중소속, 인장, 확인·설명 불성실, 서명날인 누락, 이중계약서, 금지행위.
+
+## 등록 처분(등록관청)
+
+- **절대적 등록취소**(제38조①): 사망·해산, 부정 등록, 결격사유(법인 임원 2개월 내 해소 시 제외), 이중등록·이중소속, **보조원 5배 초과**, 등록증 대여, 업무정지 중 업무, 1년 내 **2회** 업무정지 후 재위반.
+- **임의적 등록취소**(제38조②): 등록기준 미달, 둘 이상 사무소, **6개월 초과 휴업**, 거짓 기재·이중계약서, 보증 없이 업무, 금지행위, 1년 내 **3회** 처분 후 재위반.
+- **업무정지**(제39조, **6개월 범위**, 사유 발생 후 **3년** 지나면 불가): 인장, 각종 서식·보존 의무 위반 등.
+- 폐업 후 재등록 시 처분 효과 **1년** 승계, 폐업기간 **3년**(업무정지 사유는 1년) 초과면 처분 불가(제40조).
+
+## 형벌과 과태료
+
+- **3년/3천만 원**(제48조): 무등록 중개업, 부정 등록, 금지행위 5~9호·업무방해.
+- **1년/1천만 원**(제49조): 자격증·등록증 대여, 이중등록·이중소속, 보조원 5배 초과, 비밀누설, 금지행위 1~4호.
+- **과태료 500만 원 이하**: 부당 표시·광고, 보조원 고지의무, 확인·설명 불성실, 연수교육 미이수. **100만 원 이하**: 미게시, 명칭·이전·휴폐업 신고 위반, 보증 설명 누락 등.
+
+**📌 출제 포인트**
+
+- 함정: "자격정지는 등록관청이 명한다" → 시·도지사. "업무정지는 1년 범위" → 6개월.
+- 함정: "이중소속은 임의적 등록취소" → 절대적(+1년/1천만 원).
+
+> 💡 **핵심**: 자격 = 시·도지사, 등록 = 등록관청, 정지는 둘 다 6개월. "2회 → 절대적, 3회 → 임의적", "3년/3천 · 1년/1천 · 500 · 100".$aix$,
+  $aix${"type":"compare","title":"처분권자별 제재 지도","columns":[{"title":"시·도지사 (자격)","icon":"award","tone":"primary","items":["자격취소 — 반드시 · 청문 · 7일 내 반납","자격정지 — 소공 · 6개월 범위","연수교육 미이수 과태료 부과","등록관청이 사실을 알면 지체 없이 통보"]},{"title":"등록관청 (등록)","icon":"building","tone":"accent","items":["절대적 등록취소 — 1년 내 2회 업무정지 후 재위반","임의적 등록취소 — 1년 내 3회 처분 후 재위반","업무정지 — 6개월 범위 · 3년 시효","과태료 500만/100만 (게시·신고 의무 등)"]},{"title":"법원 (형벌)","icon":"gavel","tone":"warning","items":["3년/3천만 — 무등록 · 금지행위 5~9호 · 업무방해","1년/1천만 — 대여 · 이중등록 · 5배 초과 · 1~4호","양벌규정 — 고용인 위반 시 개공도 벌금","비밀누설은 반의사불벌"]}],"caption":"같은 행위라도 개공(등록취소)·소공(자격정지)·법원(형벌)이 동시에 걸릴 수 있습니다."}$aix$::jsonb, null, 7, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a7f48cee-7cce-c2d8-214e-39561e1cb613', '8273569b-6ef6-b758-23e6-8c3b4a6624a1', 'realtor-brokerage-law/transaction-report', 'transaction-report', '부동산 거래신고: 대상·30일 기한·해제신고·자금조달계획서',
+  $aix$집을 사고 30일 안에 신고하지 않으면 과태료입니다. 부동산 거래신고는 실거래가 공개의 뿌리이자 매년 2문항 이상 나오는 구간입니다.
+
+## 무엇을, 누가, 언제(제3조)
+
+- 대상: 부동산 **매매계약**, 주택법·택지개발촉진법 등 8개 법률의 **공급계약**, 그 지위(분양권)와 관리처분계획 인가로 취득한 **입주자 지위(입주권)**의 매매. 임대차·교환·증여는 대상이 아닙니다.
+- 신고관청: 부동산 소재지 **시장·군수·구청장**. 거래당사자가 **공동** 신고하되 일방이 거부하면 단독 신고 가능. 국가등이 당사자면 국가등이 신고.
+- 개업공인중개사가 거래계약서를 작성·교부했으면 **개업공인중개사가** 신고(공동중개면 공동으로). 이때 당사자는 신고의무를 지지 않습니다.
+- 기한: 계약 체결일부터 **30일 이내**. 신고필증을 받으면 검인을 받은 것으로 봅니다.
+
+## 해제 신고와 금지행위
+
+- 신고 후 해제·무효·취소가 확정되면 확정일부터 **30일 이내** 해제등 신고(제3조의2). 개업공인중개사가 신고한 건은 개업공인중개사가 할 수 있습니다.
+- 금지행위(제4조): 미신고·거짓신고 요구·조장, 계약 없는 거짓신고, 거짓 해제신고.
+
+## 자금조달계획서(시행령 별표 1·시행규칙 제2조)
+
+- 주택 매수 시 "주택취득자금 조달 및 입주계획서" 제출: **규제지역(투기과열지구·조정대상지역) 안 주택은 금액 무관**, 그 밖은 **6억 원 이상**, **법인 매수는 전부**. 투기과열지구는 증빙서류까지 첨부.
+- 신고서와 분리 제출할 때도 **30일 이내**, 매수인이 신고자에게 넘길 때는 **25일 이내**.
+
+세금 신고와 비슷합니다. 안 하면 '과태료', 거짓이면 금액에 비례합니다.
+
+**📌 출제 포인트**
+
+- 미신고·공동신고 거부: **500만 원 이하** 과태료. 거짓신고: **취득가액의 10% 이하**. 부당이득 목적 거짓신고는 3년/3천만 원 **형벌**.
+- 함정: "개업공인중개사가 작성했어도 당사자가 신고해야 한다" → 틀림. "해제 신고는 15일" → 30일.
+
+> 💡 **핵심**: 30일·30일, 신고관청은 시·군·구, 개업공인중개사가 작성했으면 개업공인중개사가 신고. 과태료 500만/10%.$aix$,
+  $aix${"type":"flow","title":"거래신고의 흐름","nodes":[{"label":"매매 · 공급계약 · 분양권 · 입주권 계약 체결","sublabel":"임대차 · 교환 · 증여는 대상 아님","icon":"file-pen","tone":"muted"},{"label":"30일 이내 신고","sublabel":"당사자 공동 (거부 시 단독) / 개공 작성 시 개공","icon":"calendar-check","tone":"primary","edgeLabel":"신고관청 = 시장·군수·구청장"},{"label":"자금조달·입주계획서 첨부","sublabel":"규제지역 전부 · 비규제 6억 이상 · 법인 전부","icon":"wallet","tone":"warning","edgeLabel":"주택 매수 시 (해당하면)"},{"label":"신고필증 발급","sublabel":"검인 받은 것으로 간주 · 실거래가 공개","icon":"badge-check","tone":"success"},{"label":"해제 · 무효 · 취소 확정 시","sublabel":"확정일부터 30일 이내 해제등 신고","icon":"x","tone":"accent","edgeLabel":"계약이 깨지면"}],"caption":"미신고 500만 원 이하, 거짓신고는 취득가액의 10% 이하 — 두 숫자를 구분하세요."}$aix$::jsonb, $aix${"title":"부동산거래관리시스템에서 거래신고서 작성 흐름 따라하기","app":{"kind":"browser","url":"rtms.molit.go.kr","blocks":[{"id":"h-title","type":"heading","label":"부동산거래관리시스템 — 국토교통부"},{"id":"btn-login","type":"button","label":"로그인"},{"id":"badge-auth","type":"badge","label":"간편인증 · 공동인증서 로그인 완료","hidden":true},{"id":"h-menu","type":"heading","label":"부동산거래신고"},{"id":"btn-register","type":"button","label":"신고서 등록"},{"id":"h-step1","type":"heading","label":"STEP 1 · 거래당사자 · 개업공인중개사","hidden":true},{"id":"in-parties","type":"input","label":"매도인 · 매수인 · 개업공인중개사 입력","hidden":true},{"id":"h-step2","type":"heading","label":"STEP 2 · 거래대상 부동산","hidden":true},{"id":"in-addr","type":"input","label":"소재지 주소 입력","hidden":true},{"id":"h-step3","type":"heading","label":"STEP 3 · 계약 내용","hidden":true},{"id":"in-date","type":"input","label":"계약체결일 입력","hidden":true},{"id":"in-price","type":"input","label":"실제 거래가격 입력","hidden":true},{"id":"btn-fund","type":"button","label":"자금조달 · 입주계획서 첨부","hidden":true},{"id":"badge-fund","type":"badge","label":"조정대상지역 주택 → 금액 무관 제출 대상","hidden":true},{"id":"btn-submit","type":"button","label":"신고서 제출","hidden":true},{"id":"card-done","type":"card","label":"신고필증 발급 완료 — 계약일부터 30일 이내 신고됨","hidden":true}]},"actions":[{"t":"caption","text":"① 개업공인중개사가 로그인합니다 (계약서를 작성했으면 신고의무자)"},{"t":"move","target":"btn-login"},{"t":"click"},{"t":"reveal","target":"badge-auth"},{"t":"caption","text":"② 부동산거래신고 → 신고서 등록: 당사자와 물건을 입력합니다"},{"t":"move","target":"btn-register"},{"t":"click"},{"t":"reveal","target":"h-step1"},{"t":"type","target":"in-parties","text":"매도인 김OO · 매수인 이OO · 개공 박OO"},{"t":"reveal","target":"h-step2"},{"t":"type","target":"in-addr","text":"서울특별시 ○○구 ○○동 12-3 ○○아파트 101-1201"},{"t":"caption","text":"③ 계약체결일과 실제 거래가격 — 이 날짜부터 30일 이내"},{"t":"reveal","target":"h-step3"},{"t":"type","target":"in-date","text":"2026-09-15"},{"t":"type","target":"in-price","text":"850,000,000원"},{"t":"caption","text":"④ 규제지역 주택이라 자금조달·입주계획서를 함께 첨부합니다"},{"t":"reveal","target":"btn-fund"},{"t":"click","target":"btn-fund"},{"t":"reveal","target":"badge-fund"},{"t":"caption","text":"⑤ 제출 → 신고필증 발급(검인 의제). 해제 시 30일 내 해제신고"},{"t":"reveal","target":"btn-submit"},{"t":"click","target":"btn-submit"},{"t":"reveal","target":"card-done"},{"t":"move","target":"card-done"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '93257eb1-e9ca-a8a7-0ad2-384cb95266c8', '8273569b-6ef6-b758-23e6-8c3b4a6624a1', 'realtor-brokerage-law/lease-report-and-foreigners', 'lease-report-and-foreigners', '전월세신고제·외국인 부동산 취득 신고·허가',
+  $aix$전세 계약도 신고 대상이고, 2025년 6월부터는 과태료가 실제로 부과됩니다. 외국인 규정과 함께 "60일·6개월"의 숫자 싸움입니다.
+
+## 전월세신고제(제6조의2~제6조의5)
+
+- 대상: **보증금 6천만 원 초과 또는 월차임 30만 원 초과** 주택 임대차(시행령 제4조의3). 금액 변동 없이 기간만 늘리는 갱신은 제외.
+- 지역: 특별자치시·특별자치도·시·자치구, 그리고 **광역시·경기도의 군** → 그 밖의 도 지역 군은 제외.
+- 기한: 계약 체결일부터 **30일 이내**, 임대인·임차인 **공동** 신고(일방 거부 시 단독). 변경·해제도 확정일부터 **30일 이내**.
+- 의제: 임차인이 **전입신고**를 하면 임대차 신고를 한 것으로 보고, 계약서를 제출해 신고가 접수되면 **확정일자**를 부여한 것으로 봅니다.
+- 과태료: **100만 원 이하**(제28조⑤). 시행령 별표는 지연 정도에 따라 2만~30만 원, 거짓신고 100만 원. 계도기간 종료로 2025-06-01 이후 계약부터 실제 부과.
+
+## 외국인등의 부동산 취득(제8조·제9조)
+
+- **계약**으로 취득(거래신고 대상 매매는 제외): 계약체결일부터 **60일 이내** 신고. 위반 300만 원 이하 과태료.
+- **계약 외 원인**(상속·경매·환매권·판결·합병·신축 등): 취득일부터 **6개월 이내**. 국민·국내 법인이 외국인등으로 바뀐 뒤 **계속보유**도 6개월. 각 100만 원 이하 과태료.
+- **허가**: 군사기지·군사시설 보호구역 등 국방 목적 지역, 지정문화유산·천연기념물·생태경관보전·야생생물 특별보호구역 토지는 계약 **전** 허가. 무허가 계약은 **효력 없음**, 2년/2천만 원. 처리 15일(군사 관련 30일).
+
+여권 심사와 비슷합니다. 입국(취득)은 대부분 신고만 하면 되지만, 군사시설 옆 땅은 비자(허가)가 먼저입니다.
+
+**📌 출제 포인트**
+
+- 함정: "보증금 6천만 원 이상" → **초과**. "월세 30만 원 이상" → **초과**.
+- 함정: "외국인 상속 취득 신고는 60일" → 6개월.
+
+> 💡 **핵심**: 임대차 6천만/30만 초과·30일·100만 원. 외국인 계약 60일·상속 등 6개월·허가지역은 사전 허가(무허가 무효).$aix$,
+  $aix${"type":"grid","title":"전월세신고제 · 외국인 취득 숫자 지도","items":[{"label":"임대차 신고 대상","sublabel":"보증금 6천만 초과 or 월차임 30만 초과","icon":"home","tone":"primary"},{"label":"신고 기한","sublabel":"체결일부터 30일 · 변경·해제도 30일","icon":"calendar-check","tone":"primary"},{"label":"의제","sublabel":"전입신고 = 신고 · 계약서 제출 = 확정일자","icon":"check","tone":"success"},{"label":"과태료","sublabel":"100만 원 이하 · 2025-06-01 계약부터 부과","icon":"receipt","tone":"warning"},{"label":"외국인 계약 취득","sublabel":"60일 이내 신고 · 300만 이하","icon":"globe","tone":"accent"},{"label":"외국인 상속·경매 등","sublabel":"6개월 이내 · 계속보유도 6개월","icon":"hourglass","tone":"accent"},{"label":"외국인 허가 지역","sublabel":"군사 · 문화유산 · 생태경관 · 야생생물","icon":"shield","tone":"warning"},{"label":"무허가 계약","sublabel":"효력 없음 · 2년/2천만 원","icon":"x","tone":"muted"}],"caption":"'이상'이 아니라 '초과', '60일'과 '6개월'을 바꿔 내는 지문을 경계하세요."}$aix$::jsonb, null, 6, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '213501e7-e610-2691-b59d-c5d1662930b7', '8273569b-6ef6-b758-23e6-8c3b4a6624a1', 'realtor-brokerage-law/land-transaction-permit', 'land-transaction-permit', '토지거래허가구역: 지정·허가 기준·이용 의무·이행강제금',
+  $aix$강남권이 토지거래허가구역이 되면서 "허가 없는 계약은 무효"가 뉴스에 자주 나옵니다. 시험도 지정 → 허가 → 이용의무 → 이행강제금 순서로 나옵니다.
+
+## 지정(제10조)
+
+- 지정권자: 둘 이상 시·도에 걸치면 **국토교통부장관**, 한 시·도 안이면 **시·도지사**. **5년 이내**, 도시계획위원회 심의.
+- 효력은 공고한 날부터 **5일 후**. 시·군·구는 **7일 이상 공고, 15일간 열람**.
+
+## 허가(제11조·제12조·시행령 제9조)
+
+- 대상: 허가구역 안 토지의 **소유권·지상권**을 **대가를 받고** 이전·설정하는 계약(예약 포함). 당사자가 **공동**으로 시장·군수·구청장에게 신청, **15일 이내** 처리.
+- 허가 불필요 면적(10~300% 범위 조정 가능): 주거 **60㎡**, 상업 **150㎡**, 공업 **150㎡**, 녹지 **200㎡**, 용도 미지정 60㎡, 도시지역 외 **250㎡**(농지 **500㎡**, 임야 **1,000㎡**).
+- 허가 없이 체결한 계약은 **효력이 발생하지 않음**. 무허가·부정 허가는 2년 이하 징역 또는 **개별공시지가 30%** 이하 벌금.
+
+## 이용의무와 이행강제금(제17조·제18조·시행령 제14조·제16조)
+
+- 이용의무 기간: 거주용·복지시설·농업 등 **2년**, 사업용 **4년**, 현상보존·그 밖 **5년**.
+- 위반 시 **3개월 이내** 이행명령 → 불이행 시 **취득가액의 10% 범위** 이행강제금: 방치 **10%**, 임대 **7%**, 승인 없는 용도 변경 **5%**, 기타 7%. **1년에 1회** 반복, 이용의무기간이 지나면 부과 불가. 이의는 **30일 이내**.
+
+'입주 조건이 있는 단지'와 같습니다. 살겠다고 허가받았으면 2년은 살아야 하고, 세를 주면 매년 7%를 냅니다.
+
+**📌 출제 포인트**
+
+- 함정: "허가받지 않은 계약은 취소할 수 있다" → 애초에 효력이 없습니다.
+- 함정: "주거지역 기준 면적 180㎡" → 60㎡(2022년 축소).
+
+> 💡 **핵심**: 5년 지정·5일 효력·15일 처리, 면적 60·150·150·200·250(농지 500·임야 1,000), 이용 2·4·5년, 이행강제금 10·7·5%.$aix$,
+  $aix${"type":"steps","title":"토지거래허가구역 5단계","steps":[{"label":"지정","sublabel":"국토부장관(2 이상 시·도) / 시·도지사 · 5년 이내 · 도시계획위 심의","icon":"map"},{"label":"효력 발생","sublabel":"공고 후 5일 · 시·군·구 7일 이상 공고 · 15일 열람","icon":"calendar"},{"label":"허가 신청","sublabel":"공동 신청 · 15일 처리 · 면적 60/150/150/200/250㎡ 이하 면제","icon":"file-pen"},{"label":"이용의무","sublabel":"거주·농업 2년 · 사업 4년 · 현상보존 등 5년","icon":"home"},{"label":"이행강제금","sublabel":"취득가액의 10%(방치) · 7%(임대) · 5%(무단 변경) · 1년 1회","icon":"gavel"}],"caption":"무허가 계약은 '취소 가능'이 아니라 '효력 불발생' — 지문에서 가장 자주 바꿔 내는 표현입니다."}$aix$::jsonb, null, 7, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '108bf2f3-6550-c407-188b-356a5959a86e', '89de0301-fe25-1818-c5ab-2dd890230e21', 'realtor-brokerage-law/practice-workflow', 'practice-workflow', '중개실무 흐름: 등기부·건축물대장·토지이용계획 확인 → 계약서 작성 → 잔금·인도',
+  $aix$중개실무 문항은 "서류를 어떤 순서로, 무엇을 확인하는가"를 묻습니다. 실무에서 사고를 막는 순서이기도 합니다.
+
+## 1단계: 공적 장부 3종 대조
+
+- **등기사항증명서**(등기부등본): 인터넷등기소(www.iros.go.kr) "부동산 등기 → 열람/발급"에서 주소로 검색해 열람(700원)·발급(1,000원). 표제부(물건 표시) → 갑구(소유권, 가압류·가등기·경매개시결정) → 을구(근저당권·전세권 등) 순서로 읽고, 말소되지 않은 권리와 채권최고액을 확인. 신탁 등기가 있으면 **신탁원부**를 따로 발급해 수탁자 동의 없는 계약인지 확인.
+- **건축물대장**: 정부24·세움터에서 발급. 등기부와 면적·용도·소유자가 일치하는지, **위반건축물** 표기가 있는지 확인. 등기부가 권리를, 건축물대장이 물리적 현황을 말합니다 — 둘이 다르면 표시사항은 대장, 권리는 등기부가 기준.
+- **토지이용계획확인서**: 토지이음(www.eum.go.kr)에서 용도지역·지구, 토지거래허가구역·개발행위 제한 등 공법상 규제 확인.
+
+## 2단계: 계약서 작성
+
+- 소유자 본인 확인(신분증·등기필정보), 대리인이면 위임장과 인감증명서. 중개대상물 확인·설명서를 먼저 작성·교부하고 계약서에 교부일을 기재.
+- 계약금·중도금·잔금 일정, 인도일, 특약(대출 불가 시 해제, 잔금 전 추가 근저당 금지 등)을 명확히. 개업공인중개사와 해당 소속공인중개사가 서명 및 날인, 등록 인장 사용.
+
+## 3단계: 잔금·인도·신고
+
+잔금 당일 등기부를 **다시 열람**해 새 권리가 생기지 않았는지 확인 → 잔금 지급과 소유권이전 서류·열쇠를 동시에 교환 → 매매는 30일 이내 부동산 거래신고, 임대차는 전월세신고제 대상인지 확인.
+
+**📌 출제 포인트**
+
+- 함정: "건축물대장과 등기부의 면적이 다르면 등기부가 우선" → 표시사항은 대장 기준.
+- 등기부 열람은 누구나 가능하고 소유자 동의가 필요 없습니다.
+
+> 💡 **핵심**: 등기부(권리) → 건축물대장(현황) → 토지이용계획(규제) 순으로 확인하고, 잔금일에 등기부를 한 번 더 봅니다.$aix$,
+  $aix${"type":"flow","title":"중개실무 6단계","nodes":[{"label":"등기사항증명서","sublabel":"표제부 → 갑구 → 을구 · 신탁원부","icon":"search","tone":"primary"},{"label":"건축물대장","sublabel":"면적·용도 일치 · 위반건축물 표기","icon":"building","tone":"primary","edgeLabel":"권리 → 현황"},{"label":"토지이용계획확인서","sublabel":"토지이음 · 용도지역 · 허가구역","icon":"map","tone":"accent","edgeLabel":"현황 → 규제"},{"label":"확인·설명서 → 계약서","sublabel":"본인 확인 · 특약 · 서명날인","icon":"file-pen","tone":"warning"},{"label":"잔금 · 인도","sublabel":"등기부 재열람 → 동시 교환","icon":"key","tone":"success","edgeLabel":"잔금일 아침"},{"label":"거래신고 30일","sublabel":"매매 신고 · 임대차 신고 대상 확인","icon":"calendar-check","tone":"muted"}],"caption":"권리(등기부) → 현황(대장) → 규제(토지이용계획) 순서가 시험과 실무의 표준입니다."}$aix$::jsonb, $aix${"title":"인터넷등기소에서 등기사항증명서 열람 따라하기","app":{"kind":"browser","url":"www.iros.go.kr","blocks":[{"id":"h-title","type":"heading","label":"대법원 인터넷등기소"},{"id":"m-realty","type":"button","label":"부동산 등기"},{"id":"m-view","type":"button","label":"열람/발급","hidden":true},{"id":"tab-simple","type":"badge","label":"간편검색","hidden":true},{"id":"in-kind","type":"input","label":"부동산구분 선택 (집합건물)","hidden":true},{"id":"in-addr","type":"input","label":"주소 입력","hidden":true},{"id":"btn-search","type":"button","label":"검색","hidden":true},{"id":"card-result","type":"card","label":"서울특별시 ○○구 ○○동 ○○아파트 101동 1201호 [현행]","hidden":true},{"id":"btn-select","type":"button","label":"선택","hidden":true},{"id":"badge-fee","type":"badge","label":"열람 700원 · 발급 1,000원","hidden":true},{"id":"btn-pay","type":"button","label":"결제","hidden":true},{"id":"card-title","type":"card","label":"표제부 — 1동 건물 · 전유부분 · 대지권 표시","hidden":true},{"id":"card-gap","type":"card","label":"갑구 — 소유권이전 2019.03.02 / 가압류·가등기 없음","hidden":true},{"id":"card-eul","type":"card","label":"을구 — 근저당권 채권최고액 360,000,000원 (○○은행)","hidden":true},{"id":"badge-again","type":"badge","label":"잔금일에 다시 열람!","hidden":true}]},"actions":[{"t":"caption","text":"① 부동산 등기 메뉴에서 열람/발급으로 들어갑니다"},{"t":"move","target":"m-realty"},{"t":"click"},{"t":"reveal","target":"m-view"},{"t":"click","target":"m-view"},{"t":"reveal","target":"tab-simple"},{"t":"caption","text":"② 간편검색에서 부동산구분과 주소를 입력해 검색합니다"},{"t":"type","target":"in-kind","text":"집합건물"},{"t":"type","target":"in-addr","text":"서울특별시 ○○구 ○○동 ○○아파트 101동 1201호"},{"t":"reveal","target":"btn-search"},{"t":"click","target":"btn-search"},{"t":"reveal","target":"card-result"},{"t":"reveal","target":"btn-select"},{"t":"click","target":"btn-select"},{"t":"caption","text":"③ 열람 700원 · 발급 1,000원 — 소유자 동의 없이 누구나 가능"},{"t":"reveal","target":"badge-fee"},{"t":"reveal","target":"btn-pay"},{"t":"click","target":"btn-pay"},{"t":"caption","text":"④ 표제부 → 갑구 → 을구 순서로 읽고 채권최고액을 확인합니다"},{"t":"reveal","target":"card-title"},{"t":"reveal","target":"card-gap"},{"t":"reveal","target":"card-eul"},{"t":"move","target":"card-eul"},{"t":"reveal","target":"badge-again"},{"t":"wait","ms":800}]}$aix$::jsonb, 7, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1947665e-6116-b5ed-913a-e3ce978d7711', '89de0301-fe25-1818-c5ab-2dd890230e21', 'realtor-brokerage-law/auction-practice-and-next', 'auction-practice-and-next', '경매·공매 실무와 매수신청대리 + 숫자 암기표 + 다음 단계',
+  $aix$법원 경매 입찰을 대신해 주는 매수신청대리는 공인중개사만의 법정 부수업무입니다. 숫자 암기표도 함께 정리합니다.
+
+## 경매·공매와 매수신청대리(제14조·대법원규칙)
+
+- 개업공인중개사는 경매·공매 부동산의 **권리분석·취득 알선**과 매수신청대리를 할 수 있습니다. 다만 **경매** 대리는 대법원규칙에 따라 **법원에 등록**하고 감독을 받습니다(공매는 등록 대상 아님).
+- 권리분석의 뼈대: 말소기준권리보다 앞선 권리는 낙찰자가 인수. 매각물건명세서·배당요구종기를 확인하고, 잔금 후 6개월 안에 인도명령을 신청합니다.
+- 등록관청은 중개사무소 관할 **지방법원장**. 요건: 개업공인중개사(법인 포함) + 경매 **실무교육**(신청일 전 1년) + **보증**(개인 2억·법인 4억, 분사무소마다 2억 추가). 사건마다 위임장을 내고 **매각장소에 직접 출석**, 이전·휴폐업·자격취소 등은 **10일 이내** 지방법원장에 신고.
+
+## 자주 나오는 숫자·기간 암기표
+
+| 구분 | 숫자 |
+|---|---|
+| 신고 기한 | 이전·고용종료·법원 신고 10일 / 인장변경 7일 / 거래·임대차·해제 30일 / 외국인 60일·6개월 |
+| 보존·유효 | 확인·설명서 3년 / 계약서 5년 / 전속계약서 3년·유효 3개월 / 처분효과 승계 1년 |
+| 금액 | 보증 개인 2억·법인 4억(+2억) / 법인 자본금 5천만 / 결격 벌금 300만 / 포상금 50만 |
+| 교육·정지 | 실무 45h·연수 12~16h(2년)·직무 3~4h / 자격정지·업무정지 6개월 / 휴업 6개월 초과 금지 |
+| 허가구역 | 지정 5년·효력 5일 / 면적 60·150·150·200·250㎡ / 이용 2·4·5년 / 이행강제금 10·7·5% |
+
+**📌 출제 포인트**
+
+- 함정: "매수신청대리 등록은 시·군·구 등록관청에" → 중개사무소 관할 **지방법원장**.
+- 대리 보수는 대법원 예규 보수표 범위 안, 지급시기는 매각대금 지급기한일.
+
+## 다음 단계
+
+이어서 **"2차 부동산공법: 6개 법률 구조로 정복하기"**로 넘어가세요. 토지거래허가구역·용도지역이 다시 나오니 12강을 복습하면 연결이 쉽습니다.
+
+> 💡 **핵심**: 경매 대리는 법원 등록·실무교육·보증이 세트. 암기표 숫자를 기출문제 지문에서 바꿔치기해 보는 연습이 최고의 마무리입니다.$aix$,
+  $aix${"type":"chat","title":"스터디 채널 함정 지문 OX","messages":[{"role":"user","text":"Q1. 공매 부동산의 매수신청대리도 법원에 등록해야 한다. (O/X)"},{"role":"ai","text":"X — 법원 등록은 「민사집행법」에 의한 경매만. 공매는 알선·대리 가능하지만 법원 등록 대상이 아닙니다(공인중개사법 제14조③)."},{"role":"user","text":"Q2. 법인 개업공인중개사가 4억 원 보증을 설정했으면 분사무소를 둘 때 추가 보증은 필요 없다. (O/X)"},{"role":"ai","text":"X — 분사무소마다 2억 원 이상을 추가 설정해야 합니다(시행령 제24조①). 매수신청대리 보증도 같은 구조입니다."},{"role":"user","text":"Q3. 전월세신고제 대상은 보증금 6천만 원 이상 또는 월차임 30만 원 이상이다. (O/X)"},{"role":"ai","text":"X — '이상'이 아니라 '초과'입니다(거래신고법 시행령 제4조의3). 6천만 원 정확히면 신고 대상이 아닙니다."}],"caption":"숫자·주체·'이상/초과'를 바꿔치기한 지문을 매일 3개씩 만들어 보세요 — 이 과목의 최고 복습법입니다."}$aix$::jsonb, null, 7, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 2차 부동산공법: 6개 법률 구조로 정복하기
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'c65769d4-5ce4-ba33-9bf2-0b38d3248a25', 'realtor-public-law', '2차 부동산공법: 6개 법률 구조로 정복하기', $aix$부동산공법은 2차 시험에서 가장 많은 수험생이 과락을 겪는 과목입니다. 법이 6개나 되고, 숫자와 절차가 끝없이 나오기 때문이죠. 하지만 공법에는 뼈대가 있습니다. 국토계획법이 땅의 '큰 규칙'을 정하고, 도시개발법과 도시정비법이 그 위에서 '개발·정비 절차'를, 건축법과 주택법이 '건물과 집의 규칙'을, 농지법이 '농지의 예외'를 다룹니다. 이 강의는 6개 법률을 이 구조 순서대로 배치하고, 시험에 그대로 나오는 숫자를 현행 법령 원문으로 확인해 정리했습니다. 토지이음 열람 데모와 숫자 암기표까지, 공법을 '버리는 과목'에서 '점수 과목'으로 바꾸는 14개 레슨입니다.$aix$,
+  null, 'realestate', 'advanced', array['공인중개사 2차', '부동산공법', '국토계획법', '건축법', '주택법', '도시정비법']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '520292d6-faff-0f02-1f3b-7947050d651c', 'c65769d4-5ce4-ba33-9bf2-0b38d3248a25', 'national-land-planning', '국토의 계획 및 이용에 관한 법률', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'ce802e40-c63d-9308-bf08-3a9bbb3aa535', 'c65769d4-5ce4-ba33-9bf2-0b38d3248a25', 'urban-development-and-regeneration', '도시개발·정비', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '61cc6abc-c06f-f2b6-e78c-34e341b6b9f2', 'c65769d4-5ce4-ba33-9bf2-0b38d3248a25', 'building-and-housing', '건축·주택', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'b7fd2259-213f-12fa-5955-caf0aa1914d2', 'c65769d4-5ce4-ba33-9bf2-0b38d3248a25', 'farmland-and-wrapup', '농지와 마무리', 3
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'a36df309-0b66-6470-d1dd-31d9d586c57a', '520292d6-faff-0f02-1f3b-7947050d651c', 'realtor-public-law/subject-map', 'subject-map', '부동산공법 6법 출제 지도와 공략 순서: 왜 국토계획법부터인가',
+  $aix$부동산공법은 2차 시험에서 "가장 먼저 포기하고 싶은 과목"으로 꼽힙니다. 법률이 6개, 숫자는 수백 개. 그런데 합격자들은 한결같이 말합니다. 공법은 **구조로 외우면 점수가 가장 안정적인 과목**이라고요.
+
+## 6개 법률, 하나의 지도
+
+공법 40문항은 국토의 계획 및 이용에 관한 법률(국토계획법), 도시개발법, 도시 및 주거환경정비법(도시정비법), 건축법, 주택법, 농지법에서 나옵니다. 법령별 문항 수는 공식 고정값이 없지만, 학원·EBS의 최근 기출문제 분석 기준으로 대략 국토계획법 12, 건축법·주택법 각 7, 도시개발법·도시정비법 각 6, 농지법 2문항 안팎입니다.
+
+도시를 한 장의 지도라고 생각해 보세요.
+
+- **국토계획법**: 지도에 색을 칠합니다. 어디가 주거지역이고 얼마나 크게 지을 수 있는지(건폐율·용적률)를 정합니다.
+- **도시개발법·도시정비법**: 색칠된 땅 위에서 새 도시를 만들거나(개발) 낡은 동네를 고치는(정비) 절차입니다.
+- **건축법·주택법**: 그 땅에 실제로 건물과 집을 지을 때의 규칙입니다.
+- **농지법**: 농지만의 특별한 예외 규칙입니다.
+
+## 왜 국토계획법부터인가
+
+국토계획법의 용어(용도지역, 도시·군관리계획, 기반시설, 개발행위허가)는 나머지 5개 법 조문 안에 그대로 등장합니다. 이를 건너뛰면 건축법의 "관리지역에서 연면적 200㎡ 미만" 같은 문장을 읽을 수 없습니다. 그래서 이 강의도 국토계획법 5개 레슨을 먼저 배치했습니다.
+
+## 시험 전 반드시 알아둘 원칙
+
+- 시험은 **시험 시행일(2026-10-31) 현재 시행 중인 법령**이 기준입니다(Q-Net 시행공고 원칙). 개정안·입법예고는 정답이 아닙니다.
+- 📌 출제 포인트: 숫자 바꿔치기(20년↔10년, 3/4↔2/3), "할 수 있다"↔"하여야 한다" 교체, 권한자 바꿔치기(국토교통부장관↔시·도지사)가 함정의 3대 패턴입니다.
+- 📌 절차 문제는 "누가 → 무엇을 → 며칠 안에"로 읽습니다.
+
+> 💡 **핵심**: 6법을 "땅의 규칙 → 개발·정비 절차 → 건물·집 규칙 → 농지 예외"의 구조로 세우고, 숫자·권한자·의무 표현 3가지 함정만 지키면 과락을 벗어나 60점 이상을 노릴 수 있습니다.$aix$,
+  $aix${"type":"grid","title":"부동산공법 6법 지도 (최근 기출 기준 대략 문항)","items":[{"label":"국토계획법","sublabel":"약 12문항 · 땅의 큰 규칙","icon":"map","tone":"primary"},{"label":"도시개발법","sublabel":"약 6문항 · 새 도시 만들기","icon":"building","tone":"accent"},{"label":"도시정비법","sublabel":"약 6문항 · 낡은 동네 고치기","icon":"refresh","tone":"accent"},{"label":"건축법","sublabel":"약 7문항 · 건물의 규칙","icon":"ruler","tone":"success"},{"label":"주택법","sublabel":"약 7문항 · 집 공급·거래 규제","icon":"home","tone":"success"},{"label":"농지법","sublabel":"약 2문항 · 농지의 예외","icon":"wheat","tone":"muted"}],"caption":"문항 배분은 학원·EBS 기출 분석 기준 근사치 — 공식 고정값이 아니므로 비중 감각으로만 활용하세요."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4f2c0f91-4c33-4509-0d77-56cde187c742', '520292d6-faff-0f02-1f3b-7947050d651c', 'realtor-public-law/plan-hierarchy', 'plan-hierarchy', '계획의 체계: 광역도시계획·도시·군기본계획·도시·군관리계획의 수립 절차',
+  $aix$국토계획법의 "계획"은 결국 3층짜리 건물 하나입니다. 위층이 큰 방향을, 아래층이 구체적 규칙을 정합니다.
+
+## 3층 구조: 위는 방향, 아래는 규칙
+
+- **광역도시계획(3층)**: 둘 이상 시·군을 묶은 광역계획권의 장기 발전 방향. 광역계획권은 **둘 이상 시·도에 걸치면 국토교통부장관, 한 도 안이면 도지사**가 지정합니다(제10조). 수립은 관할 시장·군수 또는 시·도지사가 **공동**으로 하고, 지정 후 **3년** 안에 승인 신청이 없으면 도지사·국토교통부장관이 수립합니다(제11조).
+- **도시·군기본계획(2층)**: 시·군의 종합계획. **수도권 밖이고 광역시와 경계를 접하지 않으며 인구 10만 이하**인 시·군은 수립하지 않을 수 있습니다(시행령 제14조). 시·군은 도지사 승인, 특·광역시는 자체 확정.
+- **도시·군관리계획(1층)**: 용도지역·용도지구 지정, 기반시설 설치, 지구단위계획 등 토지 이용을 직접 구속하는 계획. 시장·군수가 입안하고 **시·도지사(인구 50만 이상 대도시는 대도시 시장)**가 결정합니다(제29조). 단, 시장·군수가 입안한 **지구단위계획(구역)은 시장·군수가 직접 결정**.
+
+회사로 비유하면 그룹 비전 → 회사 전략 → 부서 업무 규정. 직원(토지)을 구속하는 것은 업무 규정만입니다.
+
+## 관리계획의 절차 숫자
+
+- 주민 의견 청취: 계획안을 **14일 이상** 열람(시행령 제22조).
+- 국토교통부장관 결정: 직접 입안한 계획·**개발제한구역**·국가계획 관련 시가화조정구역. 수산자원보호구역은 해양수산부장관 또는 시·도지사.
+- 효력 발생: **지형도면을 고시한 날부터**(제31조). 결정일이 아닙니다.
+- 기본계획·관리계획 모두 **5년마다** 타당성 재검토(제23조·제34조).
+
+## 📌 출제 포인트
+
+- 광역계획권 지정권자와 광역도시계획 수립권자(공동 수립)를 구분.
+- 함정: "관리계획 결정 효력은 결정·고시한 날부터" → ✕, 지형도면 고시일.
+- 함정: "인구 10만 이하 시·군은 모두 기본계획 생략 가능" → ✕, 수도권 외·광역시 비접 조건도 필요.
+
+> 💡 **핵심**: 계획은 "광역(방향) → 기본(전략) → 관리(구속)"의 3층. 시험은 각 층을 **누가 세우고, 누가 결정·승인하며, 언제 효력이 생기는가**만 묻습니다.$aix$,
+  $aix${"type":"stack","title":"국토계획법 계획 체계 (위 = 방향, 아래 = 구속)","layers":[{"label":"광역도시계획","sublabel":"광역계획권 · 국토부장관/도지사 지정 · 공동 수립","icon":"globe","tone":"muted"},{"label":"도시·군기본계획","sublabel":"시·군 종합계획 · 도지사 승인 · 5년 재검토","icon":"map","tone":"accent"},{"label":"도시·군관리계획","sublabel":"용도지역·기반시설·지구단위계획 · 시·도지사 결정","icon":"file-text","tone":"primary"},{"label":"토지 (효력: 지형도면 고시일부터)","sublabel":"건축·개발행위가 직접 구속되는 층","icon":"map-pin","tone":"success"}],"caption":"아래층은 위층에 부합해야 합니다(제25조). 토지를 직접 구속하는 것은 관리계획만입니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '93cc7def-64e6-252d-7479-5cb7a23a52fe', '520292d6-faff-0f02-1f3b-7947050d651c', 'realtor-public-law/zoning-system', 'zoning-system', '용도지역·용도지구·용도구역: 종류와 건폐율·용적률 상한',
+  $aix$공법에서 가장 확실한 점수는 여기서 나옵니다. 용도지역 세분과 건폐율·용적률 숫자는 매년 나오고, 표만 외우면 틀릴 수 없습니다.
+
+## 지역·지구·구역, 세 겹의 옷
+
+- **용도지역**: 모든 땅에 **하나씩만** 지정되는 기본 옷. 도시지역(주거·상업·공업·녹지 4), 관리지역(보전·생산·계획 3), 농림지역, 자연환경보전지역(제36조). 세분하면 총 **21개**(시행령 제30조·제84조).
+- **용도지구**: 그 위에 덧입는 조끼. 경관·고도·방화·방재·보호·취락·개발진흥·특정용도제한·복합용도 **9종**(제37조). 중복 지정 가능.
+- **용도구역**: 큰 틀의 외투. 개발제한구역(국토교통부장관), 도시자연공원구역(시·도지사·대도시 시장), 시가화조정구역(시·도지사, 유보기간 5~20년), 수산자원보호구역(해양수산부장관 또는 시·도지사). 2024년 개정으로 **입지규제최소구역은 삭제**되고 도시혁신구역·복합용도구역·도시·군계획시설입체복합구역이 신설됐습니다.
+
+## 법률상 건폐율·용적률 상한 (제77조·제78조)
+
+| 용도지역 | 건폐율 | 용적률 |
+|---|---|---|
+| 주거지역 | 70% | 500% |
+| 상업지역 | 90% | 1,500% |
+| 공업지역 | 70% | 400% |
+| 녹지지역 | 20% | 100% |
+| 관리·농림·자연환경보전 | 20%(계획관리 40%) | 80%(계획관리 100%) |
+
+세분값(시행령 제84·85조) 대표: 제2종일반주거 60/250, 제3종일반주거 50/300, 준주거 70/500, 중심상업 90/1,500, 일반상업 80/1,300, 준공업 70/400, 자연녹지 20/100. 실제 적용치는 이 범위 안에서 **시·군 조례**가 정합니다.
+
+## 📌 출제 포인트
+
+- 건폐율 상한 90%는 상업지역(중심상업)뿐, 40%는 계획관리지역뿐.
+- 함정: "일반상업지역 용적률 상한 1,500%" → ✕, 1,300%. 1,500%는 중심상업.
+- 아래 데모에서 토지이음으로 실제 필지의 용도지역을 열람해 보세요.
+
+> 💡 **핵심**: 지역은 하나, 지구는 중복, 구역은 큰 틀. 숫자는 법률 상한(주 70/500, 상 90/1,500, 공 70/400, 녹 20/100)부터 외우고 세분값으로 내려갑니다.$aix$,
+  $aix${"type":"compare","title":"용도지역 vs 용도지구 vs 용도구역","columns":[{"title":"용도지역","icon":"map","tone":"primary","items":["모든 토지에 하나씩 필수","도시 4 · 관리 3 · 농림 · 자연환경보전","시행령으로 21개 세분","건폐율·용적률의 큰 틀"]},{"title":"용도지구","icon":"layers","tone":"accent","items":["지역 위에 보완·중복 가능","경관·고도·방화·방재·보호","취락·개발진흥·특정용도제한·복합용도","조례로 추가 지구 가능"]},{"title":"용도구역","icon":"shield","tone":"warning","items":["시가지 확산 방지 등 큰 틀 제한","개발제한·도시자연공원·시가화조정·수산자원보호","공간혁신구역 3종(2024 신설)","입지규제최소구역은 삭제"]}],"caption":"하나의 필지에 '제2종일반주거지역 + 경관지구 + 개발제한구역'처럼 세 겹이 동시에 걸릴 수 있습니다."}$aix$::jsonb, $aix${"title":"토지이음(eum.go.kr)에서 토지이용계획 열람하기","app":{"kind":"browser","url":"www.eum.go.kr","blocks":[{"id":"hd","type":"heading","label":"토지이음 — 토지이용규제정보서비스"},{"id":"menu-plan","type":"button","label":"토지이용계획"},{"id":"menu-city","type":"button","label":"도시계획"},{"id":"menu-guide","type":"button","label":"규제안내서"},{"id":"menu-notice","type":"button","label":"고시정보"},{"id":"sub","type":"text","label":"토지이용계획 열람 · 주소로 찾기 / 도로명으로 찾기"},{"id":"addr","type":"input","label":"주소 입력 (시·도, 시·군·구, 동·리, 지번)"},{"id":"btn-view","type":"button","label":"열람"},{"id":"r-loc","type":"card","label":"소재지: 서울특별시 ○○구 ○○동 123-4","hidden":true},{"id":"r-basic","type":"card","label":"지목: 대 · 면적: 331㎡ · 개별공시지가: 열람 가능","hidden":true},{"id":"r-law","type":"card","label":"「국토의 계획 및 이용에 관한 법률」에 따른 지역·지구등: 제2종일반주거지역, 지구단위계획구역","hidden":true},{"id":"r-other","type":"card","label":"다른 법령 등에 따른 지역·지구등: 가축사육제한구역, 과밀억제권역","hidden":true},{"id":"btn-map","type":"button","label":"확인도면","hidden":true},{"id":"btn-limit","type":"button","label":"행위제한내용","hidden":true},{"id":"r-limit","type":"card","label":"제2종일반주거지역 — 건폐율 60% 이하 · 용적률 250% 이하 (시행령 상한, 실제는 조례 확인)","hidden":true},{"id":"r-tip","type":"badge","label":"확인도면과 행위제한내용을 함께 확인하세요","hidden":true}]},"actions":[{"t":"caption","text":"① 토지이음 상단 메뉴에서 '토지이용계획'을 엽니다"},{"t":"move","target":"menu-plan"},{"t":"click"},{"t":"wait","ms":500},{"t":"caption","text":"② 주소를 입력하고 '열람'을 누릅니다"},{"t":"click","target":"addr"},{"t":"type","target":"addr","text":"서울특별시 ○○구 ○○동 123-4"},{"t":"move","target":"btn-view"},{"t":"click"},{"t":"wait","ms":600},{"t":"reveal","target":"r-loc"},{"t":"reveal","target":"r-basic"},{"t":"caption","text":"③ 국토계획법상 용도지역(제2종일반주거지역)을 확인합니다"},{"t":"reveal","target":"r-law"},{"t":"move","target":"r-law"},{"t":"reveal","target":"r-other"},{"t":"caption","text":"④ '행위제한내용'에서 건폐율·용적률 범위를 확인합니다"},{"t":"reveal","target":"btn-map"},{"t":"reveal","target":"btn-limit"},{"t":"move","target":"btn-limit"},{"t":"click"},{"t":"reveal","target":"r-limit"},{"t":"reveal","target":"r-tip"},{"t":"move","target":"r-limit"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4c9fa89b-6334-25d4-8866-38f6fe380740', '520292d6-faff-0f02-1f3b-7947050d651c', 'realtor-public-law/district-plan-and-facilities', 'district-plan-and-facilities', '지구단위계획과 기반시설·도시·군계획시설(장기미집행 실효)',
+  $aix$"우리 땅이 30년 전에 도로 예정지로 묶였는데 아직도 도로가 안 났어요." 실제 들어오는 상담입니다. 국토계획법은 정확한 답(20년 실효)을 갖고 있고, 시험은 그 숫자를 매년 묻습니다.
+
+## 지구단위계획: 동네 단위의 정밀 설계
+
+지구단위계획은 도시·군관리계획의 일부로, 특정 구역의 건축물 용도·높이·배치까지 세밀하게 정합니다. 지정 대상은 용도지구, 도시개발구역, 정비구역, 택지개발지구 등이며(제51조), **도시지역 외**에서는 구역 면적의 **50% 이상이 계획관리지역**인 경우 등에만 지정할 수 있습니다.
+
+실효 규정 두 가지(제53조):
+
+- 구역 지정 고시 후 **3년** 안에 지구단위계획이 결정·고시되지 않으면 **3년이 되는 날의 다음 날** 구역 지정 실효.
+- **주민이 제안**한 지구단위계획은 고시 후 **5년** 안에 사업·공사에 착수하지 않으면 실효.
+
+## 기반시설과 도시·군계획시설
+
+기반시설은 도로·공원·상하수도·학교처럼 도시 기능에 필요한 시설로, 교통·공간·유통공급·공공문화체육·방재·보건위생·환경기초의 **7개 그룹**입니다(제2조). 이 중 도시·군관리계획으로 "여기에 짓겠다"고 **결정된** 것이 도시·군계획시설입니다.
+
+예약 없이 맡아둔 식당 좌석을 너무 오래 비우면 풀어줘야 하듯, 계획시설도 같습니다(제48조).
+
+- 결정 고시 후 **10년** 미집행 → 현황과 집행계획을 **지방의회에 보고**, 의회는 해제를 권고할 수 있음.
+- 결정 고시 후 **20년** 미시행 → **20년이 되는 날의 다음 날** 결정 실효. 시·도지사·대도시 시장은 지체 없이 고시.
+- 2024년 신설 도시·군계획시설입체복합구역에서는 건폐율·용적률을 용도지역 최대한도의 **200%** 이하까지 따로 정할 수 있습니다(제40조의5).
+
+## 📌 출제 포인트
+
+- 실효 시점은 항상 "기간이 되는 날의 **다음 날**". 함정: "20년이 되는 날에 실효" → ✕.
+- 지구단위계획구역 3년, 주민제안 계획 5년, 계획시설 10년 보고·20년 실효를 한 세트로.
+- 함정: "기반시설이면 모두 도시·군계획시설" → ✕, 관리계획으로 결정된 것만.
+
+> 💡 **핵심**: 지구단위계획은 3년·5년, 계획시설은 10년 보고·20년 실효. 모든 실효는 **다음 날**에 효력을 잃습니다.$aix$,
+  $aix${"type":"flow","title":"도시·군계획시설 결정의 일생","nodes":[{"label":"기반시설을 관리계획으로 결정·고시","sublabel":"이때부터 도시·군계획시설","icon":"file-pen","tone":"primary"},{"label":"10년 미집행","sublabel":"지방의회에 현황·집행계획 보고","icon":"clock","tone":"accent","edgeLabel":"사업 미시행"},{"label":"지방의회 해제 권고","sublabel":"특별한 사유 없으면 해제 절차","icon":"users","tone":"warning","edgeLabel":"권고 가능"},{"label":"20년 미시행 → 다음 날 실효","sublabel":"시·도지사·대도시 시장이 지체 없이 고시","icon":"x","tone":"muted","edgeLabel":"결정 효력 상실"}],"caption":"사업이 시행(실시계획 인가 등)되면 이 흐름은 중단됩니다 — 시험은 '미시행' 전제를 꼭 확인하게 합니다."}$aix$::jsonb, null, 6, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '745fe264-95e0-15d3-aa1b-69f0e84a2f48', '520292d6-faff-0f02-1f3b-7947050d651c', 'realtor-public-law/development-permit', 'development-permit', '개발행위허가·성장관리계획·개발밀도관리구역·기반시설부담구역',
+  $aix$땅을 깎거나 건물을 올리거나 흙을 파는 행위는 모두 "개발행위"입니다. 허가제로 묶은 이유는 하나, **기반시설 없는 난개발**을 막기 위해서죠. 네 제도는 모두 그 변주입니다.
+
+## 개발행위허가: 5가지 행위와 규모
+
+허가 대상(제56조): ① 건축물의 건축·공작물 설치 ② 토지의 형질변경(경작용 제외) ③ 토석 채취 ④ 토지 분할(건축물 있는 대지 제외) ⑤ 녹지·관리·자연환경보전지역에서 물건을 **1개월 이상** 쌓아놓는 행위. 도시·군계획사업에 의한 행위는 제외.
+
+허가 규모(형질변경 면적, 시행령 제55조):
+
+- 주거·상업·자연녹지·생산녹지지역 **1만㎡ 미만**
+- 공업지역 **3만㎡ 미만** · 보전녹지지역 **5천㎡ 미만**
+- 관리지역·농림지역 **3만㎡ 미만** · 자연환경보전지역 **5천㎡ 미만**
+
+허가권자는 **15일** 이내에 처분하고(시행령 제54조), 이행보증금은 **총공사비의 20% 이내**입니다.
+
+## 난개발 대응 3제도
+
+- **성장관리계획**: 녹지·관리·농림·자연환경보전지역 중 개발 압력이 높은 곳에 미리 기반시설·건축 기준을 정하는 계획. 인센티브로 건폐율을 **계획관리지역 50%**, 생산관리·농림·자연녹지·생산녹지지역 **30%**, 용적률을 계획관리지역 **125%**까지 완화, **5년마다** 재검토(제75조의2·3).
+- **개발밀도관리구역**: 주거·상업·공업지역에서 기반시설 설치가 곤란한 곳에 지정해 **용적률을 최대한도의 50% 범위에서 강화**(제66조, 시행령 제62조). "더 못 짓게" 하는 브레이크.
+- **기반시설부담구역**: 행위 제한이 완화·해제되는 지역, 개발행위허가 건수가 전년 대비 **20% 이상** 증가한 지역 등에 지정(제67조). **200㎡ 초과** 신축·증축에 설치비용 부과, 민간 부담률 **20%**.
+
+## 📌 출제 포인트
+
+- 개발밀도관리구역은 "강화"(도시지역), 성장관리계획은 "완화"(비도시 중심). 방향을 뒤집는 함정.
+- 함정: "보전녹지지역 개발행위허가 규모 1만㎡ 미만" → ✕, 5천㎡.
+
+> 💡 **핵심**: 개발행위 5종·규모 1만·3만·5천㎡·처리 15일. 밀도관리는 브레이크(50% 강화), 성장관리는 가속 페달(50·30%·125% 완화), 부담구역은 요금소(200㎡ 초과·20%)입니다.$aix$,
+  $aix${"type":"steps","title":"개발행위허가의 흐름","steps":[{"label":"허가 대상 확인","sublabel":"5종 행위 · 용도지역별 규모(1만·3만·5천㎡)","icon":"search"},{"label":"신청서 제출","sublabel":"기반시설·위해방지·환경·경관 계획서 첨부","icon":"file-text"},{"label":"15일 내 처분","sublabel":"심의·협의 기간 제외 · 조건부 허가 가능","icon":"calendar-check"},{"label":"이행보증금 예치","sublabel":"총공사비의 20% 이내","icon":"banknote"},{"label":"준공검사","sublabel":"건축법 사용승인을 받으면 생략","icon":"check"}],"caption":"지구단위계획·성장관리계획이 수립된 지역의 개발행위는 도시계획위원회 심의를 거치지 않습니다(제59조)."}$aix$::jsonb, null, 7, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'bfa999b3-52f5-8fc9-fbb1-d54cec529f02', 'ce802e40-c63d-9308-bf08-3a9bbb3aa535', 'realtor-public-law/urban-development-act', 'urban-development-act', '도시개발법: 구역 지정·시행자·환지 방식·체비지',
+  $aix$도시개발법은 빈 땅에 계획도시를 만드는 절차법입니다. 시험은 **누가 지정하고, 얼마나 커야 하며, 땅을 어떻게 나누는가**를 묻습니다.
+
+## 구역 지정과 시행자
+
+- 지정권자는 **시·도지사와 인구 50만 이상 대도시 시장**(제3조). 국가 시행이 필요한 경우 등에만 **국토교통부장관**이 지정.
+- 규모(시행령 제2조): 주거·상업·자연녹지·생산녹지지역 **1만㎡ 이상**, 공업지역 **3만㎡ 이상**, 도시지역 외 **30만㎡ 이상**(아파트·연립 계획 시 10만㎡).
+- 공람 **14일 이상**. 지정·고시 후 **3년**이 되는 날까지 실시계획 인가를 신청하지 않으면 **다음 날** 지정 해제 의제(제10조).
+- 시행 방식은 **수용 또는 사용, 환지, 혼용**(제21조). 구역 **전부를 환지 방식**으로 하면 시행자는 **토지 소유자나 조합**. 조합은 토지 소유자 **7명 이상**이 지정권자 인가를 받고, 동의는 **토지면적 2/3 + 소유자 총수 1/2 이상**(제13조). 민간 시행자의 수용도 **면적 2/3 소유 + 총수 1/2 동의**(제22조).
+
+## 환지: 땅으로 돌려주는 정산
+
+환지는 종전 토지를 내놓고 새로 조성된 땅을 돌려받는 방식. 반죽을 모아 다시 자르는 피자처럼 모양이 달라지니 정산이 필요합니다.
+
+- **체비지**: 사업 경비 충당용으로 환지로 정하지 않은 땅(보류지 중 일부, 제34조). 시행자가 **환지처분 공고일 다음 날** 소유권 취득.
+- 비행정청 시행자의 환지계획은 시장·군수·구청장 등 **인가**(제29조). 환지처분은 준공검사 후 **60일 이내**(시행령 제65조).
+- 환지는 **공고일 다음 날부터 종전 토지로 보고**, 청산금은 환지처분 시 결정되어 **공고일 다음 날 확정**(제41·42조).
+
+## 📌 출제 포인트
+
+- 함정: "도시개발구역은 국토교통부장관이 지정한다" → 원칙 ✕(시·도지사·대도시 시장), 예외적으로만 ○.
+- 함정: "체비지는 환지처분 공고일에 시행자가 취득" → ✕, 다음 날.
+
+> 💡 **핵심**: 지정은 시·도지사·대도시 시장, 규모는 1만·3만·30만㎡, 전부 환지면 토지 소유자·조합이 시행. 환지의 모든 효력은 **환지처분 공고일 다음 날**에 생깁니다.$aix$,
+  $aix${"type":"flow","title":"환지 방식 도시개발사업의 절차","nodes":[{"label":"도시개발구역 지정","sublabel":"시·도지사·대도시 시장 · 공람 14일","icon":"map","tone":"primary"},{"label":"시행자 지정 · 조합 설립","sublabel":"면적 2/3 + 총수 1/2 동의","icon":"users","tone":"accent","edgeLabel":"3년 내 실시계획 인가 신청"},{"label":"환지계획 작성·인가","sublabel":"환지 설계 · 체비지·보류지 명세","icon":"file-pen","tone":"accent"},{"label":"공사 완료 → 준공검사","sublabel":"공람·의견서 반영","icon":"check","tone":"success"},{"label":"환지처분 (60일 이내)","sublabel":"공고일 다음 날: 환지=종전 토지, 체비지 취득, 청산금 확정","icon":"stamp","tone":"warning"}],"caption":"환지 방식의 효력은 모두 '환지처분 공고일 다음 날'로 수렴합니다."}$aix$::jsonb, null, 7, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0cdd6249-3be5-ea7f-5fd0-af7e1815b2d0', 'ce802e40-c63d-9308-bf08-3a9bbb3aa535', 'realtor-public-law/urban-regeneration-act', 'urban-regeneration-act', '도시 및 주거환경정비법: 정비사업 종류·조합 설립·관리처분계획',
+  $aix$뉴스의 "조합 설립 동의율 확보", "관리처분인가 통과"는 모두 도시정비법의 단계 이름입니다. 시험은 **3종 정의·동의 요건·관리처분계획** 세 덩어리만 반복해서 묻습니다.
+
+## 정비사업 3종과 조합 설립
+
+정비사업 3종(제2조)은 정비기반시설 상태로 갈립니다. **주거환경개선사업**은 **극히 열악**, **재개발**은 **열악**, **재건축**은 **양호**(노후 공동주택 밀집).
+
+- 추진위원회: 토지등소유자 **과반수** 동의 → 시장·군수등 승인(제31조).
+- **재개발 조합**: 토지등소유자 **3/4 이상 + 토지면적 1/2 이상**(제35조②).
+- **재건축 조합**: 동별 구분소유자 **과반수** + 전체 **70% 이상** + 토지면적 **70% 이상**(제35조③, 2025-05 시행 개정으로 3/4에서 완화). 주택단지 아닌 지역은 **3/4 + 면적 2/3 이상**.
+- 재개발은 토지등소유자 **20인 미만**이면 직접 시행 가능(제25조). 재건축 조합원은 **동의한 자**만(제39조). 정비구역 지정 후 **2년** 내 추진위 미신청, **3년** 내 조합 미신청 등이면 해제(제20조).
+
+## 관리처분계획: 새 집 배분표
+
+사업시행계획인가 고시 후 **90일** 내 분양 공고, 분양신청 기간 **30일 이상 60일 이내**(20일 1회 연장). 그 결과로 누가 어느 집을 받고 분담금이 얼마인지 정한 배분표가 관리처분계획이며 **시장·군수등의 인가**를 받습니다(제74조).
+
+- 인가 신청 전 **30일 이상** 토지등소유자 공람(제78조).
+- 시장·군수등은 신청일부터 **30일**(타당성 검증 시 **60일**) 내 인가 여부 통보.
+- 인가 고시 후 **이전고시까지** 종전 건축물 사용·수익 금지(제81조). 이전고시 **다음 날** 소유권 취득(제86조).
+
+## 📌 출제 포인트
+
+- 함정: "재건축 조합 설립은 전체 구분소유자 3/4 이상" → 현행 ✕, 70%. 개정 전 숫자를 노립니다.
+- 함정: "관리처분계획은 시·도지사가 인가" → ✕, 시장·군수등.
+
+> 💡 **핵심**: 재개발 3/4·1/2, 재건축 동별 과반·70%·70%. 관리처분계획은 공람 30일 → 30일(60일) 내 통보 → 인가 고시 후 사용·수익 중지 → 이전고시 다음 날 소유권.$aix$,
+  $aix${"type":"steps","title":"조합 시행 정비사업의 7단계","steps":[{"label":"정비구역 지정·고시","sublabel":"기본계획 → 정비계획","icon":"map"},{"label":"추진위원회 승인","sublabel":"토지등소유자 과반수 동의","icon":"users"},{"label":"조합 설립 인가","sublabel":"재개발 3/4·1/2 · 재건축 동별 과반·70%·70%","icon":"badge-check"},{"label":"사업시행계획 인가","sublabel":"이후 90일 내 분양 공고","icon":"file-pen"},{"label":"분양신청","sublabel":"30~60일 (20일 1회 연장)","icon":"list-checks"},{"label":"관리처분계획 인가","sublabel":"공람 30일 → 시장·군수등 30/60일 통보","icon":"stamp"},{"label":"이주·철거·준공 → 이전고시","sublabel":"고시 다음 날 소유권 취득","icon":"home"}],"caption":"관리처분계획 인가 고시가 '이주·철거의 방아쇠'라는 점이 실무와 시험 모두의 포인트입니다."}$aix$::jsonb, null, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f98c6417-bfe1-4cbb-29ef-70bdd3a4bee3', '61cc6abc-c06f-f2b6-e78c-34e341b6b9f2', 'realtor-public-law/building-act-permits', 'building-act-permits', '건축법 ①: 용어(건축·대수선·리모델링)·건축허가·신고·사용승인',
+  $aix$건축법 문제의 절반은 용어 정의입니다. "증축인가 개축인가", "대수선인가"를 가르는 기준이 곧 허가·신고를 가르는 기준이기 때문입니다.
+
+## 용어: 건축 5종과 대수선
+
+- **건축** = 신축·증축·개축·재축·이전 **5가지**(제2조). 개축은 해체 후 **같은 규모 범위**에서 다시 짓는 것, 재축은 **재해로 멸실**된 뒤 다시 짓는 것, 이전은 주요구조부를 해체하지 않고 같은 대지 안에서 옮기는 것.
+- **주요구조부** = 내력벽·기둥·바닥·보·지붕틀·주계단 **6가지**(사이 기둥·최하층 바닥·작은 보 등 제외).
+- **대수선**: 내력벽 **30㎡ 이상**, 기둥·보·지붕틀 **3개 이상** 수선·변경 등(시행령 제3조의2).
+- **리모델링**: 노후화 억제·기능 향상을 위한 대수선 또는 일부 증축·개축. 고층건축물 **30층·120m**, 초고층 **50층·200m** 이상.
+
+## 허가 vs 신고, 그리고 사용승인
+
+건축·대수선은 원칙적으로 시장·군수·구청장의 **허가**(제11조). **21층 이상 또는 연면적 10만㎡ 이상**은 **특별시장·광역시장** 허가(공장·창고 제외). 허가 후 **2년** 내 미착수 시 취소(1년 연장).
+
+신고로 허가를 대신하는 경우(제14조):
+
+- 바닥면적 합계 **85㎡ 이내** 증축·개축·재축(3층 이상은 연면적의 1/10 이내)
+- 관리·농림·자연환경보전지역에서 연면적 **200㎡ 미만·3층 미만** 건축
+- 200㎡ 미만·3층 미만 건축물의 대수선, 주요구조부 해체가 없는 대수선
+- 연면적 합계 **100㎡ 이하** 건축물, 높이 **3m 이하** 증축 등(시행령 제11조)
+
+신고 수리 여부는 **5일**(협의 시 20일) 내 통지, 신고 후 **1년** 내 미착수 시 효력 상실. 공사를 마치면 허가권자의 **사용승인**을 받아야 씁니다(제22조).
+
+## 📌 출제 포인트
+
+- 함정: "재축은 기존 건축물을 임의로 해체하고 다시 짓는 것" → ✕, 재해 멸실이 요건.
+- 함정: "연면적 10만㎡ 이상 공장은 광역시장 허가" → ✕, 공장·창고는 제외.
+
+> 💡 **핵심**: 건축 5종·주요구조부 6종·대수선 30㎡/3개. 허가는 시장·군수·구청장, 21층·10만㎡는 특·광역시장. 신고 85㎡·200㎡/3층·100㎡, 허가 2년·신고 1년.$aix$,
+  $aix${"type":"compare","title":"건축허가 vs 건축신고","columns":[{"title":"허가 (제11조)","icon":"stamp","tone":"primary","items":["원칙: 시장·군수·구청장","21층 이상 또는 연면적 10만㎡ 이상 → 특·광역시장","공장·창고는 특·광역시장 허가 제외","2년 내 미착수 → 취소 (1년 연장)"]},{"title":"신고 (제14조)","icon":"file-text","tone":"accent","items":["85㎡ 이내 증축·개축·재축","관리·농림·자연환경보전지역 200㎡ 미만·3층 미만","연면적 100㎡ 이하 · 높이 3m 이하 증축","5일 내 수리 통지 · 1년 내 미착수 실효"]}],"caption":"신고를 하면 허가를 받은 것으로 봅니다 — 둘 다 끝나면 사용승인(제22조)이 기다립니다."}$aix$::jsonb, null, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '31435a5c-8deb-a766-fc7b-f747b5c57526', '61cc6abc-c06f-f2b6-e78c-34e341b6b9f2', 'realtor-public-law/building-act-standards', 'building-act-standards', '건축법 ②: 대지와 도로·건축선·면적과 높이 산정·용도변경',
+  $aix$"이 땅에 몇 층까지 올릴 수 있나요?"에 답하려면 도로·건축선·면적 산정 규칙을 알아야 합니다. 시험도 같은 질문을 숫자로 묻습니다.
+
+## 대지와 도로, 건축선
+
+- **도로**는 보행·자동차 통행이 가능한 너비 **4m 이상**(제2조). 대지는 도로에 **2m 이상** 접해야 하고(제44조), 연면적 합계 **2천㎡(공장 3천㎡) 이상**이면 너비 **6m 이상** 도로에 **4m 이상** 접해야 합니다(시행령 제28조).
+- 건축선은 원칙적으로 대지와 도로의 경계선. 도로가 소요 너비(4m)에 못 미치면 **중심선에서 소요 너비의 1/2**만큼 물러난 선(제46조). 건축물·담장은 건축선을 넘을 수 없고, 도로면에서 **4.5m 이하**의 출입구·창문은 열 때 건축선을 넘지 않는 구조로(제47조).
+
+## 면적·높이·층수 산정 (시행령 제119조)
+
+- **대지면적**: 수평투영면적에서 건축선 후퇴 부분과 도시·군계획시설 부분 제외.
+- **건축면적**: 외벽 중심선으로 둘러싸인 수평투영면적. **연면적**: 각 층 바닥면적 합계이되, 용적률 계산 시 **지하층, 지상층 부속 주차장, 피난안전구역, 경사지붕 아래 대피공간** 제외.
+- **층수**: 지하층 불산입, 층 구분이 불명확하면 **4m마다 1층**. 옥탑 등은 건축면적의 **1/8**(85㎡ 이하 공동주택 1/6) 이하면 불산입. 일조 높이 제한은 **전용·일반주거지역**의 **정북방향**(제61조).
+
+```text
+대지 400㎡ · 제2종일반주거지역(건폐율 60%, 용적률 250% 가정)
+최대 건축면적 = 400 × 0.6 = 240㎡
+최대 연면적(용적률용) = 400 × 2.5 = 1,000㎡
+→ 240㎡씩 4층 + 지하층(용적률 불산입) 구성 가능
+```
+
+## 용도변경: 9개 시설군
+
+시설군은 ① 자동차 관련 ② 산업 등 ③ 전기통신 ④ 문화집회 ⑤ 영업 ⑥ 교육 및 복지 ⑦ 근린생활 ⑧ 주거업무 ⑨ 그 밖의 시설군(제19조). **상위군(번호가 작은 쪽)으로 올라가면 허가, 하위군으로 내려가면 신고**, 같은 군 안은 건축물대장 **기재내용 변경 신청**. 변경 부분 **100㎡ 이상**이면 사용승인 준용.
+
+**📌 출제 포인트**
+
+- 함정: "주거업무시설군 → 근린생활시설군은 신고" → ✕, 8군에서 7군은 상위군 이동이라 허가.
+- 함정: "건축선 후퇴 부분도 대지면적에 포함" → ✕, 제외.
+
+> 💡 **핵심**: 도로 4m·접도 2m·건축선 후퇴는 중심선에서 1/2. 용적률 연면적에서 지하층·부속 주차장 제외, 층수는 4m마다 1층. 용도변경은 "위로 허가, 아래로 신고".$aix$,
+  $aix${"type":"stack","title":"용도변경 9개 시설군 (위로 = 허가, 아래로 = 신고)","layers":[{"label":"① 자동차 관련 시설군","sublabel":"자동차 관련 시설","icon":"route","tone":"warning"},{"label":"② 산업 등 시설군 · ③ 전기통신시설군","sublabel":"공장·창고·운수 · 방송통신·발전","icon":"server","tone":"warning"},{"label":"④ 문화집회시설군 · ⑤ 영업시설군","sublabel":"문화집회·종교·위락 · 판매·운동·숙박","icon":"users","tone":"accent"},{"label":"⑥ 교육 및 복지시설군 · ⑦ 근린생활시설군","sublabel":"의료·교육·노유자 · 제1·2종 근린생활","icon":"graduation-cap","tone":"accent"},{"label":"⑧ 주거업무시설군 · ⑨ 그 밖의 시설군","sublabel":"단독·공동주택·업무 · 동물 및 식물 관련","icon":"home","tone":"primary"}],"caption":"번호가 작은 군으로 올라가면 허가, 큰 군으로 내려가면 신고, 같은 군 안은 기재내용 변경 신청입니다."}$aix$::jsonb, null, 7, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '633c3956-001e-896d-a420-a89db42132e4', '61cc6abc-c06f-f2b6-e78c-34e341b6b9f2', 'realtor-public-law/housing-act-supply', 'housing-act-supply', '주택법 ①: 용어·사업계획승인·주택조합·리모델링',
+  $aix$건축법이 "건물 일반"의 규칙이라면 주택법은 "집을 대량 공급할 때"의 규칙입니다. 그래서 숫자가 **호수·세대수·비율**로 바뀝니다.
+
+## 용어 (제2조·시행령)
+
+- **국민주택**: 국가·지자체·LH·지방공사가 건설하거나 재정·주택도시기금 지원으로 건설·개량되는 **국민주택규모 이하** 주택. 국민주택규모는 주거전용면적 **85㎡ 이하**(수도권 외 도시지역 아닌 읍·면 **100㎡**).
+- **준주택**: 주택은 아니지만 주거로 쓸 수 있는 **기숙사·다중생활시설·노인복지주택·오피스텔** 4종(시행령 제4조).
+- **도시형 생활주택**: **300세대 미만** 국민주택규모 주택으로 **도시지역**에 건설. 아파트형·단지형 연립·단지형 다세대 3종(시행령 제10조).
+
+## 사업계획승인과 주택조합
+
+**단독주택 30호, 공동주택 30세대** 이상 건설 또는 **1만㎡ 이상** 대지조성은 사업계획승인 대상(제15조, 시행령 제27조; 한옥 등은 50호·50세대). 승인권자는 대지 **10만㎡ 이상**이면 시·도지사·대도시 시장, 미만이면 특·광역시장 또는 시장·군수. 승인 후 **5년** 내 착공(1년 연장 가능, 제16조).
+
+- 지역·직장주택조합 설립인가(시장·군수·구청장): 주택건설대지의 **80% 이상 사용권원 + 15% 이상 소유권**(제11조).
+- 리모델링주택조합: 단지 전체는 구분소유자·의결권 각 **2/3 이상 + 동별 과반수**, 동 단위는 **2/3 이상**.
+- 국민주택 공급용 직장주택조합은 인가가 아니라 **신고**.
+
+## 리모델링 (제2조 제25호)
+
+사용검사일부터 **15년**(조례로 15~20년) 지난 공동주택을 세대 주거전용면적의 **30%**(85㎡ 미만 **40%**) 이내에서 증축. 세대수는 기존의 **15%** 이내 증가 가능, 수직증축은 **15층 이상 3개층, 14층 이하 2개층**(시행령 제13조).
+
+**📌 출제 포인트**
+
+- 함정: "오피스텔은 주택이다" → ✕, 준주택.
+- 함정: "공동주택 20세대 이상이면 사업계획승인" → ✕, 30세대.
+
+> 💡 **핵심**: 85㎡·300세대·30호/30세대·1만㎡·10만㎡·5년, 조합 80%/15%, 리모델링 15년·30%/40%·15%. 숫자의 주어까지 함께 외우세요.$aix$,
+  $aix${"type":"grid","title":"주택법 용어 지도","items":[{"label":"국민주택","sublabel":"85㎡ 이하(읍·면 100㎡) · 공공·기금 지원","icon":"home","tone":"primary"},{"label":"민영주택","sublabel":"국민주택을 제외한 주택","icon":"building","tone":"muted"},{"label":"준주택","sublabel":"기숙사·다중생활시설·노인복지주택·오피스텔","icon":"key","tone":"accent"},{"label":"도시형 생활주택","sublabel":"300세대 미만 · 도시지역 · 3종","icon":"boxes","tone":"accent"},{"label":"주택조합 3종","sublabel":"지역·직장·리모델링 (80%·15%)","icon":"users","tone":"success"},{"label":"리모델링","sublabel":"15년 · 30%/40% · 세대수 15%","icon":"wrench","tone":"warning"}],"caption":"각 용어 옆의 숫자가 곧 출제 포인트입니다 — 숫자의 '주어'를 함께 외우세요."}$aix$::jsonb, null, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e52edea6-3048-c121-da2a-99b7024d45c0', '61cc6abc-c06f-f2b6-e78c-34e341b6b9f2', 'realtor-public-law/housing-act-sale-regulation', 'housing-act-sale-regulation', '주택법 ②: 분양가상한제·전매제한·투기과열지구·조정대상지역',
+  $aix$"규제지역 지정", "전매제한 3년"이라는 뉴스를 들으면 이제 조문이 떠올라야 합니다. 주택 시장의 온도를 조절하는 밸브들입니다.
+
+## 두 규제지역과 분양가상한제
+
+- **투기과열지구**(제63조): **국토교통부장관 또는 시·도지사**가 주거정책심의위원회 심의를 거쳐 지정. 주택가격상승률이 물가상승률보다 현저히 높고 직전 2개월 **청약경쟁률이 모두 5대 1 초과**(국민주택규모 10대 1) 등(시행령 제72조의2). **반기마다** 재검토.
+- **조정대상지역**(제63조의2): **국토교통부장관만** 지정. 과열지역은 3개월 주택가격상승률이 물가상승률의 **1.3배 초과** + 청약경쟁률·분양권 전매량 등, 위축지역은 6개월 평균 상승률 **-1% 이하**(시행령 제72조의3).
+- **분양가상한제**(제57·58조): **공공택지**와 국토교통부장관이 지정한 적용지역의 공동주택은 택지비 + 건축비 이하로 공급. **도시형 생활주택** 등은 제외.
+
+## 전매제한 (제64조·시행령 별표 3)
+
+**10년 이내**에서 시행령이 지역별로 정하며 **입주자로 선정된 날**부터 기산. 기간 안에 소유권이전등기를 마치면 지난 것으로 봅니다.
+
+| 대상 주택 | 수도권 | 수도권 외 |
+|---|---|---|
+| 투기과열지구·조정대상지역(과열) | 3년 | 1년 |
+| 분양가상한제 적용주택(공공택지) | 3년 | 1년 |
+| 공공택지 외 택지(규제지역 아님) | 과밀억제권역 1년 · 그 외 6개월 | 광역시 도시지역 6개월 · 그 밖 없음 |
+| 조정대상지역(위축) 공공택지 | 6개월 | 6개월 |
+| 토지임대부 분양주택 | 10년 | 10년 |
+
+세대원 전원의 근무·질병·취학·결혼에 따른 다른 시·군 이전(수도권 안은 제외), 해외 이주 등은 예외(시행령 제73조).
+
+## 📌 출제 포인트
+
+- 함정: "조정대상지역은 시·도지사도 지정할 수 있다" → ✕, 국토교통부장관만. 투기과열지구는 둘 다.
+- 함정: "전매제한 기간은 소유권이전등기일부터 기산" → ✕, 입주자 선정일.
+
+> 💡 **핵심**: 투기과열지구는 국토부장관·시·도지사, 조정대상지역은 국토부장관만. 전매제한은 수도권 3년·그 외 1년이 기본틀이고, 입주자 선정일부터 셉니다.$aix$,
+  $aix${"type":"compare","title":"투기과열지구 vs 조정대상지역 vs 분양가상한제 적용지역","columns":[{"title":"투기과열지구","icon":"siren","tone":"warning","items":["국토부장관 또는 시·도지사","청약경쟁률 5대1(10대1) 초과 등","반기마다 재검토","전매제한 수도권 3년 · 그 외 1년"]},{"title":"조정대상지역","icon":"gauge","tone":"accent","items":["국토부장관만 지정","과열: 가격상승률 > 물가 1.3배","위축: 6개월 -1% 이하","과열 3년/1년 · 위축 공공택지 6개월"]},{"title":"분양가상한제 적용지역","icon":"percent","tone":"primary","items":["국토부장관 지정 (공공택지는 자동 적용)","분양가 = 택지비 + 건축비 이하","도시형 생활주택 등 제외","공공택지 3년/1년"]}],"caption":"지정권자와 기준 숫자를 열(列) 단위로 비교해 두면 권한자 바꿔치기 함정이 보입니다."}$aix$::jsonb, null, 7, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '8184ede5-752c-bf61-f63c-09c84744419b', 'b7fd2259-213f-12fa-5955-caf0aa1914d2', 'realtor-public-law/farmland-act', 'farmland-act', '농지법: 농지 소유 제한·농지취득자격증명·농지전용·임대차',
+  $aix$농지법은 2문항 안팎이지만 숫자가 또렷한 "확실한 2점"입니다. **경자유전**(농사짓는 사람이 농지를 갖는다) 원칙 하나로 모든 규정이 설명됩니다.
+
+## 소유 제한과 농지취득자격증명
+
+농지는 **자기의 농업경영에 이용하거나 이용할 자**만 소유합니다(제6조). 예외는 상속, 이농, 주말·체험영농(**농업진흥지역 외**만), 농지전용 허가·신고 등. 상한(제7조)은 상속 비농업인 **1만㎡**, **8년** 이상 경영 후 이농 **1만㎡**, 주말·체험영농 **세대원 합산 1천㎡ 미만**.
+
+농지 취득 시 소재지 **시·구·읍·면장**의 농지취득자격증명을 받아 등기 신청 시 **첨부**합니다(제8조). 발급은 **7일** 이내가 원칙, 농업경영계획서를 쓰지 않는 경우 **4일**, 농지위원회 심의 대상 **14일**.
+
+정당한 사유 없이 농업경영에 이용하지 않으면 **1년** 내 처분 의무(제10조), 미처분 시 **6개월** 내 처분명령(제11조), 불이행 시 감정가격·개별공시지가 중 높은 가액의 **25%** 이행강제금.
+
+## 임대차와 농지전용
+
+- 임대차는 원칙 금지, 60세 이상의 5년 초과 자경 농지, 3년 이상 소유 농지의 주말·체험영농 임대, 이모작용 **8개월** 이내 임대 등만 허용(제23조). **서면** 계약 후 시·구·읍·면장의 **확인**을 받고 **인도**받으면 **다음 날**부터 제3자에게 효력(제24조). 기간은 **3년 이상**(다년생식물·온실 **5년**), 짧게 정해도 3년(제24조의2).
+- 농지전용은 **농림축산식품부장관의 허가**가 원칙(제34조). 농업인 주택 등은 **시장·군수·구청장에게 신고**(제35조), 잠시 쓰면 **타용도 일시사용허가**(제36조). **농지보전부담금**은 개별공시지가의 **30%**(농업진흥지역)·**20%**(그 밖).
+
+## 📌 출제 포인트
+
+- 함정: "농지취득자격증명은 4일 이내 발급이 원칙" → ✕, 7일 원칙·4일 예외·14일 심의.
+- 함정: "주말·체험영농 1천㎡ 미만은 1인 기준" → ✕, 세대 합산.
+
+> 💡 **핵심**: 경자유전 → 예외 소유(1만·1만·1천㎡) → 농취증 7일/4일/14일 → 미이용 1년 처분·6개월 명령·25% 강제금. 임대차 3년, 전용은 허가·신고·일시사용 3단계.$aix$,
+  $aix${"type":"chat","title":"농지 상담 사례로 보는 농지법","messages":[{"role":"user","text":"직장인인데 주말농장용으로 밭 1,200㎡를 사려고요. 가능할까요?"},{"role":"ai","text":"주말·체험영농은 세대원 전부 합산 1천㎡ 미만만 소유할 수 있습니다(제7조③). 1,200㎡는 불가하고, 농업진흥지역 안 농지도 안 됩니다."},{"role":"user","text":"그럼 900㎡로 줄이면 등기까지 얼마나 걸리나요?"},{"role":"ai","text":"시·구·읍·면장에게 농지취득자격증명을 신청하면 원칙 7일(주말·체험영농계획서를 쓰지 않는 예외는 4일, 농지위원회 심의 대상은 14일) 안에 발급되고, 등기 신청 때 첨부합니다."},{"role":"user","text":"사 놓고 농사를 안 지으면요?"},{"role":"ai","text":"사유 발생일부터 1년 내 처분 의무, 미처분 시 6개월 내 처분명령, 불이행하면 감정가·공시지가 중 높은 가액의 25% 이행강제금이 매년 부과됩니다."}],"caption":"상담 문장 하나에 소유 상한·발급 기간·처분 절차가 모두 들어 있습니다 — 이대로 출제됩니다."}$aix$::jsonb, null, 6, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'f704fb89-7f88-2562-b13e-ce0c60a67c93', 'b7fd2259-213f-12fa-5955-caf0aa1914d2', 'realtor-public-law/numbers-cheatsheet', 'numbers-cheatsheet', '공법 숫자 총정리: 면적·기간·비율 암기표(표 1개 + 함정 패턴)',
+  $aix$공법 정답은 대부분 "숫자 하나"에 달려 있습니다. 13개 레슨의 숫자를 한 표에 모았습니다.
+
+## 자주 나오는 숫자·기간 암기표
+
+| 법률 | 면적·규모 | 기간 | 비율·기타 |
+|---|---|---|---|
+| 국토계획법 | 개발행위 1만·3만·5천㎡ 미만 | 계획시설 20년(보고 10년) · 지구단위계획구역 3년 · 열람 14일 · 허가 15일 | 건폐율 주70/상90/공70/녹20/계획관리40 · 용적률 주500/상1,500/공400/녹100 |
+| 개발·정비 | 개발구역 1만·3만·30만㎡ 이상 | 실시계획 3년 · 환지처분 60일 · 분양신청 30~60일 · 관리처분 공람 30일 | 개발조합 2/3·1/2 · 재개발 3/4·1/2 · 재건축 동별 과반·70%·70% |
+| 건축법 | 신고 85㎡·200㎡/3층·100㎡ · 대수선 30㎡/3개 · 접도 2m | 허가 2년 · 신고 1년 · 통지 5일 | 특·광역시장 21층·10만㎡ · 4m마다 1층 · 시설군 9 |
+| 주택법 | 85㎡(읍·면 100㎡) · 승인 30호/30세대·1만㎡ · 도시형 300세대 미만 | 착공 5년 · 전매 수도권 3년/그 외 1년 · 리모델링 15년 | 조합 80%·15% · 리모델링 30%/40%·15% · 물가 1.3배 |
+| 농지법 | 상속·이농 1만㎡ · 주말·체험 1천㎡ 미만(세대) | 농취증 7일/4일/14일 · 처분 1년·명령 6개월 · 임대차 3년/5년 | 이행강제금 25% · 보전부담금 30%/20% |
+
+## 📌 출제 포인트: 숫자 함정 4패턴
+
+- **비슷한 숫자 교체**: 20년↔10년(실효↔보고), 7일↔4일(농취증 원칙↔예외).
+- **주어 바꾸기**: "1만㎡"가 개발행위허가 규모인지, 도시개발구역 최소 규모인지, 농지 소유 상한인지.
+- **단위 바꾸기**: 85㎡(건축신고 바닥면적) vs 85㎡(국민주택규모 전용면적).
+- **개정 전 숫자**: 재건축 3/4(현행 70%), 입지규제최소구역(삭제), 농취증 4일 원칙(현행 7일).
+
+> 💡 **핵심**: 공법 숫자는 "숫자 + 주어 + 단위"를 한 묶음으로 외웁니다. 표를 세로·가로로 읽고 아래 데모처럼 OX로 주고받으며, 시험 전날 마지막 한 장으로 삼으세요.$aix$,
+  $aix${"type":"cycle","title":"숫자 암기 루프","center":"표 1장 · 3회독","nodes":[{"label":"세로 읽기","sublabel":"법률별로 한 줄씩","icon":"book-open"},{"label":"가로 읽기","sublabel":"면적·기간·비율 열로","icon":"ruler"},{"label":"OX 퀴즈","sublabel":"스터디에서 함정 지문 주고받기","icon":"message"},{"label":"오답 표시","sublabel":"틀린 숫자에 형광펜","icon":"pen-line"}],"caption":"읽기만 하면 잊고, 문제로 꺼내 쓰면 남습니다 — 루프를 시험 전날까지 돌리세요."}$aix$::jsonb, $aix${"title":"스터디 채널에서 공법 숫자 OX 퀴즈 주고받기","app":{"kind":"chat-app","workspace":"공인중개사 동차 스터디","channels":[{"id":"ch-law","name":"공법-숫자퀴즈","active":true},{"id":"ch-civil","name":"민법-사례"},{"id":"ch-tax","name":"세법-계산"}],"composerId":"composer","messages":[{"id":"q1","author":"퀴즈봇","bot":true,"time":"오후 9:00","text":"OX ① 도시·군계획시설결정은 고시일부터 20년이 되는 날에 효력을 잃는다.","hidden":true},{"id":"a1","author":"나","time":"오후 9:01","text":"X — 20년이 되는 날의 '다음 날' 실효 (제48조)","hidden":true},{"id":"r1","author":"퀴즈봇","bot":true,"time":"오후 9:01","text":"정답! 실효는 항상 '다음 날'입니다. 10년 미집행은 지방의회 보고.","hidden":true},{"id":"q2","author":"퀴즈봇","bot":true,"time":"오후 9:02","text":"OX ② 재건축 조합 설립에는 전체 구분소유자 3/4 이상의 동의가 필요하다.","hidden":true},{"id":"a2","author":"나","time":"오후 9:03","text":"X — 현행은 동별 과반수 + 전체 70% + 토지면적 70% (제35조③)","hidden":true},{"id":"r2","author":"퀴즈봇","bot":true,"time":"오후 9:03","text":"정답! 2025년 개정으로 3/4에서 70%로 완화됐습니다. 재개발은 3/4·1/2.","hidden":true},{"id":"q3","author":"퀴즈봇","bot":true,"time":"오후 9:04","text":"OX ③ 농지취득자격증명은 신청일부터 4일 이내 발급이 원칙이다.","hidden":true},{"id":"a3","author":"나","time":"오후 9:05","text":"X — 원칙 7일, 계획서 미작성 4일, 농지위원회 심의 14일","hidden":true},{"id":"r3","author":"퀴즈봇","bot":true,"time":"오후 9:05","text":"3문제 모두 정답! 오늘의 오답 노트: 없음 ✅","hidden":true}]},"actions":[{"t":"caption","text":"① 퀴즈봇이 함정 지문을 OX로 던집니다"},{"t":"reveal","target":"q1"},{"t":"move","target":"q1"},{"t":"wait","ms":700},{"t":"caption","text":"② 숫자와 조문을 함께 적어 답합니다"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"X — 20년이 되는 날의 다음 날 실효 (제48조)"},{"t":"wait","ms":300},{"t":"reveal","target":"a1"},{"t":"reveal","target":"r1"},{"t":"wait","ms":600},{"t":"caption","text":"③ 개정 전 숫자를 노리는 함정에도 현행 조문으로 답합니다"},{"t":"reveal","target":"q2"},{"t":"move","target":"q2"},{"t":"click","target":"composer"},{"t":"type","target":"composer","text":"X — 동별 과반수 + 전체 70% + 면적 70%"},{"t":"wait","ms":300},{"t":"reveal","target":"a2"},{"t":"reveal","target":"r2"},{"t":"caption","text":"④ 원칙·예외 숫자는 세 개를 한 묶음으로"},{"t":"reveal","target":"q3"},{"t":"reveal","target":"a3"},{"t":"reveal","target":"r3"},{"t":"move","target":"r3"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2d5a42b5-9052-7f05-e008-b855435e0e8a', 'b7fd2259-213f-12fa-5955-caf0aa1914d2', 'realtor-public-law/exam-strategy-and-next', 'exam-strategy-and-next', '공법 실전 전략: 버릴 것과 지킬 것 + 다음 단계',
+  $aix$공법 100점은 없습니다. 합격자의 공법 점수는 대개 50~70점. 목표는 **과락(40점) 위험을 없애고 평균 60점에 기여하는 것**이고, 그러려면 지킬 것과 버릴 것을 먼저 정해야 합니다.
+
+## 지킬 것 20문항, 버릴 것
+
+- **지킬 것**: 국토계획법의 용도지역·건폐율·용적률(레슨 3), 계획시설 실효(레슨 4), 개발행위허가 규모(레슨 5)는 숫자만 정확하면 맞습니다. 건축법 용어·허가·신고(레슨 8)와 주택법 용어·사업계획승인(레슨 10)은 정의형이라 회독에 비례해 오르고, 농지법 2문항은 숫자 5개(1만·1천·7일·1년·3년)로 끝납니다. 이것만 지켜도 약 20문항, 50점입니다.
+- **버릴 것**: 도시개발법·정비법의 세부 절차 조문(공람 방법, 총회 의결 사항, 청산 세부)은 매년 다른 조문이 나오니 큰 흐름(레슨 6·7 일러스트)과 동의율·기간만 챙기세요. 건축법 피난·방화·설비, 주택법 공급 절차 세부는 기출문제 문장만 봅니다.
+- 처음 보는 지문은 **아는 선지로 소거**하고 넘어갑니다. 1교시 100분 중 공법에 50분 안팎.
+
+📌 출제 포인트
+- 함정: "공법은 평균 60점만 넘으면 된다" → ✕, 40점 미만은 과목 과락.
+- 기준은 **2026-10-31 시행 중인 법령**(Q-Net 시행공고) — 개정안 뉴스는 정답이 아님.
+
+## 마지막 4주 회독 계획
+
+1. 3주 전: 레슨 13 암기표를 하루 한 번 세로·가로 읽기.
+2. 2주 전: 5개년 공법 기출문제 200문항을 풀고, 오답은 **어느 법·어느 숫자**인지 표에 표시.
+3. 1주 전: 표시된 숫자만 조문(law.go.kr)으로 재확인.
+4. 전날: 표 1장과 함정 4패턴(레슨 13)만 봅니다.
+
+## 다음 단계
+
+공법이 "땅과 건물의 규칙"이었다면, 다음 강의 **"2차 부동산공시법 및 부동산세법: 지적·등기·세금 한 번에"**는 그 땅과 건물을 **장부에 기록하고(지적·등기) 세금을 매기는(세법)** 마지막 과목입니다. 공시법 24문항과 세법 16문항이 한 교시(50분)에 묶이니, "숫자 + 주어 + 단위" 암기법이 그대로 통합니다.
+
+> 💡 **핵심**: 지킬 20문항(용도지역·실효·허가 규모·건축·주택 용어·농지)에 집중해 50점을 확보하고, 절차 세부는 흐름만 잡습니다. 목표는 **과락 없는 60점 기여**입니다.$aix$,
+  $aix${"type":"steps","title":"공법 실전 4주 플랜","steps":[{"label":"3주 전 · 암기표 회독","sublabel":"레슨 13 표를 매일 세로·가로 1회","icon":"book-open"},{"label":"2주 전 · 기출 200문항","sublabel":"오답은 법률·숫자 단위로 표에 표시","icon":"list-checks"},{"label":"1주 전 · 조문 재확인","sublabel":"law.go.kr 현행 조문 · 개정안은 무시","icon":"search"},{"label":"전날 · 표 1장 + 함정 4패턴","sublabel":"새 내용 금지, 아는 것만 점검","icon":"target"},{"label":"다음 강의","sublabel":"2차 부동산공시법 및 부동산세법: 지적·등기·세금 한 번에","icon":"trophy"}],"caption":"지킬 것을 먼저 정한 사람이 공법을 점수 과목으로 바꿉니다."}$aix$::jsonb, null, 5, 13
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+
+-- 강의: 2차 부동산공시법 및 부동산세법: 지적·등기·세금 한 번에
+insert into public.courses (id, slug, title, description, thumbnail_url, category, level, tags) values (
+  'cbd7271e-df39-1352-5f12-9a489ca5a606', 'realtor-registration-and-tax', '2차 부동산공시법 및 부동산세법: 지적·등기·세금 한 번에', $aix$2차 2교시는 부동산공시법 24문항과 부동산세법 16문항을 50분 안에 풀어야 하는 '한 과목'입니다. 지적은 숫자(60일·2/3·0.1㎡)와 목록(지적공부·지목 28종), 등기는 절차(공동신청·각하·가등기), 세법은 계산 구조(세율·공제·기한)가 핵심입니다. 이 강의는 세 영역을 초보자 눈높이의 비유와 출제 포인트, 계산 예시로 정리하고, 2026-05-09 다주택 중과 유예 종료처럼 시험일 현재 시행 중인 법령 기준으로 서술합니다.$aix$,
+  null, 'realestate', 'advanced', array['공인중개사 2차', '부동산공시법', '부동산세법', '지적', '부동산등기법', '양도소득세']::text[]
+) on conflict (id) do update set
+  title = excluded.title, description = excluded.description,
+  category = excluded.category, level = excluded.level, tags = excluded.tags;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  'd0356e10-2dbc-cc99-8915-d31cf5ebebc9', 'cbd7271e-df39-1352-5f12-9a489ca5a606', 'cadastral-law', '공간정보관리법(지적)', 0
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '6e9b51b4-06dd-2b0b-b603-4b73dcd431e8', 'cbd7271e-df39-1352-5f12-9a489ca5a606', 'registration-law', '부동산등기법', 1
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.modules (id, course_id, slug, title, order_index) values (
+  '149855bc-3e83-f387-9e4f-40ef275533ad', 'cbd7271e-df39-1352-5f12-9a489ca5a606', 'tax-law', '부동산세법', 2
+) on conflict (id) do update set title = excluded.title, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1affc1ae-d35f-594b-b1ac-3318ceb32af3', 'd0356e10-2dbc-cc99-8915-d31cf5ebebc9', 'realtor-registration-and-tax/subject-map', 'subject-map', '공시법 24문항 + 세법 16문항 출제 지도',
+  $aix$2차 2교시는 시험 전체에서 가장 짧고(50분), 두 법 영역이 한 과목으로 묶여 채점되는 유일한 시간입니다. 구조를 먼저 알면 어디서 점수를 벌지 보입니다.
+
+## 한 과목, 두 얼굴
+
+- **부동산공시법 24문항(60점)**: 공간정보관리법 중 지적 부분과 부동산등기법. 최근 기출 기준 대략 12문항씩 나뉩니다(학원·EBS 기출 분석 기준, 공식 고정값 아님).
+- **부동산세법 16문항(40점)**: 지방세(취득세·등록면허세·재산세)와 국세(종합부동산세·양도소득세·조세 총론)가 대략 반반입니다.
+- 과락(40점)은 두 영역을 **합산한 100점** 기준입니다. 세법이 약해도 공시법에서 벌면 됩니다.
+
+시험은 시험 시행일(2026-10-31) 현재 **시행 중인 법령**이 기준입니다(Q-Net 시행공고 원칙). 개정안·세제개편안은 시행 전이면 출제 근거가 아닙니다.
+
+## 영역별 공략 성격
+
+- **지적**: 목록과 숫자를 외우는 과목. 지적공부 종류, 지목 28종, 60일·2/3·0.1㎡ 같은 숫자가 그대로 나옵니다.
+- **등기**: 절차를 이해하는 과목. "누가 신청하는가", "언제 각하되는가"를 논리로 풉니다.
+- **세법**: 계산 구조를 익히는 과목. 세율표보다 "무엇에서 무엇을 빼고 무엇을 곱하는가"가 먼저입니다.
+
+지하철 노선도에 비유하면, 지적은 역 이름 암기, 등기는 환승 규칙, 세법은 요금 계산입니다.
+
+## 이 강의의 로드맵
+
+1. 지적 5레슨 → 2. 등기 3레슨 → 3. 세법 6레슨(총론→취득→보유→양도→계산 총정리).
+
+각 레슨 끝의 "📌 출제 포인트"와 함정 지문만 따로 모아 두세요. 그것이 시험 전날 보는 최종 정리 노트가 됩니다.
+
+📌 출제 포인트
+- 2교시는 24+16=**40문항·50분**, 과락은 두 영역 **합산 40점** 기준(영역별 과락 없음).
+- 출제 기준은 **시험 시행일 현재 시행 중인 법령** — 시행 전 개정안·세제개편안은 답이 아닙니다.
+
+> 💡 **핵심**: 이 과목은 40문항 100점의 한 과목입니다. 지적·등기에서 안정적으로 벌고, 세법은 계산 구조 4개(취득·재산·종부·양도)만 확실히 잡으세요.$aix$,
+  $aix${"type":"flow","title":"2교시 과목 공략 순서","nodes":[{"label":"지적 (공간정보관리법)","sublabel":"목록·숫자 암기 · 약 12문항","icon":"map","tone":"primary"},{"label":"부동산등기법","sublabel":"절차 이해 · 약 12문항","icon":"stamp","tone":"accent"},{"label":"지방세","sublabel":"취득세·등록면허세·재산세","icon":"banknote","tone":"warning"},{"label":"국세","sublabel":"종부세·양도세·조세 총론","icon":"receipt","tone":"warning"},{"label":"계산 총정리","sublabel":"숫자 암기표 + 6강의 복습","icon":"trophy","tone":"success"}],"caption":"공시법 60점 + 세법 40점 = 한 과목 100점. 과락 40점도 합산 기준입니다."}$aix$::jsonb, null, 5, 0
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7f0f110c-8bbf-f721-2573-d3802b03840f', 'd0356e10-2dbc-cc99-8915-d31cf5ebebc9', 'realtor-registration-and-tax/cadastral-records', 'cadastral-records', '지적공부의 종류와 등록사항: 토지대장·임야대장·지적도·경계점좌표등록부',
+  $aix$"공유지연명부에는 지목이 등록된다" — 이 한 문장의 참·거짓을 가르는 것이 지적 파트의 첫 관문입니다. 장부마다 적는 내용이 다르기 때문입니다.
+
+## 지적공부 7종
+
+공간정보관리법 제2조는 지적공부를 **토지대장·임야대장·공유지연명부·대지권등록부·지적도·임야도·경계점좌표등록부**로 정합니다(전산 처리된 것 포함). 사람의 서류에 비유하면 대장은 주민등록표, 도면은 사진, 좌표등록부는 GPS 좌표입니다.
+
+- **대장류**: 토지대장·임야대장(제71조) — 소재·지번·지목·면적·소유자 + 고유번호·장번호·축척·토지이동 사유·토지등급·개별공시지가.
+- **보조 대장**: 공유지연명부(소유자 여럿일 때 소재·지번·소유자·**지분**), 대지권등록부(+건물명칭·전유부분 표시·**대지권 비율**).
+- **도면류**: 지적도·임야도(제72조) — 소재·지번·지목·**경계** + 색인도·제명·축척·도곽선·지적기준점 위치·건축물 위치.
+- **좌표**: 경계점좌표등록부(제73조) — 소재·지번·**좌표** + 고유번호·부호도·도면번호.
+
+## 시험이 노리는 차이
+
+- 면적은 **대장에만**, 경계는 **도면에만**, 좌표는 **좌표등록부에만** 있습니다.
+- 공유지연명부·대지권등록부에는 지목·면적이 **없습니다**(대장에 이미 있으니까).
+- 경계점좌표등록부에도 지목·면적이 **없습니다**.
+
+📌 출제 포인트
+- 소유자 정보가 있는 공부: 토지대장·임야대장·공유지연명부·대지권등록부(도면·좌표등록부에는 없음).
+- 지적도 축척 1/500~1/6,000, 임야도 1/3,000·1/6,000.
+- 함정: "지적도에 면적이 등록된다"(X), "경계점좌표등록부에 지목이 등록된다"(X).
+
+> 💡 **핵심**: 장부별 등록사항은 "소재·지번은 전부, 지목·면적은 대장만, 경계는 도면만, 좌표는 좌표등록부만"으로 기억하세요.$aix$,
+  $aix${"type":"grid","title":"지적공부 7종과 고유 등록사항","items":[{"label":"토지대장","sublabel":"지목·면적·소유자·개별공시지가","icon":"file-text","tone":"primary"},{"label":"임야대장","sublabel":"임야 지번 '산' · 토지대장과 동일","icon":"trees","tone":"primary"},{"label":"공유지연명부","sublabel":"소유자별 지분 (지목·면적 없음)","icon":"users","tone":"accent"},{"label":"대지권등록부","sublabel":"대지권 비율 · 전유부분 표시","icon":"building","tone":"accent"},{"label":"지적도·임야도","sublabel":"경계 · 축척 · 기준점 위치","icon":"map","tone":"success"},{"label":"경계점좌표등록부","sublabel":"좌표 · 부호도 (지목·면적 없음)","icon":"map-pin","tone":"warning"}],"caption":"소재·지번은 모든 공부에 공통. 나머지는 장부의 역할에 따라 갈립니다."}$aix$::jsonb, null, 6, 1
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'c4223d3b-28b4-b430-2145-cc2efa6449b0', 'd0356e10-2dbc-cc99-8915-d31cf5ebebc9', 'realtor-registration-and-tax/land-registration-items', 'land-registration-items', '토지의 등록: 지번 부여·지목 28종·경계·면적',
+  $aix$땅에도 주소(지번), 직업(지목), 몸의 윤곽(경계), 몸무게(면적)가 있습니다. 네 가지 등록사항의 규칙이 지적 파트 문항의 절반을 만듭니다.
+
+## 지번: 북서에서 남동으로
+
+- 지적소관청이 **지번부여지역(동·리)** 단위로 **북서에서 남동으로** 순차 부여합니다(법 제66조, 영 제56조). "북서기번"이라고 외웁니다.
+- 본번과 부번은 "-"로 연결하고 "의"로 읽습니다(123-4 → 123의 4). 임야는 앞에 "산"을 붙입니다.
+- 분할: 한 필지는 원래 지번, 나머지는 최종 부번 다음 부번. 건축물이 있는 필지가 원래 지번을 우선 받습니다.
+- 합병: 합병 전 지번 중 **선순위**, 본번이 있으면 본번 중 선순위.
+
+## 지목: 28종, 1필지 1지목
+
+법 제67조의 28종은 전·답·과수원·목장용지·임야·광천지·염전·대·공장용지·학교용지·주차장·주유소용지·창고용지·도로·철도용지·제방·하천·구거·유지·양어장·수도용지·공원·체육용지·유원지·종교용지·사적지·묘지·잡종지입니다.
+
+- 설정 원칙(영 제59조): **1필 1지목**, 둘 이상 용도면 **주된 용도**, 일시적 사용은 변경 금지(영속성).
+- 도면 부호(규칙 제64조): 첫 글자가 원칙. 예외 4개만 둘째 글자 — **공장용지 장, 주차장 차, 하천 천, 유원지 원**(첫 글자가 겹치기 때문).
+
+## 경계와 면적
+
+- 경계(토지의 구획선)는 도면에 등록된 **선**이 기준이고, 경계점 사이는 직선으로 연결합니다.
+- 면적 단위는 ㎡(법 제68조). 축척 1/600 지역과 경계점좌표등록부 시행지역은 **0.1㎡** 단위, 그 밖은 1㎡ 단위(영 제60조). 끝수는 절반 미만은 버리고 초과는 올리되, 정확히 절반(0.5 또는 0.05)이면 앞자리가 0·짝수면 버리고 홀수면 올립니다.
+
+📌 출제 포인트
+- 함정: "지번은 토지소유자가 부여한다"(X, 지적소관청). "1/1,200 지역은 0.1㎡ 단위"(X, 1/600).
+- 1필지 면적이 단위 미만이면 그 단위(0.1㎡ 또는 1㎡)로 등록.
+
+> 💡 **핵심**: 지번은 북서→남동, 지목은 28종·두문자(예외 장·차·천·원), 면적은 1/600·좌표지역만 0.1㎡. 이 세 줄이 매년 나옵니다.$aix$,
+  $aix${"type":"compare","title":"토지 등록사항 4종의 규칙","columns":[{"title":"지번","icon":"map-pin","tone":"primary","items":["지적소관청이 부여","북서 → 남동 순차","본번-부번, 임야 '산'","합병은 선순위 지번"]},{"title":"지목","icon":"wheat","tone":"accent","items":["법정 28종","1필 1지목 · 주된 용도","부호는 첫 글자","예외: 장·차·천·원"]},{"title":"경계·면적","icon":"ruler","tone":"success","items":["경계는 도면의 선","단위 ㎡","1/600·좌표지역 0.1㎡","절반 끝수는 짝수 버림"]}],"caption":"지번·지목·경계·면적은 모두 지적소관청이 결정하고 등록합니다."}$aix$::jsonb, null, 7, 2
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'abc42a98-4fe0-986c-8baa-0b015d1c1e88', 'd0356e10-2dbc-cc99-8915-d31cf5ebebc9', 'realtor-registration-and-tax/land-movement', 'land-movement', '토지이동: 신규등록·등록전환·분할·합병·지목변경·축척변경',
+  $aix$땅의 표시가 바뀌면 장부도 바뀌어야 합니다. 그 절차가 토지이동이고, 시험은 "며칠 안에 누가 신청하는가"를 묻습니다.
+
+## 60일 클럽과 예외
+
+토지소유자는 사유가 발생한 날부터 **60일 이내**에 지적소관청에 신청합니다.
+
+- 60일 의무: **신규등록**(제77조)·**등록전환**(제78조, 임야대장→토지대장)·**지목변경**(제81조).
+- 분할(제79조)·합병(제80조)은 원칙적으로 기한이 없지만, **용도가 바뀌어 하는 분할**과 **공동주택 부지·도로·제방 등 공공용지의 합병**은 60일 이내입니다.
+- 바다로 된 토지(제82조): 지적소관청이 소유자에게 말소 신청을 통지하고, 통지받은 날부터 **90일** 안에 신청하지 않으면 직권 말소.
+- 신청이 없으면 지적소관청이 **직권**으로 등록할 수 있습니다(제64조 2항).
+
+## 합병할 수 없는 땅
+
+지번부여지역·지목·소유자가 다르거나, 소유권·지상권·전세권·임차권 등기 외의 등기(예: 저당권)가 있는 토지는 원칙적으로 합병할 수 없습니다.
+
+## 축척변경: 지도를 더 크게 그리기
+
+작은 축척의 지적도를 큰 축척으로 바꾸는 절차입니다(제83조). 사진 해상도를 높이면 윤곽이 달라지듯 면적이 조금씩 바뀌므로 돈(청산금)이 오갑니다.
+
+- 시행지역 토지소유자 **3분의 2 이상 동의** → **축척변경위원회 의결** → 시·도지사 또는 대도시 시장 승인.
+- 시행공고 **20일 이상**, 소유자는 공고일부터 **30일** 내 경계점표지 설치(영 제71조).
+- 청산금: 위원회가 ㎡당 금액 결정 → 결정 공고 후 **20일** 내 납부고지·수령통지 → **6개월** 내 납부·지급 → 이의신청은 고지받은 날부터 **1개월**(영 제76·77조).
+- 축척변경위원회는 **5~10명**, 위원의 2분의 1 이상은 토지소유자(영 제79조).
+
+📌 출제 포인트
+- 함정: "분할은 사유 발생일부터 60일 이내 신청해야 한다"(X, 용도변경 분할만).
+- 함정: "축척변경 동의는 과반수"(X, 3분의 2).
+
+> 💡 **핵심**: 60일(신규등록·등록전환·지목변경), 90일(바다 말소), 2/3·20일·30일·6개월·1개월(축척변경). 숫자 자리를 바꿔 낸 지문을 잡으세요.$aix$,
+  $aix${"type":"flow","title":"토지이동 처리 흐름","nodes":[{"label":"사유 발생","sublabel":"매매·형질변경·용도변경 등","icon":"alert","tone":"muted"},{"label":"토지소유자 신청","sublabel":"신규등록·등록전환·지목변경은 60일 이내","icon":"file-pen","tone":"primary","edgeLabel":"신청 없으면 직권 등록"},{"label":"지적측량","sublabel":"분할·등록전환·신규등록 등","icon":"ruler","tone":"accent"},{"label":"지적공부 정리","sublabel":"지번·지목·면적·경계 변경","icon":"file-text","tone":"success"},{"label":"등기촉탁·통지","sublabel":"등기 필요 시 15일, 불필요 시 7일 내 통지","icon":"stamp","tone":"warning"}],"caption":"축척변경은 여기에 '2/3 동의 → 위원회 → 승인 → 청산금' 단계가 추가됩니다."}$aix$::jsonb, null, 7, 3
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '4b986fb3-94a3-8460-0d53-fa3cc5c0523b', 'd0356e10-2dbc-cc99-8915-d31cf5ebebc9', 'realtor-registration-and-tax/cadastral-survey-and-committee', 'cadastral-survey-and-committee', '지적측량과 지적위원회·지적재조사',
+  $aix$측량 결과에 불만이 있으면 어디에 따지고, 며칠 안에 답이 오는가. 지적측량 파트는 결국 이 절차 하나를 외우는 싸움입니다.
+
+## 지적측량은 언제, 누가
+
+지적측량은 **기초측량**(지적기준점 설치)과 **세부측량**(필지 경계·면적)으로 나뉩니다. 실시 사유는 법 제23조에 열거되어 있습니다.
+
+- 지적기준점 설치, 지적공부 복구, 신규등록, 등록전환, 분할, 바다로 된 토지 말소, 축척변경, 등록사항 정정, 지적확정측량, 지적재조사측량.
+- 경계를 땅 위에 다시 표시하는 **경계복원측량**, 현황을 도면에 옮기는 **지적현황측량**.
+- 수행자는 지적측량업 등록자 또는 **한국국토정보공사(LX)**입니다.
+
+## 검사와 기간
+
+- 측량 성과는 시·도지사·대도시 시장 또는 지적소관청의 **검사**를 받습니다(제25조). 단, **경계복원측량과 지적현황측량은 검사 대상이 아닙니다**.
+- 기간(규칙 제25조): 측량 **5일** + 검사 **4일**. 지적기준점 15점 초과 시 4점마다 1일 가산.
+
+## 지적위원회와 적부심사
+
+측량이 틀렸다고 다투는 절차가 **지적측량 적부심사**(제29조)입니다. 병원 진단이 의심스러울 때 다른 병원에 소견을 구하는 것과 같습니다.
+
+1. 토지소유자·이해관계인·지적측량수행자가 **시·도지사**에게 청구
+2. 시·도지사는 **30일** 내 조사 후 **지방지적위원회**에 회부
+3. 지방지적위원회는 **60일** 내 의결(부득이하면 **30일** 1회 연장)
+4. 의결서를 받은 시·도지사는 **7일** 내 청구인에게 통지
+5. 불복 시 통지받은 날부터 **90일** 내 **중앙지적위원회**에 재심사 청구
+
+중앙지적위원회(국토교통부)는 **5~10명**, 위원장은 지적업무 담당 국장입니다. 지적재조사는 별도 특별법에 따라 지적공부와 실제 경계가 다른 땅을 다시 조사해 경계를 확정하는 사업입니다.
+
+📌 출제 포인트
+- 함정: "경계복원측량 성과도 검사를 받아야 한다"(X).
+- 함정: "적부심사는 지적소관청에 청구"(X, 시·도지사).
+
+> 💡 **핵심**: 적부심사는 "시·도지사 30일 → 지방위 60일(+30일) → 7일 통지 → 90일 내 중앙위 재심사". 이 숫자 열은 통째로 외우세요.$aix$,
+  $aix${"type":"steps","title":"지적측량 적부심사 절차","steps":[{"label":"적부심사 청구","sublabel":"소유자·이해관계인·수행자 → 시·도지사","icon":"file-pen"},{"label":"시·도지사 조사·회부","sublabel":"30일 이내 지방지적위원회로","icon":"search"},{"label":"지방지적위원회 의결","sublabel":"60일 이내 (30일 1회 연장)","icon":"users"},{"label":"결과 통지","sublabel":"의결서 받은 날부터 7일 이내","icon":"send"},{"label":"중앙지적위원회 재심사","sublabel":"통지받은 날부터 90일 이내 청구","icon":"landmark"}],"caption":"지방 → 중앙의 2단계 구조. 지적소관청은 청구 대상이 아닙니다."}$aix$::jsonb, null, 6, 4
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '0b1af6cf-9180-5faf-9863-516e7ed8fc4c', '6e9b51b4-06dd-2b0b-b603-4b73dcd431e8', 'realtor-registration-and-tax/registry-structure', 'registry-structure', '등기부 구성과 등기의 종류: 표제부·갑구·을구, 주등기·부기등기',
+  $aix$등기부등본을 읽을 줄 아는 것과 등기법을 아는 것은 다릅니다. 시험은 "이 등기는 어느 구에, 어떤 형식으로 들어가는가"를 묻습니다.
+
+## 1부동산 1등기기록
+
+등기부는 토지등기부와 건물등기부로 나뉘고, **1필지·1개 건물마다 1개의 등기기록**을 둡니다(제15조, 물적 편성주의). 아파트 같은 구분건물은 1동 전체에 1개 기록을 쓰고, 전유부분마다 표제부·갑구·을구를 둡니다.
+
+- **표제부**: 부동산의 표시(소재·지번·면적·구조). 권리가 아닌 **사실의 등기**.
+- **갑구**: 소유권과 그에 관한 사항(보존·이전·가압류·가처분·경매개시결정·소유권 가등기).
+- **을구**: 소유권 외의 권리(지상권·지역권·전세권·저당권·근저당권·임차권).
+
+## 순위는 어떻게 정해지나
+
+- 같은 구 안에서는 **순위번호**, 다른 구 사이에서는 **접수번호**로 순위를 정합니다(제4조).
+- 부기등기의 순위는 **주등기의 순위**를 따르고, 부기등기 사이에서는 그 전후로 정합니다(제5조).
+
+책의 목차에 비유하면 주등기는 새 장(章) 번호를 받고, 부기등기는 기존 장에 붙는 각주입니다. 각주는 그 장의 자리에 그대로 붙어 있습니다.
+
+## 어떤 등기가 부기등기인가
+
+제52조가 열거합니다. 등기명의인 표시의 변경·경정, **소유권 외의 권리의 이전**(예: 저당권 이전), 소유권 외의 권리를 목적으로 하는 권리(예: 전세권에 대한 저당권), 소유권 외의 권리에 대한 처분제한, 권리의 변경·경정(이해관계인 승낙이 있을 때), 환매특약, 권리소멸약정, 공유물 분할금지 약정.
+
+📌 출제 포인트
+- 함정: "소유권 이전등기는 부기등기로 한다"(X, 주등기). 소유권 **외의** 권리 이전만 부기.
+- 권리변경등기는 승낙이 있으면 부기, 없으면 주등기.
+- 말소된 등기는 말소 표시만 남고 순위에서 빠집니다.
+
+아래 데모에서 인터넷등기소 열람 화면의 표제부·갑구·을구를 따라가며 순위번호와 부기 표시(2-1 같은 가지번호)를 읽어 봅니다.
+
+> 💡 **핵심**: 표제부=사실, 갑구=소유권, 을구=그 외 권리. 순위는 같은 구 순위번호·다른 구 접수번호, 부기등기는 주등기 순위를 그대로 씁니다.$aix$,
+  $aix${"type":"stack","title":"등기기록의 3단 구조와 순위 규칙","layers":[{"label":"표제부","sublabel":"부동산의 표시 — 사실의 등기","icon":"home","tone":"muted"},{"label":"갑구","sublabel":"소유권 · 가압류 · 가처분 · 소유권 가등기","icon":"user","tone":"primary"},{"label":"을구","sublabel":"지상권 · 전세권 · (근)저당권 · 임차권","icon":"key","tone":"accent"},{"label":"순위 규칙","sublabel":"같은 구 순위번호 · 다른 구 접수번호 · 부기는 주등기 순위","icon":"list-checks","tone":"warning"}],"caption":"갑구와 을구 사이의 선후는 접수번호로 비교합니다."}$aix$::jsonb, $aix${"title":"인터넷등기소에서 등기기록 읽기","app":{"kind":"browser","url":"www.iros.go.kr","blocks":[{"id":"h-title","type":"heading","label":"대법원 인터넷등기소"},{"id":"btn-menu","type":"button","label":"등기열람/발급"},{"id":"btn-realty","type":"button","label":"부동산 열람하기","hidden":true},{"id":"in-addr","type":"input","label":"부동산소재지번 입력","hidden":true},{"id":"btn-search","type":"button","label":"검색","hidden":true},{"id":"card-result","type":"card","label":"서울특별시 ○○구 ○○동 123 ○○아파트 제101동 제5층 제501호 [집합건물]","hidden":true},{"id":"btn-view","type":"button","label":"열람 (수수료 700원) → 결제","hidden":true},{"id":"card-title","type":"card","label":"【표제부】 (전유부분의 건물의 표시) 철근콘크리트구조 84.97㎡ · 대지권 비율 45,000분의 52","hidden":true},{"id":"card-gap","type":"card","label":"【갑구】 1 소유권보존 · 2 소유권이전(매매) 김○○ · 2-1 등기명의인표시변경(부기) · 3 가압류","hidden":true},{"id":"card-eul","type":"card","label":"【을구】 1 근저당권설정 채권최고액 360,000,000원 ○○은행 · 1-1 근저당권이전(부기)","hidden":true},{"id":"badge-note","type":"badge","label":"갑구 3번(가압류)과 을구 1번의 선후는 접수번호로 비교","hidden":true}]},"actions":[{"t":"caption","text":"① 인터넷등기소에서 열람 메뉴로 들어갑니다"},{"t":"move","target":"btn-menu"},{"t":"click"},{"t":"reveal","target":"btn-realty"},{"t":"click","target":"btn-realty"},{"t":"reveal","target":"in-addr"},{"t":"caption","text":"② 소재지번을 입력해 부동산을 찾고 열람합니다"},{"t":"type","target":"in-addr","text":"서울특별시 ○○구 ○○동 123 ○○아파트 501호"},{"t":"reveal","target":"btn-search"},{"t":"click","target":"btn-search"},{"t":"reveal","target":"card-result"},{"t":"click","target":"card-result"},{"t":"reveal","target":"btn-view"},{"t":"click","target":"btn-view"},{"t":"wait","ms":500},{"t":"caption","text":"③ 표제부 → 갑구 → 을구 순서로 읽습니다"},{"t":"reveal","target":"card-title"},{"t":"reveal","target":"card-gap"},{"t":"move","target":"card-gap"},{"t":"reveal","target":"card-eul"},{"t":"move","target":"card-eul"},{"t":"caption","text":"④ 2-1, 1-1처럼 가지번호가 붙은 것이 부기등기입니다"},{"t":"reveal","target":"badge-note"},{"t":"move","target":"badge-note"},{"t":"wait","ms":900}]}$aix$::jsonb, 6, 5
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '1c07463b-a72b-5da7-dbf5-469ec731c069', '6e9b51b4-06dd-2b0b-b603-4b73dcd431e8', 'realtor-registration-and-tax/registration-procedure', 'registration-procedure', '등기 절차: 신청주의·공동신청·등기필정보·각하 사유',
+  $aix$등기관은 서류만 심사합니다(형식적 심사). 그래서 "누가 신청하고, 무엇이 갖춰져야 하는가"가 절차의 전부입니다.
+
+## 공동신청 원칙과 단독신청 예외(제23조)
+
+등기는 당사자의 신청 또는 관공서의 촉탁으로 합니다(제22조). 권리를 얻는 **등기권리자**와 잃는 **등기의무자**가 **공동으로** 신청하는 것이 원칙 — 매도인이 도장을 안 찍으면 매수인 혼자 등기할 수 없는 이유입니다. 단독으로 신청하는 예외는 다음과 같습니다.
+
+- 소유권**보존**등기와 그 말소 — 등기명의인이 될 자
+- **상속**·법인 합병 등 포괄승계 — 등기권리자
+- **판결**에 의한 등기 — 승소한 등기권리자 **또는 등기의무자**
+- 부동산 표시·등기명의인 표시의 변경·경정 — 해당 명의인
+- 신탁등기 — 수탁자
+- 가등기 — 가등기의무자의 승낙 또는 가처분명령이 있을 때(제89조)
+
+## 등기필정보: 등기의 비밀번호
+
+등기를 마치면 등기관이 등기권리자에게 **등기필정보**를 통지합니다(제50조). 다음 등기에서 등기의무자가 될 때 제공해 본인임을 증명합니다. 분실 시 재발급은 없고 ① 등기소 **출석 확인**, ② 변호사·법무사 **확인서면**, ③ 신청서 **공증** 중 하나로 대신합니다(제51조).
+
+## 각하 사유(제29조) — 11가지
+
+1호 관할 위반, 2호 **등기할 것이 아닌 경우**, 3호 권한 없는 자, 4호 출석 불이행, 5호 방식 위반, 6·7호 부동산·권리·등기의무자 표시 불일치, 8호 등기원인 증명정보 불일치, 9호 첨부정보 누락, 10호 세금·수수료 미납, 11호 대장 불일치.
+
+- **보정을 명한 다음 날까지** 고치면 각하하지 않습니다.
+- **1·2호 위반** 등기는 실체관계에 맞아도 무효이고 직권 말소됩니다(제58조). 3호 이하 위반은 실체관계에 맞으면 유효로 봅니다.
+
+📌 출제 포인트
+- 함정: "판결에 의한 등기는 승소한 등기권리자만 단독 신청"(X, 승소한 등기의무자도).
+- 함정: "등기필정보를 분실하면 재교부받는다"(X, 재교부 없음).
+
+> 💡 **핵심**: 공동신청이 원칙, 단독신청은 "보존·상속·판결·표시변경·신탁·가등기(승낙)". 각하 1·2호는 절대적 무효, 나머지는 실체관계 부합 시 유효.$aix$,
+  $aix${"type":"flow","title":"등기 신청에서 완료까지","nodes":[{"label":"신청","sublabel":"공동신청 원칙 · 단독신청 예외","icon":"file-pen","tone":"primary"},{"label":"접수","sublabel":"접수번호 부여 → 순위 기준","icon":"clock","tone":"accent"},{"label":"등기관 심사","sublabel":"형식적 심사 · 각하 사유 11호 점검","icon":"search","tone":"warning","edgeLabel":"보정 명령 → 다음 날까지"},{"label":"각하 또는 실행","sublabel":"1·2호 위반은 실행돼도 무효","icon":"gavel","tone":"warning"},{"label":"완료 통지·등기필정보","sublabel":"등기권리자에게 등기필정보 통지","icon":"key","tone":"success"}],"caption":"등기필정보는 다음 등기에서 '등기의무자가 진짜 본인'임을 증명하는 열쇠입니다."}$aix$::jsonb, null, 7, 6
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'e38d2c6e-10a9-91c8-f7ea-6950eb21fb64', '6e9b51b4-06dd-2b0b-b603-4b73dcd431e8', 'realtor-registration-and-tax/rights-registrations', 'rights-registrations', '권리별 등기: 소유권보존·이전, 용익·담보권 등기, 가등기',
+  $aix$등기부의 첫 줄은 누가 쓰고, 빚과 임차는 어디에 적고, 아직 확정되지 않은 권리는 어떻게 자리를 잡아 두는가. 권리별 등기의 세 질문입니다.
+
+## 소유권보존등기: 등기부의 첫 줄
+
+미등기 토지·건물에 처음 하는 등기로, **단독 신청**합니다. 신청할 수 있는 사람은 제65조가 정합니다.
+
+- 토지대장·임야대장·건축물대장에 **최초 소유자로 등록된 자**와 그 상속인·포괄승계인
+- **확정판결**로 소유권을 증명하는 자
+- **수용**으로 소유권을 취득한 자
+- **건물에 한해** 특별자치시장·특별자치도지사·시장·군수·구청장의 확인으로 증명하는 자
+
+소유권이전등기는 공동신청이 원칙이고, 상속은 단독입니다.
+
+## 용익권·담보권 등기의 필수 기록사항
+
+- **지상권**: 목적·범위 필수, 존속기간·지료는 약정 시.
+- **전세권**: **전세금**과 범위 필수.
+- **저당권**: **채권액**과 채무자 필수. **근저당권**은 채권액 대신 **채권최고액**과 채무자, 존속기간은 약정 시.
+
+## 가등기: 순위를 예약하는 등기
+
+가등기는 권리의 설정·이전·변경·소멸 **청구권을 보전**하기 위해 합니다(제88조). 콘서트 좌석을 미리 찜해 두는 것과 같아서, 좌석(권리)은 아직 내 것이 아니지만 자리(순위)는 지켜집니다.
+
+- 신청: 공동 원칙. 가등기의무자의 **승낙**이나 법원의 **가처분명령**이 있으면 단독(제89·90조).
+- 효력: **본등기의 순위는 가등기의 순위**를 따릅니다(제91조). 가등기 자체로는 물권 변동이 없습니다.
+- 본등기 후 그 사이에 끼어든 등기는 등기관이 **직권 말소**합니다(제92조).
+- 말소: 가등기명의인이 **단독** 신청, 이해관계인은 명의인의 승낙을 받아 단독 신청(제93조).
+
+📌 출제 포인트
+- 함정: "가등기를 하면 그때부터 소유권을 취득한다"(X, 순위보전만).
+- 함정: "근저당권 등기에 존속기간은 필수"(X, 채권최고액·채무자가 필수).
+- 함정: "토지 소유권보존은 시장·군수의 확인으로 신청할 수 있다"(X, 건물만).
+
+> 💡 **핵심**: 보존등기는 단독·4가지 신청인, 근저당권은 채권최고액, 가등기는 순위보전(본등기 순위=가등기 순위). 이 셋이 뼈대입니다.$aix$,
+  $aix${"type":"compare","title":"세 가지 등기의 신청과 효력","columns":[{"title":"소유권보존등기","icon":"home","tone":"primary","items":["단독 신청","대장 최초 소유자 · 판결 · 수용","건물만: 시장·군수 확인","갑구 1번의 출발점"]},{"title":"(근)저당권 등기","icon":"banknote","tone":"accent","items":["공동 신청 · 을구","저당권: 채권액·채무자 필수","근저당권: 채권최고액 필수","존속기간은 약정 시만"]},{"title":"가등기","icon":"hourglass","tone":"warning","items":["청구권 보전 목적","승낙·가처분명령 시 단독","본등기 순위 = 가등기 순위","중간 등기는 직권 말소"]}],"caption":"가등기는 권리를 주지 않고 '자리'만 지켜 줍니다 — 순위보전 효력."}$aix$::jsonb, null, 7, 7
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '7b58b501-51a3-837e-cedb-a894a07d8fff', '149855bc-3e83-f387-9e4f-40ef275533ad', 'realtor-registration-and-tax/tax-general', 'tax-general', '조세 총론: 납세의무 성립·확정, 부과제척기간, 가산세, 국세·지방세 구분',
+  $aix$세법 16문항 중 첫 2~3문항은 특정 세금이 아니라 "세금이란 언제 생기고, 언제 사라지는가"를 묻습니다. 여기가 세법의 문법입니다.
+
+## 국세인가 지방세인가
+
+부동산 세금은 거래 단계별로 짝을 이룹니다.
+
+- **취득 단계**: 취득세·등록면허세(지방세), 인지세·농어촌특별세(국세)
+- **보유 단계**: 재산세(지방세), 종합부동산세(국세)
+- **양도 단계**: 양도소득세(국세), 지방소득세(지방세)
+
+같은 집 한 채에 국세청과 시·군·구가 각각 다른 시점에 손을 뻗는 구조입니다.
+
+## 납세의무의 성립과 확정
+
+납세의무는 법이 정한 사실이 생기면 자동으로 **성립**하고, 금액이 정해지면 **확정**됩니다.
+
+- 성립 시기: 취득세 **취득하는 때**, 등록면허세 **등기·등록하는 때**, 재산세·종합부동산세 **과세기준일(6월 1일)**, 양도소득세(소득세) **과세기간이 끝나는 때(12월 31일)**. 무신고·과소신고 가산세는 **법정신고기한이 지나는 때** 성립합니다(본세 성립 시가 아님).
+- 확정 방식: 취득세·등록면허세·양도소득세는 납세자가 **신고**해야 확정(신고납세). 재산세·종합부동산세는 정부가 **부과**해 확정(종합부동산세는 신고납부 선택 가능). 성립은 "주문한 순간", 확정은 "계산서가 나온 순간"입니다.
+
+## 부과제척기간과 가산세
+
+- 부과제척기간: 원칙 **5년**, 무신고 **7년**, 사기 등 부정행위 **10년**(국세기본법 제26조의2, 지방세기본법 제38조). 상속세·증여세는 **10년**, 무신고·부정은 **15년**.
+- 가산세(국세기본법 제47조의2~4): 무신고 **20%**(부정 40%), 과소신고 **10%**(부정 40%), 납부지연은 미납세액 × 미납일수 × **1일 10만분의 22**.
+
+📌 출제 포인트
+- 함정: "재산세 납세의무는 납기 개시일에 성립"(X, 과세기준일 6월 1일).
+- 함정: "양도소득세 납세의무는 양도일에 성립"(X, 과세기간 종료 시).
+- 제척기간이 지나면 부과 자체가 불가능합니다(징수권 소멸시효와 구분).
+
+> 💡 **핵심**: 성립 시기 4개(취득 시·등기 시·6월 1일·12월 31일)와 제척기간 5·7·10년, 가산세 20·10·40%. 총론은 이 숫자 열로 끝납니다.$aix$,
+  $aix${"type":"compare","title":"국세 vs 지방세 — 부동산 거래 단계별","columns":[{"title":"국세 (국세청)","icon":"landmark","tone":"primary","items":["종합부동산세 — 보유 · 6월 1일 성립","양도소득세 — 양도 · 12월 31일 성립","인지세 · 농어촌특별세","국세기본법: 제척기간 5·7·10년"]},{"title":"지방세 (시·군·구)","icon":"building","tone":"accent","items":["취득세 — 취득 시 성립 · 신고납세","등록면허세 — 등기 시 성립","재산세 — 보유 · 6월 1일 성립 · 부과","지방소득세 · 지방교육세"]}],"caption":"같은 부동산에 취득 → 보유 → 양도 단계마다 국세와 지방세가 짝을 이룹니다."}$aix$::jsonb, null, 6, 8
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '2323e646-d768-c16a-6cef-9aef3399297c', '149855bc-3e83-f387-9e4f-40ef275533ad', 'realtor-registration-and-tax/acquisition-tax', 'acquisition-tax', '취득세: 과세대상·취득 시기·표준세율·중과·신고납부',
+  $aix$집을 사면 잔금 치른 날부터 60일 안에 취득세를 신고합니다. "등기한 날"이 아니라는 점에서부터 문제가 시작됩니다.
+
+## 무엇을, 언제 취득했다고 보나
+
+- 과세대상(지방세법 제7조): 부동산·차량·기계장비·선박·항공기·입목·각종 회원권 등. 등기하지 않아도 **사실상 취득**하면 과세.
+- 취득 시기(영 제20조): 유상은 **사실상 잔금지급일**(확인 안 되면 계약상 잔금지급일), 그 전에 등기하면 **등기일**. 증여는 **계약일**, 상속은 **상속개시일**, 신축은 **사용승인서를 받은 날**.
+- 과세표준(제10조): 취득 당시 가액. 유상은 사실상 취득가격, 증여는 시가인정액, 상속은 시가표준액.
+
+## 표준세율(제11조)
+
+- 상속: 농지 2.3%, 그 외 **2.8%** / 증여 등 무상: **3.5%** / 원시취득(신축): **2.8%**
+- 유상: 농지 3%, 그 외 **4%**
+- 유상 주택: 6억 이하 **1%**, 6억 초과 9억 이하 **1~3% 구간 산식**, 9억 초과 **3%**
+
+## 중과(제13조의2)와 신고납부(제20조)
+
+중과는 표준세율 4%에 중과기준세율 2%를 얹는 방식입니다. 기본요금에 할증이 붙는 택시 미터기와 같습니다.
+
+- 조정대상지역 2주택, 비조정지역 3주택: 4% + 2%×2 = **8%**
+- 조정대상지역 3주택 이상, 비조정지역 4주택 이상, 법인 주택: 4% + 2%×4 = **12%**
+- 조정대상지역 **3억 원 이상 주택 증여**: **12%**(1세대 1주택자가 배우자·직계존비속에게 증여하면 제외)
+
+신고납부는 취득일부터 **60일** 이내. 증여는 취득일이 속하는 달 말일부터 **3개월**, 상속은 상속개시일이 속하는 달 말일부터 **6개월**(외국 주소 상속인 있으면 9개월).
+
+📌 출제 포인트
+- 함정: "등기일이 항상 취득일"(X, 잔금일과 등기일 중 빠른 날).
+- 함정: "상속 취득세 신고는 60일 이내"(X, 6개월).
+
+> 💡 **핵심**: 취득 시기는 잔금일·등기일 중 빠른 날, 표준세율은 "유상 4·주택 1~3·상속 2.8·증여 3.5", 중과는 8%·12%, 신고는 60일.$aix$,
+  $aix${"type":"flow","title":"취득세 계산 4단계","nodes":[{"label":"취득 시기 확정","sublabel":"잔금일·등기일 중 빠른 날 / 증여 계약일 / 상속 개시일","icon":"calendar-check","tone":"muted"},{"label":"과세표준","sublabel":"사실상 취득가격 · 시가인정액 · 시가표준액","icon":"banknote","tone":"primary"},{"label":"세율 적용","sublabel":"표준 4% · 주택 1~3% / 중과 8%·12%","icon":"percent","tone":"warning","edgeLabel":"주택 수 · 조정대상지역 여부"},{"label":"신고납부","sublabel":"60일 (증여 3개월 · 상속 6개월)","icon":"receipt","tone":"success"}],"caption":"중과는 표준세율 4%에 중과기준세율 2%의 2배(8%) 또는 4배(12%)를 더한 값입니다."}$aix$::jsonb, null, 7, 9
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  '15f705e1-5c44-d41b-1737-b86979e28308', '149855bc-3e83-f387-9e4f-40ef275533ad', 'realtor-registration-and-tax/property-tax-and-registration-tax', 'property-tax-and-registration-tax', '재산세와 등록면허세: 과세기준일·세율·납기·분할납부',
+  $aix$5월 31일에 팔고 6월 1일에 산 사람은 그 해 재산세를 냅니다. 하루 차이로 1년 세금이 갈립니다.
+
+## 재산세: 6월 1일의 소유자에게
+
+- 과세대상(제105조): 토지·건축물·주택·항공기·선박. 납세의무자는 **과세기준일(6월 1일) 현재 사실상 소유자**.
+- 과세표준(제110조): 시가표준액 × 공정시장가액비율(토지·건축물 70%, 주택 60%, 2026년 1세대 1주택은 43~45% — 영 제109조). 주택 과표는 전년 대비 **0~5%** 이내로만 오릅니다(과세표준상한제).
+- 세율(제111조): 주택은 4단계 누진 **0.1% → 0.15% → 0.25% → 0.4%**(과표 6천만·1억 5천만·3억 기준). **1세대 1주택 특례**(제111조의2): 시가표준액 **9억 원 이하**면 **0.05%p 낮은 0.05~0.35%**(2026-12-28까지 성립분 한시).
+
+## 납기와 징수
+
+- **7월 16~31일**: 건축물·선박·항공기 + 주택 세액의 **2분의 1**
+- **9월 16~30일**: 토지 + 주택 나머지 **2분의 1** (주택 세액 20만 원 이하면 7월에 한 번에)
+- 납부세액 **250만 원 초과** → 납기 후 **3개월** 이내 분할납부(제118조).
+- 세부담 상한(제122조): 토지·건축물 **150%**, 주택은 과세표준상한제로 대체.
+
+## 등록면허세: 등기의 입장료
+
+취득 없이 하는 등기(저당권 설정 등)에 붙습니다(제28조). 자유이용권(취득세)을 샀으면 개별 입장료(등록면허세)는 안 내는 셈입니다.
+
+- 소유권보존 0.8%, 소유권이전 유상 2%·무상 1.5%·상속 0.8%
+- 저당권·가등기·가압류·경매신청·지상권·전세권 등: **0.2%**
+- 그 밖의 등기(변경·말소 등): **건당 6,000원**(최저세액도 6,000원)
+- 등기 신청서 접수일까지 신고납부(제30조).
+
+📌 출제 포인트
+- 함정: "재산세 납세의무자는 납기 현재 소유자"(X, 6월 1일).
+- 함정: "주택 재산세 분할납부는 500만 원 초과"(X, 250만 원).
+
+> 💡 **핵심**: 6월 1일 소유자, 주택 0.1~0.4%(1주택 9억 이하 −0.05%p), 7월·9월 반씩, 250만 원 초과 3개월 분납. 등록면허세는 저당권 0.2%·기타 6천 원.$aix$,
+  $aix${"type":"compare","title":"재산세 vs 등록면허세","columns":[{"title":"재산세 (보유)","icon":"home","tone":"primary","items":["6월 1일 사실상 소유자","시가표준액 × 60%(주택)","주택 0.1~0.4% 누진","7월·9월 절반씩 · 250만 원 초과 3개월 분납"]},{"title":"등록면허세 (등기)","icon":"stamp","tone":"accent","items":["등기·등록하는 자","등록 당시 가액 · 채권금액","저당권 0.2% · 보존 0.8%","기타 건당 6천 원 · 접수일까지 신고납부"]}],"caption":"취득을 동반하는 등기는 취득세, 취득 없는 등기(저당권 설정 등)는 등록면허세."}$aix$::jsonb, null, 7, 10
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'abdc26b5-20fe-2f03-8988-78507b8cf042', '149855bc-3e83-f387-9e4f-40ef275533ad', 'realtor-registration-and-tax/comprehensive-real-estate-tax', 'comprehensive-real-estate-tax', '종합부동산세: 과세대상·공제금액·세율·합산배제',
+  $aix$종합부동산세는 재산세 위에 한 층 더 올라가는 국세입니다. 재산세가 집마다 매기는 세금이라면, 종합부동산세는 **한 사람이 가진 집을 전부 합쳐** 기준을 넘는 부분에만 매깁니다.
+
+## 누가 내나
+
+- **과세기준일 6월 1일** 현재 주택분·토지분 **재산세 납세의무자** 중, 인별로 합산한 공시가격이 공제금액을 넘는 사람.
+- 대상은 **주택**과 **토지**만(건축물 제외).
+- **개인별 합산** — 세대 합산이 아니라 부부가 각각 공제를 받습니다.
+
+## 과세표준(제8조)과 세율(제9조)
+
+(인별 주택 공시가격 합계 − 공제금액) × 공정시장가액비율 **60%** = 과세표준
+
+- 공제금액: **1세대 1주택자 12억 원**, 그 외 개인 **9억 원**, 법인 **0원**.
+- 2주택 이하: **0.5%~2.7%** 7단계 누진(과표 3억·6억·12억·25억·50억·94억 기준).
+- 3주택 이상: 과표 12억 초과 구간부터 높아져 **최고 5.0%**. 법인은 **2.7%·5.0%** 단일세율.
+- 같은 주택에 낸 **재산세액은 공제**. 1세대 1주택자는 **고령자**(60·65·70세 → 20·30·40%)·**장기보유**(5·10·15년 → 20·40·50%) 세액공제를 합계 **80%** 한도로 받습니다(제9조).
+- 세부담 상한: 전년도 재산세+종합부동산세 합계의 **150%**(법인 제외).
+
+## 합산배제와 납부
+
+- 합산배제(제8조 2항): 등록 임대주택, 사원용 주택, 기숙사, 미분양 주택 등은 합산에서 제외. 매년 **9월 16~30일** 신고.
+- 납부(제16조): 관할 세무서장이 **12월 1~15일** 부과·징수. 원하면 **신고납부** 선택 가능.
+- 분납(제20조): 세액 **250만 원 초과** → 납부기한 후 **6개월** 이내.
+
+📌 출제 포인트
+- 함정: "1세대 1주택자 공제는 9억 원"(X, 12억). "세대 합산 과세"(X, 인별).
+- 함정: "납부기간은 12월 1일부터 31일까지"(X, 15일까지).
+- 2026년 세제개편안의 종합부동산세 개편은 **확정 아님**(국회 통과 전).
+
+> 💡 **핵심**: 6월 1일·인별 합산·공제 12억/9억/0·비율 60%·세율 0.5~2.7%(3주택 최고 5%)·12월 1~15일·250만 원 초과 6개월 분납.$aix$,
+  $aix${"type":"stack","title":"종합부동산세 계산의 층","layers":[{"label":"인별 주택 공시가격 합산","sublabel":"6월 1일 기준 · 합산배제 주택 제외","icon":"layers","tone":"muted"},{"label":"− 공제금액","sublabel":"1세대 1주택 12억 · 그 외 9억 · 법인 0","icon":"wallet","tone":"primary"},{"label":"× 공정시장가액비율 60%","sublabel":"= 과세표준","icon":"percent","tone":"accent"},{"label":"× 세율","sublabel":"2주택 이하 0.5~2.7% · 3주택 이상 최고 5.0%","icon":"chart","tone":"warning"},{"label":"− 재산세액 공제 · 세부담 상한 150%","sublabel":"12월 1~15일 납부","icon":"receipt","tone":"success"}],"caption":"위에서 아래로 내려오면 납부세액. 각 층의 숫자가 그대로 출제됩니다."}$aix$::jsonb, null, 6, 11
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'aaa38b46-9868-95ee-c00b-d111da88696f', '149855bc-3e83-f387-9e4f-40ef275533ad', 'realtor-registration-and-tax/capital-gains-tax', 'capital-gains-tax', '양도소득세: 계산 구조·비과세·장기보유특별공제·다주택 중과(2026-05-09 유예 종료)',
+  $aix$세법에서 가장 많이 나오고 자주 바뀌는 세금입니다. 세율표보다 **뺄셈의 순서**를 먼저 잡아야 합니다.
+
+## 계산 구조
+
+1. 양도가액 − 취득가액 − 필요경비 = **양도차익**
+2. 양도차익 − **장기보유특별공제** = 양도소득금액
+3. 양도소득금액 − **기본공제 연 250만 원**(제103조) = 과세표준
+4. 과세표준 × **세율** = 산출세액
+
+양도 시기는 **대금을 청산한 날**, 청산 전 등기했으면 등기접수일입니다(제98조). 월급에서 공제를 다 뺀 뒤 세율을 곱하는 근로소득세와 같은 순서입니다.
+
+## 비과세와 장기보유특별공제
+
+- 1세대 1주택 비과세(제89조, 영 제154조): **2년 이상 보유**, 취득 당시 **조정대상지역**이면 **2년 이상 거주**도 필요. 양도가액 **12억 원 초과** 고가주택은 **초과분만** 과세.
+- 장기보유특별공제(제95조): 3년 이상 보유 시 연 2%, **6~30%**(15년). 과세되는 1세대 1주택은 보유·거주 각 연 4%로 **최대 80%**.
+
+## 세율(제104조)과 신고
+
+- 기본세율 **6~45%** 누진, 미등기 자산 **70%**.
+- 주택·입주권·분양권 단기: **1년 미만 70%, 2년 미만 60%**(그 외 자산 50%·40%).
+- **조정대상지역 다주택 중과**(제104조 7항): 2주택 **+20%p**, 3주택 이상 **+30%p**(장기보유특별공제 배제). 한시 배제가 **2026-05-09 양도분**으로 끝나 **2026-05-10 이후 양도분은 중과가 현행**. 2026년 세제개편안의 완화는 **확정 아님**.
+- **예정신고** 양도일이 속하는 달의 말일부터 **2개월**(제105조), **확정신고** 다음 해 **5월 1~31일**(제110조).
+
+📌 출제 포인트
+- 함정: "예정신고 기한은 양도일부터 2개월"(X, 양도일이 속하는 달의 말일부터).
+- 함정: "중과 대상 주택도 장기보유특별공제를 받는다"(X).
+
+> 💡 **핵심**: 양도차익 → 장기보유특별공제 → 250만 원 → 세율. 비과세는 2년 보유(조정지역 +2년 거주)·12억. 2026-05-10 이후 조정지역 다주택 양도는 중과가 현행.$aix$,
+  $aix${"type":"flow","title":"양도소득세 계산 흐름","nodes":[{"label":"양도가액","sublabel":"실지거래가액 · 대금 청산일 기준","icon":"banknote","tone":"muted"},{"label":"− 취득가액 · 필요경비 = 양도차익","sublabel":"취득세 · 중개보수 · 자본적 지출","icon":"receipt","tone":"primary"},{"label":"− 장기보유특별공제","sublabel":"3년 이상 6~30% · 1세대 1주택 최대 80%","icon":"hourglass","tone":"accent"},{"label":"− 기본공제 250만 원 = 과세표준","sublabel":"연간 1회 · 미등기 자산 제외","icon":"wallet","tone":"accent"},{"label":"× 세율 = 산출세액","sublabel":"6~45% · 단기 60/70% · 조정지역 다주택 +20/+30%p","icon":"percent","tone":"warning"}],"caption":"예정신고는 양도일이 속하는 달의 말일부터 2개월 이내."}$aix$::jsonb, $aix${"title":"홈택스 양도소득세 모의계산 따라하기","app":{"kind":"browser","url":"hometax.go.kr","blocks":[{"id":"h-home","type":"heading","label":"국세청 홈택스"},{"id":"btn-report","type":"button","label":"세금신고"},{"id":"btn-cgt","type":"button","label":"양도소득세 신고","hidden":true},{"id":"btn-sim","type":"button","label":"모의계산","hidden":true},{"id":"btn-simple","type":"button","label":"양도소득세 간편계산 (1개 부동산)","hidden":true},{"id":"in-acq-date","type":"input","label":"취득일자","hidden":true},{"id":"in-sale-date","type":"input","label":"양도일자","hidden":true},{"id":"in-sale","type":"input","label":"양도가액","hidden":true},{"id":"in-acq","type":"input","label":"취득가액","hidden":true},{"id":"in-exp","type":"input","label":"필요경비","hidden":true},{"id":"btn-calc","type":"button","label":"세액계산하기","hidden":true},{"id":"card-gain","type":"card","label":"양도차익 300,000,000원 (8억 − 4.7억 − 3천만)","hidden":true},{"id":"card-ltd","type":"card","label":"장기보유특별공제 −60,000,000원 (10년 보유 20%)","hidden":true},{"id":"card-base","type":"card","label":"기본공제 −2,500,000원 → 과세표준 237,500,000원","hidden":true},{"id":"card-tax","type":"card","label":"세율 38% − 누진공제 19,940,000원 = 산출세액 70,310,000원","hidden":true},{"id":"badge-note","type":"badge","label":"비조정지역 2주택 사례 — 조정대상지역이면 +20%p","hidden":true}]},"actions":[{"t":"caption","text":"① 세금신고 → 양도소득세 신고 → 모의계산으로 들어갑니다"},{"t":"click","target":"btn-report"},{"t":"reveal","target":"btn-cgt"},{"t":"click","target":"btn-cgt"},{"t":"reveal","target":"btn-sim"},{"t":"click","target":"btn-sim"},{"t":"reveal","target":"btn-simple"},{"t":"click","target":"btn-simple"},{"t":"caption","text":"② 취득·양도 일자와 금액을 입력합니다"},{"t":"type","target":"in-acq-date","text":"2016-03-15"},{"t":"type","target":"in-sale-date","text":"2026-06-20"},{"t":"type","target":"in-sale","text":"800,000,000"},{"t":"type","target":"in-acq","text":"470,000,000"},{"t":"type","target":"in-exp","text":"30,000,000"},{"t":"reveal","target":"btn-calc"},{"t":"click","target":"btn-calc"},{"t":"caption","text":"③ 양도차익 → 장기보유특별공제 → 기본공제 → 세율 순서로 결과가 나옵니다"},{"t":"reveal","target":"card-gain"},{"t":"reveal","target":"card-ltd"},{"t":"reveal","target":"card-base"},{"t":"reveal","target":"card-tax"},{"t":"caption","text":"④ 조정대상지역 다주택이면 2026-05-10 이후 양도분은 중과가 붙습니다"},{"t":"reveal","target":"badge-note"},{"t":"move","target":"badge-note"},{"t":"wait","ms":900}]}$aix$::jsonb, 7, 12
+) on conflict (id) do update set
+  title = excluded.title, content_markdown = excluded.content_markdown,
+  illustration = excluded.illustration, demo = excluded.demo,
+  minutes = excluded.minutes, order_index = excluded.order_index;
+insert into public.lessons (id, module_id, key, slug, title, content_markdown, illustration, demo, minutes, order_index) values (
+  'ad5baaf2-684b-b8c2-dd6d-4163bed885a6', '149855bc-3e83-f387-9e4f-40ef275533ad', 'realtor-registration-and-tax/tax-calc-drill-and-next', 'tax-calc-drill-and-next', '세금 계산 총정리와 숫자 암기표 + 시리즈 마무리',
+  $aix$계산형은 보통 2~4문항. 취득·보유·양도를 한 사례로 이어 풀면 구조가 한 번에 정리됩니다.
+
+## 한 집의 일생으로 세금 세 번 계산
+
+비조정지역 5억 원 주택을 사서(2주택자) 공시가격 3억으로 보유하다 팔았다고 가정합니다.
+
+```text
+[취득] 5억 × 1% (6억 이하 주택)          = 5,000,000원
+       → 조정대상지역 2주택이었다면 8%    = 40,000,000원
+[보유] 재산세 과표 3억 × 60% = 1.8억
+       195,000 + (1.8억−1.5억) × 0.25%     = 270,000원
+       → 1세대 1주택 특례세율이라면(비율 60% 동일 가정) 120,000 + 3천만 × 0.2% = 180,000원
+[양도] 과표 2.375억 × 38% − 19,940,000    = 70,310,000원
+```
+
+요령: ① 주택 수·조정대상지역 확인, ② 공제(장기보유특별공제·250만 원) 빼기, ③ 누진세율은 "구간 세율 − 누진공제".
+
+## 자주 나오는 숫자·기간 암기표
+
+| 영역 | 꼭 나오는 숫자 |
+|---|---|
+| 지적 | 토지이동 60일 · 바다 말소 90일 · 축척변경 2/3·6개월·1개월 · 0.1㎡(1/600·좌표지역) |
+| 측량·등기 | 측량 5일+검사 4일 · 적부심사 30→60→7→90일 · 각하 11호 |
+| 취득·등록 | 신고 60일(증여 3개월·상속 6개월) · 유상 4%·주택 1~3% · 중과 8%·12% · 저당권 0.2%·기타 6천 원 |
+| 재산·종부 | 6월 1일 · 주택 0.1~0.4% · 7월·9월 납기 · 분납 250만 원 초과 · 공제 12억/9억 · 12/1~15 |
+| 양도 | 250만 원 · 2년 보유(조정지역 +2년 거주)·12억 · 단기 70/60% · 중과 +20/+30%p · 예정신고 말일부터 2개월 |
+
+## 시리즈 복습 동선
+
+6강의 시리즈가 끝났습니다. 복습은 숫자가 많은 과목부터 **역순**으로.
+
+1. **2차 부동산공시법 및 부동산세법: 지적·등기·세금 한 번에** (이 강의)
+2. **2차 부동산공법: 6개 법률 구조로 정복하기**
+3. **2차 공인중개사법령 및 중개실무: 등록부터 거래신고까지**
+4. **1차 민법 및 민사특별법: 사례로 푸는 핵심 조문**
+5. **1차 부동산학개론: 시험에 나오는 핵심만**
+6. **공인중개사 시험 로드맵: 제도·전략·합격 공식**
+
+📌 출제 포인트
+- 함정 패턴: 숫자 바꿔치기(60일↔90일, 12억↔9억), 주체 바꿔치기(지적소관청↔시·도지사), "할 수 있다↔하여야 한다".
+- 시험일(2026-10-31) 현재 시행 법령 기준 — 개편안은 답이 아닙니다.
+
+> 💡 **핵심**: 계산은 "주택 수·지역 확인 → 공제 → 구간 세율 − 누진공제". 암기표를 전날 한 번 더 보고 6강의를 역순으로 훑으세요.$aix$,
+  $aix${"type":"terminal","windowTitle":"세금 계산 — 한 집의 일생","lines":[{"text":"취득세: 500,000,000 × 1%","tone":"cmd"},{"text":"= 5,000,000원 (조정대상지역 2주택이면 8% = 40,000,000)","tone":"out"},{"text":"재산세: 300,000,000 × 60% = 180,000,000 (과세표준)","tone":"cmd"},{"text":"= 195,000 + 30,000,000 × 0.25% = 270,000원","tone":"out"},{"text":"# 1세대 1주택 특례세율(9억 이하, 비율 60% 동일 가정): 120,000 + 30,000,000 × 0.2% = 180,000원","tone":"comment"},{"text":"양도세: 과세표준 237,500,000 × 38% − 19,940,000","tone":"cmd"},{"text":"= 70,310,000원 (지방소득세 10% 별도)","tone":"ok"},{"text":"# 2026-05-10 이후 조정대상지역 2주택 양도 → 세율 +20%p","tone":"comment"}],"caption":"취득 → 보유 → 양도. 세 계산의 공통 요령은 '주택 수·지역 확인 → 공제 → 구간 세율 − 누진공제'."}$aix$::jsonb, null, 7, 13
 ) on conflict (id) do update set
   title = excluded.title, content_markdown = excluded.content_markdown,
   illustration = excluded.illustration, demo = excluded.demo,

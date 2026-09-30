@@ -13,6 +13,7 @@ import { GLOSSARY_TERMS } from "@/content/glossary";
  *
  * - 긴 용어 우선 매칭 ("시스템 프롬프트"가 "프롬프트"보다 먼저)
  * - 영문 용어는 단어 경계 검사 ("PR"이 "PRD" 안에서 매칭되지 않음)
+ * - 한글 용어는 앞쪽 한글 경계 검사 ("프로그램" 안의 "로그"가 매칭되지 않음, 뒤의 조사는 허용)
  * - 레슨당 용어별 첫 등장 1회만 표시 (밑줄 남발 방지)
  * - p/li 내부 텍스트만 대상 (기존 동작 유지), 코드/링크 내부는 건드리지 않음
  */
@@ -23,7 +24,14 @@ function escapeRegExp(s: string): string {
 
 const TERM_REGEX = new RegExp(
   GLOSSARY_TERMS.map((t) => {
-    const pre = /^[A-Za-z0-9]/.test(t) ? "(?<![A-Za-z0-9])" : "";
+    // 영문·숫자 키: 양쪽 단어 경계. 한글 키: 앞쪽만 한글 경계 —
+    // "프로그램" 안의 "로그", "나머지" 안의 "머지", "선택지" 안의 "택지"처럼
+    // 다른 단어 속에 묻힌 매칭을 막되, 뒤에 붙는 조사("파드가")는 허용한다.
+    const pre = /^[A-Za-z0-9]/.test(t)
+      ? "(?<![A-Za-z0-9])"
+      : /^[가-힣]/.test(t)
+        ? "(?<![가-힣])"
+        : "";
     const post = /[A-Za-z0-9]$/.test(t) ? "(?![A-Za-z0-9])" : "";
     return pre + escapeRegExp(t) + post;
   }).join("|"),

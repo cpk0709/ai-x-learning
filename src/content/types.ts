@@ -104,7 +104,21 @@ export type IconKey =
   | "siren"
   | "bug"
   | "route"
-  | "timer";
+  | "timer"
+  | "award"
+  | "badge-check"
+  | "scroll-text"
+  | "book-open"
+  | "stamp"
+  | "list-checks"
+  | "calendar-check"
+  | "ruler"
+  | "map"
+  | "trees"
+  | "wheat"
+  | "pen-line"
+  | "trophy"
+  | "hourglass";
 
 /** 노드/레이어/컬럼의 시각적 강조 톤 */
 export type Tone = "primary" | "accent" | "success" | "warning" | "muted";
@@ -278,7 +292,7 @@ export const CATEGORY_META: Record<
   },
   realestate: {
     label: "부동산",
-    description: "전월세 계약, 청약과 대출, 세금, 투자와 경매까지 — 생활 부동산 지식",
+    description: "전월세 계약, 청약과 대출, 세금, 투자와 경매까지 생활 부동산 지식 — 그리고 공인중개사 자격시험 5과목 대비 과정",
   },
 };
 

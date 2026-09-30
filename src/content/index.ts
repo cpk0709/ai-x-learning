@@ -26,6 +26,12 @@ import { realEstateBasics } from "./courses/real-estate-basics";
 import { realEstateFirstHome } from "./courses/real-estate-first-home";
 import { realEstateMarketTax } from "./courses/real-estate-market-tax";
 import { realEstateAdvanced } from "./courses/real-estate-advanced";
+import { realtorExamRoadmap } from "./courses/realtor-exam-roadmap";
+import { realtorRealEstateTheory } from "./courses/realtor-real-estate-theory";
+import { realtorCivilLaw } from "./courses/realtor-civil-law";
+import { realtorBrokerageLaw } from "./courses/realtor-brokerage-law";
+import { realtorPublicLaw } from "./courses/realtor-public-law";
+import { realtorRegistrationAndTax } from "./courses/realtor-registration-and-tax";
 
 /**
  * 강의 레지스트리 — 카테고리 내 표시 순서대로 나열합니다.
@@ -64,6 +70,13 @@ export const COURSES: Course[] = [
   realEstateFirstHome, // beginner(초보): 청약·대출·매매 내 집 마련
   realEstateMarketTax, // intermediate(중급): 시장 분석과 세금 설계
   realEstateAdvanced, // advanced(고급): 경매·재개발·절세 전략
+  // Track 4-2: 공인중개사 자격시험 시리즈 — 같은 카테고리지만 별도 시리즈라 생활 부동산 뒤에 묶어 두고, 시리즈 안에서 난이도(시험 과목 순)대로 나열
+  realtorExamRoadmap, // beginner: 시험 제도·전략 (시리즈 진입점)
+  realtorRealEstateTheory, // intermediate: 1차 부동산학개론
+  realtorCivilLaw, // intermediate: 1차 민법 및 민사특별법
+  realtorBrokerageLaw, // intermediate: 2차 공인중개사법령 및 중개실무
+  realtorPublicLaw, // advanced: 2차 부동산공법
+  realtorRegistrationAndTax, // advanced: 2차 부동산공시법 및 부동산세법
 ];
 
 export function getCourse(slug: string): Course | undefined {
