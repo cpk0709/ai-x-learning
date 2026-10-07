@@ -12,11 +12,11 @@
 
 ## 주요 기능
 
-- **강의 33개 / 레슨 404개 / 5개 카테고리** — 2026년 최신 기준, 전 강의 웹 검색 팩트체크 완료 (에이전틱 워크플로우, AI 하네스/Evals, MCP, RAG, AI 게임 개발, Runway·Veo·Kling, Figma AI, Suno·ElevenLabs, Make.com·n8n 자동화, AI 수익화, AI 시대의 PM, AX 팀 구축·운영, 생활 부동산 4단계, Docker·Kubernetes·Datadog 인프라 & DevOps 6단계, **공인중개사 자격시험 5과목 대비 6강의**)
+- **강의 34개 / 레슨 420개 / 5개 카테고리** — 2026년 최신 기준, 전 강의 웹 검색 팩트체크 완료 (에이전틱 워크플로우, AI 하네스/Evals, MCP, RAG, AI 게임 개발, Runway·Veo·Kling, Figma AI, Suno·ElevenLabs, Make.com·n8n 자동화, AI 수익화, AI 시대의 PM, AX 팀 구축·운영, 생활 부동산 4단계, Docker·Kubernetes·Datadog 인프라 & DevOps 6단계, **공인중개사 자격시험 5과목 대비 6강의, **토큰 절약의 기술**)
 - **핵심 UI**: 한 화면에 하나의 개념 — 좌측 텍스트 + 우측 일러스트 스플릿 뷰, [이전/다음 단계] 스텝 네비게이션 (키보드 ←/→ 지원)
-- **일러스트 시스템**: 이미지 파일 대신 구조화된 데이터(flow/cycle/compare/stack/steps/grid/terminal/chat)를 커스텀 렌더러가 그려 404개 레슨 전체의 비주얼 일관성 보장
+- **일러스트 시스템**: 이미지 파일 대신 구조화된 데이터(flow/cycle/compare/stack/steps/grid/terminal/chat)를 커스텀 렌더러가 그려 420개 레슨 전체의 비주얼 일관성 보장
 - **따라하기 데모 (시뮬레이션 스크린캐스트)**: 실무 도구 화면(코드 에디터·디자인 캔버스·Make 자동화·Slack·Gmail·브라우저)을 재현하고, 커서가 움직이며 클릭(물결 1회)·더블클릭(물결 2회)·타이핑·드래그를 시연 — 재생/일시정지/배속 지원
-- **용어 툴팁**: 어려운 용어(670여 개)의 첫 등장에 자동으로 점선 밑줄 — 마우스를 올리면(모바일은 탭) 초보자 눈높이 설명 표시 (`src/content/glossary.ts`)
+- **용어 툴팁**: 어려운 용어(700여 개)의 첫 등장에 자동으로 점선 밑줄 — 마우스를 올리면(모바일은 탭) 초보자 눈높이 설명 표시 (`src/content/glossary.ts`)
 - **초보자 최적화 콘텐츠**: 전 레슨이 일상 비유·첫 등장 용어 풀이·구체적 따라하기 단계("여기서 막힌다면" 안내 포함)로 작성됨
 - **진도 트래킹**: [다음 단계] 클릭 시 자동 저장, 이어보기, 코스별 진도율
 - **게이미피케이션**: 배지 8종, 학습 잔디(최근 18주), 연속 학습 스트릭
@@ -58,7 +58,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 
 **콘텐츠의 단일 소스는 코드입니다** (`src/content/courses/*.ts`).
 
-- 앱은 이 데이터를 직접 읽어 404개 레슨 페이지를 **정적 생성(SSG)** 합니다 — 콘텐츠 조회에 DB 왕복이 없습니다.
+- 앱은 이 데이터를 직접 읽어 420개 레슨 페이지를 **정적 생성(SSG)** 합니다 — 콘텐츠 조회에 DB 왕복이 없습니다.
 - `npm run seed:generate` 가 동일 데이터를 `supabase/seed.sql`로 변환합니다 (슬러그 기반 결정적 UUID → 재실행해도 안전한 upsert).
 - DB는 인증과 진도(user_progress) 동기화에 사용합니다. PRD의 `user_progress.lesson_id` 대신 안정적인 `lesson_key`("코스슬러그/레슨슬러그", `lessons.key` 참조)로 매칭합니다 — 콘텐츠 재시드에도 진도가 유지됩니다.
 
@@ -80,7 +80,7 @@ src/
 │   └── auth/callback/       # OAuth 콜백
 ├── content/                 # ★ 강의 콘텐츠 (단일 소스)
 │   ├── types.ts             # Course/Lesson/Illustration 타입
-│   └── courses/*.ts         # 강의 33개
+│   └── courses/*.ts         # 강의 34개
 ├── components/
 │   ├── illustrations/       # 일러스트 렌더러 (8종)
 │   ├── learn/               # 스텝 뷰어, 마크다운 렌더러
@@ -110,7 +110,7 @@ scripts/generate-seed.ts     # 콘텐츠 → 시드 SQL 변환기
 
 1. Vercel에서 이 저장소 Import
 2. (Supabase 사용 시) 환경변수 2개 추가
-3. Deploy — 레슨·강의·정적 페이지 440여 개가 정적 생성됩니다
+3. Deploy — 레슨·강의·정적 페이지 460여 개가 정적 생성됩니다
 
 ## 스크립트
 
@@ -124,7 +124,7 @@ scripts/generate-seed.ts     # 콘텐츠 → 시드 SQL 변환기
 
 ## 문서
 
-- [`docs/DEVLOG.md`](docs/DEVLOG.md) — 개발 과정의 시행착오·버그·해결 기록과 아키텍처 결정(ADR). 버전별(v0.1 초기 구축 → v0.2 데모 시스템 → v0.3 팩트체크·강의 확충 → v0.4 초보자 눈높이·용어 툴팁 → v0.5~0.7 강의 확충·부동산 카테고리 → v0.8 인프라 & DevOps 카테고리 → v0.9 공인중개사 자격시험 과정) 히스토리 포함
+- [`docs/DEVLOG.md`](docs/DEVLOG.md) — 개발 과정의 시행착오·버그·해결 기록과 아키텍처 결정(ADR). 버전별(v0.1 초기 구축 → v0.2 데모 시스템 → v0.3 팩트체크·강의 확충 → v0.4 초보자 눈높이·용어 툴팁 → v0.5~0.7 강의 확충·부동산 카테고리 → v0.8 인프라 & DevOps 카테고리 → v0.9 공인중개사 자격시험 과정 → v0.10 토큰 절약 강의) 히스토리 포함
 - [`CLAUDE.md`](CLAUDE.md) — 개발 원칙, 콘텐츠 작성 규칙, 기술 스택 주의사항 (AI 어시스턴트와 협업 시 자동 로드)
 - [`docs/PRD.md`](docs/PRD.md) — 최초 기획서 (제품 요구사항 정의서)
 

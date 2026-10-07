@@ -3,6 +3,7 @@ import { aiHarness } from "./courses/ai-harness";
 import { loopEngineering } from "./courses/loop-engineering";
 import { aiAgentTeam } from "./courses/ai-agent-team";
 import { promptEngineeringRag } from "./courses/prompt-engineering-rag";
+import { tokenSaving } from "./courses/token-saving";
 import { aiCodingTools } from "./courses/ai-coding-tools";
 import { aiGameDev } from "./courses/ai-game-dev";
 import { aiDesign } from "./courses/ai-design";
@@ -42,6 +43,7 @@ export const COURSES: Course[] = [
   aiCodingTools, // beginner: AI 코딩 도구 첫걸음
   aiAgentTeam, // beginner: 도구에 익숙해진 뒤 멀티 에이전트 입문
   promptEngineeringRag, // intermediate: 프롬프트 설계 원리와 RAG
+  tokenSaving, // intermediate: 프롬프트 다음 단계 — 같은 결과를 더 적은 토큰으로
   loopEngineering, // intermediate: 프롬프트 위에 에이전틱 워크플로우 설계
   aiGameDev, // intermediate: 응용 프로젝트
   aiHarness, // advanced: 평가·테스트 프레임워크
